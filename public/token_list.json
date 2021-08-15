@@ -1,0 +1,28 @@
+{
+  "name": "Juno Token List",
+  "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
+  "keywords": ["special tokens"],
+  "tags": {
+    "Juno": {
+      "name": "Juno",
+      "description": "Tokens that are listed on Juno"
+    }
+  },
+  "timestamp": "2021-06-12T00:00:00+00:00",
+  "tokens": [
+    {
+      "chain-id": "lucina",
+      "address": "juno1pez5706uvjfz9y4nkx68w3j5ls8yufmvplprge",
+      "symbol": "POOD",
+      "name": "Poodle Coin",
+      "decimals": 6,
+      "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
+      "tags": ["memecoin"]
+    }
+  ],
+  "version": {
+    "major": 0,
+    "minor": 1,
+    "patch": 0
+  }
+}

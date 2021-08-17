@@ -45,7 +45,7 @@ export default function Home() {
       price = await getNativeForTokenPrice({
         nativeAmount: e.target.value * 1000000,
         swapAddress: contract as string,
-        client,
+        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
       });
     }
     else {
@@ -53,7 +53,7 @@ export default function Home() {
       price = await getTokenForNativePrice({
         tokenAmount: e.target.value * 1000000,
         swapAddress: contract as string,
-        client,
+        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
       })
     }
     setPrice(price / 1000000);

@@ -1,4 +1,4 @@
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { SigningCosmWasmClient, CosmWasmClient} from '@cosmjs/cosmwasm-stargate'
 import { coin } from '@cosmjs/launchpad'
 
 export interface swapNativeForTokenInput {
@@ -75,14 +75,15 @@ export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
 export interface getNativeForTokenPriceInput {
   nativeAmount: number
   swapAddress: string
-  client: SigningCosmWasmClient
+  rpcEndpoint: string 
 }
 
 export const getNativeForTokenPrice = async (
   input: getNativeForTokenPriceInput
 ) => {
   console.log(input)
-  const query = await input.client.queryContractSmart(input.swapAddress, {
+  const client = await CosmWasmClient.connect(input.rpcEndpoint)
+  const query = await client.queryContractSmart(input.swapAddress, {
     native_for_token_price: {
       native_amount: `${input.nativeAmount}`,
     },
@@ -95,13 +96,14 @@ export const getNativeForTokenPrice = async (
 export interface getTokenForNativePriceInput {
   tokenAmount: number
   swapAddress: string
-  client: SigningCosmWasmClient
+  rpcEndpoint: string
 }
 
 export const getTokenForNativePrice = async (
   input: getTokenForNativePriceInput
 ) => {
-  const query = await input.client.queryContractSmart(input.swapAddress, {
+  const client = await CosmWasmClient.connect(input.rpcEndpoint)
+  const query = await client.queryContractSmart(input.swapAddress, {
     token_for_native_price: {
       token_amount: `${input.tokenAmount}`,
     },

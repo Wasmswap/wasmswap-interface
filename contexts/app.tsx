@@ -17,7 +17,7 @@ export function AppProvider({
   children,
 }: React.HTMLAttributes<HTMLOrSVGElement>): JSX.Element {
   const [address, setAddress] = useState('')
-  const [client, setClient] = useState({})
+  const [client, setClient] = useState(undefined)
 
   const connectWallet = async () => {
     await window.keplr?.experimentalSuggestChain(chainInfo)

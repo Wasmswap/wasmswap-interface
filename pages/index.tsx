@@ -12,6 +12,9 @@ import {
 } from 'services/swap'
 import TokenList from 'public/token_list.json'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Home() {
   const { address, client, connectWallet } = useAppContext()
 
@@ -67,10 +70,20 @@ export default function Home() {
 
   // TODO don't hardwire everything, just for testing
   const handleSwap = async () => {
-    if (!client) {
-      alert('connect wallet')
+    console.log(client)
+    if (client == undefined) {
+      toast.error('Please connect wallet', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
     } else {
       console.log(tokenBPrice)
+      try {
       if (tokenAName === 'JUNO') {
         const res = await swapNativeForToken({
           nativeAmount: tokenAAmount * 1000000,
@@ -92,8 +105,29 @@ export default function Home() {
             swapAddress: contract as string,
             client,
           })
+        
         }
       }
+      toast.success('🎉 Swap Succesful', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    } catch(e){
+      toast.error(`Error with swap ${e}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+    }
 
     }
   }
@@ -101,6 +135,17 @@ export default function Home() {
   return (
     <div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="space-y-6">
             Swap

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { connectKeplr } from 'services/keplr'
+import { chainInfo } from 'public/chain_info'
 
 interface AppContextType {
   address: string
@@ -19,6 +20,7 @@ export function AppProvider({
   const [client, setClient] = useState({})
 
   const connectWallet = async () => {
+    await window.keplr?.experimentalSuggestChain(chainInfo)
     const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
     await window.keplr?.enable(chainId)
     const offlineSigner = await window?.getOfflineSigner(chainId)

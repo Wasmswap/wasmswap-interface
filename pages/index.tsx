@@ -24,6 +24,7 @@ export default function Home() {
   const [tokenAName, setTokenAName] = useState('JUNO')
   const [tokenBName, setTokenBName] = useState('POOD')
   const [tokenBPrice, setPrice] = useState(0)
+  const [loading, setLoading] = useState(false)
 
 
 
@@ -83,6 +84,7 @@ export default function Home() {
         });
     } else {
       console.log(tokenBPrice)
+      setLoading(true)
       try {
       if (tokenAName === 'JUNO') {
         const res = await swapNativeForToken({
@@ -128,7 +130,7 @@ export default function Home() {
         progress: undefined,
         });
     }
-
+    setLoading(false)
     }
   }
 
@@ -218,7 +220,7 @@ export default function Home() {
               <button
                 onClick={handleSwap}
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className={"w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 " + (loading ? "animate-spin" : " ")}
               >
                 Swap
               </button>

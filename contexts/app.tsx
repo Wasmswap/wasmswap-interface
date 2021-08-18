@@ -5,7 +5,7 @@ import { chainInfo } from 'public/chain_info'
 
 interface AppContextType {
   address: string
-  client: any
+  client: SigningCosmWasmClient | undefined
   connectWallet: () => void
 }
 
@@ -17,7 +17,7 @@ export function AppProvider({
   children,
 }: React.HTMLAttributes<HTMLOrSVGElement>): JSX.Element {
   const [address, setAddress] = useState('')
-  const [client, setClient] = useState(undefined)
+  const [client, setClient] = useState<SigningCosmWasmClient | undefined>(undefined)
 
   const connectWallet = async () => {
     await window.keplr?.experimentalSuggestChain(chainInfo)

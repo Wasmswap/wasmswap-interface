@@ -14,6 +14,7 @@ import TokenList from 'public/token_list.json'
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CW20 } from 'services/cw20';
 
 export default function Home() {
   const { address, client, connectWallet } = useAppContext()
@@ -28,21 +29,47 @@ export default function Home() {
   const [tokenBBalance, setTokenBBalance] = useState(0)
   const [loading, setLoading] = useState(false)
 
+  const setBalance = async (tokenName:string, setter:React.Dispatch<React.SetStateAction<number>>) => {
+    setter(await getBalance(tokenName))
+  }
 
+  const getBalance = async (tokenName: string): Promise<number> => {
+    console.log(tokenName)
+    if(client == undefined){
+      return 0
+    }
+    if (tokenName === 'JUNO') {
+      const coin = await client.getBalance(address,'ujuno')
+      console.log(coin)
+      const res = coin ? +coin.amount : 0
+      return res / 1000000
+    }
+    const token = TokenList.tokens.find((x) => x.symbol === tokenName)
+    if(token == undefined){
+      return 0
+    }
+    const res = +(await CW20(client).use(token.address).balance(address))
+    return res / 1000000
+  }
 
   const handleTokenANameChange = (e: any) => {
     setTokenAAmount(0)
     setPrice(0)
     if (e.target.value === tokenBName) {
       setTokenBName(tokenAName)
+      setBalance(tokenAName,setTokenBBalance)
     }
     setTokenAName(e.target.value)
+    setBalance(e.target.value,setTokenABalance)
   }
+
   const handleTokenBNameChange = (e: any) => {
     if (e.target.value === tokenAName) {
       setTokenAName(tokenBName)
+      setBalance(tokenBName,setTokenABalance)
     }
     setTokenBName(e.target.value)
+    setBalance(e.target.value,setTokenBBalance)
   }
 
   const handleTokenAAmountChange = async (e: any) => {
@@ -77,6 +104,10 @@ export default function Home() {
     const aAmount = tokenAAmount
     setTokenAAmount(tokenBPrice)
     setPrice(aAmount)
+
+    const aBalance = tokenABalance
+    setTokenABalance(tokenBBalance)
+    setTokenBBalance(aBalance)
   }
 
   // TODO don't hardwire everything, just for testing
@@ -140,6 +171,8 @@ export default function Home() {
           progress: undefined,
         });
       }
+      setTokenABalance(await getBalance(tokenAName))
+      setTokenBBalance(await getBalance(tokenBName))
       setLoading(false)
     }
   }

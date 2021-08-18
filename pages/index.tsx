@@ -21,9 +21,11 @@ export default function Home() {
   const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
 
   const [tokenAAmount, setTokenAAmount] = useState(0)
+  const [tokenABalance, setTokenABalance] = useState(0)
   const [tokenAName, setTokenAName] = useState('JUNO')
   const [tokenBName, setTokenBName] = useState('POOD')
   const [tokenBPrice, setPrice] = useState(0)
+  const [tokenBBalance, setTokenBBalance] = useState(0)
   const [loading, setLoading] = useState(false)
 
 
@@ -47,24 +49,24 @@ export default function Home() {
     setTokenAAmount(e.target.value);
     console.log(e.target.value)
     let price: number = 0;
-    if (!isNaN(+e.target.value)){
-    if (tokenAName === 'JUNO') {
-      price = await getNativeForTokenPrice({
-        nativeAmount: e.target.value * 1000000,
-        swapAddress: contract as string,
-        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-      });
+    if (!isNaN(+e.target.value)) {
+      if (tokenAName === 'JUNO') {
+        price = await getNativeForTokenPrice({
+          nativeAmount: e.target.value * 1000000,
+          swapAddress: contract as string,
+          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+        });
+      }
+      else {
+        const token = TokenList.tokens.find((x) => x.symbol === tokenAName)
+        price = await getTokenForNativePrice({
+          tokenAmount: e.target.value * 1000000,
+          swapAddress: contract as string,
+          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+        })
+      }
+      setPrice(price / 1000000);
     }
-    else {
-      const token = TokenList.tokens.find((x) => x.symbol === tokenAName)
-      price = await getTokenForNativePrice({
-        tokenAmount: e.target.value * 1000000,
-        swapAddress: contract as string,
-        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-      })
-    }
-    setPrice(price / 1000000);
-  }
   }
 
   const handleSwitch = () => {
@@ -89,73 +91,73 @@ export default function Home() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        });
+      });
     } else {
       console.log(tokenBPrice)
       setLoading(true)
       try {
-      if (tokenAName === 'JUNO') {
-        const res = await swapNativeForToken({
-          nativeAmount: tokenAAmount * 1000000,
-          price: tokenBPrice,
-          slippage: 0.1,
-          senderAddress: address,
-          swapAddress: contract as string,
-          client,
-        })
-      } else {
-        const token = TokenList.tokens.find((x) => x.symbol === tokenAName)
-        if (token) {
-          const res = await swapTokenForNative({
-            tokenAmount: tokenAAmount * 1000000,
+        if (tokenAName === 'JUNO') {
+          const res = await swapNativeForToken({
+            nativeAmount: tokenAAmount * 1000000,
             price: tokenBPrice,
             slippage: 0.1,
             senderAddress: address,
-            tokenAddress: token.address,
             swapAddress: contract as string,
             client,
           })
-        
+        } else {
+          const token = TokenList.tokens.find((x) => x.symbol === tokenAName)
+          if (token) {
+            const res = await swapTokenForNative({
+              tokenAmount: tokenAAmount * 1000000,
+              price: tokenBPrice,
+              slippage: 0.1,
+              senderAddress: address,
+              tokenAddress: token.address,
+              swapAddress: contract as string,
+              client,
+            })
+
+          }
         }
+        toast.success('🎉 Swap Succesful', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } catch (e) {
+        toast.error(`Error with swap ${e}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
-      toast.success('🎉 Swap Succesful', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        });
-    } catch(e){
-      toast.error(`Error with swap ${e}`, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        });
-    }
-    setLoading(false)
+      setLoading(false)
     }
   }
 
   return (
     <div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="space-y-6">
             Swap
@@ -189,14 +191,17 @@ export default function Home() {
                   autoComplete="off"
                 />
               </div>
-              <div>
-                <button
-                  onClick={handleSwitch}
-                  type="submit"
-                  className="text-center opacity-70 hover:opacity-90 py-2 px-4 text-sm font-medium text-white focus:outline-none"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z" /><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM7 9l3-3.5L13 9h-2v4H9V9H7zm10 6l-3 3.5-3-3.5h2v-4h2v4h2z" fill="#000" /></svg>
-                </button>
+              <div className="flex justify-start"><div >Balance:</div> <div className="px-2">{tokenABalance}</div></div>
+              <div className="flex justify-center">
+                <div>
+                  <button
+                    onClick={handleSwitch}
+                    type="submit"
+                    className="text-center opacity-70 hover:opacity-90 py-2 px-4 text-sm font-medium text-white focus:outline-none"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z" /><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM7 9l3-3.5L13 9h-2v4H9V9H7zm10 6l-3 3.5-3-3.5h2v-4h2v4h2z" fill="#000" /></svg>
+                  </button>
+                </div>
               </div>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 flex items-center">
@@ -226,10 +231,11 @@ export default function Home() {
                   readOnly
                 />
               </div>
+              <div className="flex justify-start"><div >Balance:</div> <div className="px-2">{tokenBBalance}</div></div>
             </div>
             <div>
               <button
-                onClick={loading? ()=>{} : handleSwap}
+                onClick={loading ? () => { } : handleSwap}
                 type="submit"
                 className={"object-contain w-full flex justify-center h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600  " + (loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500')}
               >

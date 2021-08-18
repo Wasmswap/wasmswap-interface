@@ -29,6 +29,8 @@ export default function Home() {
 
 
   const handleTokenANameChange = (e: any) => {
+    setTokenAAmount(0)
+    setPrice(0)
     if (e.target.value === tokenBName) {
       setTokenBName(tokenAName)
     }
@@ -45,6 +47,7 @@ export default function Home() {
     setTokenAAmount(e.target.value);
     console.log(e.target.value)
     let price: number = 0;
+    if (!isNaN(+e.target.value)){
     if (tokenAName === 'JUNO') {
       price = await getNativeForTokenPrice({
         nativeAmount: e.target.value * 1000000,
@@ -62,11 +65,16 @@ export default function Home() {
     }
     setPrice(price / 1000000);
   }
+  }
 
   const handleSwitch = () => {
     const tokenA = tokenAName
     setTokenAName(tokenBName)
     setTokenBName(tokenA)
+
+    const aAmount = tokenAAmount
+    setTokenAAmount(tokenBPrice)
+    setPrice(aAmount)
   }
 
   // TODO don't hardwire everything, just for testing
@@ -178,6 +186,7 @@ export default function Home() {
                   placeholder="0.0"
                   value={tokenAAmount}
                   onChange={handleTokenAAmountChange}
+                  autoComplete="off"
                 />
               </div>
               <div>
@@ -211,8 +220,10 @@ export default function Home() {
                   type="text"
                   name="token-b-amount"
                   id="token-b-amount"
-                  className="text-right focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-16 sm:text-sm border-gray-300 rounded-md"
+                  className="text-right block w-full pl-16 sm:text-sm border-gray-300 rounded-md"
                   value={tokenBPrice}
+                  autoComplete="off"
+                  readOnly
                 />
               </div>
             </div>

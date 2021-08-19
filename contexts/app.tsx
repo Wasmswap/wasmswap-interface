@@ -20,10 +20,10 @@ export function AppProvider({
   const [client, setClient] = useState<SigningCosmWasmClient | undefined>(undefined)
 
   const connectWallet = async () => {
-    await window.keplr?.experimentalSuggestChain(chainInfo)
+    await (window as any).keplr?.experimentalSuggestChain(chainInfo)
     const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
-    await window.keplr?.enable(chainId)
-    const offlineSigner = await window?.getOfflineSigner(chainId)
+    await (window as any).keplr?.enable(chainId)
+    const offlineSigner = await (window as any).getOfflineSigner(chainId)
 
     const wasmChainClient = await SigningCosmWasmClient.connectWithSigner(
       process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,

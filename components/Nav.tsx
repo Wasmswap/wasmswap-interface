@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import { PlusIcon } from '@heroicons/react/solid'
+import Image from 'next/image'
 
 interface NavType {
   title?: string
@@ -48,7 +49,7 @@ export default function Example<NavType>({
                 </div>
                 <div className="flex-shrink-0 flex items-center">
                   {logoURL ? (
-                    <img className="lg:block h-10 w-auto" src={logoURL} />
+                    <Image className="lg:block h-10 w-auto" src={logoURL} alt="crab logo" />
                   ) : null}
                   {title ? (
                     <div className="ml-4 text-white">{title}</div>

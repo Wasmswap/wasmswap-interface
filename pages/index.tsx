@@ -29,6 +29,20 @@ export default function Home() {
   const [tokenBBalance, setTokenBBalance] = useState(0)
   const [loading, setLoading] = useState(false)
 
+  const getTokenABalance = () => {
+    if (address && !tokenABalance) {
+      setBalance(tokenAName, setTokenABalance)
+    }
+    return tokenABalance
+  }
+
+  const getTokenBBalance = () => {
+    if (address && !tokenBBalance) {
+      setBalance(tokenBName, setTokenBBalance)
+    }
+    return tokenBBalance
+  }
+
   const setBalance = async (tokenName:string, setter:React.Dispatch<React.SetStateAction<number>>) => {
     setter(await getBalance(tokenName))
   }
@@ -224,7 +238,7 @@ export default function Home() {
                   autoComplete="off"
                 />
               </div>
-              <div className="flex justify-start"><div >Balance:</div> <div className="px-2">{tokenABalance}</div></div>
+              <div className="flex justify-start"><div >Balance:</div> <div className="px-2">{getTokenABalance()}</div></div>
               <div className="flex justify-center">
                 <div>
                   <button
@@ -264,7 +278,7 @@ export default function Home() {
                   readOnly
                 />
               </div>
-              <div className="flex justify-start"><div >Balance:</div> <div className="px-2">{tokenBBalance}</div></div>
+              <div className="flex justify-start"><div >Balance:</div> <div className="px-2">{getTokenBBalance()}</div></div>
             </div>
             <div>
               <button

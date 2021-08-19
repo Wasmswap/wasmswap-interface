@@ -49,7 +49,7 @@ export default function Example<NavType>({
                 </div>
                 <div className="flex-shrink-0 flex items-center">
                   {logoURL ? (
-                    <Image className="lg:block h-10 w-auto" src={logoURL} alt="crab logo" />
+                    <Image className="lg:block h-10 w-auto" src={logoURL} alt="crab logo" width={50} height={40}/>
                   ) : null}
                   {title ? (
                     <div className="ml-4 text-white">{title}</div>

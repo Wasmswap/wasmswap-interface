@@ -287,7 +287,7 @@ export default function Home() {
                 type="submit"
                 className={"object-contain w-full flex justify-center h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600  " + (loading ? 'cursor-not-allowed opacity-70' : 'hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500')}
               >
-                {loading ? <Image src={'/spinner.svg' as any} alt="loading" className="h-6 animate-spin"/> : "Swap"}
+                {loading ? <Image src={'/spinner.svg' as any} alt="loading" className="h-6 animate-spin" width={24} height={24}/> : "Swap"}
               </button>
             </div>
           </div>

@@ -1,12 +1,8 @@
 import { atom } from 'recoil'
 
-export const transactionState = atom<{
-  state: 'IDLE' | 'SUCCESS' | 'ERROR' | 'FETCHING'
-  message: string | null
-}>({
+export const transactionStatusState = atom<
+  'IDLE' | 'SUCCESS' | 'ERROR' | 'FETCHING'
+>({
   key: 'transactionState',
-  default: {
-    state: 'IDLE',
-    message: null,
-  },
+  default: 'IDLE',
 })

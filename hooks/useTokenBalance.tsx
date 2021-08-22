@@ -3,13 +3,13 @@ import { clientState, walletAddressState } from '../state/atoms/walletAtoms'
 import { useEffect, useState } from 'react'
 import TokenList from '../public/token_list.json'
 import { CW20 } from '../services/cw20'
-import { transactionState } from '../state/atoms/transactionAtoms'
+import { transactionStatusState } from '../state/atoms/transactionAtoms'
 
-export const useGetTokenBalance = (tokenName: string) => {
+export const useTokenBalance = (tokenName: string) => {
   const [balance, setBalance] = useState(0)
   const address = useRecoilValue(walletAddressState)
   const client = useRecoilValue(clientState)
-  const transaction = useRecoilValue(transactionState)
+  const transactionStatus = useRecoilValue(transactionStatusState)
 
   useEffect(() => {
     const getTokenBalance = async () => {
@@ -31,7 +31,7 @@ export const useGetTokenBalance = (tokenName: string) => {
     getTokenBalance().then((balance) => {
       setBalance(balance)
     })
-  }, [tokenName, address, client, transaction.state])
+  }, [tokenName, address, client, transactionStatus])
 
   return balance
 }

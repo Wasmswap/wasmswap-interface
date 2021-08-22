@@ -1,159 +1,64 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useAppContext } from 'contexts/app'
-import {
-  getNativeForTokenPrice,
-  getTokenForNativePrice,
-  swapNativeForToken,
-  swapTokenForNative,
-} from 'services/swap'
+import { swapNativeForToken, swapTokenForNative } from 'services/swap'
 import TokenList from 'public/token_list.json'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { CW20 } from 'services/cw20'
 import Image from 'next/image'
 import { useRecoilState } from 'recoil'
-import { tokenAState, tokenBState } from '../state/atoms/tokenAtoms'
-import { useGetTokenBalance } from '../hooks/useGetTokenBalance'
-import { transactionState } from '../state/atoms/transactionAtoms'
+import {
+  tokenAmountState,
+  tokenANameState,
+  tokenBNameState,
+} from '../state/atoms/tokenAtoms'
+import { useTokenBalance } from '../hooks/useTokenBalance'
+import { transactionStatusState } from '../state/atoms/transactionAtoms'
+import { useTokenPrice } from '../hooks/useTokenPrice'
 
 export default function Home() {
   const { address, client } = useAppContext()
 
   const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
 
-  const [transaction, setTransactionState] = useRecoilState(transactionState)
+  const [transactionStatus, setTransactionState] = useRecoilState(
+    transactionStatusState
+  )
 
-  const [tokenAValue, setTokenAValue] = useRecoilState(tokenAState)
-  const tokenAAmount = tokenAValue.amount
-  const setTokenAAmount = (amount) => {
-    setTokenAValue((state) => ({
-      ...state,
-      amount,
-    }))
-  }
+  const [tokenAName, setTokenAName] = useRecoilState(tokenANameState)
+  const [tokenAmount, setTokenAmount] = useRecoilState(tokenAmountState)
 
-  const tokenAName = tokenAValue.name
-  const setTokenAName = (name) => {
-    setTokenAValue((state) => ({
-      ...state,
-      name,
-    }))
-  }
+  const tokenABalance = useTokenBalance(tokenAName)
+  const [tokenBName, setTokenBName] = useRecoilState(tokenBNameState)
 
-  const tokenABalance = useGetTokenBalance(tokenAValue.name)
-  const setTokenABalance = () => {}
-
-  const [tokenBValue, setTokenBValue] = useRecoilState(tokenBState)
-  const tokenBName = tokenBValue.name
-  const setTokenBName = (name) => {
-    setTokenBValue((state) => ({
-      ...state,
-      name,
-    }))
-  }
-
-  const [tokenBPrice, setPrice] = useState(0)
-
-  const tokenBBalance = useGetTokenBalance(tokenBValue.name)
-  const setTokenBBalance = () => {}
-
-  const getTokenABalance = () => {
-    if (address && !tokenABalance) {
-      setBalance(tokenAName, setTokenABalance)
-    }
-    return tokenABalance
-  }
-
-  const getTokenBBalance = () => {
-    if (address && !tokenBBalance) {
-      setBalance(tokenBName, setTokenBBalance)
-    }
-    return tokenBBalance
-  }
-
-  const setBalance = async (
-    tokenName: string,
-    setter: React.Dispatch<React.SetStateAction<number>>
-  ) => {
-    setter(await getBalance(tokenName))
-  }
-
-  const getBalance = async (tokenName: string): Promise<number> => {
-    console.log(tokenName)
-    if (client == undefined) {
-      return 0
-    }
-    if (tokenName === 'JUNO') {
-      const coin = await client.getBalance(address, 'ujuno')
-      console.log(coin)
-      const res = coin ? +coin.amount : 0
-      return res / 1000000
-    }
-    const token = TokenList.tokens.find((x) => x.symbol === tokenName)
-    if (token == undefined) {
-      return 0
-    }
-    const res = +(await CW20(client).use(token.address).balance(address))
-    return res / 1000000
-  }
+  const tokenBPrice = useTokenPrice(tokenAName, tokenAmount)
+  const tokenBBalance = useTokenBalance(tokenBName)
 
   const handleTokenANameChange = (e: any) => {
-    setTokenAAmount(0)
-    setPrice(0)
+    setTokenAmount(0)
     if (e.target.value === tokenBName) {
       setTokenBName(tokenAName)
-      setBalance(tokenAName, setTokenBBalance)
     }
     setTokenAName(e.target.value)
-    setBalance(e.target.value, setTokenABalance)
   }
 
   const handleTokenBNameChange = (e: any) => {
     if (e.target.value === tokenAName) {
       setTokenAName(tokenBName)
-      setBalance(tokenBName, setTokenABalance)
     }
     setTokenBName(e.target.value)
-    setBalance(e.target.value, setTokenBBalance)
   }
 
-  const handleTokenAAmountChange = async (e: any) => {
-    setTokenAAmount(e.target.value)
-    console.log(e.target.value)
-    let price: number = 0
-    if (!isNaN(+e.target.value)) {
-      if (tokenAName === 'JUNO') {
-        price = await getNativeForTokenPrice({
-          nativeAmount: e.target.value * 1000000,
-          swapAddress: contract as string,
-          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-        })
-      } else {
-        // @todo: utilize token's contract from the list
-        // const token = TokenList.tokens.find((x) => x.symbol === tokenAName)
-        price = await getTokenForNativePrice({
-          tokenAmount: e.target.value * 1000000,
-          swapAddress: contract as string,
-          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-        })
-      }
-      setPrice(price / 1000000)
-    }
+  const handletokenAmountChange = (e: any) => {
+    setTokenAmount(Number(e.target.value))
   }
+
+  console.log('re-rendered')
 
   const handleSwitch = () => {
-    const tokenA = tokenAName
     setTokenAName(tokenBName)
-    setTokenBName(tokenA)
-
-    const aAmount = tokenAAmount
-    setTokenAAmount(tokenBPrice)
-    setPrice(aAmount)
-
-    const aBalance = tokenABalance
-    setTokenABalance(tokenBBalance)
-    setTokenBBalance(aBalance)
+    setTokenBName(tokenAName)
+    setTokenAmount(tokenBPrice)
   }
 
   // TODO don't hardwire everything, just for testing
@@ -171,15 +76,12 @@ export default function Home() {
       })
     } else {
       console.log(tokenBPrice)
-      setTransactionState((state) => ({
-        ...state,
-        state: 'FETCHING',
-      }))
+      setTransactionState('FETCHING')
       try {
         if (tokenAName === 'JUNO') {
           await swapNativeForToken({
-            nativeAmount: tokenAAmount * 1000000,
-            price: tokenBPrice,
+            nativeAmount: tokenAmount * 1000000,
+            price: tokenBPrice * 1000000,
             slippage: 0.1,
             senderAddress: address,
             swapAddress: contract as string,
@@ -189,8 +91,8 @@ export default function Home() {
           const token = TokenList.tokens.find((x) => x.symbol === tokenAName)
           if (token) {
             await swapTokenForNative({
-              tokenAmount: tokenAAmount * 1000000,
-              price: tokenBPrice,
+              tokenAmount: tokenAmount * 1000000,
+              price: tokenBPrice * 1000000,
               slippage: 0.1,
               senderAddress: address,
               tokenAddress: token.address,
@@ -219,16 +121,11 @@ export default function Home() {
           progress: undefined,
         })
       }
-      setTokenABalance(await getBalance(tokenAName))
-      setTokenBBalance(await getBalance(tokenBName))
-      setTransactionState((state) => ({
-        ...state,
-        state: 'SUCCESS',
-      }))
+      setTransactionState('SUCCESS')
     }
   }
 
-  const loading = transaction.state === 'FETCHING'
+  const loading = transactionStatus === 'FETCHING'
 
   return (
     <div>
@@ -267,19 +164,20 @@ export default function Home() {
                   </select>
                 </div>
                 <input
-                  type="text"
+                  type="number"
                   name="token-a-amount"
                   id="token-a-amount"
                   className="text-right text-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-16 sm:text-sm border-gray-300 rounded-md"
                   placeholder="0.0"
-                  value={tokenAAmount}
-                  onChange={handleTokenAAmountChange}
+                  min={0}
+                  // max={tokenABalance || 0}
+                  value={tokenAmount}
+                  onChange={handletokenAmountChange}
                   autoComplete="off"
                 />
               </div>
               <div className="flex justify-start">
-                <div>Balance:</div>{' '}
-                <div className="px-2">{getTokenABalance()}</div>
+                <div>Balance:</div> <div className="px-2">{tokenABalance}</div>
               </div>
               <div className="flex justify-center">
                 <div>
@@ -332,8 +230,7 @@ export default function Home() {
                 />
               </div>
               <div className="flex justify-start">
-                <div>Balance:</div>{' '}
-                <div className="px-2">{getTokenBBalance()}</div>
+                <div>Balance:</div> <div className="px-2">{tokenBBalance}</div>
               </div>
             </div>
             <div>

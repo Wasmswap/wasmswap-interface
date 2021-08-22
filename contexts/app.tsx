@@ -30,12 +30,9 @@ export function AppProvider({
       process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
       offlineSigner
     )
-
-    setClient(wasmChainClient)
-
     const [{ address }] = await offlineSigner.getAccounts()
-
     setAddress(address)
+    setClient(wasmChainClient)
   }
 
   const value: AppContextType = { address, client, connectWallet }

@@ -1,16 +1,16 @@
 import { atom } from 'recoil'
 
-export const tokenAState = atom({
-  key: 'tokenAState',
-  default: {
-    amount: 0,
-    name: 'JUNO',
-  },
+export const tokenAmountState = atom({
+  key: 'tokenAmount',
+  default: 0,
 })
 
-export const tokenBState = atom({
+export const tokenANameState = atom({
+  key: 'tokenAState',
+  default: 'JUNO',
+})
+
+export const tokenBNameState = atom({
   key: 'tokenBState',
-  default: {
-    name: 'POOD',
-  },
+  default: 'POOD',
 })

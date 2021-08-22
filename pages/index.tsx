@@ -12,14 +12,17 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { CW20 } from 'services/cw20'
 import Image from 'next/image'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { tokenAState, tokenBState } from '../state/atoms/tokenAtoms'
-import { tokenABalance as tokenABalanceRecoil } from '../state/selectors/tokenSelectors'
+import { useGetTokenBalance } from '../hooks/useGetTokenBalance'
+import { transactionState } from '../state/atoms/transactionAtoms'
 
 export default function Home() {
   const { address, client } = useAppContext()
 
   const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
+
+  const [transaction, setTransactionState] = useRecoilState(transactionState)
 
   const [tokenAValue, setTokenAValue] = useRecoilState(tokenAState)
   const tokenAAmount = tokenAValue.amount
@@ -38,7 +41,8 @@ export default function Home() {
     }))
   }
 
-  const [tokenABalance, setTokenABalance] = useState(0)
+  const tokenABalance = useGetTokenBalance(tokenAValue.name)
+  const setTokenABalance = () => {}
 
   const [tokenBValue, setTokenBValue] = useRecoilState(tokenBState)
   const tokenBName = tokenBValue.name
@@ -49,14 +53,10 @@ export default function Home() {
     }))
   }
 
-  const tokenABalanceRecoilState = useRecoilValue(tokenABalanceRecoil)
-  if (typeof window !== 'undefined') {
-    console.log({ tokenABalanceRecoilState })
-  }
-
   const [tokenBPrice, setPrice] = useState(0)
-  const [tokenBBalance, setTokenBBalance] = useState(0)
-  const [loading, setLoading] = useState(false)
+
+  const tokenBBalance = useGetTokenBalance(tokenBValue.name)
+  const setTokenBBalance = () => {}
 
   const getTokenABalance = () => {
     if (address && !tokenABalance) {
@@ -171,7 +171,10 @@ export default function Home() {
       })
     } else {
       console.log(tokenBPrice)
-      setLoading(true)
+      setTransactionState((state) => ({
+        ...state,
+        state: 'FETCHING',
+      }))
       try {
         if (tokenAName === 'JUNO') {
           await swapNativeForToken({
@@ -218,9 +221,14 @@ export default function Home() {
       }
       setTokenABalance(await getBalance(tokenAName))
       setTokenBBalance(await getBalance(tokenBName))
-      setLoading(false)
+      setTransactionState((state) => ({
+        ...state,
+        state: 'SUCCESS',
+      }))
     }
   }
+
+  const loading = transaction.state === 'FETCHING'
 
   return (
     <div>

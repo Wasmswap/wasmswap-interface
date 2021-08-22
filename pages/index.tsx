@@ -1,12 +1,11 @@
 import React from 'react'
-import { useAppContext } from 'contexts/app'
 import { swapNativeForToken, swapTokenForNative } from 'services/swap'
 import TokenList from 'public/token_list.json'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Image from 'next/image'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   tokenAmountState,
   tokenANameState,
@@ -15,9 +14,10 @@ import {
 import { useTokenBalance } from '../hooks/useTokenBalance'
 import { transactionStatusState } from '../state/atoms/transactionAtoms'
 import { useTokenPrice } from '../hooks/useTokenPrice'
+import { walletState } from '../state/atoms/walletAtoms'
 
 export default function Home() {
-  const { address, client } = useAppContext()
+  const { address, client } = useRecoilValue(walletState)
 
   const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
 

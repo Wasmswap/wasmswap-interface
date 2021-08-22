@@ -1,9 +1,12 @@
 import React from 'react'
-import { useAppContext } from 'contexts/app'
+import { useConnectWallet } from '../hooks/useConnectWallet'
 import Nav from './Nav'
+import { useRecoilValue } from 'recoil'
+import { walletState } from '../state/atoms/walletAtoms'
 
 export default function Layout({ children }) {
-  const { address, connectWallet } = useAppContext()
+  const connectWallet = useConnectWallet()
+  const { address } = useRecoilValue(walletState)
 
   return (
     <>

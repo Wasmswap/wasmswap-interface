@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app'
-import { AppProvider } from 'contexts/app'
 import Layout from 'components/Layout'
 
 import 'tailwindcss/tailwind.css'
@@ -18,15 +17,13 @@ function SafeHydrate({ children }) {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
-      <AppProvider>
-        <Layout>
-          <SafeHydrate>
-            <ErrorBoundary>
-              <Component {...pageProps} />
-            </ErrorBoundary>
-          </SafeHydrate>
-        </Layout>
-      </AppProvider>
+      <Layout>
+        <SafeHydrate>
+          <ErrorBoundary>
+            <Component {...pageProps} />
+          </ErrorBoundary>
+        </SafeHydrate>
+      </Layout>
     </RecoilRoot>
   )
 }

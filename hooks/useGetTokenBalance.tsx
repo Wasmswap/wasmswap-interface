@@ -13,7 +13,7 @@ export const useGetTokenBalance = (tokenName: string) => {
 
   useEffect(() => {
     const getTokenBalance = async () => {
-      if (!client) return 0
+      if (!client || !address) return 0
 
       if (tokenName === 'JUNO') {
         const coin = await client.getBalance(address, 'ujuno')

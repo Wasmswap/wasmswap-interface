@@ -4,14 +4,17 @@ import Layout from 'components/Layout'
 
 import 'tailwindcss/tailwind.css'
 import 'styles/globals.css'
+import { RecoilRoot } from 'recoil'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <AppProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </AppProvider>
+    <RecoilRoot>
+      <AppProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </AppProvider>
+    </RecoilRoot>
   )
 }
 export default MyApp

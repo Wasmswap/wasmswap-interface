@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext } from 'react'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
-import { connectKeplr } from 'services/keplr'
 import { chainInfo } from 'public/chain_info'
+import { useRecoilState } from 'recoil'
+import { clientState, walletAddressState } from '../state/atoms/walletAtoms'
 
 interface AppContextType {
   address: string
@@ -16,8 +17,8 @@ export const useAppContext = (): AppContextType => useContext(AppContext)
 export function AppProvider({
   children,
 }: React.HTMLAttributes<HTMLOrSVGElement>): JSX.Element {
-  const [address, setAddress] = useState('')
-  const [client, setClient] = useState<SigningCosmWasmClient | undefined>(undefined)
+  const [address, setAddress] = useRecoilState(walletAddressState)
+  const [client, setClient] = useRecoilState(clientState)
 
   const connectWallet = async () => {
     await (window as any).keplr?.experimentalSuggestChain(chainInfo)

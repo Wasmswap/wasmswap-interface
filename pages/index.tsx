@@ -49,11 +49,9 @@ export default function Home() {
     setTokenBName(e.target.value)
   }
 
-  const handletokenAmountChange = (e: any) => {
-    setTokenAmount(Number(e.target.value))
+  const handleTokenAmountChange = ({ target: { value } }: any) => {
+    setTokenAmount(Number(value))
   }
-
-  console.log('re-rendered')
 
   const handleSwitch = () => {
     setTokenAName(tokenBName)
@@ -172,7 +170,7 @@ export default function Home() {
                   min={0}
                   // max={tokenABalance || 0}
                   value={tokenAmount}
-                  onChange={handletokenAmountChange}
+                  onChange={handleTokenAmountChange}
                   autoComplete="off"
                 />
               </div>

@@ -1,6 +1,5 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import { Disclosure } from '@headlessui/react'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { PlusIcon } from '@heroicons/react/solid'
 import Image from 'next/image'
 
@@ -22,13 +21,13 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example<NavType>({
+export default function Example({
   title,
   logoURL,
   navItems = [],
   walletAddress,
   onConnectWallet,
-}) {
+}: NavType) {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -49,7 +48,14 @@ export default function Example<NavType>({
                 </div>
                 <div className="flex-shrink-0 flex items-center">
                   {logoURL ? (
-                    <Image className="lg:block h-10 w-auto" src={logoURL} alt="crab logo" width={50} height={40} priority/>
+                    <Image
+                      className="lg:block h-10 w-auto"
+                      src={logoURL}
+                      alt="crab logo"
+                      width={50}
+                      height={40}
+                      priority
+                    />
                   ) : null}
                   {title ? (
                     <div className="ml-4 text-white">{title}</div>

@@ -4,6 +4,7 @@ import {
 } from '../services/swap'
 import { useEffect, useState } from 'react'
 
+// @todo let's get contracts from the token name associated data
 const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
 
 export const useTokenPrice = (tokenName: string, value: number) => {

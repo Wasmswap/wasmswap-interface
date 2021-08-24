@@ -18,9 +18,6 @@ import { SwitchTokensButton } from '../components/SwitchTokensButton'
 import { SwapButton } from '../components/SwapButton'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 
-// @todo let's get contracts from the token name associated data
-const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
-
 export default function Home() {
   const { address, client } = useRecoilValue(walletState)
 

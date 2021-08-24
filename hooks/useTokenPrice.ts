@@ -5,9 +5,6 @@ import {
 import { useEffect, useState } from 'react'
 import { TokenInfo } from './useTokenInfo'
 
-// @todo let's get contracts from the token name associated data
-const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
-
 export const useTokenPrice = (fromTokenInfo: TokenInfo, toTokenInfo: TokenInfo, value: number) => {
   const [price, setPrice] = useState(0)
 

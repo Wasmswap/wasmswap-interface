@@ -27,7 +27,7 @@ export const useTokenPrice = (
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
       })
     }
-    if (fromTokenInfo && value > 0) {
+    if (fromTokenInfo && value >= 0) {
       getPrice().then((receivedPrice) => {
         setPrice(receivedPrice / 1000000)
       })

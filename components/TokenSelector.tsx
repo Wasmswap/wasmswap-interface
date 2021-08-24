@@ -35,7 +35,6 @@ export const TokenSelector = ({
             onChange={handleTokenNameSelect}
             value={tokenName}
           >
-            <option>JUNO</option>
             {tokensList.map((value, key) => (
               <option key={key}>{value.symbol}</option>
             ))}

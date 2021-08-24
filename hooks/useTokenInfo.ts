@@ -4,6 +4,7 @@ import TokenList from '../public/token_list.json'
 export interface TokenInfo {
 chain_id: string;
 token_address: string;
+swap_address: string;
 symbol: string;
 name: string;
 decimals: number;

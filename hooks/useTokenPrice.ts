@@ -3,34 +3,35 @@ import {
   getTokenForNativePrice,
 } from '../services/swap'
 import { useEffect, useState } from 'react'
+import { TokenInfo } from './useTokenInfo'
 
 // @todo let's get contracts from the token name associated data
 const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
 
-export const useTokenPrice = (tokenName: string, value: number) => {
+export const useTokenPrice = (fromTokenInfo: TokenInfo, toTokenInfo: TokenInfo, value: number) => {
   const [price, setPrice] = useState(0)
 
   useEffect(() => {
     const getPrice = async () => {
-      if (tokenName === 'JUNO') {
+      if (fromTokenInfo.symbol === 'JUNO') {
         return await getNativeForTokenPrice({
           nativeAmount: value * 1000000,
-          swapAddress: contract as string,
+          swapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })
       }
       return await getTokenForNativePrice({
         tokenAmount: value * 1000000,
-        swapAddress: contract as string,
+        swapAddress: fromTokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
       })
     }
-    if (tokenName && value > 0) {
+    if (fromTokenInfo && value > 0) {
       getPrice().then((receivedPrice) => {
         setPrice(receivedPrice / 1000000)
       })
     }
-  }, [tokenName, value])
+  }, [fromTokenInfo, toTokenInfo, value])
 
   return price
 }

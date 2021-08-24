@@ -11,13 +11,34 @@
   "timestamp": "2021-06-12T00:00:00+00:00",
   "tokens": [
     {
-      "chain-id": "lucina",
-      "address": "juno1pez5706uvjfz9y4nkx68w3j5ls8yufmvplprge",
+      "chain_id": "lucina",
+      "token_address": "",
+      "swap_address": "",
+      "symbol": "JUNO",
+      "name": "Juno",
+      "decimals": 6,
+      "logoURI": "",
+      "tags": ["native"]
+    },
+    {
+      "chain_id": "lucina",
+      "token_address": "juno1pez5706uvjfz9y4nkx68w3j5ls8yufmvplprge",
+      "swap_address": "juno1mvtl25cganft5ae9rcrqt7nz3ktvwz88m76eds",
       "symbol": "POOD",
       "name": "Poodle Coin",
       "decimals": 6,
       "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
       "tags": ["memecoin"]
+    },
+    {
+      "chain_id": "lucina",
+      "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
+      "swap_address": "juno1q32vls9trywkh7k0vfcrzwzpklrv5tzvsan4fv",
+      "symbol": "CRAB",
+      "name": "Crab Coin",
+      "decimals": 6,
+      "logoURI": "",
+      "tags": ["memecoin"] 
     }
   ],
   "version": {

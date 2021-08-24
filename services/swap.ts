@@ -1,4 +1,7 @@
-import { SigningCosmWasmClient, CosmWasmClient} from '@cosmjs/cosmwasm-stargate'
+import {
+  SigningCosmWasmClient,
+  CosmWasmClient,
+} from '@cosmjs/cosmwasm-stargate'
 import { coin } from '@cosmjs/launchpad'
 
 export interface swapNativeForTokenInput {
@@ -11,14 +14,14 @@ export interface swapNativeForTokenInput {
 }
 
 export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
-  const minToken = Math.floor(input.price * (1-input.slippage))
-  console.log(minToken)
+  const minToken = Math.floor(input.price * (1 - input.slippage))
+  console.log({ minToken })
   const msg = {
-	swap_native_for_token: {
-	  min_token: `${minToken}`,
-	},
-      };
-  console.log(msg);
+    swap_native_for_token: {
+      min_token: `${minToken}`,
+    },
+  }
+  console.log({ msg })
   const execute = await input.client.execute(
     input.senderAddress,
     input.swapAddress,
@@ -26,7 +29,7 @@ export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
     undefined,
     [coin(input.nativeAmount, 'ujuno')]
   )
-  console.log(execute)
+  console.log({ execute })
 
   return execute
 }
@@ -56,7 +59,7 @@ export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
   )
   console.log(executeAllowance)
 
-  const minNative = Math.floor(input.price * (1-input.slippage))
+  const minNative = Math.floor(input.price * (1 - input.slippage))
   const executeSwap = await input.client.execute(
     input.senderAddress,
     input.swapAddress,
@@ -75,7 +78,7 @@ export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
 export interface getNativeForTokenPriceInput {
   nativeAmount: number
   swapAddress: string
-  rpcEndpoint: string 
+  rpcEndpoint: string
 }
 
 export const getNativeForTokenPrice = async (

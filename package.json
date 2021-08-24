@@ -30,7 +30,9 @@
     "next": "11.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-hook-form": "^7.13.0",
     "react-toastify": "^7.0.4",
+    "recoil": "^0.4.0",
     "utf-8-validate": "^5.0.5"
   },
   "devDependencies": {

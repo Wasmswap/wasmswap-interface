@@ -38,6 +38,18 @@ export default function Home() {
   const tokenBBalance = useTokenBalance(tokenBName)
 
   const handleTokenANameSelect = (value: string) => {
+    if(value !== 'JUNO' && tokenBName != 'JUNO') {
+      toast.error('One token must be set to JUNO', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }) 
+      return
+    }
     setTokenAmount(0)
     if (value === tokenBName) {
       setTokenBName(tokenAName)
@@ -46,6 +58,18 @@ export default function Home() {
   }
 
   const handleTokenBNameSelect = (value: string) => {
+    if(value !== 'JUNO' && tokenAName != 'JUNO') {
+      toast.error('One token must be set to JUNO', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }) 
+      return
+    }
     if (value === tokenAName) {
       setTokenAName(tokenBName)
     }

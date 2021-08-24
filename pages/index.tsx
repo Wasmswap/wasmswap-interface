@@ -16,6 +16,7 @@ import { walletState } from '../state/atoms/walletAtoms'
 import { TokenSelector } from '../components/TokenSelector'
 import { SwitchTokensButton } from '../components/SwitchTokensButton'
 import { SwapButton } from '../components/SwapButton'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 
 // @todo let's get contracts from the token name associated data
 const contract = process.env.NEXT_PUBLIC_AMM_CONTRACT_ADDRESS
@@ -30,12 +31,14 @@ export default function Home() {
   // Token A related states
   const [tokenAName, setTokenAName] = useRecoilState(tokenANameState)
   const [tokenAmount, setTokenAmount] = useRecoilState(tokenAmountState)
-  const tokenABalance = useTokenBalance(tokenAName)
+  const tokenAInfo = useTokenInfo(tokenAName)
+  const tokenABalance = useTokenBalance(tokenAInfo)
 
   // Token B related states
   const [tokenBName, setTokenBName] = useRecoilState(tokenBNameState)
   const tokenBPrice = useTokenPrice(tokenAName, tokenAmount)
-  const tokenBBalance = useTokenBalance(tokenBName)
+  const tokenBInfo = useTokenInfo(tokenBName)
+  const tokenBBalance = useTokenBalance(tokenBInfo)
 
   const handleTokenANameSelect = (value: string) => {
     if(value !== 'JUNO' && tokenBName != 'JUNO') {
@@ -116,7 +119,7 @@ export default function Home() {
               price: tokenBPrice * 1000000,
               slippage: 0.1,
               senderAddress: address,
-              tokenAddress: token.address,
+              tokenAddress: token.token_address,
               swapAddress: contract as string,
               client,
             })

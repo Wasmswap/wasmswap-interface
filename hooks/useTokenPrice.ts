@@ -5,7 +5,11 @@ import {
 import { useEffect, useState } from 'react'
 import { TokenInfo } from './useTokenInfo'
 
-export const useTokenPrice = (fromTokenInfo: TokenInfo, toTokenInfo: TokenInfo, value: number) => {
+export const useTokenPrice = (
+  fromTokenInfo: TokenInfo,
+  toTokenInfo: TokenInfo,
+  value: number
+) => {
   const [price, setPrice] = useState(0)
 
   useEffect(() => {

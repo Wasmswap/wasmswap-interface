@@ -34,19 +34,16 @@ export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
   return execute
 }
 
-export interface swapTokenForNativeInput {
+export interface increaseTokenAllowanceInput {
   tokenAmount: number
-  price: number
-  slippage: number
   senderAddress: string
-  swapAddress: string
   tokenAddress: string
+  swapAddress: string
   client: SigningCosmWasmClient
 }
 
-export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
-  // TODO can these call be done in one transaction
-
+export const increaseTokenAllowance = async (input: increaseTokenAllowanceInput) => {
+  console.log(input)
   const executeAllowance = await input.client.execute(
     input.senderAddress,
     input.tokenAddress,
@@ -58,6 +55,19 @@ export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
     }
   )
   console.log(executeAllowance)
+}
+
+export interface swapTokenForNativeInput {
+  tokenAmount: number
+  price: number
+  slippage: number
+  senderAddress: string
+  swapAddress: string
+  tokenAddress: string
+  client: SigningCosmWasmClient
+}
+
+export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
 
   const minNative = Math.floor(input.price * (1 - input.slippage))
   const executeSwap = await input.client.execute(
@@ -84,6 +94,7 @@ export interface getNativeForTokenPriceInput {
 export const getNativeForTokenPrice = async (
   input: getNativeForTokenPriceInput
 ) => {
+  try{
   console.log(input)
   const client = await CosmWasmClient.connect(input.rpcEndpoint)
   const query = await client.queryContractSmart(input.swapAddress, {
@@ -92,8 +103,11 @@ export const getNativeForTokenPrice = async (
     },
   })
   console.log(query)
-
   return query.token_amount
+  } catch(e) {
+    console.log(e)
+  }
+
 }
 
 export interface getTokenForNativePriceInput {
@@ -105,6 +119,7 @@ export interface getTokenForNativePriceInput {
 export const getTokenForNativePrice = async (
   input: getTokenForNativePriceInput
 ) => {
+  try{
   const client = await CosmWasmClient.connect(input.rpcEndpoint)
   const query = await client.queryContractSmart(input.swapAddress, {
     token_for_native_price: {
@@ -112,6 +127,9 @@ export const getTokenForNativePrice = async (
     },
   })
   console.log(query)
-
   return query.native_amount
+}catch(e){
+  console.log(e)
+}
+
 }

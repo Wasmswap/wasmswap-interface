@@ -1,63 +1,149 @@
-import React from 'react'
+import React, { FC } from 'react'
+import styled from 'styled-components'
+import { Text } from './Text'
 
 type TokenSelectorProps = {
   amount: number
   balance?: number
+  blockedTokenSymbol?: string
   tokensList: Array<{ symbol: string; [k: string]: any }>
   tokenName: string
   onAmountChange?: (amount: number) => void
   onTokenNameSelect: (tokenName: string) => void
+  onApplyMaxBalanceClick?: () => void
 }
 
-export const TokenSelector = ({
+export const TokenSelector: FC<TokenSelectorProps> = ({
   balance,
   tokensList,
   amount,
   tokenName,
+  blockedTokenSymbol,
   onAmountChange,
   onTokenNameSelect,
-}: TokenSelectorProps) => {
+  onApplyMaxBalanceClick,
+}) => {
   const handleAmountChange = ({ target: { value } }) =>
     onAmountChange(Number(value))
   const handleTokenNameSelect = ({ target: { value } }) =>
     onTokenNameSelect(value)
+
   return (
-    <>
-      <div className="mt-1 relative rounded-md shadow-sm">
-        <div className="absolute inset-y-0 left-0 flex items-center">
-          <label htmlFor="token-a" className="sr-only">
+    <StyledInputBox>
+      <StyledRow>
+        <StyledTokenWrapper>
+          <label htmlFor="token-a" hidden>
             Token
           </label>
-          <select
+          <Text variant="light">{tokenName}</Text>
+          <StyledSelect
             id="token-a"
             name="token-a"
-            className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-3 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
             onChange={handleTokenNameSelect}
             value={tokenName}
           >
             {tokensList.map((value, key) => (
-              <option key={key}>{value.symbol}</option>
+              <option key={key} disabled={blockedTokenSymbol === value.symbol}>
+                {value.symbol}
+              </option>
             ))}
-          </select>
-        </div>
-        <input
-          type="number"
-          name="token-a-amount"
-          id="token-a-amount"
-          className="text-right text-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-16 sm:text-sm border-gray-300 rounded-md"
-          placeholder="0.0"
-          min={0}
-          value={amount}
-          onChange={onAmountChange ? handleAmountChange : undefined}
-          autoComplete="off"
-          readOnly={!onAmountChange}
-        />
-      </div>
+          </StyledSelect>
+        </StyledTokenWrapper>
+        <Text>
+          <StyledInput
+            type="number"
+            name="token-a-amount"
+            id="token-a-amount"
+            placeholder="0.0"
+            min={0}
+            value={amount}
+            onChange={onAmountChange ? handleAmountChange : undefined}
+            autoComplete="off"
+            readOnly={!onAmountChange}
+          />
+        </Text>
+      </StyledRow>
+
       {typeof balance === 'number' && (
-        <div className="flex justify-start">
-          <div>Balance:</div> <div className="px-2">{balance}</div>
-        </div>
+        <StyledRow>
+          <StyledSubRow>
+            <Text type="caption" variant="light" color="gray">
+              Balance: {balance} {tokenName}
+            </Text>
+            {Boolean(onApplyMaxBalanceClick) && (
+              <StyledLink onClick={onApplyMaxBalanceClick}>(Max)</StyledLink>
+            )}
+          </StyledSubRow>
+
+          <Text type="caption" variant="light" color="gray">
+            $0.00
+          </Text>
+        </StyledRow>
       )}
-    </>
+    </StyledInputBox>
   )
 }
+
+const StyledInputBox = styled.div`
+  background-color: #fafafa;
+  border-radius: 16px;
+  padding: 20px 18px;
+`
+
+const StyledRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  &:not(&:first-child) {
+    padding-top: 10px;
+  }
+`
+
+const StyledSubRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+const StyledTokenWrapper = styled.div`
+  background-color: #fff;
+  border-radius: 12px;
+  position: relative;
+  padding: 8px 12px;
+`
+
+const StyledSelect = styled.select`
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`
+
+const StyledInput = styled.input`
+  border: none;
+  outline: none;
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  width: auto;
+  background: transparent;
+  text-align: right;
+`
+
+const StyledLink = styled(Text).attrs(() => ({
+  variant: 'light',
+  type: 'caption',
+  color: 'light-blue',
+}))`
+  margin-left: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.1s ease-out;
+  &:hover {
+    opacity: 0.75;
+  }
+`

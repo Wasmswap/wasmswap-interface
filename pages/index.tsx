@@ -17,6 +17,10 @@ import { TokenSelector } from '../components/TokenSelector'
 import { SwitchTokensButton } from '../components/SwitchTokensButton'
 import { SwapButton } from '../components/SwapButton'
 import { useTokenInfo } from 'hooks/useTokenInfo'
+import {
+  SwapFormHeading,
+  SwapFormFrame,
+} from '../components/SwapForm/SwapFormStyles'
 
 export default function Home() {
   const { address, client } = useRecoilValue(walletState)
@@ -38,7 +42,7 @@ export default function Home() {
   const tokenBBalance = useTokenBalance(tokenBInfo)
 
   const handleTokenANameSelect = (value: string) => {
-    if(value !== 'JUNO' && tokenBName != 'JUNO') {
+    if (value !== 'JUNO' && tokenBName != 'JUNO') {
       toast.error('One token must be set to JUNO', {
         position: 'top-right',
         autoClose: 5000,
@@ -47,7 +51,7 @@ export default function Home() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      }) 
+      })
       return
     }
     setTokenAmount(0)
@@ -58,7 +62,7 @@ export default function Home() {
   }
 
   const handleTokenBNameSelect = (value: string) => {
-    if(value !== 'JUNO' && tokenAName != 'JUNO') {
+    if (value !== 'JUNO' && tokenAName != 'JUNO') {
       toast.error('One token must be set to JUNO', {
         position: 'top-right',
         autoClose: 5000,
@@ -67,7 +71,7 @@ export default function Home() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      }) 
+      })
       return
     }
     if (value === tokenAName) {
@@ -84,8 +88,7 @@ export default function Home() {
 
   // TODO don't hardwire everything, just for testing
   const handleSwap = async () => {
-    console.log(client)
-    if (client == undefined) {
+    if (!client) {
       toast.error('Please connect wallet', {
         position: 'top-right',
         autoClose: 5000,
@@ -96,7 +99,6 @@ export default function Home() {
         progress: undefined,
       })
     } else {
-      console.log(tokenBPrice)
       setTransactionState('FETCHING')
       try {
         if (tokenAName === 'JUNO') {
@@ -109,15 +111,15 @@ export default function Home() {
             client,
           })
         } else {
-            await swapTokenForNative({
-              tokenAmount: tokenAmount * 1000000,
-              price: tokenBPrice * 1000000,
-              slippage: 0.1,
-              senderAddress: address,
-              tokenAddress: tokenAInfo.token_address,
-              swapAddress: tokenAInfo.swap_address,
-              client,
-            })
+          await swapTokenForNative({
+            tokenAmount: tokenAmount * 1000000,
+            price: tokenBPrice * 1000000,
+            slippage: 0.1,
+            senderAddress: address,
+            tokenAddress: tokenAInfo.token_address,
+            swapAddress: tokenAInfo.swap_address,
+            client,
+          })
         }
         toast.success('🎉 Swap Succesful', {
           position: 'top-right',
@@ -144,49 +146,52 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <div className="space-y-6">
-            Swap
-            <div>
-              <TokenSelector
-                amount={tokenAmount}
-                balance={tokenABalance}
-                tokensList={TokenList.tokens}
-                tokenName={tokenAName}
-                onAmountChange={setTokenAmount}
-                onTokenNameSelect={handleTokenANameSelect}
-              />
-              <SwitchTokensButton onClick={handleSwitch} />
-              <TokenSelector
-                amount={tokenBPrice}
-                balance={tokenBBalance}
-                tokensList={TokenList.tokens}
-                tokenName={tokenBName}
-                onTokenNameSelect={handleTokenBNameSelect}
-              />
-            </div>
-            <div>
-              <SwapButton
-                isLoading={transactionStatus === 'FETCHING'}
-                onClick={handleSwap}
-              />
-            </div>
-          </div>
+    <SwapFormFrame>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="space-y-6">
+          <SwapFormHeading>Swap</SwapFormHeading>
+          <TokenSelector
+            amount={tokenAmount}
+            balance={tokenABalance}
+            blockedTokenSymbol={tokenBName}
+            tokensList={TokenList.tokens}
+            tokenName={tokenAName}
+            onAmountChange={setTokenAmount}
+            onTokenNameSelect={handleTokenANameSelect}
+            onApplyMaxBalanceClick={
+              tokenABalance
+                ? () => {
+                    setTokenAmount(tokenABalance)
+                  }
+                : undefined
+            }
+          />
+          <SwitchTokensButton onClick={handleSwitch} />
+          <TokenSelector
+            amount={tokenBPrice}
+            balance={tokenBBalance}
+            blockedTokenSymbol={tokenAName}
+            tokensList={TokenList.tokens}
+            tokenName={tokenBName}
+            onTokenNameSelect={handleTokenBNameSelect}
+          />
+          <SwapButton
+            isLoading={transactionStatus === 'FETCHING'}
+            onClick={handleSwap}
+          />
         </div>
       </div>
-    </div>
+    </SwapFormFrame>
   )
 }

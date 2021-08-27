@@ -33,7 +33,13 @@ export const StyledButton = styled.button<ButtonProps>`
     props.size === 'humongous' ? '24px' : '12px 14px'};
   width: ${(props: ButtonProps) =>
     props.size === 'humongous' ? '100%' : 'auto'};
-  background-color: ${colorTokens.black};
+  background-color: ${({ disabled }) => {
+    return disabled ? colorTokens.gray : colorTokens.black
+  }};
+  cursor: ${({ disabled }) => {
+    return disabled ? 'auto' : 'pointer'
+  }};
+
   transition: opacity 0.1s ease-out;
 
   &:hover {

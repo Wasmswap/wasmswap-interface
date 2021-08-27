@@ -1,5 +1,9 @@
-import React from 'react'
-import { swapNativeForToken, swapTokenForNative } from 'services/swap'
+import React, { useEffect } from 'react'
+import {
+  swapNativeForToken,
+  swapTokenForNative,
+  increaseTokenAllowance,
+} from 'services/swap'
 import TokenList from 'public/token_list.json'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -28,7 +32,6 @@ export default function Home() {
   const [transactionStatus, setTransactionState] = useRecoilState(
     transactionStatusState
   )
-
   // Token A related states
   const [tokenAName, setTokenAName] = useRecoilState(tokenANameState)
   const [tokenAmount, setTokenAmount] = useRecoilState(tokenAmountState)
@@ -41,8 +44,13 @@ export default function Home() {
   const tokenBPrice = useTokenPrice(tokenAInfo, tokenBInfo, tokenAmount)
   const tokenBBalance = useTokenBalance(tokenBInfo)
 
+  // Reset transaction state everytime token names or amount names change
+  useEffect(() => {
+    setTransactionState('IDLE')
+  }, [tokenAName, tokenAmount, tokenBName, setTransactionState])
+
   const handleTokenANameSelect = (value: string) => {
-    if (value !== 'JUNO' && tokenBName != 'JUNO') {
+    if (value !== 'JUNO' && tokenBName !== 'JUNO') {
       toast.error('One token must be set to JUNO', {
         position: 'top-right',
         autoClose: 5000,
@@ -59,6 +67,10 @@ export default function Home() {
       setTokenBName(tokenAName)
     }
     setTokenAName(value)
+  }
+
+  const handleTokenAmountChange = (val: number) => {
+    setTokenAmount(val)
   }
 
   const handleTokenBNameSelect = (value: string) => {
@@ -86,6 +98,53 @@ export default function Home() {
     setTokenAmount(tokenBPrice)
   }
 
+  const approveAllowance = async () => {
+    if (client == undefined) {
+      toast.error('Please connect wallet', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+      return
+    }
+    try {
+      setTransactionState('APPROVING_ALLOWANCE')
+      await increaseTokenAllowance({
+        tokenAmount: tokenAmount * 1000000,
+        senderAddress: address,
+        tokenAddress: tokenAInfo.token_address,
+        swapAddress: tokenAInfo.swap_address,
+        client,
+      })
+      toast.success('Permissions Succesful', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+      setTransactionState('ALLOWANCE_APPROVED')
+    } catch (e) {
+      toast.error(`Error with granting permissions ${e}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+      console.log(e)
+      setTransactionState('IDLE')
+    }
+  }
+
   // TODO don't hardwire everything, just for testing
   const handleSwap = async () => {
     if (!client) {
@@ -99,7 +158,7 @@ export default function Home() {
         progress: undefined,
       })
     } else {
-      setTransactionState('FETCHING')
+      setTransactionState('EXECUTING_SWAP')
       try {
         if (tokenAName === 'JUNO') {
           await swapNativeForToken({
@@ -141,7 +200,7 @@ export default function Home() {
           progress: undefined,
         })
       }
-      setTransactionState('SUCCESS')
+      setTransactionState('IDLE')
     }
   }
 
@@ -165,7 +224,7 @@ export default function Home() {
           balance={tokenABalance}
           tokensList={TokenList.tokens}
           tokenName={tokenAName}
-          onAmountChange={setTokenAmount}
+          onAmountChange={handleTokenAmountChange}
           onTokenNameSelect={handleTokenANameSelect}
           onApplyMaxBalanceClick={
             tokenABalance
@@ -183,10 +242,27 @@ export default function Home() {
           tokenName={tokenBName}
           onTokenNameSelect={handleTokenBNameSelect}
         />
-        <SwapButton
-          isLoading={transactionStatus === 'FETCHING'}
-          onClick={handleSwap}
-        />
+
+        <section>
+          {tokenAName !== 'JUNO' && (
+            <SwapButton
+              isLoading={transactionStatus === 'APPROVING_ALLOWANCE'}
+              isActive={transactionStatus === 'IDLE'}
+              onClick={approveAllowance}
+              label={`Allow Wasmswap to access your ${tokenAName}`}
+            />
+          )}
+
+          <SwapButton
+            isLoading={transactionStatus === 'EXECUTING_SWAP'}
+            isActive={
+              tokenAName === 'JUNO' ||
+              transactionStatus === 'ALLOWANCE_APPROVED'
+            }
+            onClick={handleSwap}
+            label="Swap"
+          />
+        </section>
       </SwapFormFrame>
     </>
   )

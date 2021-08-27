@@ -1,19 +1,26 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { FC } from 'react'
 import { Button } from './Button'
 import styled from 'styled-components'
 
-export const SwapButton = ({
-  isLoading,
-  onClick,
-}: {
+type SwapButtonProps = {
   isLoading: boolean
+  isActive: boolean
   onClick: () => void
+  label: string
+}
+
+export const SwapButton: FC<SwapButtonProps> = ({
+  isLoading,
+  isActive,
+  onClick,
+  label,
 }) => (
   <StyledButtonWrapper>
     <Button
       size="humongous"
       onClick={isLoading ? undefined : onClick}
+      disabled={!isActive}
       type="submit"
     >
       {isLoading ? (
@@ -25,7 +32,7 @@ export const SwapButton = ({
           height={24}
         />
       ) : (
-        'Swap'
+        label
       )}
     </Button>
   </StyledButtonWrapper>
@@ -33,4 +40,7 @@ export const SwapButton = ({
 
 export const StyledButtonWrapper = styled.div`
   padding: 18px 0 32px;
+  &:not(&:last-child) {
+    padding-bottom: 0;
+  }
 `

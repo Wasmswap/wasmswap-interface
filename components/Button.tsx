@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
 
-const resetStyles = css`
+export const resetStyles = css`
   text-transform: none;
   -webkit-appearance: button;
   padding: 0;

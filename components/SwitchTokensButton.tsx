@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, FC } from 'react'
 import styled from 'styled-components'
 import { restStylesForButton } from './Button'
 import { colorTokens } from '../util/constants'
 
-export const SwitchTokensButton = ({ onClick }: { onClick: () => void }) => {
+type SwitchTokensButtonProps = { onClick: () => void }
+
+export const SwitchTokensButton: FC<SwitchTokensButtonProps> = ({
+  onClick,
+}) => {
   const [flipped, setFlipped] = useState(false)
 
   function handleClick() {

@@ -5,14 +5,14 @@ import styled from 'styled-components'
 
 type SwapButtonProps = {
   isLoading: boolean
-  isActive: boolean
+  isActive?: boolean
   onClick: () => void
   label: string
 }
 
 export const SwapButton: FC<SwapButtonProps> = ({
   isLoading,
-  isActive,
+  isActive = true,
   onClick,
   label,
 }) => (
@@ -20,7 +20,7 @@ export const SwapButton: FC<SwapButtonProps> = ({
     <Button
       size="humongous"
       onClick={isLoading ? undefined : onClick}
-      disabled={!isActive}
+      disabled={!isActive || isLoading}
       type="submit"
     >
       {isLoading ? (

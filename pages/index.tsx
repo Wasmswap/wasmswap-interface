@@ -245,23 +245,31 @@ export default function Home() {
 
         <section>
           {tokenAName !== 'JUNO' && (
+            <>
+              <SwapButton
+                isLoading={transactionStatus === 'APPROVING_ALLOWANCE'}
+                isActive={transactionStatus === 'IDLE'}
+                onClick={approveAllowance}
+                label={`Allow Wasmswap to access your ${tokenAName}`}
+              />
+              {['EXECUTING_SWAP', 'ALLOWANCE_APPROVED'].includes(
+                transactionStatus
+              ) && (
+                <SwapButton
+                  isLoading={transactionStatus === 'EXECUTING_SWAP'}
+                  onClick={handleSwap}
+                  label="Swap"
+                />
+              )}
+            </>
+          )}
+          {tokenAName === 'JUNO' && (
             <SwapButton
-              isLoading={transactionStatus === 'APPROVING_ALLOWANCE'}
-              isActive={transactionStatus === 'IDLE'}
-              onClick={approveAllowance}
-              label={`Allow Wasmswap to access your ${tokenAName}`}
+              isLoading={transactionStatus === 'EXECUTING_SWAP'}
+              onClick={handleSwap}
+              label="Swap"
             />
           )}
-
-          <SwapButton
-            isLoading={transactionStatus === 'EXECUTING_SWAP'}
-            isActive={
-              tokenAName === 'JUNO' ||
-              transactionStatus === 'ALLOWANCE_APPROVED'
-            }
-            onClick={handleSwap}
-            label="Swap"
-          />
         </section>
       </SwapFormFrame>
     </>

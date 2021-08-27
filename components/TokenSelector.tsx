@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
+import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Text } from './Text'
+import { colorTokens } from '../util/constants'
 
 type TokenSelectorProps = {
   amount: number
   balance?: number
-  blockedTokenSymbol?: string
   tokensList: Array<{ symbol: string; [k: string]: any }>
   tokenName: string
   onAmountChange?: (amount: number) => void
@@ -18,7 +19,6 @@ export const TokenSelector: FC<TokenSelectorProps> = ({
   tokensList,
   amount,
   tokenName,
-  blockedTokenSymbol,
   onAmountChange,
   onTokenNameSelect,
   onApplyMaxBalanceClick,
@@ -36,6 +36,7 @@ export const TokenSelector: FC<TokenSelectorProps> = ({
             Token
           </label>
           <Text variant="light">{tokenName}</Text>
+          <StyledChevronDownIcon color={colorTokens.black} />
           <StyledSelect
             id="token-a"
             name="token-a"
@@ -43,9 +44,7 @@ export const TokenSelector: FC<TokenSelectorProps> = ({
             value={tokenName}
           >
             {tokensList.map((value, key) => (
-              <option key={key} disabled={blockedTokenSymbol === value.symbol}>
-                {value.symbol}
-              </option>
+              <option key={key}>{value.symbol}</option>
             ))}
           </StyledSelect>
         </StyledTokenWrapper>
@@ -107,6 +106,8 @@ const StyledSubRow = styled.div`
 `
 
 const StyledTokenWrapper = styled.div`
+  display: flex;
+  align-items: center;
   background-color: #fff;
   border-radius: 12px;
   position: relative;
@@ -146,4 +147,10 @@ const StyledLink = styled(Text).attrs(() => ({
   &:hover {
     opacity: 0.75;
   }
+`
+
+const StyledChevronDownIcon = styled(ChevronDownIcon)`
+  width: 24px;
+  height: 24px;
+  margin-left: 12px;
 `

@@ -1,24 +1,25 @@
 import React from 'react'
-import { useConnectWallet } from '../hooks/useConnectWallet'
-import Nav from './Nav'
-import { useRecoilValue } from 'recoil'
-import { walletState } from '../state/atoms/walletAtoms'
+import styled from 'styled-components'
+import { NavigationBar } from './NavigationBar'
+import { FooterBar } from './FooterBar'
+import { AppBackground } from './AppBackground'
 
 export default function Layout({ children }) {
-  const connectWallet = useConnectWallet()
-  const { address } = useRecoilValue(walletState)
-
   return (
-    <>
-      <Nav
-        title={process.env.NEXT_PUBLIC_SITE_TITLE}
-        logoURL={process.env.NEXT_PUBLIC_LOGO_URL}
-        walletAddress={address}
-        onConnectWallet={connectWallet}
-      />
-      <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</div>
-      </main>
-    </>
+    <AppBackground>
+      <StyledWrapper>
+        <NavigationBar />
+        <main>{children}</main>
+        <FooterBar />
+      </StyledWrapper>
+    </AppBackground>
   )
 }
+
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+`

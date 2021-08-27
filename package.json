@@ -22,15 +22,12 @@
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.3",
     "@stargazefi/util": "^0.0.3",
-    "@tailwindcss/aspect-ratio": "^0.2.1",
-    "@tailwindcss/forms": "^0.3.3",
     "bufferutil": "^4.0.3",
     "mobx": "^6.3.2",
     "mobx-react": "^7.2.0",
     "next": "11.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-hook-form": "^7.13.0",
     "react-toastify": "^7.0.4",
     "recoil": "^0.4.0",
     "styled-components": "^5.3.1",
@@ -43,7 +40,6 @@
     "eslint-config-next": "11.0.1",
     "postcss": "^8.3.5",
     "prettier": "^2.3.2",
-    "tailwindcss": "^2.2.4",
     "typescript": "4.3.5"
   }
 }

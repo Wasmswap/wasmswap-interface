@@ -146,11 +146,11 @@ export default function Home() {
   }
 
   return (
-    <SwapFormFrame>
+    <>
       <ToastContainer
         position="top-right"
         autoClose={5000}
-        hideProgressBar={false}
+        hideProgressBar={true}
         newestOnTop
         closeOnClick
         rtl={false}
@@ -158,40 +158,36 @@ export default function Home() {
         draggable
         pauseOnHover
       />
-      <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <div className="space-y-6">
-          <SwapFormHeading>Swap</SwapFormHeading>
-          <TokenSelector
-            amount={tokenAmount}
-            balance={tokenABalance}
-            blockedTokenSymbol={tokenBName}
-            tokensList={TokenList.tokens}
-            tokenName={tokenAName}
-            onAmountChange={setTokenAmount}
-            onTokenNameSelect={handleTokenANameSelect}
-            onApplyMaxBalanceClick={
-              tokenABalance
-                ? () => {
-                    setTokenAmount(tokenABalance)
-                  }
-                : undefined
-            }
-          />
-          <SwitchTokensButton onClick={handleSwitch} />
-          <TokenSelector
-            amount={tokenBPrice}
-            balance={tokenBBalance}
-            blockedTokenSymbol={tokenAName}
-            tokensList={TokenList.tokens}
-            tokenName={tokenBName}
-            onTokenNameSelect={handleTokenBNameSelect}
-          />
-          <SwapButton
-            isLoading={transactionStatus === 'FETCHING'}
-            onClick={handleSwap}
-          />
-        </div>
-      </div>
-    </SwapFormFrame>
+      <SwapFormFrame>
+        <SwapFormHeading>Swap</SwapFormHeading>
+        <TokenSelector
+          amount={tokenAmount}
+          balance={tokenABalance}
+          tokensList={TokenList.tokens}
+          tokenName={tokenAName}
+          onAmountChange={setTokenAmount}
+          onTokenNameSelect={handleTokenANameSelect}
+          onApplyMaxBalanceClick={
+            tokenABalance
+              ? () => {
+                  setTokenAmount(tokenABalance)
+                }
+              : undefined
+          }
+        />
+        <SwitchTokensButton onClick={handleSwitch} />
+        <TokenSelector
+          amount={tokenBPrice}
+          balance={tokenBBalance}
+          tokensList={TokenList.tokens}
+          tokenName={tokenBName}
+          onTokenNameSelect={handleTokenBNameSelect}
+        />
+        <SwapButton
+          isLoading={transactionStatus === 'FETCHING'}
+          onClick={handleSwap}
+        />
+      </SwapFormFrame>
+    </>
   )
 }

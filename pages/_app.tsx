@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
-import { AppBackground } from '../components/AppBackground'
 
 function SafeHydrate({ children }) {
   return (
@@ -17,13 +16,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
       <SafeHydrate>
-        <AppBackground>
-          <ErrorBoundary>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ErrorBoundary>
-        </AppBackground>
+        <ErrorBoundary>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ErrorBoundary>
       </SafeHydrate>
     </RecoilRoot>
   )

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
 
-export const resetStyles = css`
+export const restStylesForButton = css`
   text-transform: none;
   -webkit-appearance: button;
   padding: 0;
@@ -22,7 +22,7 @@ type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
 }
 
 export const StyledButton = styled.button<ButtonProps>`
-  ${resetStyles};
+  ${restStylesForButton};
   text-align: center;
   display: flex;
   justify-content: center;
@@ -37,7 +37,11 @@ export const StyledButton = styled.button<ButtonProps>`
   transition: opacity 0.1s ease-out;
 
   &:hover {
-    opacity: 0.75;
+    opacity: 0.9;
+  }
+
+  &:active {
+    opacity: 0.85;
   }
 `
 

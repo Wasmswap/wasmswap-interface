@@ -55,12 +55,24 @@ const GithubIcon = () => (
   </StyledGithubIconSvg>
 )
 
+const setMobileStyles = (styles) => `
+  @media only screen and (max-width: 500px) {
+    ${styles}
+  }
+`
+
 const StyledRow = styled.div<{ $fullWidth: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   width: ${(p) => (p.$fullWidth ? '100%' : 'auto')};
   padding: 18px 0;
+  ${setMobileStyles(`
+    justify-content: center;
+    flex-direction: column;
+  `)}
+  }
 `
 
 const StyledLink = styled(Text).attrs(() => ({ variant: 'light', as: 'a' }))`
@@ -74,4 +86,8 @@ const StyledLink = styled(Text).attrs(() => ({ variant: 'light', as: 'a' }))`
   &:active {
     opacity: 0.9;
   }
+
+  ${setMobileStyles(`
+    padding: 5px 0;
+  `)}
 `

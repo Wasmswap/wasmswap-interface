@@ -5,6 +5,9 @@ body {
   margin: 0;
   font-family: -apple-system, Open Sans, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  min-width: 320px;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 a {

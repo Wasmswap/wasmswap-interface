@@ -126,11 +126,11 @@ const StyledSelect = styled.select`
 const StyledInput = styled.input`
   border: none;
   outline: none;
-  display: inline;
+  display: block;
+  width: 100%;
   font-family: inherit;
   font-size: inherit;
   padding: 0;
-  width: auto;
   background: transparent;
   text-align: right;
 `

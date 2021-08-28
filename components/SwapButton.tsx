@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import React, { FC } from 'react'
 import { Button } from './Button'
 import styled from 'styled-components'
+import { Spinner } from './Spinner'
 
 type SwapButtonProps = {
   isLoading: boolean
@@ -23,17 +23,7 @@ export const SwapButton: FC<SwapButtonProps> = ({
       disabled={!isActive || isLoading}
       type="submit"
     >
-      {isLoading ? (
-        <Image
-          src={'/spinner.svg' as any}
-          alt="loading"
-          className="h-6 animate-spin"
-          width={24}
-          height={24}
-        />
-      ) : (
-        label
-      )}
+      {isLoading ? <Spinner /> : label}
     </Button>
   </StyledButtonWrapper>
 )

@@ -1,36 +1,46 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { FC } from 'react'
+import { Button } from './Button'
+import styled from 'styled-components'
 
-export const SwapButton = ({
-  isLoading,
-  isActive,
-  onClick,
-}: {
+type SwapButtonProps = {
   isLoading: boolean
-  isActive: boolean
+  isActive?: boolean
   onClick: () => void
+  label: string
+}
+
+export const SwapButton: FC<SwapButtonProps> = ({
+  isLoading,
+  isActive = true,
+  onClick,
+  label,
 }) => (
-  <button
-    onClick={isLoading ? () => {} : onClick}
-    type="submit"
-    className={
-      'object-contain w-full flex justify-center h-10 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600  ' +
-      ((isLoading || !isActive)
-        ? 'cursor-not-allowed opacity-50'
-        : 'hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500')
-    }
-    disabled={!isActive}
-  >
-    {(isLoading) ? (
-      <Image
-        src={'/spinner.svg' as any}
-        alt="loading"
-        className="h-6 animate-spin"
-        width={24}
-        height={24}
-      />
-    ) : (
-      'Swap'
-    )}
-  </button>
+  <StyledButtonWrapper>
+    <Button
+      size="humongous"
+      onClick={isLoading ? undefined : onClick}
+      disabled={!isActive || isLoading}
+      type="submit"
+    >
+      {isLoading ? (
+        <Image
+          src={'/spinner.svg' as any}
+          alt="loading"
+          className="h-6 animate-spin"
+          width={24}
+          height={24}
+        />
+      ) : (
+        label
+      )}
+    </Button>
+  </StyledButtonWrapper>
 )
+
+export const StyledButtonWrapper = styled.div`
+  padding: 18px 0 32px;
+  &:not(&:last-child) {
+    padding-bottom: 0;
+  }
+`

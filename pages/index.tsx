@@ -1,5 +1,9 @@
-import React from 'react'
-import { swapNativeForToken, swapTokenForNative, increaseTokenAllowance } from 'services/swap'
+import React, { useEffect } from 'react'
+import {
+  swapNativeForToken,
+  swapTokenForNative,
+  increaseTokenAllowance,
+} from 'services/swap'
 import TokenList from 'public/token_list.json'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -17,7 +21,10 @@ import { TokenSelector } from '../components/TokenSelector'
 import { SwitchTokensButton } from '../components/SwitchTokensButton'
 import { SwapButton } from '../components/SwapButton'
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { AllowanceButton } from 'components/AllowanceButton'
+import {
+  SwapFormHeading,
+  SwapFormFrame,
+} from '../components/SwapForm/SwapFormStyles'
 
 export default function Home() {
   const { address, client } = useRecoilValue(walletState)
@@ -25,11 +32,6 @@ export default function Home() {
   const [transactionStatus, setTransactionState] = useRecoilState(
     transactionStatusState
   )
-
-  const resetTransactionState = () => {
-    setTransactionState('IDLE')
-  }
-
   // Token A related states
   const [tokenAName, setTokenAName] = useRecoilState(tokenANameState)
   const [tokenAmount, setTokenAmount] = useRecoilState(tokenAmountState)
@@ -42,9 +44,13 @@ export default function Home() {
   const tokenBPrice = useTokenPrice(tokenAInfo, tokenBInfo, tokenAmount)
   const tokenBBalance = useTokenBalance(tokenBInfo)
 
+  // Reset transaction state everytime token names or amount names change
+  useEffect(() => {
+    setTransactionState('IDLE')
+  }, [tokenAName, tokenAmount, tokenBName, setTransactionState])
 
   const handleTokenANameSelect = (value: string) => {
-    if(value !== 'JUNO' && tokenBName != 'JUNO') {
+    if (value !== 'JUNO' && tokenBName !== 'JUNO') {
       toast.error('One token must be set to JUNO', {
         position: 'top-right',
         autoClose: 5000,
@@ -53,7 +59,7 @@ export default function Home() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      }) 
+      })
       return
     }
     setTokenAmount(0)
@@ -61,17 +67,14 @@ export default function Home() {
       setTokenBName(tokenAName)
     }
     setTokenAName(value)
-    resetTransactionState()
   }
 
   const handleTokenAmountChange = (val: number) => {
     setTokenAmount(val)
-    resetTransactionState()
   }
 
-
   const handleTokenBNameSelect = (value: string) => {
-    if(value !== 'JUNO' && tokenAName != 'JUNO') {
+    if (value !== 'JUNO' && tokenAName != 'JUNO') {
       toast.error('One token must be set to JUNO', {
         position: 'top-right',
         autoClose: 5000,
@@ -80,21 +83,19 @@ export default function Home() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      }) 
+      })
       return
     }
     if (value === tokenAName) {
       setTokenAName(tokenBName)
     }
     setTokenBName(value)
-    resetTransactionState()
   }
 
   const handleSwitch = () => {
     setTokenAName(tokenBName)
     setTokenBName(tokenAName)
     setTokenAmount(tokenBPrice)
-    resetTransactionState()
   }
 
   const approveAllowance = async () => {
@@ -109,7 +110,7 @@ export default function Home() {
         progress: undefined,
       })
       return
-    } 
+    }
     try {
       setTransactionState('APPROVING_ALLOWANCE')
       await increaseTokenAllowance({
@@ -117,7 +118,7 @@ export default function Home() {
         senderAddress: address,
         tokenAddress: tokenAInfo.token_address,
         swapAddress: tokenAInfo.swap_address,
-        client
+        client,
       })
       toast.success('Permissions Succesful', {
         position: 'top-right',
@@ -129,25 +130,24 @@ export default function Home() {
         progress: undefined,
       })
       setTransactionState('ALLOWANCE_APPROVED')
-  } catch (e) {
-    toast.error(`Error with granting permissions ${e}`, {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    })
-    console.log(e)
-    resetTransactionState()
-  }
+    } catch (e) {
+      toast.error(`Error with granting permissions ${e}`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+      console.log(e)
+      setTransactionState('IDLE')
+    }
   }
 
   // TODO don't hardwire everything, just for testing
   const handleSwap = async () => {
-    console.log(client)
-    if (client == undefined) {
+    if (!client) {
       toast.error('Please connect wallet', {
         position: 'top-right',
         autoClose: 5000,
@@ -158,7 +158,6 @@ export default function Home() {
         progress: undefined,
       })
     } else {
-      console.log(tokenBPrice)
       setTransactionState('EXECUTING_SWAP')
       try {
         if (tokenAName === 'JUNO') {
@@ -171,15 +170,15 @@ export default function Home() {
             client,
           })
         } else {
-            await swapTokenForNative({
-              tokenAmount: tokenAmount * 1000000,
-              price: tokenBPrice * 1000000,
-              slippage: 0.1,
-              senderAddress: address,
-              tokenAddress: tokenAInfo.token_address,
-              swapAddress: tokenAInfo.swap_address,
-              client,
-            })
+          await swapTokenForNative({
+            tokenAmount: tokenAmount * 1000000,
+            price: tokenBPrice * 1000000,
+            slippage: 0.1,
+            senderAddress: address,
+            tokenAddress: tokenAInfo.token_address,
+            swapAddress: tokenAInfo.swap_address,
+            client,
+          })
         }
         toast.success('🎉 Swap Succesful', {
           position: 'top-right',
@@ -201,62 +200,78 @@ export default function Home() {
           progress: undefined,
         })
       }
-      resetTransactionState()
+      setTransactionState('IDLE')
     }
   }
 
   return (
-    <div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
+    <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <SwapFormFrame>
+        <SwapFormHeading>Swap</SwapFormHeading>
+        <TokenSelector
+          amount={tokenAmount}
+          balance={tokenABalance}
+          tokensList={TokenList.tokens}
+          tokenName={tokenAName}
+          onAmountChange={handleTokenAmountChange}
+          onTokenNameSelect={handleTokenANameSelect}
+          onApplyMaxBalanceClick={
+            tokenABalance
+              ? () => {
+                  setTokenAmount(tokenABalance)
+                }
+              : undefined
+          }
         />
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <div className="space-y-6">
-            Swap
-            <div>
-              <TokenSelector
-                amount={tokenAmount}
-                balance={tokenABalance}
-                tokensList={TokenList.tokens}
-                tokenName={tokenAName}
-                onAmountChange={handleTokenAmountChange}
-                onTokenNameSelect={handleTokenANameSelect}
-              />
-              <SwitchTokensButton onClick={handleSwitch} />
-              <TokenSelector
-                amount={tokenBPrice}
-                balance={tokenBBalance}
-                tokensList={TokenList.tokens}
-                tokenName={tokenBName}
-                onTokenNameSelect={handleTokenBNameSelect}
-              />
-            </div>
-            <AllowanceButton
-                tokenName={tokenAName}
-                isVisible={tokenAName !== "JUNO"}
+        <SwitchTokensButton onClick={handleSwitch} />
+        <TokenSelector
+          amount={tokenBPrice}
+          balance={tokenBBalance}
+          tokensList={TokenList.tokens}
+          tokenName={tokenBName}
+          onTokenNameSelect={handleTokenBNameSelect}
+        />
+
+        <section>
+          {tokenAName !== 'JUNO' && (
+            <>
+              <SwapButton
                 isLoading={transactionStatus === 'APPROVING_ALLOWANCE'}
                 isActive={transactionStatus === 'IDLE'}
                 onClick={approveAllowance}
+                label={`Allow Wasmswap to access your ${tokenAName}`}
               />
-            <div>
-              <SwapButton
-                isLoading={transactionStatus === 'EXECUTING_SWAP'}
-                isActive={tokenAName === "JUNO" || transactionStatus === 'ALLOWANCE_APPROVED'}
-                onClick={handleSwap}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              {['EXECUTING_SWAP', 'ALLOWANCE_APPROVED'].includes(
+                transactionStatus
+              ) && (
+                <SwapButton
+                  isLoading={transactionStatus === 'EXECUTING_SWAP'}
+                  onClick={handleSwap}
+                  label="Swap"
+                />
+              )}
+            </>
+          )}
+          {tokenAName === 'JUNO' && (
+            <SwapButton
+              isLoading={transactionStatus === 'EXECUTING_SWAP'}
+              onClick={handleSwap}
+              label="Swap"
+            />
+          )}
+        </section>
+      </SwapFormFrame>
+    </>
   )
 }

@@ -1,8 +1,6 @@
+import 'styles/globals.css'
 import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
-
-import 'tailwindcss/tailwind.css'
-import 'styles/globals.css'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 
@@ -17,13 +15,13 @@ function SafeHydrate({ children }) {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
-      <Layout>
-        <SafeHydrate>
-          <ErrorBoundary>
+      <SafeHydrate>
+        <ErrorBoundary>
+          <Layout>
             <Component {...pageProps} />
-          </ErrorBoundary>
-        </SafeHydrate>
-      </Layout>
+          </Layout>
+        </ErrorBoundary>
+      </SafeHydrate>
     </RecoilRoot>
   )
 }

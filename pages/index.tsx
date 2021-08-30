@@ -25,6 +25,7 @@ import {
   SwapFormHeading,
   SwapFormFrame,
 } from '../components/SwapForm/SwapFormStyles'
+import { Disclaimer } from '../components/SwapForm/Disclaimer'
 
 export default function Home() {
   const { address, client } = useRecoilValue(walletState)
@@ -205,7 +206,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div>
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -272,6 +273,10 @@ export default function Home() {
           )}
         </section>
       </SwapFormFrame>
-    </>
+      <Disclaimer delayMs={3000}>
+        Wasmswap is currently operating on Juno test net. We&apos;ll be
+        utilizing the Juno chain once it gets released on October 1st 2021.
+      </Disclaimer>
+    </div>
   )
 }

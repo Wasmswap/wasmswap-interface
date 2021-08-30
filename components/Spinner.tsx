@@ -14,7 +14,7 @@ export const Spinner: FC<SpinnerProps> = ({
 }) => (
   <StyledImage
     {...rest}
-    src={'/spinner.svg' as any}
+    src="/spinner.svg"
     alt="loading"
     width={width}
     height={height}

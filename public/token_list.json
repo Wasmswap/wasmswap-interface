@@ -22,8 +22,8 @@
     },
     {
       "chain_id": "lucina",
-      "token_address": "juno1pez5706uvjfz9y4nkx68w3j5ls8yufmvplprge",
-      "swap_address": "juno1mvtl25cganft5ae9rcrqt7nz3ktvwz88m76eds",
+      "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
+      "swap_address": "juno1v2lujd8g8khednxl0q7800j7vswn564zpwm79l",
       "symbol": "POOD",
       "name": "Poodle Coin",
       "decimals": 6,

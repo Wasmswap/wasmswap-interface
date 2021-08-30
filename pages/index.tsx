@@ -274,7 +274,7 @@ export default function Home() {
         </section>
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>
-        Wasmswap is currently in beta and operating on the Juno testnet.
+        Wasmswap is currently in beta and operating on the Juno testnet. Keplr connected to a ledger is currently unsupported.
       </Disclaimer>
     </div>
   )

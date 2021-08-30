@@ -274,8 +274,7 @@ export default function Home() {
         </section>
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>
-        Wasmswap is currently operating on Juno test net. We&apos;ll be
-        utilizing the Juno chain once it gets released on October 1st 2021.
+        Wasmswap is currently in beta and operating on the Juno testnet.
       </Disclaimer>
     </div>
   )

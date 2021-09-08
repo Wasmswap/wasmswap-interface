@@ -38,19 +38,6 @@ export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
   return execute
 }
 
-export interface increaseTokenAllowanceInput {
-  tokenAmount: number
-  senderAddress: string
-  tokenAddress: string
-  swapAddress: string
-  client: SigningCosmWasmClient
-}
-
-export const increaseTokenAllowance = async (input: increaseTokenAllowanceInput) => {
-  console.log(input)
-  console.log("skipped")
-}
-
 export interface swapTokenForNativeInput {
   tokenAmount: number
   price: number

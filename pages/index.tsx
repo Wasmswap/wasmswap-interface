@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import {
   swapNativeForToken,
   swapTokenForNative,
-  increaseTokenAllowance,
 } from 'services/swap'
 import TokenList from 'public/token_list.json'
 import { ToastContainer, toast } from 'react-toastify'

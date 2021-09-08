@@ -1,8 +1,12 @@
 import {
   SigningCosmWasmClient,
   CosmWasmClient,
+  MsgExecuteContractEncodeObject
 } from '@cosmjs/cosmwasm-stargate'
-import { coin } from '@cosmjs/launchpad'
+import { MsgExecuteContract } from '@cosmjs/cosmwasm-stargate/build/codec/cosmwasm/wasm/v1beta1/tx'
+import { toUtf8 } from '@cosmjs/encoding'
+import { coin, StdFee } from '@cosmjs/launchpad'
+import { BroadcastTxResponse } from '@cosmjs/stargate'
 
 export interface swapNativeForTokenInput {
   nativeAmount: number
@@ -44,17 +48,7 @@ export interface increaseTokenAllowanceInput {
 
 export const increaseTokenAllowance = async (input: increaseTokenAllowanceInput) => {
   console.log(input)
-  const executeAllowance = await input.client.execute(
-    input.senderAddress,
-    input.tokenAddress,
-    {
-      increase_allowance: {
-        amount: `${input.tokenAmount}`,
-        spender: `${input.swapAddress}`,
-      },
-    }
-  )
-  console.log(executeAllowance)
+  console.log("skipped")
 }
 
 export interface swapTokenForNativeInput {
@@ -67,21 +61,42 @@ export interface swapTokenForNativeInput {
   client: SigningCosmWasmClient
 }
 
-export const swapTokenForNative = async (input: swapTokenForNativeInput) => {
+export const swapTokenForNative = async (input: swapTokenForNativeInput) : Promise<BroadcastTxResponse> => {
 
   const minNative = Math.floor(input.price * (1 - input.slippage))
-  const executeSwap = await input.client.execute(
-    input.senderAddress,
-    input.swapAddress,
-    {
-      swap_token_for_native: {
-        min_native: `${minNative}`,
-        token_amount: `${input.tokenAmount}`,
-      },
-    }
-  )
+  let msg1 = {
+    increase_allowance: {
+      amount: `${input.tokenAmount}`,
+      spender: `${input.swapAddress}`,
+    }, 
+  }
+  const executeContractMsg1:MsgExecuteContractEncodeObject = {
+    typeUrl: "/cosmwasm.wasm.v1beta1.MsgExecuteContract",
+    value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.tokenAddress,
+        msg: toUtf8(JSON.stringify(msg1)),
+        funds: [],
+    }),
+  };
+  let msg2 = {
+    swap_token_for_native: {
+      min_native: `${minNative}`,
+      token_amount: `${input.tokenAmount}`,
+    },
+  }
+  const executeContractMsg2:MsgExecuteContractEncodeObject = {
+    typeUrl: "/cosmwasm.wasm.v1beta1.MsgExecuteContract",
+    value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.swapAddress,
+        msg: toUtf8(JSON.stringify(msg2)),
+        funds: [],
+    }),
+  };
+  const fee: StdFee = {amount:input.client.fees.exec.amount,gas:(+input.client.fees.exec.gas*2).toString()}
+  const executeSwap = await input.client.signAndBroadcast(input.senderAddress,[executeContractMsg1, executeContractMsg2], fee)
   console.log(executeSwap)
-
   return executeSwap
 }
 

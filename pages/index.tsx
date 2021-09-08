@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import {
   swapNativeForToken,
   swapTokenForNative,
-  increaseTokenAllowance,
 } from 'services/swap'
 import TokenList from 'public/token_list.json'
 import { ToastContainer, toast } from 'react-toastify'
@@ -97,53 +96,6 @@ export default function Home() {
     setTokenAName(tokenBName)
     setTokenBName(tokenAName)
     setTokenAmount(tokenBPrice)
-  }
-
-  const approveAllowance = async () => {
-    if (client == undefined) {
-      toast.error('Please connect wallet', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-      return
-    }
-    try {
-      setTransactionState('APPROVING_ALLOWANCE')
-      await increaseTokenAllowance({
-        tokenAmount: tokenAmount * 1000000,
-        senderAddress: address,
-        tokenAddress: tokenAInfo.token_address,
-        swapAddress: tokenAInfo.swap_address,
-        client,
-      })
-      toast.success('Permissions Succesful', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-      setTransactionState('ALLOWANCE_APPROVED')
-    } catch (e) {
-      toast.error(`Error with granting permissions ${e}`, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-      console.log(e)
-      setTransactionState('IDLE')
-    }
   }
 
   // TODO don't hardwire everything, just for testing
@@ -245,32 +197,11 @@ export default function Home() {
         />
 
         <section>
-          {tokenAName !== 'JUNO' && (
-            <>
-              <SwapButton
-                isLoading={transactionStatus === 'APPROVING_ALLOWANCE'}
-                isActive={transactionStatus === 'IDLE'}
-                onClick={approveAllowance}
-                label={`Allow Wasmswap to access your ${tokenAName}`}
-              />
-              {['EXECUTING_SWAP', 'ALLOWANCE_APPROVED'].includes(
-                transactionStatus
-              ) && (
-                <SwapButton
-                  isLoading={transactionStatus === 'EXECUTING_SWAP'}
-                  onClick={handleSwap}
-                  label="Swap"
-                />
-              )}
-            </>
-          )}
-          {tokenAName === 'JUNO' && (
             <SwapButton
               isLoading={transactionStatus === 'EXECUTING_SWAP'}
               onClick={handleSwap}
               label="Swap"
             />
-          )}
         </section>
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>

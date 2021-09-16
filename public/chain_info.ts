@@ -4,9 +4,9 @@ export const chainInfo = {
 	// The name of the chain to be displayed to the user.
 	chainName: "Juno Testnet",
 	// RPC endpoint of the chain.
-	rpc: "https://rpc.juno.omniflix.co/",
+	rpc: "https://35.175.219.88:9090/" ,
 	// REST endpoint of the chain.
-	rest: "https://api.juno.omniflix.co/",
+	rest: "http://35.175.219.88:1317/",
 	// Staking coin information
 	stakeCurrency: {
 	    // Coin denomination to be displayed to the user.

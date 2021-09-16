@@ -6,7 +6,7 @@ export const chainInfo = {
 	// RPC endpoint of the chain.
 	rpc: "https://rpc.juno.giansalex.dev/" ,
 	// REST endpoint of the chain.
-	rest: "http://35.175.219.88:1317/",
+	rest: "https://lcd.juno.giansalex.dev/",
 	// Staking coin information
 	stakeCurrency: {
 	    // Coin denomination to be displayed to the user.

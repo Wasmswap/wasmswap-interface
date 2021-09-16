@@ -1,6 +1,7 @@
 import {
   getNativeForTokenPrice,
   getTokenForNativePrice,
+  getTokenForTokenPrice,
 } from '../services/swap'
 import { useEffect, useState } from 'react'
 import { TokenInfo } from './useTokenInfo'
@@ -20,10 +21,17 @@ export const useTokenPrice = (
           swapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })
+      } else if (fromTokenInfo.token_address && !toTokenInfo.token_address) {
+        return await getTokenForNativePrice({
+          tokenAmount: value * 1000000,
+          swapAddress: fromTokenInfo.swap_address,
+          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+        })
       }
-      return await getTokenForNativePrice({
+      return await getTokenForTokenPrice({
         tokenAmount: value * 1000000,
         swapAddress: fromTokenInfo.swap_address,
+        outputSwapAddress: toTokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
       })
     }

@@ -4,7 +4,7 @@ export const chainInfo = {
 	// The name of the chain to be displayed to the user.
 	chainName: "Juno Testnet",
 	// RPC endpoint of the chain.
-	rpc: "https://35.175.219.88:9090/" ,
+	rpc: "https://rpc.juno.giansalex.dev/" ,
 	// REST endpoint of the chain.
 	rest: "http://35.175.219.88:1317/",
 	// Staking coin information

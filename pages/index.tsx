@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import {
   swapNativeForToken,
   swapTokenForNative,
+  swapTokenForToken,
 } from 'services/swap'
 import TokenList from 'public/token_list.json'
 import { ToastContainer, toast } from 'react-toastify'
@@ -50,18 +51,6 @@ export default function Home() {
   }, [tokenAName, tokenAmount, tokenBName, setTransactionState])
 
   const handleTokenANameSelect = (value: string) => {
-    if (value !== 'JUNO' && tokenBName !== 'JUNO') {
-      toast.error('One token must be set to JUNO', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-      return
-    }
     setTokenAmount(0)
     if (value === tokenBName) {
       setTokenBName(tokenAName)
@@ -74,18 +63,6 @@ export default function Home() {
   }
 
   const handleTokenBNameSelect = (value: string) => {
-    if (value !== 'JUNO' && tokenAName != 'JUNO') {
-      toast.error('One token must be set to JUNO', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-      return
-    }
     if (value === tokenAName) {
       setTokenAName(tokenBName)
     }
@@ -122,7 +99,7 @@ export default function Home() {
             swapAddress: tokenBInfo.swap_address,
             client,
           })
-        } else {
+        } else if (tokenAInfo.token_address && !tokenBInfo.token_address){
           await swapTokenForNative({
             tokenAmount: tokenAmount * 1000000,
             price: tokenBPrice * 1000000,
@@ -132,6 +109,17 @@ export default function Home() {
             swapAddress: tokenAInfo.swap_address,
             client,
           })
+        } else {
+          await swapTokenForToken({
+            tokenAmount: tokenAmount * 1000000,
+            price: tokenBPrice * 1000000,
+            slippage: 0.1,
+            senderAddress: address,
+            tokenAddress: tokenAInfo.token_address,
+            swapAddress: tokenAInfo.swap_address,
+            outputSwapAddress: tokenBInfo.swap_address,
+            client,
+          }) 
         }
         toast.success('🎉 Swap Succesful', {
           position: 'top-right',

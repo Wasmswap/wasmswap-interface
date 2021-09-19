@@ -109,4 +109,7 @@ export const getLiquidityBalance = async (input: GetLiquidityBalanceInput) => {
     })
     console.log(query)
     return query.balance
-  }}
+  } catch (e) {
+    console.log(e)
+  }
+}

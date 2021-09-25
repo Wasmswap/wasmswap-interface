@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { colorTokens } from '../util/constants'
 import { resetStylesForButton } from './Button'
 import { HTMLProps, useMemo, useState } from 'react'
+import { animated, useSpring } from '@react-spring/web'
 
 type SegmentedControllerProps = {
   tabs: Array<{ value: string; label: string }>
@@ -20,6 +21,10 @@ export const SegmentedController = ({
     () => tabs.findIndex(({ value }) => value === currentTab),
     [currentTab, tabs]
   )
+
+  const { x } = useSpring({
+    x: tabIndex * 100,
+  })
 
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
@@ -45,7 +50,12 @@ export const SegmentedController = ({
           </StyledButtonForController>
         )
       })}
-      <StyledDivForIndicator $width={tabWidth} $positionIndex={tabIndex} />
+      <StyledDivForIndicator
+        $width={tabWidth}
+        style={{
+          transform: x.to((value) => `translateX(${value}%)`),
+        }}
+      />
     </StyledDivForWrapper>
   )
 }
@@ -74,8 +84,7 @@ const StyledButtonForController = styled.button<{
   transition: background-color 0.1s ease-out;
 `
 
-const StyledDivForIndicator = styled.div<{
-  $positionIndex: number
+const StyledDivForIndicator = styled(animated.div)<{
   $width: number
 }>`
   position: absolute;
@@ -83,8 +92,7 @@ const StyledDivForIndicator = styled.div<{
   top: 2px;
   height: calc(100% - 4px);
   width: calc(${(p) => `${p.$width}%`} - 2px);
-  transform: translateX(${(p) => `${p.$positionIndex * 100}%`});
-  transition: transform 0.15s ease-out;
+  transform: translateX(0%);
   background-color: ${colorTokens.primary};
   border-radius: 100px;
   z-index: 0;

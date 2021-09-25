@@ -1,6 +1,6 @@
 import React, { useState, FC } from 'react'
 import styled from 'styled-components'
-import { restStylesForButton } from './Button'
+import { resetStylesForButton } from './Button'
 import { colorTokens } from '../util/constants'
 
 type SwitchTokensButtonProps = { onClick: () => void }
@@ -43,7 +43,7 @@ const StyledWrapper = styled.div`
 `
 
 const StyledButton = styled.button<{ $flipped: boolean }>`
-  ${restStylesForButton};
+  ${resetStylesForButton};
   padding: 3px;
   background-color: ${colorTokens.white};
   border-radius: 50%;

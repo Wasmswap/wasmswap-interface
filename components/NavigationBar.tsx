@@ -14,7 +14,7 @@ export function NavigationBar() {
     <Container>
       <StyledWrapper>
         <Text type="heading" variant="bold">
-          Wasmswap
+          Junoswap
         </Text>
         <Button size="medium" onClick={address ? undefined : connectWallet}>
           <StyledText color="white" variant="light">

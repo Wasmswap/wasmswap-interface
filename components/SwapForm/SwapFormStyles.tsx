@@ -1,5 +1,6 @@
 import { Text } from '../Text'
 import styled, { css } from 'styled-components'
+import { SegmentedController } from '../SegmentedController'
 
 export const swapFormSize = css`
   width: 90%;
@@ -21,4 +22,9 @@ export const SwapFormHeading = styled(Text).attrs(() => ({
   variant: 'normal',
 }))`
   padding: 44px 0 32px;
+`
+
+export const SwapFormSegmentedController = styled(SegmentedController)`
+  width: 343px;
+  margin: 0 auto;
 `

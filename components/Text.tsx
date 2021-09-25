@@ -14,10 +14,12 @@ type TextProps = {
   variant?: keyof typeof fontWeightTokens
 }
 
-const colorTokenSelector = (props: TextProps) =>
-  colorTokens[props.color] || colorTokens.black
-const fontWeightSelector = (props: TextProps) =>
-  fontWeightTokens[props.variant] || fontWeightTokens.normal
+const colorTokenSelector = (props: TextProps) => {
+  return colorTokens[props.color] || colorTokens.black
+}
+const fontWeightSelector = (props: TextProps) => {
+  return fontWeightTokens[props.variant] || fontWeightTokens.normal
+}
 
 const Heading = styled.p<TextProps>`
   font-size: 20px;

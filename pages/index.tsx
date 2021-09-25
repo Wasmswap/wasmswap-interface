@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   swapNativeForToken,
   swapTokenForNative,
@@ -24,11 +24,20 @@ import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   SwapFormHeading,
   SwapFormFrame,
+  SwapFormSegmentedController,
 } from '../components/SwapForm/SwapFormStyles'
 import { Disclaimer } from '../components/SwapForm/Disclaimer'
+import { useConnectWallet } from '../hooks/useConnectWallet'
 
 export default function Home() {
   const { address, client } = useRecoilValue(walletState)
+  const connectWallet = useConnectWallet()
+
+  const segmentedControllerTabs = useRef([
+    { label: 'Swap', value: 'swap' },
+    { label: 'Pools', value: 'pools' },
+  ]).current
+  const [currentTab, setTab] = useState(segmentedControllerTabs[0].value)
 
   const [transactionStatus, setTransactionState] = useRecoilState(
     transactionStatusState
@@ -75,7 +84,6 @@ export default function Home() {
     setTokenAmount(tokenBPrice)
   }
 
-  // TODO don't hardwire everything, just for testing
   const handleSwap = async () => {
     if (!client) {
       toast.error('Please connect wallet', {
@@ -159,6 +167,11 @@ export default function Home() {
         draggable
         pauseOnHover
       />
+      <SwapFormSegmentedController
+        tabs={segmentedControllerTabs}
+        currentTab={currentTab}
+        onChangeTab={(tab) => setTab(tab)}
+      />
       <SwapFormFrame>
         <SwapFormHeading>Swap</SwapFormHeading>
         <TokenSelector
@@ -184,12 +197,11 @@ export default function Home() {
           tokenName={tokenBName}
           onTokenNameSelect={handleTokenBNameSelect}
         />
-
         <section>
           <SwapButton
             isLoading={transactionStatus === 'EXECUTING_SWAP'}
-            onClick={handleSwap}
-            label="Swap"
+            onClick={address ? handleSwap : connectWallet}
+            label={address ? 'Swap' : 'Connect Wallet'}
           />
         </section>
       </SwapFormFrame>

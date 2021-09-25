@@ -13,6 +13,7 @@ export const swapFormSize = css`
 
 const StyledFormFrame = styled(animated.div)`
   ${swapFormSize};
+  position: relative;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.96);
   padding: 0 18px;

@@ -1,12 +1,39 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import styled from 'styled-components'
+import { Canvas } from '@react-three/fiber'
+import { SpringModel } from './SpringModel'
+import { useRecoilValue } from 'recoil'
+import { transactionStatusState } from '../state/atoms/transactionAtoms'
+import { walletState } from '../state/atoms/walletAtoms'
+
+const USE_3D_SPRINGS = true
 
 export const AppBackground = ({ children }) => {
+  const transactionStatus = useRecoilValue(transactionStatusState)
+  const { address } = useRecoilValue(walletState)
+
   return (
     <>
       <StyledBackgroundWrapper>
-        <StyledSpringLeft src="/spring-left.png" />
-        <StyledSpringRight src="/spring-right.png" />
+        {USE_3D_SPRINGS ? (
+          <Canvas shadows dpr={[1, 2]}>
+            <Suspense fallback="loading....">
+              <ambientLight intensity={0.75} />
+              <spotLight position={[15, 15, 20]} penumbra={0.5} angle={0.2} />
+              <directionalLight position={[0, 5, -4]} intensity={2} />
+              <directionalLight position={[0, -15, -0]} intensity={2} />
+              <SpringModel
+                isSpinning={transactionStatus === 'EXECUTING_SWAP'}
+                isShowing={Boolean(address)}
+              />
+            </Suspense>
+          </Canvas>
+        ) : (
+          <>
+            <StyledSpringLeft src="/spring-left.png" />
+            <StyledSpringRight src="/spring-right.png" />
+          </>
+        )}
       </StyledBackgroundWrapper>
       <StyledContent>{children}</StyledContent>
     </>

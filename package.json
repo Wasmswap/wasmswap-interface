@@ -21,8 +21,12 @@
     "@cosmjs/stargate": "0.25.4",
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.3",
+    "@react-spring/three": "^9.2.4",
+    "@react-three/drei": "^7.8.5",
+    "@react-three/fiber": "^7.0.7",
     "@stargazefi/util": "^0.0.3",
     "bufferutil": "^4.0.3",
+    "gsap": "^3.7.1",
     "mobx": "^6.3.2",
     "mobx-react": "^7.2.0",
     "next": "11.0.1",
@@ -31,6 +35,7 @@
     "react-toastify": "^7.0.4",
     "recoil": "^0.4.0",
     "styled-components": "^5.3.1",
+    "three": "^0.132.2",
     "utf-8-validate": "^5.0.5"
   },
   "devDependencies": {

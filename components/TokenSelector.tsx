@@ -138,7 +138,7 @@ const StyledInput = styled.input`
 const StyledLink = styled(Text).attrs(() => ({
   variant: 'light',
   type: 'caption',
-  color: 'light-blue',
+  color: 'lightBlue',
 }))`
   margin-left: 4px;
   cursor: pointer;

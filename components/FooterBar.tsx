@@ -81,7 +81,7 @@ const StyledLink = styled(Text).attrs(() => ({ variant: 'light', as: 'a' }))`
   transition: opacity 0.1s ease-out, color 0.1s ease-out;
   padding: 0 10px;
   &:hover {
-    color: ${colorTokens['light-blue']};
+    color: ${colorTokens.lightBlue};
   }
   &:active {
     opacity: 0.9;

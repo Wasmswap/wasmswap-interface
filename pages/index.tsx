@@ -99,7 +99,7 @@ export default function Home() {
             swapAddress: tokenBInfo.swap_address,
             client,
           })
-        } else if (tokenAInfo.token_address && !tokenBInfo.token_address){
+        } else if (tokenAInfo.token_address && !tokenBInfo.token_address) {
           await swapTokenForNative({
             tokenAmount: tokenAmount * 1000000,
             price: tokenBPrice * 1000000,
@@ -119,9 +119,9 @@ export default function Home() {
             swapAddress: tokenAInfo.swap_address,
             outputSwapAddress: tokenBInfo.swap_address,
             client,
-          }) 
+          })
         }
-        toast.success('🎉 Swap Succesful', {
+        toast.success('🎉 Swap Successful', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -140,8 +140,9 @@ export default function Home() {
           draggable: true,
           progress: undefined,
         })
+      } finally {
+        setTransactionState('IDLE')
       }
-      setTransactionState('IDLE')
     }
   }
 
@@ -185,15 +186,16 @@ export default function Home() {
         />
 
         <section>
-            <SwapButton
-              isLoading={transactionStatus === 'EXECUTING_SWAP'}
-              onClick={handleSwap}
-              label="Swap"
-            />
+          <SwapButton
+            isLoading={transactionStatus === 'EXECUTING_SWAP'}
+            onClick={handleSwap}
+            label="Swap"
+          />
         </section>
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>
-        Wasmswap is currently in beta and operating on the Juno testnet. Keplr connected to a ledger is currently unsupported.
+        Wasmswap is currently in beta and operating on the Juno testnet. Keplr
+        connected to a ledger is currently unsupported.
       </Disclaimer>
     </div>
   )

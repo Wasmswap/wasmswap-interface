@@ -23,7 +23,7 @@
     {
       "chain_id": "lucina",
       "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
-      "swap_address": "juno1x5efy2d5gvqyaef2zqpknmj588dvf5a3gpgdnf",
+      "swap_address": "juno15sdu4xflmsu9nrrmk9favqueuwhghjrxpg3g4q",
       "symbol": "POOD",
       "name": "Poodle Coin",
       "decimals": 6,
@@ -33,7 +33,7 @@
     {
       "chain_id": "lucina",
       "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
-      "swap_address": "juno1xmf8y9wcth07259s959ch42fch4fz0lgh4ussg",
+      "swap_address": "juno123lsam8l2kxcm8ewkla7khczpzucgxmjqag8lg",
       "symbol": "CRAB",
       "name": "Crab Coin",
       "decimals": 6,

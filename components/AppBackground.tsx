@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil'
 import { transactionStatusState } from '../state/atoms/transactionAtoms'
 import { walletState } from '../state/atoms/walletAtoms'
 
-const USE_3D_SPRINGS = true
+const USE_3D_SPRINGS = false
 
 export const AppBackground = ({ children }) => {
   const transactionStatus = useRecoilValue(transactionStatusState)

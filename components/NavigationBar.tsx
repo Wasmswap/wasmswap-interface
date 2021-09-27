@@ -32,11 +32,11 @@ export function NavigationBar() {
           />
         </StyledColumn>
         <StyledColumn $align="flex-end">
-          <Button size="medium" onClick={address ? undefined : connectWallet}>
+          <StyledButton size="medium" onClick={address ? undefined : connectWallet}>
             <StyledText color="white" variant="light">
               {address || 'Connect Wallet'}
             </StyledText>
-          </Button>
+          </StyledButton>
         </StyledColumn>
       </StyledWrapper>
     </Container>
@@ -49,6 +49,10 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+`
+
+const StyledButton = styled(Button)`
+  background: #161616
 `
 
 const StyledColumn = styled.div<{ $align: string }>`

@@ -23,7 +23,7 @@ const fontWeightSelector = (props: TextProps) => {
 }
 
 const Heading = styled.p<TextProps>`
-  font-size: 20px;
+  font-size: 32px;
   line-height: 27px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};

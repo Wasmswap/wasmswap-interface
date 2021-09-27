@@ -15,9 +15,7 @@ export const PoolsContent = () => {
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        Some helpful explainer text tells you what a liquidity pool is and what
-        you’re risking. Right now, wasmswap users have a total of $23,028,048 in
-        liquidity pools.
+        Add assets and earn swap fees for providing liqudity to the market.
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>

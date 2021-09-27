@@ -7,6 +7,7 @@ export const SwapFormHeading = styled(Text).attrs(() => ({
   variant: 'normal',
 }))`
   padding: 44px 0 32px;
+  margin: 15px;
 `
 
 export const SwapFormSegmentedController = styled(SegmentedController)`

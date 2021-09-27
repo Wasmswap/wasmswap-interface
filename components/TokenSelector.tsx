@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { ChevronDownIcon } from '@heroicons/react/solid'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
+import { Link } from './Link'
 
 type TokenSelectorProps = {
   amount: number
@@ -135,18 +136,8 @@ const StyledInput = styled.input`
   text-align: right;
 `
 
-const StyledLink = styled(Text).attrs(() => ({
-  variant: 'light',
-  type: 'caption',
-  color: 'lightBlue',
-}))`
+const StyledLink = styled(Link)`
   margin-left: 4px;
-  cursor: pointer;
-  user-select: none;
-  transition: opacity 0.1s ease-out;
-  &:hover {
-    opacity: 0.75;
-  }
 `
 
 const StyledChevronDownIcon = styled(ChevronDownIcon)`

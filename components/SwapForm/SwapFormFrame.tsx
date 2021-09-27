@@ -1,4 +1,3 @@
-import { animated, useSpring } from '@react-spring/web'
 import styled, { css } from 'styled-components'
 
 const FORM_WIDTH = {
@@ -11,8 +10,10 @@ export const swapFormSize = css`
   max-width: ${FORM_WIDTH.default}px;
 `
 
-const StyledFormFrame = styled(animated.div)`
+export const SwapFormFrame = styled.div<{ $expanded: boolean }>`
   ${swapFormSize};
+  max-width: ${(p) =>
+    p.$expanded ? FORM_WIDTH.expanded : FORM_WIDTH.default}px;
   position: relative;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.96);
@@ -21,10 +22,3 @@ const StyledFormFrame = styled(animated.div)`
   backdrop-filter: blur(4px);
   margin: 12px auto 0;
 `
-
-export const SwapFormFrame = ({ $expanded, ...props }) => {
-  const { width } = useSpring({
-    width: $expanded ? FORM_WIDTH.expanded : FORM_WIDTH.default,
-  })
-  return <StyledFormFrame style={{ maxWidth: width }} {...props} />
-}

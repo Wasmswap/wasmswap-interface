@@ -17,6 +17,7 @@ type TextProps = {
 const colorTokenSelector = (props: TextProps) => {
   return colorTokens[props.color] || colorTokens.black
 }
+
 const fontWeightSelector = (props: TextProps) => {
   return fontWeightTokens[props.variant] || fontWeightTokens.normal
 }

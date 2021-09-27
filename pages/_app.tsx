@@ -1,4 +1,5 @@
 import 'styles/globals.css'
+import 'normalize.css'
 import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'

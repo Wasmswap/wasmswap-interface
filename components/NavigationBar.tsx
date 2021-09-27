@@ -1,26 +1,43 @@
-import { Container } from './Container'
+import React from 'react'
 import styled from 'styled-components'
+import { Container } from './Container'
 import { Text } from './Text'
 import { Button } from './Button'
 import { useConnectWallet } from '../hooks/useConnectWallet'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
+import { SwapFormSegmentedController } from './SwapForm/SwapFormStyles'
+import { tabValueState, tabsConfig } from '../state/atoms/tabAtoms'
 
 export function NavigationBar() {
   const connectWallet = useConnectWallet()
   const { address } = useRecoilValue(walletState)
+  const [currentTab, setCurrentTab] = useRecoilState(tabValueState)
 
   return (
     <Container>
       <StyledWrapper>
-        <Text type="heading" variant="bold">
-          Junoswap
-        </Text>
-        <Button size="medium" onClick={address ? undefined : connectWallet}>
-          <StyledText color="white" variant="light">
-            {address || 'Connect Wallet'}
-          </StyledText>
-        </Button>
+        <StyledColumn>
+          <Text type="heading" variant="bold">
+            Wasmswap
+          </Text>
+        </StyledColumn>
+        <StyledColumn $align="center">
+          <SwapFormSegmentedController
+            tabs={tabsConfig}
+            currentTab={currentTab}
+            onChangeTab={(tab) => {
+              setCurrentTab(tab)
+            }}
+          />
+        </StyledColumn>
+        <StyledColumn $align="flex-end">
+          <Button size="medium" onClick={address ? undefined : connectWallet}>
+            <StyledText color="white" variant="light">
+              {address || 'Connect Wallet'}
+            </StyledText>
+          </Button>
+        </StyledColumn>
       </StyledWrapper>
     </Container>
   )
@@ -32,6 +49,12 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+`
+
+const StyledColumn = styled.div<{ $align: string }>`
+  flex: 0.33;
+  display: flex;
+  justify-content: ${(p) => p.$align || 'flex-start'};
 `
 
 const StyledText = styled(Text)`

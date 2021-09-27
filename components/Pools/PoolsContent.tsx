@@ -2,19 +2,15 @@ import { Text } from '../Text'
 import styled from 'styled-components'
 import { PoolCard } from './PoolCard'
 import { useState } from 'react'
-import { Button } from '../Button'
 import { PoolDialog } from '../PoolDialog'
 
 export const PoolsContent = () => {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
 
+  const openDialog = () => setIsDialogShowing(true)
+
   return (
     <>
-      <Button onClick={() => setIsDialogShowing(true)}>Open dialog</Button>
-      <PoolDialog
-        isShowing={isDialogShowing}
-        onRequestClose={() => setIsDialogShowing(false)}
-      />
       <StyledTitle type="heading" variant="bold">
         Pools
       </StyledTitle>
@@ -32,10 +28,15 @@ export const PoolsContent = () => {
               tokenBName="Pood"
               availableLiquidity={1000000}
               liquidity={0}
+              onButtonClick={openDialog}
             />
           )
           .map((renderedItem, index) => ({ ...renderedItem, key: index }))}
       </StyledDivForPoolsGrid>
+      <PoolDialog
+        isShowing={isDialogShowing}
+        onRequestClose={() => setIsDialogShowing(false)}
+      />
     </>
   )
 }

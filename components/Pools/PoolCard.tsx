@@ -8,6 +8,7 @@ export const PoolCard = ({
   tokenBName,
   availableLiquidity,
   liquidity,
+  onButtonClick,
 }) => {
   return (
     <StyledDivForCard>
@@ -50,7 +51,9 @@ export const PoolCard = ({
             })}
           </StyledTextForLiquidity>
         </div>
-        <Button size="small">Join</Button>
+        <Button onClick={onButtonClick} size="small">
+          Join
+        </Button>
       </StyledDivForFooter>
     </StyledDivForCard>
   )

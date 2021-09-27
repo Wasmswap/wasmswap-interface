@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { NavigationBar } from './NavigationBar'
 import { FooterBar } from './FooterBar'
 import { AppBackground } from './AppBackground'
+import { ToastContainer } from 'react-toastify'
 
 export default function Layout({ children }) {
   return (
@@ -10,6 +11,17 @@ export default function Layout({ children }) {
       <StyledWrapper>
         <NavigationBar />
         <main>{children}</main>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={true}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <FooterBar />
       </StyledWrapper>
     </AppBackground>

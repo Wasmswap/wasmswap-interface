@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
 
-export const restStylesForButton = css`
+export const resetStylesForButton = css`
   text-transform: none;
   -webkit-appearance: button;
   padding: 0;
@@ -18,23 +18,32 @@ export const restStylesForButton = css`
 
 type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
   variant?: 'primary'
-  size?: 'humongous' | 'medium'
+  size?: 'humongous' | 'medium' | 'small'
 }
 
 export const StyledButton = styled.button<ButtonProps>`
-  ${restStylesForButton};
+  ${resetStylesForButton};
   text-align: center;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   border-radius: 6px;
-  padding: ${(props: ButtonProps) =>
-    props.size === 'humongous' ? '24px' : '12px 14px'};
+  padding: ${(props: ButtonProps) => {
+    switch (props.size) {
+      case 'humongous':
+        return '24px'
+      case 'medium':
+        return '12px 14px'
+      case 'small':
+      default:
+        return '5px 12px'
+    }
+  }};
   width: ${(props: ButtonProps) =>
     props.size === 'humongous' ? '100%' : 'auto'};
   background-color: ${({ disabled }) => {
-    return disabled ? colorTokens.gray : colorTokens.black
+    return disabled ? colorTokens.gray : colorTokens.primary
   }};
   cursor: ${({ disabled }) => {
     return disabled ? 'auto' : 'pointer'

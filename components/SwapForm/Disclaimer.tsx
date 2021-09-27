@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ReactNode, FC } from 'react'
 import styled from 'styled-components'
 import { Text } from '../Text'
-import { swapFormSize } from './SwapFormStyles'
+import { swapFormSize } from './SwapFormFrame'
 
 type DisclaimerProps = {
   children: ReactNode

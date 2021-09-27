@@ -9,7 +9,7 @@ const fontWeightTokens = {
 }
 
 type TextProps = {
-  type?: 'heading' | 'body' | 'caption'
+  type?: 'heading' | 'title' | 'body' | 'caption'
   color?: keyof typeof colorTokens
   variant?: keyof typeof fontWeightTokens
 }
@@ -23,6 +23,13 @@ const fontWeightSelector = (props: TextProps) => {
 }
 
 const Heading = styled.p<TextProps>`
+  font-size: 20px;
+  line-height: 27px;
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+`
+
+const Title = styled.p<TextProps>`
   font-size: 32px;
   line-height: 27px;
   color: ${colorTokenSelector};
@@ -47,6 +54,7 @@ const map = {
   body: Paragraph,
   caption: Caption,
   heading: Heading,
+  title: Title,
 }
 
 export const Text = ({

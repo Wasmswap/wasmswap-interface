@@ -11,7 +11,7 @@ export const PoolsContent = () => {
 
   return (
     <>
-      <StyledTitle type="heading" variant="bold">
+      <StyledTitle type="title" variant="bold">
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">

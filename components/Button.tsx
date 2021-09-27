@@ -68,7 +68,7 @@ export const Button: FC<ButtonProps> = ({
   <StyledButton {...props}>
     {typeof children === 'string' ? (
       <Text
-        type={props.size === 'humongous' ? 'body' : 'body'}
+        type={props.size === 'humongous' ? 'heading' : 'body'}
         variant={props.size === 'humongous' ? 'normal' : 'light'}
         color="white"
       >

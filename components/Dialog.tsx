@@ -1,32 +1,61 @@
-import { useTransition, animated } from '@react-spring/web'
 import Portal from '@reach/portal'
 import styled from 'styled-components'
+import gsap from 'gsap'
+import { useEffect, useState, useRef } from 'react'
 
 export const Dialog = ({ children, isShowing, onRequestClose }) => {
-  const transitions = useTransition(isShowing, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    reverse: isShowing,
-  })
+  const [isRenderingDialog, setIsRenderingDialog] = useState(isShowing)
+  const modalRef = useRef()
+  const overlayRef = useRef()
+
+  useEffect(() => {
+    if (isShowing) {
+      setIsRenderingDialog(true)
+    }
+  }, [isShowing])
+
+  useEffect(() => {
+    const tl = gsap.timeline({
+      duration: 1,
+      ease: 'power.easeOut',
+    })
+
+    const shouldAnimateCloseOut = !isShowing && isRenderingDialog
+    if (shouldAnimateCloseOut) {
+      tl.to(modalRef.current, { opacity: 0 }, 0)
+      tl.to(
+        overlayRef.current,
+        {
+          opacity: 0,
+          onComplete() {
+            setIsRenderingDialog(false)
+          },
+        },
+        0
+      )
+    }
+
+    if (isShowing && isRenderingDialog) {
+      tl.to(overlayRef.current, { opacity: 0.6 }, 0)
+      tl.to(modalRef.current, { opacity: 1 }, 0.1)
+      return
+    }
+  }, [isRenderingDialog, isShowing])
 
   return (
     <Portal>
-      {transitions(
-        ({ opacity }, item) =>
-          item && (
-            <>
-              <StyledDivForModal style={{ opacity }}>
-                <StyledCloseIcon onClick={onRequestClose} />
-                {children}
-              </StyledDivForModal>
-              <StyledDivForOverlay
-                role="presentation"
-                onClick={onRequestClose}
-                style={{ opacity: opacity.to([0, 1], [0, 0.6]) }}
-              />
-            </>
-          )
+      {isRenderingDialog && (
+        <>
+          <StyledDivForModal ref={modalRef}>
+            <StyledCloseIcon onClick={onRequestClose} />
+            {children}
+          </StyledDivForModal>
+          <StyledDivForOverlay
+            role="presentation"
+            onClick={onRequestClose}
+            ref={overlayRef}
+          />
+        </>
       )}
     </Portal>
   )
@@ -36,7 +65,8 @@ export const DialogBody = styled.div`
   padding: 0 72px 40px;
 `
 
-const StyledDivForModal = styled(animated.div)`
+const StyledDivForModal = styled.div`
+  opacity: 0;
   width: 508px;
   position: absolute;
   z-index: 99;
@@ -49,7 +79,8 @@ const StyledDivForModal = styled(animated.div)`
   padding: 16px;
 `
 
-const StyledDivForOverlay = styled(animated.div)`
+const StyledDivForOverlay = styled.div`
+  opacity: 0;
   width: 100vw;
   height: 100vh;
   position: fixed;

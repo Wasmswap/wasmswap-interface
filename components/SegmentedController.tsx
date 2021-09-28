@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 import { colorTokens } from '../util/constants'
 import { resetStylesForButton } from './Button'
-import { HTMLProps, useMemo, useState } from 'react'
-import { animated, useSpring } from '@react-spring/web'
+import gsap from 'gsap'
+import { HTMLProps, useMemo, useState, useRef, useEffect } from 'react'
 
 type SegmentedControllerProps = {
   tabs: Array<{ value: string; label: string }>
@@ -22,9 +22,14 @@ export const SegmentedController = ({
     [currentTab, tabs]
   )
 
-  const { x } = useSpring({
-    x: tabIndex * 100,
-  })
+  const indicatorRef = useRef()
+  useEffect(() => {
+    gsap.to(indicatorRef.current, {
+      duration: 0.35,
+      ease: 'power2.easeOut',
+      x: `${tabIndex * 100}%`,
+    })
+  }, [tabIndex])
 
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
@@ -50,12 +55,7 @@ export const SegmentedController = ({
           </StyledButtonForController>
         )
       })}
-      <StyledDivForIndicator
-        $width={tabWidth}
-        style={{
-          transform: x.to((value) => `translateX(${value}%)`),
-        }}
-      />
+      <StyledDivForIndicator $width={tabWidth} ref={indicatorRef} />
     </StyledDivForWrapper>
   )
 }
@@ -84,7 +84,7 @@ const StyledButtonForController = styled.button<{
   transition: background-color 0.1s ease-out;
 `
 
-const StyledDivForIndicator = styled(animated.div)<{
+const StyledDivForIndicator = styled.div<{
   $width: number
 }>`
   position: absolute;

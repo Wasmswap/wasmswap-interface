@@ -9,8 +9,10 @@ export default function Layout({ children }) {
   return (
     <AppBackground>
       <StyledWrapper>
-        <NavigationBar />
-        <main>{children}</main>
+        <section>
+          <NavigationBar />
+          <main>{children}</main>
+        </section>
         <ToastContainer
           position="top-right"
           autoClose={5000}

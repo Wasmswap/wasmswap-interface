@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 function SafeHydrate({ children }) {
   return (

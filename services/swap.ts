@@ -211,3 +211,22 @@ export const getTokenForTokenPrice = async (
     console.log(e)
   }
 }
+
+export type InfoResponse = {
+  native_denom: string
+  native_reserve: string
+  token_address: string
+  token_denom: string
+  token_reserve: string
+}
+
+export const getSwapInfo = async(swapAddress: string, rpcEndpoint: string): Promise<InfoResponse> => {
+  try{
+    const client = await CosmWasmClient.connect(rpcEndpoint)
+    return await client.queryContractSmart(swapAddress, {
+      get_info: {},
+    })
+  }catch(e){
+    console.log(e)
+  }
+}

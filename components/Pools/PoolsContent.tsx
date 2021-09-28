@@ -3,6 +3,13 @@ import styled from 'styled-components'
 import { PoolCard } from './PoolCard'
 import { useState } from 'react'
 import { PoolDialog } from '../PoolDialog'
+import TokenList from '../../public/token_list.json'
+import { getSwapInfo } from 'services/swap'
+
+
+const formatTokenName = (name: string) => {
+  return name.slice(0,1).toUpperCase() + name.slice(1).toLowerCase()
+}
 
 export const PoolsContent = () => {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
@@ -19,17 +26,20 @@ export const PoolsContent = () => {
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>
-        {new Array(3)
-          .fill(
-            <PoolCard
-              tokenAName="Juno"
-              tokenBName="Pood"
-              availableLiquidity={1000000}
-              liquidity={0}
-              onButtonClick={openDialog}
-            />
-          )
-          .map((renderedItem, index) => ({ ...renderedItem, key: index }))}
+        {TokenList.tokens
+          .filter((x) => x.token_address)
+          .map((token, key) => ({
+            ...(
+              <PoolCard
+                tokenAName="Juno"
+                tokenBName={formatTokenName(token.symbol)}
+                availableLiquidity={1000000}
+                liquidity={0}
+                onButtonClick={openDialog}
+              />
+            ),
+            key: key,
+          }))}
       </StyledDivForPoolsGrid>
       <PoolDialog
         isShowing={isDialogShowing}

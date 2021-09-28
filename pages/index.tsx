@@ -4,14 +4,24 @@ import { Disclaimer } from '../components/SwapForm/Disclaimer'
 import { SwapFormContent } from '../components/SwapForm/SwapFormContent'
 import { SwapFormFrame } from '../components/SwapForm/SwapFormFrame'
 import { PoolsContent } from '../components/Pools/PoolsContent'
-import { tabValueState } from '../state/atoms/tabAtoms'
-import { useRecoilValue } from 'recoil'
+import { tabsConfig, tabValueState } from '../state/atoms/tabAtoms'
+import { useRecoilState } from 'recoil'
+import { SwapFormSegmentedController } from '../components/SwapForm/SwapFormStyles'
+import styled from 'styled-components'
 
 export default function Home() {
-  const currentTab = useRecoilValue(tabValueState)
+  const [currentTab, setCurrentTab] = useRecoilState(tabValueState)
 
   return (
-    <div>
+    <>
+      <StyledSpacer />
+      <SwapFormSegmentedController
+        tabs={tabsConfig}
+        currentTab={currentTab}
+        onChangeTab={(tab) => {
+          setCurrentTab(tab)
+        }}
+      />
       <SwapFormFrame $expanded={currentTab === 'pools'}>
         {currentTab === 'swap' ? <SwapFormContent /> : <PoolsContent />}
       </SwapFormFrame>
@@ -19,6 +29,12 @@ export default function Home() {
         Wasmswap is currently in beta and operating on the Juno testnet. Keplr
         connected to a ledger is currently unsupported.
       </Disclaimer>
-    </div>
+    </>
   )
 }
+
+const StyledSpacer = styled.div`
+  height: calc(13.5vh - 84px);
+  max-height: 400px;
+  width: 100%;
+`

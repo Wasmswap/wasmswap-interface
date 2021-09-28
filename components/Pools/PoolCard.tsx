@@ -1,15 +1,39 @@
 import styled from 'styled-components'
+import { useQuery } from 'react-query'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
 import { Button } from '../Button'
+import { getSwapInfo } from 'services/swap'
+import { getLiquidityBalance } from 'services/liquidity'
+import { useRecoilValue } from 'recoil'
+import { walletState } from 'state/atoms/walletAtoms'
 
 export const PoolCard = ({
   tokenAName,
   tokenBName,
-  availableLiquidity,
-  liquidity,
+  tokenInfo,
   onButtonClick,
 }) => {
+  const { address } = useRecoilValue(walletState)
+
+  const totalLiquidityQuery = useQuery(`totalLiquidity${tokenBName}`, () =>
+    getSwapInfo(
+      tokenInfo.swap_address,
+      process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
+    ).then((res) => (+res.native_reserve * 2) / 1000000)
+  )
+
+  const myLiquidityQuery = useQuery(`myLiquidity${tokenBName}`, () => {
+    if (address) {
+      return getLiquidityBalance({
+        address: address,
+        swapAddress: tokenInfo.swap_address,
+        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
+      }).then((res) => res)
+    }
+    return 0
+  })
+
   return (
     <StyledDivForCard>
       <StyledDivForTitle>
@@ -33,10 +57,12 @@ export const PoolCard = ({
         variant="light"
       >
         Total liquidity:{' '}
-        {availableLiquidity.toLocaleString('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        })}
+        {totalLiquidityQuery.data
+          ? totalLiquidityQuery.data.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })
+          : 0}
       </StyledTextForAvailableLiquidity>
       <StyledDivForDivider />
       <StyledDivForFooter>
@@ -45,10 +71,12 @@ export const PoolCard = ({
             My liquidity
           </Text>
           <StyledTextForLiquidity>
-            {liquidity.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
+            {myLiquidityQuery.data
+              ? (+myLiquidityQuery.data).toLocaleString('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                })
+              : 0}
           </StyledTextForLiquidity>
         </div>
         <Button onClick={onButtonClick} size="small">

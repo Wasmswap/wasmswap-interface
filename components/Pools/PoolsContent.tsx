@@ -4,17 +4,16 @@ import { PoolCard } from './PoolCard'
 import { useState } from 'react'
 import { PoolDialog } from '../PoolDialog'
 import TokenList from '../../public/token_list.json'
-import { getSwapInfo } from 'services/swap'
-
-
-const formatTokenName = (name: string) => {
-  return name.slice(0,1).toUpperCase() + name.slice(1).toLowerCase()
-}
+import { formatTokenName } from 'util/conversion'
 
 export const PoolsContent = () => {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
+  const [tokenInfo, setTokenInfo] = useState({})
 
-  const openDialog = () => setIsDialogShowing(true)
+  const openDialog = (tokenInfo) => {
+    setTokenInfo(tokenInfo)
+    setIsDialogShowing(true)
+  }
 
   return (
     <>
@@ -33,9 +32,8 @@ export const PoolsContent = () => {
               <PoolCard
                 tokenAName="Juno"
                 tokenBName={formatTokenName(token.symbol)}
-                availableLiquidity={1000000}
-                liquidity={0}
-                onButtonClick={openDialog}
+                tokenInfo={token}
+                onButtonClick={() => openDialog(token)}
               />
             ),
             key: key,
@@ -44,6 +42,7 @@ export const PoolsContent = () => {
       <PoolDialog
         isShowing={isDialogShowing}
         onRequestClose={() => setIsDialogShowing(false)}
+        tokenInfo={tokenInfo}
       />
     </>
   )

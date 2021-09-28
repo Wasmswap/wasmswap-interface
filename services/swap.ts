@@ -222,11 +222,16 @@ export type InfoResponse = {
 
 export const getSwapInfo = async(swapAddress: string, rpcEndpoint: string): Promise<InfoResponse> => {
   try{
+    console.log(swapAddress)
+    console.log(rpcEndpoint)
     const client = await CosmWasmClient.connect(rpcEndpoint)
-    return await client.queryContractSmart(swapAddress, {
-      get_info: {},
+    const result = await client.queryContractSmart(swapAddress, {
+      info: {},
     })
+    console.log(result)
+    return result
   }catch(e){
+    console.info('aksdjfalskjf')
     console.log(e)
   }
 }

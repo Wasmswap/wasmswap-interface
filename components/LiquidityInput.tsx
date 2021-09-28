@@ -4,7 +4,7 @@ import { Text } from './Text'
 
 type LiquidityInputProps = {
   tokenName: string
-  liquidity: number
+  balance: number
   amount: number
   ratio: number
   onAmountChange: (value: number) => void
@@ -12,7 +12,7 @@ type LiquidityInputProps = {
 
 export const LiquidityInput: FC<LiquidityInputProps> = ({
   tokenName,
-  liquidity,
+  balance,
   ratio,
   amount,
   onAmountChange,
@@ -42,7 +42,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
       <StyledRow>
         <StyledSubRow>
           <Text type="caption" variant="light" color="gray">
-            Total available: <b>{liquidity}</b>
+            Total available: <b>{balance}</b>
           </Text>
         </StyledSubRow>
       </StyledRow>

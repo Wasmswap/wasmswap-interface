@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 
 function SafeHydrate({ children }) {
   return (
@@ -14,8 +15,10 @@ function SafeHydrate({ children }) {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const queryClient = new QueryClient()
   return (
     <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
       <SafeHydrate>
         <ErrorBoundary>
           <Layout>
@@ -23,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Layout>
         </ErrorBoundary>
       </SafeHydrate>
+      </QueryClientProvider>
     </RecoilRoot>
   )
 }

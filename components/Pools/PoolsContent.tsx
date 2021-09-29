@@ -21,23 +21,21 @@ export const PoolsContent = () => {
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        Add assets and earn swap fees for providing liqudity to the market.
+        Add assets and earn swap fees for providing liquidity to the market.
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>
         {TokenList.tokens
           .filter((x) => x.token_address)
-          .map((token, key) => ({
-            ...(
-              <PoolCard
-                tokenAName="Juno"
-                tokenBName={formatTokenName(token.symbol)}
-                tokenInfo={token}
-                onButtonClick={() => openDialog(token)}
-              />
-            ),
-            key: key,
-          }))}
+          .map((token, key) => (
+            <PoolCard
+              key={key}
+              tokenAName="Juno"
+              tokenBName={formatTokenName(token.symbol)}
+              tokenInfo={token}
+              onButtonClick={() => openDialog(token)}
+            />
+          ))}
       </StyledDivForPoolsGrid>
       <PoolDialog
         isShowing={isDialogShowing}

@@ -1,12 +1,16 @@
 import styled from 'styled-components'
-import { useQuery } from 'react-query'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
 import { Button } from '../Button'
-import { getSwapInfo } from 'services/swap'
-import { getLiquidityBalance } from 'services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
+import { useLiquidity } from '../../hooks/useLiquidity'
+
+const parseCurrency = (value: number | string) =>
+  Number(value).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
 
 export const PoolCard = ({
   tokenAName,
@@ -16,21 +20,10 @@ export const PoolCard = ({
 }) => {
   const { address } = useRecoilValue(walletState)
 
-  const swapInfoQuery = useQuery(`totalLiquidity${tokenBName}`, () =>
-    getSwapInfo(
-      tokenInfo.swap_address,
-      process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-    ).then((res) => res)
-  )
-
-  const myLiquidityQuery = useQuery([`myLiquidity${tokenBName}`, address, swapInfoQuery.data], () => {
-      console.log('fetching')
-      
-      return getLiquidityBalance({
-        address: address,
-        swapAddress: tokenInfo.swap_address,
-        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
-      }).then((res) => (res.balance/+swapInfoQuery.data.lp_token_supply) * +swapInfoQuery.data.native_reserve * 2)
+  const { totalLiquidity, myLiquidity } = useLiquidity({
+    tokenName: tokenBName,
+    swapAddress: tokenInfo.swap_address,
+    address,
   })
 
   return (
@@ -55,13 +48,7 @@ export const PoolCard = ({
         type="caption"
         variant="light"
       >
-        Total liquidity:{' '}
-        {swapInfoQuery.data
-          ? ((+swapInfoQuery.data.native_reserve * 2) / 1000000).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })
-          : 0}
+        Total liquidity: {parseCurrency(totalLiquidity)}
       </StyledTextForAvailableLiquidity>
       <StyledDivForDivider />
       <StyledDivForFooter>
@@ -70,12 +57,7 @@ export const PoolCard = ({
             My liquidity
           </Text>
           <StyledTextForLiquidity>
-            {myLiquidityQuery.data
-              ? (+myLiquidityQuery.data).toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                })
-              : 0}
+            {parseCurrency(myLiquidity)}
           </StyledTextForLiquidity>
         </div>
         <Button onClick={onButtonClick} size="small">

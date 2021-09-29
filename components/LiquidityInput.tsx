@@ -10,6 +10,11 @@ type LiquidityInputProps = {
   onAmountChange: (value: number) => void
 }
 
+const balanceFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 6,
+})
+
 export const LiquidityInput: FC<LiquidityInputProps> = ({
   tokenName,
   balance,
@@ -19,6 +24,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
 }) => {
   const handleAmountChange = ({ target: { value } }) =>
     onAmountChange(Number(value))
+
   return (
     <StyledInputBox>
       <StyledRow>
@@ -32,7 +38,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
             type="number"
             placeholder="0.0"
             min={0}
-            value={amount}
+            value={balanceFormatter.format(amount)}
             onChange={onAmountChange ? handleAmountChange : undefined}
             autoComplete="off"
             readOnly={!onAmountChange}

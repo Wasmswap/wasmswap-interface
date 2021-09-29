@@ -218,6 +218,7 @@ export type InfoResponse = {
   token_address: string
   token_denom: string
   token_reserve: string
+  lp_token_supply: string,
 }
 
 export const getSwapInfo = async(swapAddress: string, rpcEndpoint: string): Promise<InfoResponse> => {

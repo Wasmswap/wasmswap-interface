@@ -42,7 +42,7 @@ export const PoolsContent = () => {
       <PoolDialog
         isShowing={isDialogShowing}
         onRequestClose={() => setIsDialogShowing(false)}
-        tokenInfo={tokenInfo}
+        tokenListInfo={tokenInfo}
       />
     </>
   )

@@ -16,22 +16,21 @@ export const PoolCard = ({
 }) => {
   const { address } = useRecoilValue(walletState)
 
-  const totalLiquidityQuery = useQuery(`totalLiquidity${tokenBName}`, () =>
+  const swapInfoQuery = useQuery(`totalLiquidity${tokenBName}`, () =>
     getSwapInfo(
       tokenInfo.swap_address,
       process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-    ).then((res) => (+res.native_reserve * 2) / 1000000)
+    ).then((res) => res)
   )
 
-  const myLiquidityQuery = useQuery(`myLiquidity${tokenBName}`, () => {
-    if (address) {
+  const myLiquidityQuery = useQuery([`myLiquidity${tokenBName}`, address, swapInfoQuery.data], () => {
+      console.log('fetching')
+      
       return getLiquidityBalance({
         address: address,
         swapAddress: tokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
-      }).then((res) => res)
-    }
-    return 0
+      }).then((res) => (res.balance/+swapInfoQuery.data.lp_token_supply) * +swapInfoQuery.data.native_reserve * 2)
   })
 
   return (
@@ -57,8 +56,8 @@ export const PoolCard = ({
         variant="light"
       >
         Total liquidity:{' '}
-        {totalLiquidityQuery.data
-          ? totalLiquidityQuery.data.toLocaleString('en-US', {
+        {swapInfoQuery.data
+          ? ((+swapInfoQuery.data.native_reserve * 2) / 1000000).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
             })

@@ -2,14 +2,30 @@ import styled from 'styled-components'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
 import { Button } from '../Button'
+import { useRecoilValue } from 'recoil'
+import { walletState } from 'state/atoms/walletAtoms'
+import { useLiquidity } from '../../hooks/useLiquidity'
+
+const parseCurrency = (value: number | string) =>
+  Number(value).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
 
 export const PoolCard = ({
   tokenAName,
   tokenBName,
-  availableLiquidity,
-  liquidity,
+  tokenInfo,
   onButtonClick,
 }) => {
+  const { address } = useRecoilValue(walletState)
+
+  const { totalLiquidity, myLiquidity } = useLiquidity({
+    tokenName: tokenBName,
+    swapAddress: tokenInfo.swap_address,
+    address,
+  })
+
   return (
     <StyledDivForCard>
       <StyledDivForTitle>
@@ -32,11 +48,7 @@ export const PoolCard = ({
         type="caption"
         variant="light"
       >
-        Total liquidity:{' '}
-        {availableLiquidity.toLocaleString('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        })}
+        Total liquidity: {parseCurrency(totalLiquidity)}
       </StyledTextForAvailableLiquidity>
       <StyledDivForDivider />
       <StyledDivForFooter>
@@ -45,10 +57,7 @@ export const PoolCard = ({
             My liquidity
           </Text>
           <StyledTextForLiquidity>
-            {liquidity.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
+            {parseCurrency(myLiquidity)}
           </StyledTextForLiquidity>
         </div>
         <Button onClick={onButtonClick} size="small">

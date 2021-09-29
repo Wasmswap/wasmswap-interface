@@ -22,6 +22,7 @@ export type AddLiquidityInput = {
 export const addLiquidity = async (
   input: AddLiquidityInput
 ): Promise<BroadcastTxResponse> => {
+  console.log(input)
   let msg1 = {
     increase_allowance: {
       amount: `${input.maxToken}`,

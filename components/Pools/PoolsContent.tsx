@@ -3,11 +3,17 @@ import styled from 'styled-components'
 import { PoolCard } from './PoolCard'
 import { useState } from 'react'
 import { PoolDialog } from '../PoolDialog'
+import TokenList from '../../public/token_list.json'
+import { formatTokenName } from 'util/conversion'
 
 export const PoolsContent = () => {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
+  const [tokenInfo, setTokenInfo] = useState({})
 
-  const openDialog = () => setIsDialogShowing(true)
+  const openDialog = (tokenInfo) => {
+    setTokenInfo(tokenInfo)
+    setIsDialogShowing(true)
+  }
 
   return (
     <>
@@ -15,25 +21,26 @@ export const PoolsContent = () => {
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        Add assets and earn swap fees for providing liqudity to the market.
+        Add assets and earn swap fees for providing liquidity to the market.
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>
-        {new Array(3)
-          .fill(
+        {TokenList.tokens
+          .filter((x) => x.token_address)
+          .map((token, key) => (
             <PoolCard
+              key={key}
               tokenAName="Juno"
-              tokenBName="Pood"
-              availableLiquidity={1000000}
-              liquidity={0}
-              onButtonClick={openDialog}
+              tokenBName={formatTokenName(token.symbol)}
+              tokenInfo={token}
+              onButtonClick={() => openDialog(token)}
             />
-          )
-          .map((renderedItem, index) => ({ ...renderedItem, key: index }))}
+          ))}
       </StyledDivForPoolsGrid>
       <PoolDialog
         isShowing={isDialogShowing}
         onRequestClose={() => setIsDialogShowing(false)}
+        tokenListInfo={tokenInfo}
       />
     </>
   )

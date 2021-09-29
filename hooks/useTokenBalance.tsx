@@ -21,7 +21,9 @@ export const useTokenBalance = (tokenInfo: TokenInfo) => {
         return res / 1000000
       }
 
-      const res = +(await CW20(client).use(tokenInfo.token_address).balance(address))
+      const res = +(await CW20(client)
+        .use(tokenInfo.token_address)
+        .balance(address))
       return res / 1000000
     }
     getTokenBalance().then((balance) => {

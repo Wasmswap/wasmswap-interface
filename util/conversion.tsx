@@ -1,30 +1,20 @@
-export function convertMicroDenomToDenom(amount: number | string) {
-  if (typeof amount === 'string') {
-    amount = Number(amount)
-  }
-  amount = amount / 1000000
+export function convertMicroDenomToDenom(value: number | string) {
+  const amount = Number(value) / 1000000
   return isNaN(amount) ? 0 : amount
 }
 
-export function convertDenomToMicroDenom(amount: number | string): string {
-  if (typeof amount === 'string') {
-    amount = Number(amount)
-  }
-  amount = amount * 1000000
-  return isNaN(amount) ? '0' : String(amount)
+export function convertDenomToMicroDenom(value: number | string): string {
+  const amount = Number(value) * 1000000
+  return String(isNaN(amount) ? 0 : amount)
 }
 
 export function convertFromMicroDenom(denom: string) {
   return denom?.substring(1).toUpperCase()
 }
 
-export function convertToFixedDecimals(amount: number | string): string {
-  if (typeof amount === 'string') {
-    amount = Number(amount)
-  }
-  if (amount > 0.01) {
-    return amount.toFixed(2)
-  } else return String(amount)
+export function convertToFixedDecimals(value: number | string): string {
+  const amount = Number(value)
+  return amount > 0.01 ? amount.toFixed(2) : String(amount)
 }
 
 export const zeroVotingCoin = {

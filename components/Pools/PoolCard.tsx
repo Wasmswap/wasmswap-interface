@@ -8,6 +8,12 @@ import { getLiquidityBalance } from 'services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
 
+const parseCurrency = (value: number | string) =>
+  Number(value).toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+
 export const PoolCard = ({
   tokenAName,
   tokenBName,
@@ -16,22 +22,27 @@ export const PoolCard = ({
 }) => {
   const { address } = useRecoilValue(walletState)
 
-  const swapInfoQuery = useQuery(`totalLiquidity${tokenBName}`, () =>
-    getSwapInfo(
-      tokenInfo.swap_address,
-      process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-    ).then((res) => res)
+  const { data: { native_reserve, lp_token_supply } = {} } = useQuery(
+    `totalLiquidity/${tokenBName}`,
+    () =>
+      getSwapInfo(
+        tokenInfo.swap_address,
+        process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
+      )
   )
 
-  const myLiquidityQuery = useQuery([`myLiquidity${tokenBName}`, address, swapInfoQuery.data], () => {
-      console.log('fetching')
-      
-      return getLiquidityBalance({
+  const { data: liquidity } = useQuery(
+    [`myLiquidity/${tokenBName}`, address, native_reserve, lp_token_supply],
+    async () => {
+      const { balance } = await getLiquidityBalance({
         address: address,
         swapAddress: tokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
-      }).then((res) => (res.balance/+swapInfoQuery.data.lp_token_supply) * +swapInfoQuery.data.native_reserve * 2)
-  })
+      })
+
+      return (balance / Number(lp_token_supply)) * Number(native_reserve) * 2
+    }
+  )
 
   return (
     <StyledDivForCard>
@@ -56,12 +67,9 @@ export const PoolCard = ({
         variant="light"
       >
         Total liquidity:{' '}
-        {swapInfoQuery.data
-          ? ((+swapInfoQuery.data.native_reserve * 2) / 1000000).toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })
-          : 0}
+        {parseCurrency(
+          native_reserve ? (Number(native_reserve) * 2) / 1000000 : 0
+        )}
       </StyledTextForAvailableLiquidity>
       <StyledDivForDivider />
       <StyledDivForFooter>
@@ -70,12 +78,7 @@ export const PoolCard = ({
             My liquidity
           </Text>
           <StyledTextForLiquidity>
-            {myLiquidityQuery.data
-              ? (+myLiquidityQuery.data).toLocaleString('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                })
-              : 0}
+            {parseCurrency(liquidity ? liquidity : 0)}
           </StyledTextForLiquidity>
         </div>
         <Button onClick={onButtonClick} size="small">

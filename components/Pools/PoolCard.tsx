@@ -1,12 +1,10 @@
 import styled from 'styled-components'
-import { useQuery } from 'react-query'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
 import { Button } from '../Button'
-import { getSwapInfo } from 'services/swap'
-import { getLiquidityBalance } from 'services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
+import { useLiquidity } from '../../hooks/useLiquidity'
 
 const parseCurrency = (value: number | string) =>
   Number(value).toLocaleString('en-US', {
@@ -22,27 +20,11 @@ export const PoolCard = ({
 }) => {
   const { address } = useRecoilValue(walletState)
 
-  const { data: { native_reserve, lp_token_supply } = {} } = useQuery(
-    `totalLiquidity/${tokenBName}`,
-    () =>
-      getSwapInfo(
-        tokenInfo.swap_address,
-        process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-      )
-  )
-
-  const { data: liquidity } = useQuery(
-    [`myLiquidity/${tokenBName}`, address, native_reserve, lp_token_supply],
-    async () => {
-      const { balance } = await getLiquidityBalance({
-        address: address,
-        swapAddress: tokenInfo.swap_address,
-        rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
-      })
-
-      return (balance / Number(lp_token_supply)) * Number(native_reserve) * 2
-    }
-  )
+  const { totalLiquidity, myLiquidity } = useLiquidity({
+    tokenName: tokenBName,
+    swapAddress: tokenInfo.swap_address,
+    address,
+  })
 
   return (
     <StyledDivForCard>
@@ -66,10 +48,7 @@ export const PoolCard = ({
         type="caption"
         variant="light"
       >
-        Total liquidity:{' '}
-        {parseCurrency(
-          native_reserve ? (Number(native_reserve) * 2) / 1000000 : 0
-        )}
+        Total liquidity: {parseCurrency(totalLiquidity)}
       </StyledTextForAvailableLiquidity>
       <StyledDivForDivider />
       <StyledDivForFooter>
@@ -78,7 +57,7 @@ export const PoolCard = ({
             My liquidity
           </Text>
           <StyledTextForLiquidity>
-            {parseCurrency(liquidity ? liquidity : 0)}
+            {parseCurrency(myLiquidity)}
           </StyledTextForLiquidity>
         </div>
         <Button onClick={onButtonClick} size="small">

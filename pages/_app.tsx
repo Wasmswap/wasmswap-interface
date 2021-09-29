@@ -18,14 +18,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient()
   return (
     <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-      <SafeHydrate>
-        <ErrorBoundary>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ErrorBoundary>
-      </SafeHydrate>
+      <QueryClientProvider client={queryClient}>
+        <SafeHydrate>
+          <ErrorBoundary>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ErrorBoundary>
+        </SafeHydrate>
       </QueryClientProvider>
     </RecoilRoot>
   )

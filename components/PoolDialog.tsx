@@ -1,5 +1,5 @@
 import { Dialog, DialogBody } from './Dialog'
-import { useQuery } from 'react-query'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { Text } from './Text'
 import styled from 'styled-components'
 import { LiquidityInput } from './LiquidityInput'
@@ -13,12 +13,13 @@ import { useState } from 'react'
 import { getSwapInfo } from 'services/swap'
 import { addLiquidity } from 'services/liquidity'
 import { toast } from 'react-toastify'
+import { Spinner } from './Spinner'
 
 export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
   const { data: { token_reserve, native_reserve } = {} } = useQuery(
-    `getInfo/${tokenListInfo.swap_address}`,
+    `getSwapInfo/${tokenListInfo.swap_address}`,
     () =>
       getSwapInfo(
         tokenListInfo.swap_address,
@@ -26,7 +27,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
       )
   )
 
-  const { data: junoBalance = 0 } = useQuery(`junoBalance`, async () => {
+  const { data: junoBalance = 0 } = useQuery('junoBalance', async () => {
     if (address) {
       const coin = await client.getBalance(address, 'ujuno')
       const amount = coin ? Number(coin.amount) : 0
@@ -48,22 +49,10 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
     }
   )
 
-  const [tokenAAmount, setTokenAAmount] = useState(1)
-  const [tokenBAmount, setTokenBAmount] = useState(1)
-
-  const handleTokenAAmount = (val: number) => {
-    setTokenAAmount(val)
-    setTokenBAmount((Number(token_reserve) / Number(native_reserve)) * val)
-  }
-
-  const handleTokenBAmount = (val: number) => {
-    setTokenBAmount(val)
-    setTokenAAmount((Number(native_reserve) / Number(token_reserve)) * val)
-  }
-
-  const executeAddLiquidity = async () => {
-    try {
-      await addLiquidity({
+  const queryClient = useQueryClient()
+  const { isLoading, mutateAsync: mutateAsyncAddLiquidity } = useMutation(
+    () => {
+      return addLiquidity({
         nativeAmount: Math.floor(tokenAAmount * 1000000),
         nativeDenom: 'ujuno',
         maxToken: Math.floor(tokenBAmount * 1000000 + 5),
@@ -73,6 +62,39 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
         tokenAddress: tokenListInfo.token_address,
         client: client,
       })
+    },
+    {
+      onSuccess: () => {
+        const queriesToInvalidate = [
+          'getSwapInfo',
+          'myLiquidity',
+          'totalLiquidity',
+          'junoBalance',
+          `${tokenListInfo.symbol}Balance`,
+        ]
+        queriesToInvalidate.forEach((queryName) => {
+          queryClient.invalidateQueries(queryName)
+        })
+      },
+    }
+  )
+
+  const [tokenAAmount, setTokenAAmount] = useState(1)
+  const [tokenBAmount, setTokenBAmount] = useState(1)
+
+  const handleTokenAAmountChange = (val: number) => {
+    setTokenAAmount(val)
+    setTokenBAmount((Number(token_reserve) / Number(native_reserve)) * val)
+  }
+
+  const handleTokenBAmountChange = (val: number) => {
+    setTokenBAmount(val)
+    setTokenAAmount((Number(native_reserve) / Number(token_reserve)) * val)
+  }
+
+  const executeAddLiquidity = async () => {
+    try {
+      await mutateAsyncAddLiquidity()
       toast.success('🎉 Add Successful', {
         position: 'top-right',
         autoClose: 5000,
@@ -82,6 +104,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
         draggable: true,
         progress: undefined,
       })
+      requestAnimationFrame(onRequestClose)
     } catch (e) {
       toast.error(`Error with add ${e}`, {
         position: 'top-right',
@@ -107,23 +130,27 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
           balance={junoBalance ? junoBalance : 0}
           amount={tokenAAmount}
           ratio={50}
-          onAmountChange={handleTokenAAmount}
+          onAmountChange={handleTokenAAmountChange}
         />
         <LiquidityInput
           tokenName={formatTokenName(tokenListInfo.symbol)}
           balance={tokenBalance ? tokenBalance : 0}
           amount={tokenBAmount}
           ratio={50}
-          onAmountChange={handleTokenBAmount}
+          onAmountChange={handleTokenBAmountChange}
         />
         <Link
           color="lightBlue"
-          onClick={() => console.log('add maximum amounts')}
+          onClick={() => handleTokenAAmountChange(junoBalance)}
         >
           Add maximum amounts
         </Link>
-        <StyledButton size="humongous" onClick={executeAddLiquidity}>
-          Add Liquidity
+        <StyledButton
+          size="humongous"
+          onClick={isLoading ? undefined : executeAddLiquidity}
+          disabled={isLoading}
+        >
+          {isLoading ? <Spinner /> : 'Add Liquidity'}
         </StyledButton>
       </DialogBody>
     </Dialog>

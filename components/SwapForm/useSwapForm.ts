@@ -8,7 +8,10 @@ import {
   tokenBNameState,
 } from '../../state/atoms/tokenAtoms'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import { useTokenBalance } from '../../hooks/useTokenBalance'
+import {
+  useInvalidateBalances,
+  useTokenBalance,
+} from '../../hooks/useTokenBalance'
 import { useTokenPrice } from '../../hooks/useTokenPrice'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
@@ -31,13 +34,15 @@ export const useSwapForm = () => {
   const [tokenAName, setTokenAName] = useRecoilState(tokenANameState)
   const [tokenAmount, setTokenAmount] = useRecoilState(tokenAmountState)
   const tokenAInfo = useTokenInfo(tokenAName)
-  const tokenABalance = useTokenBalance(tokenAInfo)
+  const { balance: tokenABalance } = useTokenBalance(tokenAInfo)
 
   // Token B related states
   const [tokenBName, setTokenBName] = useRecoilState(tokenBNameState)
   const tokenBInfo = useTokenInfo(tokenBName)
   const tokenBPrice = useTokenPrice(tokenAInfo, tokenBInfo, tokenAmount)
-  const tokenBBalance = useTokenBalance(tokenBInfo)
+  const { balance: tokenBBalance } = useTokenBalance(tokenBInfo)
+
+  const invalidateBalances = useInvalidateBalances()
 
   // Reset transaction state everytime token names or amount names change
   useEffect(() => {
@@ -135,6 +140,8 @@ export const useSwapForm = () => {
         })
       } finally {
         setTransactionState('IDLE')
+        // invalidate token balances and refetch them all
+        invalidateBalances()
       }
     }
   }

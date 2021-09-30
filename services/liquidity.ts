@@ -22,7 +22,6 @@ export type AddLiquidityInput = {
 export const addLiquidity = async (
   input: AddLiquidityInput
 ): Promise<BroadcastTxResponse> => {
-  console.log(input)
   let msg1 = {
     increase_allowance: {
       amount: `${input.maxToken}`,
@@ -55,14 +54,13 @@ export const addLiquidity = async (
   }
   const fee: StdFee = {
     amount: input.client.fees.exec.amount,
-    gas: (+input.client.fees.exec.gas * 2).toString(),
+    gas: (Number(input.client.fees.exec.gas) * 2).toString(),
   }
   const executeAddLiquidity = await input.client.signAndBroadcast(
     input.senderAddress,
     [executeContractMsg1, executeContractMsg2],
     fee
   )
-  console.log(executeAddLiquidity)
   return executeAddLiquidity
 }
 
@@ -100,17 +98,18 @@ export type GetLiquidityBalanceInput = {
   rpcEndpoint: string
 }
 
-export const getLiquidityBalance = async (input: GetLiquidityBalanceInput) => {
+export const getLiquidityBalance = async ({
+  rpcEndpoint,
+  swapAddress,
+  address,
+}: GetLiquidityBalanceInput) => {
   try {
-    const client = await CosmWasmClient.connect(input.rpcEndpoint)
-    const query = await client.queryContractSmart(input.swapAddress, {
-      balance: {
-        address: input.address,
-      },
+    const client = await CosmWasmClient.connect(rpcEndpoint)
+    const query = await client.queryContractSmart(swapAddress, {
+      balance: { address },
     })
-    console.log(query)
     return query.balance
   } catch (e) {
-    console.log(e)
+    console.error('Cannot get liquidity balance:', e)
   }
 }

@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { PoolDialog } from '../PoolDialog'
 import TokenList from '../../public/token_list.json'
 import { formatTokenName } from 'util/conversion'
+import { TokenInfo } from '../../hooks/useTokenInfo'
 
 export const PoolsContent = () => {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
-  const [tokenInfo, setTokenInfo] = useState({})
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
 
   const openDialog = (tokenInfo) => {
     setTokenInfo(tokenInfo)
@@ -40,7 +41,7 @@ export const PoolsContent = () => {
       <PoolDialog
         isShowing={isDialogShowing}
         onRequestClose={() => setIsDialogShowing(false)}
-        tokenInfo={tokenInfo}
+        tokenInfo={tokenInfo || {}}
       />
     </>
   )

@@ -44,7 +44,7 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
 
   return (
     <Portal>
-      {isRenderingDialog && (
+      {(isShowing || isRenderingDialog) && (
         <>
           <StyledDivForModal ref={modalRef}>
             <StyledCloseIcon onClick={onRequestClose} />

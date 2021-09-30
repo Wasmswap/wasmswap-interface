@@ -23,7 +23,7 @@
     {
       "chain_id": "lucina",
       "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
-      "swap_address": "juno1x5efy2d5gvqyaef2zqpknmj588dvf5a3gpgdnf",
+      "swap_address": "juno1m3flnl63kv6l9f72lavetku63z083ms2kjan7c",
       "symbol": "POOD",
       "name": "Poodle Coin",
       "decimals": 6,
@@ -33,9 +33,19 @@
     {
       "chain_id": "lucina",
       "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
-      "swap_address": "juno123lsam8l2kxcm8ewkla7khczpzucgxmjqag8lg",
+      "swap_address": "juno153lxnqqktphyga7pu78xuzruc0sanxwyf45zmd",
       "symbol": "CRAB",
       "name": "Crab Coin",
+      "decimals": 6,
+      "logoURI": "",
+      "tags": ["memecoin"] 
+    },
+    {
+      "chain_id": "lucina",
+      "token_address": "juno1q3zr6asu48tjysqjeetwpes5evewsq6wf0kdat",
+      "swap_address": "juno1ek5uy2uts6azjvynuvze2pj6psz580n8qnpc54",
+      "symbol": "DAO",
+      "name": "DAO Coin",
       "decimals": 6,
       "logoURI": "",
       "tags": ["memecoin"] 

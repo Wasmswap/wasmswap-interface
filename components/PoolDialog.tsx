@@ -15,14 +15,14 @@ import { addLiquidity } from 'services/liquidity'
 import { toast } from 'react-toastify'
 import { Spinner } from './Spinner'
 
-export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
+export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
   const { data: { token_reserve, native_reserve } = {} } = useQuery(
-    `getSwapInfo/${tokenListInfo.swap_address}`,
+    `getSwapInfo/${tokenInfo.swap_address}`,
     () =>
       getSwapInfo(
-        tokenListInfo.swap_address,
+        tokenInfo.swap_address,
         process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
       )
   )
@@ -37,11 +37,11 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
   })
 
   const { data: tokenBalance = 0 } = useQuery(
-    `${tokenListInfo.symbol}Balance`,
+    `${tokenInfo.symbol}Balance`,
     async () => {
       if (address) {
         const balance = await CW20(client)
-          .use(tokenListInfo.token_address)
+          .use(tokenInfo.token_address)
           .balance(address)
         return Number(balance) / 1000000
       }
@@ -57,9 +57,9 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
         nativeDenom: 'ujuno',
         maxToken: Math.floor(tokenBAmount * 1000000 + 5),
         minLiquidity: 0,
-        swapAddress: tokenListInfo.swap_address,
+        swapAddress: tokenInfo.swap_address,
         senderAddress: address,
-        tokenAddress: tokenListInfo.token_address,
+        tokenAddress: tokenInfo.token_address,
         client: client,
       })
     },
@@ -67,10 +67,10 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
       onSuccess: () => {
         const queriesToInvalidate = [
           'getSwapInfo',
-          'myLiquidity',
-          'totalLiquidity',
+          `myLiquidity/${tokenInfo.symbol}`,
+          `totalLiquidity/${tokenInfo.symbol}`,
           'junoBalance',
-          `${tokenListInfo.symbol}Balance`,
+          `${tokenInfo.symbol}Balance`,
         ]
         queriesToInvalidate.forEach((queryName) => {
           queryClient.invalidateQueries(queryName)
@@ -123,7 +123,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
       <DialogBody>
         <StyledTitle>
           {' '}
-          {`Juno / ${formatTokenName(tokenListInfo.symbol)}`}
+          {`Juno / ${formatTokenName(tokenInfo.symbol)}`}
         </StyledTitle>
         <LiquidityInput
           tokenName="Juno"
@@ -133,7 +133,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenListInfo }) => {
           onAmountChange={handleTokenAAmountChange}
         />
         <LiquidityInput
-          tokenName={formatTokenName(tokenListInfo.symbol)}
+          tokenName={formatTokenName(tokenInfo.symbol)}
           balance={tokenBalance ? tokenBalance : 0}
           amount={tokenBAmount}
           ratio={50}

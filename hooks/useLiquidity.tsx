@@ -19,11 +19,13 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
   const { data: myLiquidity, isLoading: fetchingMyLiquidity } = useQuery(
     [`myLiquidity/${tokenName}`, address, native_reserve, lp_token_supply],
     async () => {
-      const balance = await getLiquidityBalance({
+      const input = {
         address: address,
         swapAddress: swapAddress,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
-      })
+      }
+      console.log(input)
+      const balance = await getLiquidityBalance(input)
 
       console.log({
         balance,
@@ -32,7 +34,7 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
       })
 
       return (
-        (Number(balance) / Number(lp_token_supply)) * Number(native_reserve) * 2
+        ((Number(balance) / Number(lp_token_supply)) * Number(native_reserve) * 2) / 1000000
       )
     }
   )

@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
 import { Text } from './Text'
+import { colorTokens } from '../util/constants'
 
 type LiquidityInputProps = {
   tokenName: string
@@ -27,66 +28,63 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
 
   return (
     <StyledInputBox>
-      <StyledRow>
-        <StyledTokenWrapper>
-          <Text variant="light">
-            {tokenName} - {ratio}%
-          </Text>
-        </StyledTokenWrapper>
-        <Text>
-          <StyledInput
-            type="number"
-            placeholder="0.0"
-            min={0}
-            value={balanceFormatter.format(amount)}
-            onChange={onAmountChange ? handleAmountChange : undefined}
-            autoComplete="off"
-            readOnly={!onAmountChange}
-          />
-        </Text>
-      </StyledRow>
-      <StyledRow>
-        <StyledSubRow>
+      <StyledDivForInfo>
+        <StyledRow>
+          <StyledTokenWrapper>
+            <Text variant="light">
+              {tokenName} - {ratio}%
+            </Text>
+          </StyledTokenWrapper>
+        </StyledRow>
+        <StyledRow>
           <Text type="caption" variant="light" color="gray">
-            Total available: <b>{balance}</b>
+            Total available:{' '}
+            <StyledSpanForBalance>{balance}</StyledSpanForBalance>
           </Text>
-        </StyledSubRow>
-      </StyledRow>
+        </StyledRow>
+      </StyledDivForInfo>
+
+      <Text>
+        <StyledInput
+          type="number"
+          placeholder="0.0"
+          min={0}
+          value={balanceFormatter.format(amount)}
+          onChange={onAmountChange ? handleAmountChange : undefined}
+          autoComplete="off"
+          readOnly={!onAmountChange}
+        />
+      </Text>
     </StyledInputBox>
   )
 }
 
 const StyledInputBox = styled.div`
-  background-color: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${colorTokens.white};
   border-radius: 16px;
-  padding: 20px 18px;
-  margin-bottom: 8px;
+  padding: 18px 24px;
+  margin-bottom: 12px;
 `
 
 const StyledRow = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   &:not(&:first-child) {
-    padding-top: 10px;
+    padding-top: 8px;
   }
 `
 
-const StyledSubRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
+const StyledDivForInfo = styled.div``
 
 const StyledTokenWrapper = styled.div`
   display: flex;
   align-items: center;
-  background-color: #fff;
-  border-radius: 12px;
-  position: relative;
-  padding: 8px 12px;
   white-space: nowrap;
+  text-transform: uppercase;
 `
 
 const StyledInput = styled.input`
@@ -99,4 +97,8 @@ const StyledInput = styled.input`
   padding: 0;
   background: transparent;
   text-align: right;
+`
+
+const StyledSpanForBalance = styled.span`
+  color: ${colorTokens.black};
 `

@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { toast } from 'react-toastify'
 import { useRecoilValue } from 'recoil'
+import { PlusIcon } from '@heroicons/react/solid'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { Dialog, DialogBody } from './Dialog'
 import { Text } from './Text'
@@ -19,6 +20,7 @@ import {
 } from '../hooks/useTokenBalance'
 import { useTokenInfo } from '../hooks/useTokenInfo'
 import { useInvalidateLiquidity } from '../hooks/useLiquidity'
+import { colorTokens } from '../util/constants'
 
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
@@ -112,9 +114,8 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
-        <StyledTitle>
-          {' '}
-          {`Juno / ${formatTokenName(tokenInfo.symbol)}`}
+        <StyledTitle type="title" variant="normal">
+          Add {`Juno / ${formatTokenName(tokenInfo.symbol)}`}
         </StyledTitle>
         <LiquidityInput
           tokenName="Juno"
@@ -130,12 +131,17 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           ratio={50}
           onAmountChange={handleTokenBAmountChange}
         />
-        <Link
-          color="lightBlue"
-          onClick={() => handleTokenAAmountChange(junoBalance)}
-        >
-          Add maximum amounts
-        </Link>
+        <StyledDivForLink>
+          <StyledPlusIcon />
+          <Link
+            color="black"
+            variant="normal"
+            type="body"
+            onClick={() => handleTokenAAmountChange(junoBalance)}
+          >
+            Add maximum amounts
+          </Link>
+        </StyledDivForLink>
         <StyledButton
           size="humongous"
           onClick={isLoading ? undefined : mutateAddLiquidity}
@@ -149,10 +155,22 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
 }
 
 const StyledTitle = styled(Text)`
-  padding-bottom: 24px;
-  text-align: center;
+  padding: 18px 14px;
 `
 
 const StyledButton = styled(Button)`
-  margin-top: 32px;
+  margin: 8px 0 14px;
+`
+
+const StyledPlusIcon = styled(PlusIcon)`
+  color: ${colorTokens.black};
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+`
+
+const StyledDivForLink = styled.div`
+  padding: 24px 14px;
+  display: flex;
+  align-items: center;
 `

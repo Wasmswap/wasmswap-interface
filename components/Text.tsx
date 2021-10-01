@@ -9,7 +9,7 @@ const fontWeightTokens = {
 }
 
 type TextProps = {
-  type?: 'heading' | 'title' | 'body' | 'caption'
+  type?: 'heading' | 'title' | 'body' | 'subtitle' | 'caption'
   color?: keyof typeof colorTokens
   variant?: keyof typeof fontWeightTokens
 }
@@ -22,15 +22,15 @@ const fontWeightSelector = (props: TextProps) => {
   return fontWeightTokens[props.variant] || fontWeightTokens.normal
 }
 
-const Heading = styled.p<TextProps>`
-  font-size: 20px;
-  line-height: 27px;
+const Title = styled.p<TextProps>`
+  font-size: 32px;
+  line-height: 44px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
 `
 
-const Title = styled.p<TextProps>`
-  font-size: 32px;
+const Heading = styled.p<TextProps>`
+  font-size: 20px;
   line-height: 27px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
@@ -39,6 +39,13 @@ const Title = styled.p<TextProps>`
 const Paragraph = styled.p<TextProps>`
   font-size: 18px;
   line-height: 24px;
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+`
+
+const Subtitle = styled.p<TextProps>`
+  font-size: 16px;
+  line-height: 18px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
 `
@@ -55,6 +62,7 @@ const map = {
   caption: Caption,
   heading: Heading,
   title: Title,
+  subtitle: Subtitle,
 }
 
 export const Text = ({

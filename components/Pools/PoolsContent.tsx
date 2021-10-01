@@ -2,13 +2,14 @@ import { Text } from '../Text'
 import styled from 'styled-components'
 import { PoolCard } from './PoolCard'
 import { useState } from 'react'
-import { PoolDialog } from '../PoolDialog'
+import { PoolDialog } from './PoolDialog'
 import TokenList from '../../public/token_list.json'
 import { formatTokenName } from 'util/conversion'
+import { TokenInfo } from '../../hooks/useTokenInfo'
 
 export const PoolsContent = () => {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
-  const [tokenInfo, setTokenInfo] = useState({})
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
 
   const openDialog = (tokenInfo) => {
     setTokenInfo(tokenInfo)
@@ -21,7 +22,8 @@ export const PoolsContent = () => {
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        Add assets and earn swap fees for providing liquidity to the market.
+        Some helpful explainer text tells you what a liquidity pool is, what
+        you’re risking, and what you stand to gain.
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>
@@ -40,18 +42,18 @@ export const PoolsContent = () => {
       <PoolDialog
         isShowing={isDialogShowing}
         onRequestClose={() => setIsDialogShowing(false)}
-        tokenInfo={tokenInfo}
+        tokenInfo={tokenInfo || {}}
       />
     </>
   )
 }
 
 const StyledTitle = styled(Text)`
-  padding: 32px 0 8px;
+  padding: 36px 0 12px;
 `
 
 const StyledSubtitle = styled(Text)`
-  padding-bottom: 16px;
+  padding-bottom: 48px;
 `
 
 const StyledDivForPoolsGrid = styled.div`
@@ -59,5 +61,5 @@ const StyledDivForPoolsGrid = styled.div`
   grid-template-columns: auto auto;
   column-gap: 21px;
   row-gap: 14px;
-  padding-bottom: 30px;
+  padding-bottom: 50px;
 `

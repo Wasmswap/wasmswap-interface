@@ -11,6 +11,6 @@ export const SwapFormHeading = styled(Text).attrs(() => ({
 `
 
 export const SwapFormSegmentedController = styled(SegmentedController)`
-  width: 343px;
+  width: 180px;
   margin: 0 auto;
 `

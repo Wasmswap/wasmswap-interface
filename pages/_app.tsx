@@ -6,6 +6,14 @@ import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 function SafeHydrate({ children }) {
   return (
     <div suppressHydrationWarning>
@@ -15,7 +23,6 @@ function SafeHydrate({ children }) {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient()
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>

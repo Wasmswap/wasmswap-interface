@@ -62,7 +62,8 @@ export const SegmentedController = ({
 
 const StyledDivForWrapper = styled.div`
   border-radius: 34px;
-  border: 2px solid ${colorTokens.primary};
+  border: 2px solid ${colorTokens.black};
+  background-color: ${colorTokens.black};
   padding: 2px;
   position: relative;
 `
@@ -73,14 +74,17 @@ const StyledButtonForController = styled.button<{
 }>`
   ${resetStylesForButton};
   background-color: ${(p) =>
-    p.$hovered && !p.$active ? '#D9E8FA' : 'transparent'};
-  color: ${(p) => (p.$active ? colorTokens.white : colorTokens.primary)};
+    p.$hovered && !p.$active ? colorTokens.white : 'transparent'};
+  color: ${(p) => {
+    if (p.$active) return colorTokens.black
+    return p.$hovered ? colorTokens.black : colorTokens.white
+  }};
   width: ${(p) => `${p.$width}%`};
   font-weight: 400;
   position: relative;
   border-radius: 100px;
   z-index: 1;
-  padding: 5px 0;
+  padding: 9px 0;
   transition: background-color 0.1s ease-out;
 `
 
@@ -93,7 +97,7 @@ const StyledDivForIndicator = styled.div<{
   height: calc(100% - 4px);
   width: calc(${(p) => `${p.$width}%`} - 2px);
   transform: translateX(0%);
-  background-color: ${colorTokens.primary};
+  background-color: ${colorTokens.white};
   border-radius: 100px;
   z-index: 0;
 `

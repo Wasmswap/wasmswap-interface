@@ -2,6 +2,7 @@ import Portal from '@reach/portal'
 import styled from 'styled-components'
 import gsap from 'gsap'
 import { useEffect, useState, useRef } from 'react'
+import { colorTokens } from '../util/constants'
 
 export const Dialog = ({ children, isShowing, onRequestClose }) => {
   const [isRenderingDialog, setIsRenderingDialog] = useState(isShowing)
@@ -16,7 +17,7 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
 
   useEffect(() => {
     const tl = gsap.timeline({
-      duration: 1,
+      duration: 0.35,
       ease: 'power.easeOut',
     })
 
@@ -44,7 +45,7 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
 
   return (
     <Portal>
-      {isRenderingDialog && (
+      {(isShowing || isRenderingDialog) && (
         <>
           <StyledDivForModal ref={modalRef}>
             <StyledCloseIcon onClick={onRequestClose} />
@@ -61,22 +62,23 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
   )
 }
 
+const paddingX = 18
+
 export const DialogBody = styled.div`
-  padding: 0 72px 40px;
+  padding: ${paddingX}px;
 `
 
 const StyledDivForModal = styled.div`
   opacity: 0;
-  width: 508px;
+  width: 456px;
   position: absolute;
   z-index: 99;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fff;
+  background-color: ${colorTokens.lightGray};
   border-radius: 6px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.02);
-  padding: 16px;
 `
 
 const StyledDivForOverlay = styled.div`
@@ -112,6 +114,9 @@ const StyledCloseIcon = styled(CloseIcon)`
   display: block;
   transition: opacity 0.15s ease-out;
   cursor: pointer;
+  margin-left: auto;
+  margin-right: ${paddingX}px;
+  margin-top: ${paddingX}px;
   &:hover {
     opacity: 0.75;
   }

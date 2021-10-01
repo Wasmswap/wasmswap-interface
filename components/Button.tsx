@@ -17,7 +17,7 @@ export const resetStylesForButton = css`
 `
 
 type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
-  variant?: 'primary'
+  variant?: 'primary' | 'rounded'
   size?: 'humongous' | 'medium' | 'small'
 }
 
@@ -28,13 +28,13 @@ export const StyledButton = styled.button<ButtonProps>`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  border-radius: 6px;
+  border-radius: ${(p) => (p.variant === 'rounded' ? '18px' : '6px')};
   padding: ${(props: ButtonProps) => {
     switch (props.size) {
       case 'humongous':
         return '24px'
       case 'medium':
-        return '12px 14px'
+        return props.variant === 'rounded' ? '9px 14px' : '12px 14px'
       case 'small':
       default:
         return '5px 12px'
@@ -42,14 +42,16 @@ export const StyledButton = styled.button<ButtonProps>`
   }};
   width: ${(props: ButtonProps) =>
     props.size === 'humongous' ? '100%' : 'auto'};
-  background-color: ${({ disabled }) => {
-    return disabled ? colorTokens.gray : colorTokens.primary
+  background-color: ${({ disabled, color }) => {
+    return disabled
+      ? colorTokens.gray
+      : colorTokens[color] || color || colorTokens.black
   }};
   cursor: ${({ disabled }) => {
     return disabled ? 'auto' : 'pointer'
   }};
 
-  transition: opacity 0.1s ease-out;
+  transition: opacity 0.1s ease-out, background-color 0.15s ease-out;
 
   &:hover {
     opacity: 0.9;
@@ -61,15 +63,16 @@ export const StyledButton = styled.button<ButtonProps>`
 `
 
 export const Button: FC<ButtonProps> = ({
-  variant: __variant,
+  variant,
+  size = 'medium',
   children,
   ...props
 }) => (
-  <StyledButton {...props}>
+  <StyledButton variant={variant} size={size} {...props}>
     {typeof children === 'string' ? (
       <Text
-        type={props.size === 'humongous' ? 'heading' : 'body'}
-        variant={props.size === 'humongous' ? 'normal' : 'light'}
+        type={size === 'humongous' ? 'heading' : 'body'}
+        variant="light"
         color="white"
       >
         {children}

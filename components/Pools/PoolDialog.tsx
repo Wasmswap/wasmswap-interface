@@ -12,14 +12,14 @@ import { formatTokenName } from 'util/conversion'
 import { walletState } from 'state/atoms/walletAtoms'
 import { useState } from 'react'
 import { getSwapInfo } from 'services/swap'
-import { addLiquidity } from 'services/liquidity'
+import { addLiquidity, removeLiquidity } from 'services/liquidity'
 import { Spinner } from '../Spinner'
 import {
   useInvalidateBalances,
   useTokenBalance,
 } from '../../hooks/useTokenBalance'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import { useInvalidateLiquidity } from '../../hooks/useLiquidity'
+import { useInvalidateLiquidity, useLiquidity } from '../../hooks/useLiquidity'
 import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
 
@@ -29,21 +29,33 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { balance: junoBalance } = useTokenBalance(useTokenInfo('JUNO'))
   const { balance: tokenBalance } = useTokenBalance(tokenInfo)
 
+  const { myLPBalance } = useLiquidity({
+    tokenName: tokenInfo.symbol,
+    swapAddress: tokenInfo.swap_address,
+    address: address,
+  })
+
   const invalidateBalances = useInvalidateBalances()
   const invalidateLiquidity = useInvalidateLiquidity()
 
-  const { data: { token_reserve, native_reserve } = {} } = useQuery(
-    `swapInfo/${tokenInfo.swap_address}`,
-    async () => {
-      return await getSwapInfo(
-        tokenInfo.swap_address,
-        process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-      )
-    },
-    {
-      enabled: Boolean(tokenInfo.swap_address),
-    }
-  )
+  const { data: { token_reserve, native_reserve, lp_token_supply } = {} } =
+    useQuery(
+      `swapInfo/${tokenInfo.swap_address}`,
+      async () => {
+        return await getSwapInfo(
+          tokenInfo.swap_address,
+          process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
+        )
+      },
+      {
+        enabled: Boolean(tokenInfo.swap_address),
+      }
+    )
+
+  const balanceFormatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 6,
+  })
 
   const queryClient = useQueryClient()
   const {
@@ -52,21 +64,33 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     mutate: mutateAddLiquidity,
   } = useMutation(
     async () => {
-      return await addLiquidity({
-        nativeAmount: Math.floor(tokenAAmount * 1000000),
-        nativeDenom: 'ujuno',
-        maxToken: Math.floor(tokenBAmount * 1000000 + 5),
-        minLiquidity: 0,
-        swapAddress: tokenInfo.swap_address,
-        senderAddress: address,
-        tokenAddress: tokenInfo.token_address,
-        client: client,
-      })
+      if (isAddingLiquidity) {
+        return await addLiquidity({
+          nativeAmount: Math.floor(tokenAAmount * 1000000),
+          nativeDenom: 'ujuno',
+          maxToken: Math.floor(tokenBAmount * 1000000 + 5),
+          minLiquidity: 0,
+          swapAddress: tokenInfo.swap_address,
+          senderAddress: address,
+          tokenAddress: tokenInfo.token_address,
+          client: client,
+        })
+      } else {
+        return await removeLiquidity({
+          amount: Math.floor((removeLiquidityPercent * myLPBalance) / 100),
+          minNative: 0,
+          minToken: 0,
+          swapAddress: tokenInfo.swap_address,
+          senderAddress: address,
+          tokenAddress: tokenInfo.token_address,
+          client: client,
+        })
+      }
     },
     {
       onSuccess() {
         // show toast
-        toast.success('🎉 Add Successful', {
+        toast.success(`🎉 ${isAddingLiquidity ? 'Add' : 'Remove'} Successful`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -80,15 +104,20 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         requestAnimationFrame(onRequestClose)
       },
       onError(error) {
-        toast.error(`Couldn't add liquidity because of: ${error}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+        toast.error(
+          `Couldn't ${
+            isAddingLiquidity ? 'Add' : 'Remove'
+          } liquidity because of: ${error}`,
+          {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        )
       },
       onSettled() {
         queryClient.refetchQueries('swapInfo')
@@ -194,8 +223,18 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
 
         {!isAddingLiquidity && (
           <StyledDivForLiquiditySummary>
-            <Text>Juno: 184.35</Text>
-            <Text>{tokenInfo.symbol}: 581.12</Text>
+            <Text>
+              Juno:{' '}
+              {balanceFormatter.format(
+                ((myLPBalance / +lp_token_supply) * +native_reserve) / 1000000
+              )}
+            </Text>
+            <Text>
+              {tokenInfo.symbol}:{' '}
+              {balanceFormatter.format(
+                ((myLPBalance / +lp_token_supply) * +token_reserve) / 1000000
+              )}
+            </Text>
           </StyledDivForLiquiditySummary>
         )}
 

@@ -20,7 +20,10 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
     }
   )
 
-  const { data: myLiquidity, isLoading: fetchingMyLiquidity } = useQuery(
+  const {
+    data: { myLiquidity, myLPBalance } = {},
+    isLoading: fetchingMyLiquidity,
+  } = useQuery(
     [`myLiquidity/${tokenName}`, address, native_reserve, lp_token_supply],
     async () => {
       const balance = await getLiquidityBalance({
@@ -28,12 +31,14 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
         swapAddress: swapAddress,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
       })
-      return (
-        ((Number(balance) / Number(lp_token_supply)) *
-          Number(native_reserve) *
-          2) /
-        1000000
-      )
+      return {
+        myLiquidity:
+          ((Number(balance) / Number(lp_token_supply)) *
+            Number(native_reserve) *
+            2) /
+          1000000,
+        myLPBalance: Number(balance),
+      }
     },
     {
       enabled: Boolean(
@@ -54,6 +59,7 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
   return {
     totalLiquidity: native_reserve ? (Number(native_reserve) * 2) / 1000000 : 0,
     myLiquidity: myLiquidity ? myLiquidity : undefined,
+    myLPBalance: myLPBalance,
     isLoading: fetchingMyLiquidity || fetchingTotalLiquidity,
   }
 }
@@ -62,14 +68,7 @@ export const useInvalidateLiquidity = (tokenName?: string) => {
   const queryClient = useQueryClient()
 
   function invalidateLiquidity() {
-    const queryKeys = [
-      `swapInfo${tokenName ? `/${tokenName}` : ''}`,
-      `myLiquidity${tokenName ? `/${tokenName}` : ''}`,
-    ]
-    queryKeys.forEach((queryKey) => {
-      queryClient.invalidateQueries(queryKey)
-      queryClient.refetchQueries(queryKey)
-    })
+    queryClient.refetchQueries()
   }
 
   return useCallback(invalidateLiquidity, [queryClient, tokenName])

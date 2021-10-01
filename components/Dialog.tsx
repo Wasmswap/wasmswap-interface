@@ -62,12 +62,12 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
 }
 
 export const DialogBody = styled.div`
-  padding: 0 72px 40px;
+  padding: 18px;
 `
 
 const StyledDivForModal = styled.div`
   opacity: 0;
-  width: 508px;
+  width: 456px;
   position: absolute;
   z-index: 99;
   left: 50%;

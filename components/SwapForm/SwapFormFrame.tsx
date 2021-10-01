@@ -19,11 +19,11 @@ export const SwapFormFrame = styled.div<{ $expanded: boolean }>`
   border-radius: 6px;
   background-color: ${(p) =>
     p.$expanded ? colorTokens.lightGray : colorTokens.white};
-  padding: 0 18px;
+  padding: ${(p) => (p.$expanded ? '0 32px' : '0 18px')};
   box-shadow: ${(p) =>
     p.$expanded
-      ? '2px 2px 10px rgba(0, 0, 0, 0.02)'
-      : '0px 0px 80px 4px rgba(158, 116, 195, 0.18)'};
+      ? '0px 0px 80px 4px rgba(158, 116, 195, 0.18)'
+      : '2px 2px 10px rgba(0, 0, 0, 0.02)'};
   backdrop-filter: blur(4px);
-  margin: 12px auto 0;
+  margin: 30px auto 0;
 `

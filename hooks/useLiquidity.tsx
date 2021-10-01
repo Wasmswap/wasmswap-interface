@@ -53,7 +53,7 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
 
   return {
     totalLiquidity: native_reserve ? (Number(native_reserve) * 2) / 1000000 : 0,
-    myLiquidity: myLiquidity ? myLiquidity : 0,
+    myLiquidity: myLiquidity ? myLiquidity : undefined,
     isLoading: fetchingMyLiquidity || fetchingTotalLiquidity,
   }
 }

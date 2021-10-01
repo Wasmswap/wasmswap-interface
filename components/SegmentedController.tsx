@@ -84,7 +84,7 @@ const StyledButtonForController = styled.button<{
   position: relative;
   border-radius: 100px;
   z-index: 1;
-  padding: 5px 0;
+  padding: 9px 0;
   transition: background-color 0.1s ease-out;
 `
 

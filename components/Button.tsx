@@ -43,7 +43,7 @@ export const StyledButton = styled.button<ButtonProps>`
   width: ${(props: ButtonProps) =>
     props.size === 'humongous' ? '100%' : 'auto'};
   background-color: ${({ disabled }) => {
-    return disabled ? colorTokens.gray : colorTokens.primary
+    return disabled ? colorTokens.gray : colorTokens.black
   }};
   cursor: ${({ disabled }) => {
     return disabled ? 'auto' : 'pointer'

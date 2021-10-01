@@ -17,7 +17,7 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
 
   useEffect(() => {
     const tl = gsap.timeline({
-      duration: 1,
+      duration: 0.35,
       ease: 'power.easeOut',
     })
 

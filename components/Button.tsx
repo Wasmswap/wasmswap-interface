@@ -51,7 +51,7 @@ export const StyledButton = styled.button<ButtonProps>`
     return disabled ? 'auto' : 'pointer'
   }};
 
-  transition: opacity 0.1s ease-out;
+  transition: opacity 0.1s ease-out, background-color 0.15s ease-out;
 
   &:hover {
     opacity: 0.9;
@@ -72,7 +72,7 @@ export const Button: FC<ButtonProps> = ({
     {typeof children === 'string' ? (
       <Text
         type={size === 'humongous' ? 'heading' : 'body'}
-        variant={size === 'humongous' ? 'normal' : 'light'}
+        variant="light"
         color="white"
       >
         {children}

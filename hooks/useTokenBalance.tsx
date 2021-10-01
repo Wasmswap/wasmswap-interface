@@ -44,9 +44,7 @@ export const useInvalidateBalances = (tokenSymbol?: string) => {
   const queryClient = useQueryClient()
 
   function invalidateBalances() {
-    queryClient.refetchQueries(
-      `tokenBalance${tokenSymbol ? `/${tokenSymbol}` : ''}`
-    )
+    queryClient.refetchQueries()
   }
 
   return useCallback(invalidateBalances, [tokenSymbol, queryClient])

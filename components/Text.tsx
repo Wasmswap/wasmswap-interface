@@ -9,7 +9,7 @@ const fontWeightTokens = {
 }
 
 type TextProps = {
-  type?: 'heading' | 'title' | 'body' | 'caption'
+  type?: 'heading' | 'title' | 'body' | 'subtitle' | 'caption'
   color?: keyof typeof colorTokens
   variant?: keyof typeof fontWeightTokens
 }
@@ -43,6 +43,13 @@ const Paragraph = styled.p<TextProps>`
   font-weight: ${fontWeightSelector};
 `
 
+const Subtitle = styled.p<TextProps>`
+  font-size: 16px;
+  line-height: 18px;
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+`
+
 const Caption = styled.p<TextProps>`
   font-size: 14px;
   line-height: 18px;
@@ -55,6 +62,7 @@ const map = {
   caption: Caption,
   heading: Heading,
   title: Title,
+  subtitle: Subtitle,
 }
 
 export const Text = ({

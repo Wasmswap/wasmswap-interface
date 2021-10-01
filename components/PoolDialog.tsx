@@ -114,6 +114,10 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
+        <StyledDivForButtons>
+          <StyledSwitchButton $active={true}>Add</StyledSwitchButton>
+          <StyledSwitchButton $active={false}>Remove</StyledSwitchButton>
+        </StyledDivForButtons>
         <StyledTitle type="title" variant="normal">
           Add {`Juno / ${formatTokenName(tokenInfo.symbol)}`}
         </StyledTitle>
@@ -173,4 +177,26 @@ const StyledDivForLink = styled.div`
   padding: 24px 14px;
   display: flex;
   align-items: center;
+`
+
+const StyledDivForButtons = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 14px;
+`
+
+const StyledSwitchButton = styled(Button).attrs(
+  ({ $active, children, ...attrs }) => ({
+    ...attrs,
+    variant: 'rounded',
+    color: $active ? 'black' : 'white',
+    children: (
+      <Text color={$active ? 'white' : 'black'} type="subtitle" variant="light">
+        {children}
+      </Text>
+    ),
+  })
+)`
+  min-width: 88px;
+  margin-right: 4px;
 `

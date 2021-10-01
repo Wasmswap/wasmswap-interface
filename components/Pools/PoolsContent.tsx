@@ -22,8 +22,7 @@ export const PoolsContent = () => {
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        Some helpful explainer text tells you what a liquidity pool is, what
-        you’re risking, and what you stand to gain.
+        Provide liquidity to the market by adding assets to the pools and receive swap fees. Additional incentives coming soon.
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>

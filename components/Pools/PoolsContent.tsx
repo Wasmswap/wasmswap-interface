@@ -22,7 +22,7 @@ export const PoolsContent = () => {
         Pools
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        Provide liquidity to the market by adding assets to the pools and receive swap fees. Additional incentives coming soon.
+        Provide liquidity to the market by adding assets to the pools and receive swap fees from each trade.
       </StyledSubtitle>
 
       <StyledDivForPoolsGrid>

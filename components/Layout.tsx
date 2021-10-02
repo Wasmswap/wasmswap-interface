@@ -3,13 +3,31 @@ import styled from 'styled-components'
 import { NavigationBar } from './NavigationBar'
 import { FooterBar } from './FooterBar'
 import { AppBackground } from './AppBackground'
+import { ToastContainer } from 'react-toastify'
+import { Portal } from '@reach/portal'
 
 export default function Layout({ children }) {
   return (
     <AppBackground>
       <StyledWrapper>
-        <NavigationBar />
-        <main>{children}</main>
+        <section>
+          <NavigationBar />
+          <main>{children}</main>
+        </section>
+        <Portal>
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={true}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            toastStyle={{ zIndex: 150 }}
+          />
+        </Portal>
         <FooterBar />
       </StyledWrapper>
     </AppBackground>

@@ -1,5 +1,6 @@
-import { Container } from './Container'
+import React from 'react'
 import styled from 'styled-components'
+import { Container } from './Container'
 import { Text } from './Text'
 import { Button } from './Button'
 import { useConnectWallet } from '../hooks/useConnectWallet'
@@ -16,11 +17,15 @@ export function NavigationBar() {
         <Text type="heading" variant="bold">
           Wasmswap
         </Text>
-        <Button size="medium" onClick={address ? undefined : connectWallet}>
+
+        <StyledButton
+          size="medium"
+          onClick={address ? undefined : connectWallet}
+        >
           <StyledText color="white" variant="light">
             {address || 'Connect Wallet'}
           </StyledText>
-        </Button>
+        </StyledButton>
       </StyledWrapper>
     </Container>
   )
@@ -32,6 +37,10 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+`
+
+const StyledButton = styled(Button)`
+  background: #161616;
 `
 
 const StyledText = styled(Text)`

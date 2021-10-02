@@ -1,8 +1,18 @@
 import 'styles/globals.css'
+import 'normalize.css'
 import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 function SafeHydrate({ children }) {
   return (
@@ -15,13 +25,15 @@ function SafeHydrate({ children }) {
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <RecoilRoot>
-      <SafeHydrate>
-        <ErrorBoundary>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ErrorBoundary>
-      </SafeHydrate>
+      <QueryClientProvider client={queryClient}>
+        <SafeHydrate>
+          <ErrorBoundary>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ErrorBoundary>
+        </SafeHydrate>
+      </QueryClientProvider>
     </RecoilRoot>
   )
 }

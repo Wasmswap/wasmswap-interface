@@ -141,7 +141,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     setTokenAAmount((Number(native_reserve) / Number(token_reserve)) * val)
   }
 
-  const [isAddingLiquidity, setAddingLiquidity] = useState(false)
+  const [isAddingLiquidity, setAddingLiquidity] = useState(true)
   const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
 
   const submitButtonText = isAddingLiquidity

@@ -1,7 +1,6 @@
-import { useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import { getSwapInfo } from '../services/swap'
 import { getLiquidityBalance } from '../services/liquidity'
-import { useCallback } from 'react'
 
 export const useLiquidity = ({ tokenName, address, swapAddress }) => {
   const {
@@ -44,15 +43,6 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
       enabled: Boolean(
         swapAddress && address && native_reserve && lp_token_supply
       ),
-      onSuccess() {
-        console.log(
-          'fetched myLiquidity',
-          `myLiquidity/${tokenName}`,
-          address,
-          native_reserve,
-          lp_token_supply
-        )
-      },
     }
   )
 
@@ -62,14 +52,4 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
     myLPBalance: myLPBalance,
     isLoading: fetchingMyLiquidity || fetchingTotalLiquidity,
   }
-}
-
-export const useInvalidateLiquidity = (tokenName?: string) => {
-  const queryClient = useQueryClient()
-
-  function invalidateLiquidity() {
-    queryClient.refetchQueries()
-  }
-
-  return useCallback(invalidateLiquidity, [queryClient, tokenName])
 }

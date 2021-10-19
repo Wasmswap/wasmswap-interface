@@ -11,9 +11,11 @@ export const RemoveLiquidityInput: FC<RemoveLiquidityInputProps> = ({
   value,
   onChangeValue,
 }) => {
+  const parseAmountValue = (amount) => Number(amount.toFixed(2))
   const handleChange = ({ target: { value } }) => {
     const amount = Math.min(parseFloat(value), 100)
-    onChangeValue(amount % 1 > 0 ? Number(amount.toFixed(2)) : amount)
+    const updatedValue = amount % 1 > 0 ? parseAmountValue(value) : amount
+    onChangeValue(isNaN(updatedValue) ? 0 : updatedValue)
   }
 
   return (

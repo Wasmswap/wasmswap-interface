@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { toast } from 'react-toastify'
 import { useRecoilValue } from 'recoil'
 import { PlusIcon } from '@heroicons/react/solid'
-import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
 import { Dialog, DialogBody } from '../Dialog'
 import { Text } from '../Text'
 import { LiquidityInput } from '../LiquidityInput'
@@ -10,18 +10,16 @@ import { Link } from '../Link'
 import { Button } from '../Button'
 import { formatTokenName } from 'util/conversion'
 import { walletState } from 'state/atoms/walletAtoms'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getSwapInfo } from 'services/swap'
 import { addLiquidity, removeLiquidity } from 'services/liquidity'
 import { Spinner } from '../Spinner'
-import {
-  useInvalidateBalances,
-  useTokenBalance,
-} from '../../hooks/useTokenBalance'
+import { useTokenBalance } from '../../hooks/useTokenBalance'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import { useInvalidateLiquidity, useLiquidity } from '../../hooks/useLiquidity'
+import { useLiquidity } from '../../hooks/useLiquidity'
 import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
+import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
@@ -29,14 +27,11 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { balance: junoBalance } = useTokenBalance(useTokenInfo('JUNO'))
   const { balance: tokenBalance } = useTokenBalance(tokenInfo)
 
-  const { myLPBalance } = useLiquidity({
+  const { myLPBalance, myLiquidity } = useLiquidity({
     tokenName: tokenInfo.symbol,
     swapAddress: tokenInfo.swap_address,
     address: address,
   })
-
-  const invalidateBalances = useInvalidateBalances()
-  const invalidateLiquidity = useInvalidateLiquidity()
 
   const { data: { token_reserve, native_reserve, lp_token_supply } = {} } =
     useQuery(
@@ -57,11 +52,11 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     maximumFractionDigits: 6,
   })
 
-  const queryClient = useQueryClient()
   const {
     isLoading,
     reset: resetAddLiquidityMutation,
     mutate: mutateAddLiquidity,
+    isSuccess,
   } = useMutation(
     async () => {
       if (isAddingLiquidity) {
@@ -73,7 +68,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
           tokenAddress: tokenInfo.token_address,
-          client: client,
+          client,
         })
       } else {
         return await removeLiquidity({
@@ -83,7 +78,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
           tokenAddress: tokenInfo.token_address,
-          client: client,
+          client,
         })
       }
     },
@@ -119,14 +114,18 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           }
         )
       },
-      onSettled() {
-        queryClient.refetchQueries('swapInfo')
-        invalidateBalances()
-        invalidateLiquidity()
-        setTimeout(resetAddLiquidityMutation, 350)
-      },
     }
   )
+
+  const refetchQueries = useRefetchQueries()
+  useEffect(() => {
+    // refetch queries if the mutation succeeded & the dialog is closed
+    const shouldRefetchQueries = isSuccess && !isShowing
+    if (shouldRefetchQueries) {
+      refetchQueries()
+      setTimeout(resetAddLiquidityMutation, 350)
+    }
+  }, [isSuccess, refetchQueries, resetAddLiquidityMutation, isShowing])
 
   const [tokenAAmount, setTokenAAmount] = useState(1)
   const [tokenBAmount, setTokenBAmount] = useState(1)
@@ -151,20 +150,22 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
-        <StyledDivForButtons>
-          <StyledSwitchButton
-            onClick={() => setAddingLiquidity(true)}
-            $active={isAddingLiquidity}
-          >
-            Add
-          </StyledSwitchButton>
-          <StyledSwitchButton
-            onClick={() => setAddingLiquidity(false)}
-            $active={!isAddingLiquidity}
-          >
-            Remove
-          </StyledSwitchButton>
-        </StyledDivForButtons>
+        {typeof myLiquidity === 'number' && (
+          <StyledDivForButtons>
+            <StyledSwitchButton
+              onClick={() => setAddingLiquidity(true)}
+              $active={isAddingLiquidity}
+            >
+              Add
+            </StyledSwitchButton>
+            <StyledSwitchButton
+              onClick={() => setAddingLiquidity(false)}
+              $active={!isAddingLiquidity}
+            >
+              Remove
+            </StyledSwitchButton>
+          </StyledDivForButtons>
+        )}
 
         <StyledTitle
           $hasSubtitle={!isAddingLiquidity}

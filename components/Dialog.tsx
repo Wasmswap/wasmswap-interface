@@ -9,6 +9,7 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
   const modalRef = useRef()
   const overlayRef = useRef()
 
+  // render the dialog
   useEffect(() => {
     if (isShowing) {
       setIsRenderingDialog(true)
@@ -16,12 +17,13 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
   }, [isShowing])
 
   useEffect(() => {
+    const shouldAnimateCloseOut = !isShowing && isRenderingDialog
+
     const tl = gsap.timeline({
       duration: 0.35,
       ease: 'power.easeOut',
     })
 
-    const shouldAnimateCloseOut = !isShowing && isRenderingDialog
     if (shouldAnimateCloseOut) {
       tl.to(modalRef.current, { opacity: 0 }, 0)
       tl.to(
@@ -29,6 +31,7 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
         {
           opacity: 0,
           onComplete() {
+            // unmount the dialog
             setIsRenderingDialog(false)
           },
         },

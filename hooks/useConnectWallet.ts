@@ -15,6 +15,7 @@ export const useConnectWallet = () => {
       process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
       offlineSigner
     )
+
     const [{ address }] = await offlineSigner.getAccounts()
 
     setWalletState({

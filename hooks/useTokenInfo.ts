@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import TokenList from '../public/token_list.json'
 
-export interface TokenInfo {
+export type TokenInfo = {
   chain_id: string
   token_address: string
   swap_address: string
@@ -13,13 +13,8 @@ export interface TokenInfo {
 }
 
 export const useTokenInfo = (tokenName: string) => {
-  const [info, setInfo] = useState<TokenInfo>(
-    TokenList.tokens.find((x) => x.symbol === tokenName)
+  return useMemo(
+    () => TokenList.tokens.find((x) => x.symbol === tokenName),
+    [tokenName]
   )
-
-  useEffect(() => {
-    setInfo(TokenList.tokens.find((x) => x.symbol === tokenName))
-  }, [tokenName])
-
-  return info
 }

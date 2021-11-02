@@ -2,8 +2,7 @@ import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
 import { CW20 } from '../services/cw20'
 import { TokenInfo } from './useTokenInfo'
-import { useQuery, useQueryClient } from 'react-query'
-import { useCallback } from 'react'
+import { useQuery } from 'react-query'
 
 export const useTokenBalance = ({ symbol, token_address }: TokenInfo) => {
   const { address, client } = useRecoilValue(walletState)
@@ -26,26 +25,8 @@ export const useTokenBalance = ({ symbol, token_address }: TokenInfo) => {
     },
     {
       enabled: Boolean(address),
-      onSuccess() {
-        console.log(
-          'fetched balance for',
-          `tokenBalance/${symbol}`,
-          address,
-          token_address
-        )
-      },
     }
   )
 
   return { balance, isLoading }
-}
-
-export const useInvalidateBalances = (tokenSymbol?: string) => {
-  const queryClient = useQueryClient()
-
-  function invalidateBalances() {
-    queryClient.refetchQueries()
-  }
-
-  return useCallback(invalidateBalances, [tokenSymbol, queryClient])
 }

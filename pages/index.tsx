@@ -18,9 +18,7 @@ export default function Home() {
       <SwapFormSegmentedController
         tabs={tabsConfig}
         currentTab={currentTab}
-        onChangeTab={(tab) => {
-          setCurrentTab(tab)
-        }}
+        onChangeTab={setCurrentTab}
       />
       <SwapFormFrame $expanded={currentTab === 'pools'}>
         {currentTab === 'swap' ? <SwapFormContent /> : <PoolsContent />}

@@ -6,3 +6,9 @@ export const colorTokens = {
   white: '#ffffff',
   primary: '#0066DB',
 }
+
+export const spaces = {
+  12: '12px',
+  18: '18px',
+  24: '24px',
+}

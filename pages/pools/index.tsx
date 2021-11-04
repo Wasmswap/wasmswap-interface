@@ -1,16 +1,16 @@
 import React from 'react'
 import 'react-toastify/dist/ReactToastify.css'
-import { Disclaimer } from '../components/SwapForm/Disclaimer'
-import { SwapFormContent } from '../components/SwapForm/SwapFormContent'
-import { SwapFormFrame } from '../components/SwapForm/SwapFormFrame'
+import { Disclaimer } from 'components/SwapForm/Disclaimer'
+import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
+import { PoolsContent } from 'components/Pools/PoolsContent'
 import styled from 'styled-components'
 
-export default function Home() {
+export default function Pools() {
   return (
     <>
       <StyledSpacer />
-      <SwapFormFrame $expanded={false}>
-        <SwapFormContent />
+      <SwapFormFrame $expanded>
+        <PoolsContent />
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>
         Junoswap is currently in beta and operating on the Juno testnet. Keplr

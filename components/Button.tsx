@@ -36,6 +36,7 @@ export const StyledButton = styled.button<ButtonProps>`
       case 'medium':
         return props.variant === 'rounded' ? '9px 14px' : '12px 14px'
       case 'small':
+        return '8px 12px'
       default:
         return '5px 12px'
     }
@@ -62,6 +63,17 @@ export const StyledButton = styled.button<ButtonProps>`
   }
 `
 
+const mapTextSize = (size: ButtonProps['size']) => {
+  switch (size) {
+    case 'humongous':
+      return 'heading'
+    case 'small':
+      return 'subtitle'
+    default:
+      return 'body'
+  }
+}
+
 export const Button: FC<ButtonProps> = ({
   variant,
   size = 'medium',
@@ -70,11 +82,7 @@ export const Button: FC<ButtonProps> = ({
 }) => (
   <StyledButton variant={variant} size={size} {...props}>
     {typeof children === 'string' ? (
-      <Text
-        type={size === 'humongous' ? 'heading' : 'body'}
-        variant="light"
-        color="white"
-      >
+      <Text type={mapTextSize(size)} variant="light" color="white">
         {children}
       </Text>
     ) : (

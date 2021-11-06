@@ -1,5 +1,4 @@
 import React from 'react'
-import 'react-toastify/dist/ReactToastify.css'
 import { Disclaimer } from 'components/SwapForm/Disclaimer'
 import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
 import { Text } from 'components/Text'
@@ -15,15 +14,22 @@ export default function Transfer() {
     <>
       <StyledSpacer />
       <SwapFormFrame $expanded={true}>
-        <Header title="IBC Transfer">
-          Easily and quickly initiate payments in between interchain wallets.
-        </Header>
-        <Text paddingBottom={spaces[24]} type="title" variant="bold">
-          My assets
-        </Text>
-        <div style={{ maxWidth: 280 }}>
-          <AssetCard tokenInfo={tokenInfo} balance={999} />
-        </div>
+        <StyledWrapper>
+          <Header title="IBC Transfer">
+            Easily and quickly initiate payments in between interchain wallets.
+          </Header>
+          <StyledSubtitle
+            paddingBottom={spaces[24]}
+            type="title"
+            variant="bold"
+          >
+            My assets
+          </StyledSubtitle>
+          <StyledGrid>
+            <AssetCard tokenInfo={tokenInfo} />
+            <AssetCard tokenInfo={tokenInfo} />
+          </StyledGrid>
+        </StyledWrapper>
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>
         Junoswap is currently in beta and operating on the Juno testnet. Keplr
@@ -32,6 +38,21 @@ export default function Transfer() {
     </>
   )
 }
+
+const StyledWrapper = styled.section`
+  padding-bottom: 34px;
+`
+
+const StyledSubtitle = styled(Text)`
+  font-size: 24px;
+  line-height: 35px;
+`
+
+const StyledGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 14px;
+`
 
 const StyledSpacer = styled.div`
   height: calc(13.5vh - 84px);

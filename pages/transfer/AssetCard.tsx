@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { colorTokens, spaces } from 'util/constants'
 import { Text } from 'components/Text'
+import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline'
 import { Button } from '../../components/Button'
 
 export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
@@ -32,13 +33,38 @@ export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
         </Text>
 
         <StyledButtonsWrapper>
-          <Button size="small">Deposit</Button>
-          <Button size="small">Withdraw</Button>
+          <Button
+            size="small"
+            iconBefore={
+              <IconWrapper icon={<ArrowDownIcon />} color={colorTokens.white} />
+            }
+          >
+            Deposit
+          </Button>
+          <Button
+            size="small"
+            iconBefore={
+              <IconWrapper icon={<ArrowUpIcon />} color={colorTokens.white} />
+            }
+          >
+            Withdraw
+          </Button>
         </StyledButtonsWrapper>
       </StyledContent>
     </StyledWrapper>
   )
 }
+
+const StyledIcon = styled.div`
+  color: ${(p) => p.$color};
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+`
+
+const IconWrapper = ({ icon, color }) => (
+  <StyledIcon $color={color}>{icon}</StyledIcon>
+)
 
 const StyledButtonsWrapper = styled.div`
   display: grid;

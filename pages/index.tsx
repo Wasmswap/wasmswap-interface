@@ -1,5 +1,4 @@
 import React from 'react'
-import 'react-toastify/dist/ReactToastify.css'
 import { Disclaimer } from '../components/SwapForm/Disclaimer'
 import { SwapFormContent } from '../components/SwapForm/SwapFormContent'
 import { SwapFormFrame } from '../components/SwapForm/SwapFormFrame'

@@ -1,35 +1,32 @@
-import { useState } from 'react'
 import { CardWithSeparator } from '../CardWithSeparator'
 import { Text } from '../Text'
-import { CreditCardIcon } from '@heroicons/react/solid'
 import {
   StyledHeader,
   StyledDivForBalance,
   StyledIconWrapper,
 } from './card.styles'
-import { TokenAmountInput } from '../TokenAmountInput'
+import { AppLogoIcon } from '../AppLogoIcon'
 
-export const WalletCardWithInput = ({}) => {
-  const [amount, setAmount] = useState(100)
+export const WalletCardWithBalance = ({}) => {
   return (
     <CardWithSeparator
+      paddingBottom={0}
       contents={[
         <>
           <Text type="microscopic" variant="light">
-            FROM
+            TO
           </Text>
           <StyledHeader>
             <StyledIconWrapper
               size="44px"
               color="#1a44af"
               rounded
-              $enableGradient
-              $enablePadding
-              icon={<CreditCardIcon />}
+              enableGradient
+              icon={<AppLogoIcon />}
             />
             <div>
               <Text type="body" variant="light">
-                Keplr wallet
+                Junoswap
               </Text>
               <Text
                 type="microscopic"
@@ -37,30 +34,25 @@ export const WalletCardWithInput = ({}) => {
                 color="gray"
                 paddingTop="2"
               >
-                cosmos1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y
+                juno1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y
               </Text>
             </div>
           </StyledHeader>
         </>,
         <>
-          <StyledDivForBalance>
+          <StyledDivForBalance $paddingY={18}>
             <Text type="microscopic" variant="light">
-              Max available:{' '}
+              Current balance:{' '}
             </Text>
             <Text
               type="microscopic"
               variant="normal"
-              color="lightBlue"
+              color="black"
               paddingLeft="2"
             >
               133 JUNO
             </Text>
           </StyledDivForBalance>
-          <TokenAmountInput
-            value={amount}
-            onAmountChange={setAmount}
-            maxValue={1000}
-          />
         </>,
       ]}
     />

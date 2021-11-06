@@ -8,8 +8,9 @@ import { IconWrapper } from '../../components/IconWrapper'
 
 export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
   return (
-    <CardWithSeparator>
-      {[
+    <CardWithSeparator
+      paddingTop={14}
+      contents={[
         <>
           <StyledHeader>
             <StyledTokenAvatar />
@@ -58,7 +59,7 @@ export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
           </StyledButtonsWrapper>
         </>,
       ]}
-    </CardWithSeparator>
+    />
   )
 }
 

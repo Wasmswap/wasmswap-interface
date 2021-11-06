@@ -1,16 +1,27 @@
 import { ReactElement, Children } from 'react'
-import { colorTokens } from '../util/constants'
+import { colorTokens, spaces } from '../util/constants'
 import styled from 'styled-components'
 
 type CardWithSeparatorProps = {
-  children: ReactElement[]
+  contents: ReactElement[]
+  paddingTop?: keyof typeof spaces
+  paddingBottom?: keyof typeof spaces
 }
 
-export const CardWithSeparator = ({ children }: CardWithSeparatorProps) => {
+export const CardWithSeparator = ({
+  contents,
+  paddingTop,
+  paddingBottom,
+  ...props
+}: CardWithSeparatorProps) => {
   return (
-    <StyledWrapper>
-      {Children.map(children, (child, idx) => (
-        <StyledContent $enableSeparator={idx !== children.length - 1}>
+    <StyledWrapper
+      $paddingTop={paddingTop}
+      $paddingBottom={paddingBottom}
+      {...props}
+    >
+      {Children.map(contents, (child, idx) => (
+        <StyledContent $enableSeparator={idx !== contents.length - 1}>
           {child}
         </StyledContent>
       ))}
@@ -23,7 +34,11 @@ const StyledWrapper = styled.div`
   border: 1px solid #e7e7e7;
   background-color: ${colorTokens.white};
   min-width: 280px;
-  padding: 12px 0 18px;
+  // padding: 12px 0 18px;
+  padding: ${(p) =>
+    `${spaces[p.$paddingTop] ?? '12px'} 0 ${
+      spaces[p.$paddingBottom] ?? '18px'
+    }`};
 `
 
 const StyledContent = styled.div`

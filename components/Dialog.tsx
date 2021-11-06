@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react'
 import { colorTokens } from '../util/constants'
 
 export const Dialog = ({ children, isShowing, onRequestClose }) => {
-  const [isRenderingDialog, setIsRenderingDialog] = useState(isShowing)
+  const [isRenderingDialog, setIsRenderingDialog] = useState(false)
   const modalRef = useRef()
   const overlayRef = useRef()
 

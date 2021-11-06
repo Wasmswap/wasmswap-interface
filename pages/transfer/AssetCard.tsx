@@ -1,70 +1,66 @@
 import styled from 'styled-components'
-import { colorTokens, spaces } from 'util/constants'
+import { colorTokens, spaces } from '../../util/constants'
 import { Text } from 'components/Text'
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline'
 import { Button } from '../../components/Button'
+import { CardWithSeparator } from '../../components/CardWithSeparator'
+import { IconWrapper } from '../../components/IconWrapper'
 
 export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
   return (
-    <StyledWrapper>
-      <StyledContent $enableSeparator>
-        <StyledHeader>
-          <StyledTokenAvatar />
-          <StyledHeaderTextWrapper>
-            <Text type="heading">{symbol}</Text>
-            <Text type="body" variant="light">
-              {name} mainnet
-            </Text>
-          </StyledHeaderTextWrapper>
-        </StyledHeader>
-      </StyledContent>
-      <StyledContent>
-        <Text paddingY={spaces[18]} type="caption" color="gray">
-          Current balance
-        </Text>
-        <StyledBalanceWrapper>
-          <Text type="title">34.3343</Text>
-          <Text type="caption" paddingY="6px" paddingX="6px">
-            {symbol}
+    <CardWithSeparator>
+      {[
+        <>
+          <StyledHeader>
+            <StyledTokenAvatar />
+            <StyledHeaderTextWrapper>
+              <Text type="heading">{symbol}</Text>
+              <Text type="body" variant="light">
+                {name} mainnet
+              </Text>
+            </StyledHeaderTextWrapper>
+          </StyledHeader>
+        </>,
+        <>
+          <Text paddingY={spaces[18]} type="caption" color="gray">
+            Current balance
           </Text>
-        </StyledBalanceWrapper>
-        <Text type="subtitle" variant="light">
-          $116.33
-        </Text>
+          <StyledBalanceWrapper>
+            <Text type="title">34.3343</Text>
+            <Text type="caption" paddingY="6px" paddingX="6px">
+              {symbol}
+            </Text>
+          </StyledBalanceWrapper>
+          <Text type="subtitle" variant="light">
+            $116.33
+          </Text>
 
-        <StyledButtonsWrapper>
-          <Button
-            size="small"
-            iconBefore={
-              <IconWrapper icon={<ArrowDownIcon />} color={colorTokens.white} />
-            }
-          >
-            Deposit
-          </Button>
-          <Button
-            size="small"
-            iconBefore={
-              <IconWrapper icon={<ArrowUpIcon />} color={colorTokens.white} />
-            }
-          >
-            Withdraw
-          </Button>
-        </StyledButtonsWrapper>
-      </StyledContent>
-    </StyledWrapper>
+          <StyledButtonsWrapper>
+            <Button
+              size="small"
+              iconBefore={
+                <IconWrapper
+                  icon={<ArrowDownIcon />}
+                  color={colorTokens.white}
+                />
+              }
+            >
+              Deposit
+            </Button>
+            <Button
+              size="small"
+              iconBefore={
+                <IconWrapper icon={<ArrowUpIcon />} color={colorTokens.white} />
+              }
+            >
+              Withdraw
+            </Button>
+          </StyledButtonsWrapper>
+        </>,
+      ]}
+    </CardWithSeparator>
   )
 }
-
-const StyledIcon = styled.div`
-  color: ${(p) => p.$color};
-  width: 16px;
-  height: 16px;
-  fill: currentColor;
-`
-
-const IconWrapper = ({ icon, color }) => (
-  <StyledIcon $color={color}>{icon}</StyledIcon>
-)
 
 const StyledButtonsWrapper = styled.div`
   display: grid;
@@ -93,18 +89,4 @@ const StyledTokenAvatar = styled.img`
   height: 40px;
   border-radius: 50%;
   background-color: #ccc;
-`
-
-const StyledWrapper = styled.div`
-  border-radius: 16px;
-  border: 1px solid #e7e7e7;
-  background-color: ${colorTokens.white};
-  min-width: 280px;
-  padding: 12px 0 18px;
-`
-
-const StyledContent = styled.div`
-  width: 100%;
-  padding: 0 18px;
-  border-bottom: ${(p) => (p.$enableSeparator ? '1px solid #E6E6E6' : 'none')};
 `

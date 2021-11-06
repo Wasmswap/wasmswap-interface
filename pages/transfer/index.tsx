@@ -7,11 +7,15 @@ import { Header } from './Header'
 import { AssetCard } from './AssetCard'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { spaces } from '../../util/constants'
+import { TransferDialog } from '../../components/TransferDialog'
+import { noop } from '@reach/utils'
 
 export default function Transfer() {
   const tokenInfo = useTokenInfo('JUNO')
   return (
     <>
+      <TransferDialog isShowing={true} onRequestClose={noop} />
+
       <StyledSpacer />
       <SwapFormFrame $expanded={true}>
         <StyledWrapper>

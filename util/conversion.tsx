@@ -33,3 +33,12 @@ export const formatTokenName = (name: string) => {
   }
   return ''
 }
+
+const balanceFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 6,
+})
+
+export function formatTokenBalance(value: number | string) {
+  return Number(balanceFormatter.format(Number(value)).replace(/,|\s/g, ''))
+}

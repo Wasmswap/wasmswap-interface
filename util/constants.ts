@@ -8,7 +8,9 @@ export const colorTokens = {
 }
 
 export const spaces = {
+  2: '2px',
   12: '12px',
+  14: '14px',
   18: '18px',
   24: '24px',
 }

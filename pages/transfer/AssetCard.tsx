@@ -6,7 +6,7 @@ import { Button } from '../../components/Button'
 import { CardWithSeparator } from '../../components/CardWithSeparator'
 import { IconWrapper } from '../../components/IconWrapper'
 
-export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
+export const AssetCard = ({ tokenInfo: { name, symbol }, onActionClick }) => {
   return (
     <CardWithSeparator
       paddingTop={14}
@@ -38,6 +38,12 @@ export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
 
           <StyledButtonsWrapper>
             <Button
+              onClick={() => {
+                onActionClick({
+                  tokenSymbol: symbol,
+                  actionType: 'deposit',
+                })
+              }}
               size="small"
               iconBefore={
                 <IconWrapper
@@ -49,6 +55,12 @@ export const AssetCard = ({ tokenInfo: { name, symbol } }) => {
               Deposit
             </Button>
             <Button
+              onClick={() => {
+                onActionClick({
+                  tokenSymbol: symbol,
+                  actionType: 'withdraw',
+                })
+              }}
               size="small"
               iconBefore={
                 <IconWrapper icon={<ArrowUpIcon />} color={colorTokens.white} />

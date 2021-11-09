@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Disclaimer } from 'components/SwapForm/Disclaimer'
 import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
 import { Text } from 'components/Text'
@@ -8,13 +8,20 @@ import { AssetCard } from './AssetCard'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
-import { noop } from '@reach/utils'
 
 export default function Transfer() {
   const tokenInfo = useTokenInfo('JUNO')
+
+  const [isTransferDialogShowing, setTransferDialogShowing] = useState(false)
+
+  const openTransferDialog = () => setTransferDialogShowing(true)
+
   return (
     <>
-      <TransferDialog isShowing={true} onRequestClose={noop} />
+      <TransferDialog
+        isShowing={isTransferDialogShowing}
+        onRequestClose={() => setTransferDialogShowing(false)}
+      />
 
       <StyledSpacer />
       <SwapFormFrame $expanded={true}>
@@ -30,8 +37,14 @@ export default function Transfer() {
             My assets
           </StyledSubtitle>
           <StyledGrid>
-            <AssetCard tokenInfo={tokenInfo} />
-            <AssetCard tokenInfo={tokenInfo} />
+            <AssetCard
+              tokenInfo={tokenInfo}
+              onActionClick={openTransferDialog}
+            />
+            <AssetCard
+              tokenInfo={tokenInfo}
+              onActionClick={openTransferDialog}
+            />
           </StyledGrid>
         </StyledWrapper>
       </SwapFormFrame>

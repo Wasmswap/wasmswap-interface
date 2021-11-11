@@ -12,9 +12,9 @@ export type TokenInfo = {
   tags: string[]
 }
 
-export const useTokenInfo = (tokenName: string) => {
+export const useTokenInfo = (tokenSymbol: string) => {
   return useMemo(
-    () => TokenList.tokens.find((x) => x.symbol === tokenName),
-    [tokenName]
+    () => TokenList.tokens.find((x) => x.symbol === tokenSymbol),
+    [tokenSymbol]
   )
 }

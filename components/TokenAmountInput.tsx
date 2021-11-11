@@ -13,7 +13,9 @@ export const TokenAmountInput = ({ value, onAmountChange, maxValue }) => {
 
   return (
     <StyledWrapper>
-      <StyledButton size="small">Max</StyledButton>
+      <StyledButton size="small" onClick={() => onAmountChange(maxValue)}>
+        Max
+      </StyledButton>
       <Text as={StyledDivForInputWrapper} type="title" variant="bold">
         <StyledInput
           value={formatTokenBalance(value)}

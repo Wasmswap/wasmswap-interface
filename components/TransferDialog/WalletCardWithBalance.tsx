@@ -7,7 +7,11 @@ import {
 } from './card.styles'
 import { AppLogoIcon } from '../AppLogoIcon'
 
-export const WalletCardWithBalance = ({}) => {
+export const WalletCardWithBalance = ({
+  walletAddress = 'No address found',
+  balance = 0,
+  tokenName,
+}) => {
   return (
     <CardWithSeparator
       paddingBottom={0}
@@ -34,7 +38,7 @@ export const WalletCardWithBalance = ({}) => {
                 color="gray"
                 paddingTop="2"
               >
-                juno1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y
+                {walletAddress}
               </Text>
             </div>
           </StyledHeader>
@@ -50,7 +54,7 @@ export const WalletCardWithBalance = ({}) => {
               color="black"
               paddingLeft="2"
             >
-              133 JUNO
+              {balance} {tokenName}
             </Text>
           </StyledDivForBalance>
         </>,

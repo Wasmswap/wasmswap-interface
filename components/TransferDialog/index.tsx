@@ -1,31 +1,70 @@
+import styled from 'styled-components'
 import { Dialog } from '../Dialog'
 import { Text } from '../Text'
-import styled from 'styled-components'
 import { WalletCardWithInput } from './WalletCardWithInput'
 import { WalletCardWithBalance } from './WalletCardWithBalance'
 import { Button } from '../Button'
+import { useTokenInfo } from '../../hooks/useTokenInfo'
+import { useState } from 'react'
 
-export const TransferDialog = ({ isShowing, onRequestClose }) => {
+type TransferDialogProps = {
+  tokenSymbol: string
+  transactionKind: 'deposit' | 'withdraw'
+  isShowing: boolean
+  onRequestClose: () => void
+}
+
+export const TransferDialog = ({
+  tokenSymbol,
+  transactionKind,
+  isShowing,
+  onRequestClose,
+}: TransferDialogProps) => {
+  const capitalizedTransactionType =
+    transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
+
+  const tokenInfo = useTokenInfo(tokenSymbol)
+
+  const [tokenAmount, setTokenAmount] = useState(0)
+  const tokenMaxAvailableBalance = 1000
+  const walletAddressTransferringAssetsFrom =
+    'cosmos1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y'
+
+  const walletAddressTransferringAssetsTo =
+    'juno1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y'
+  const availableAssetBalanceOnChain = 399
+  const arbitrarySwapFee = 0.03
+
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <StyledContent>
-        <Text type="title">Deposit</Text>
+        <Text type="title">{capitalizedTransactionType}</Text>
         <Text paddingTop="24" paddingBottom="18" variant="light">
-          How many Juno would you like to transfer?
+          How many {tokenInfo.name} would you like to {transactionKind}?
         </Text>
         <StyledDivForCards>
-          <WalletCardWithInput />
-          <WalletCardWithBalance />
+          <WalletCardWithInput
+            value={tokenAmount}
+            onChange={setTokenAmount}
+            tokenName={tokenInfo.name}
+            maxValue={tokenMaxAvailableBalance}
+            walletAddress={walletAddressTransferringAssetsFrom}
+          />
+          <WalletCardWithBalance
+            walletAddress={walletAddressTransferringAssetsTo}
+            balance={availableAssetBalanceOnChain}
+            tokenName={tokenInfo.name}
+          />
         </StyledDivForCards>
         <StyledDivForFee>
           <Text type="microscopic" variant="light">
             Transaction fees
           </Text>
           <Text type="microscopic" variant="bold" paddingLeft="10">
-            $0,03
+            ${arbitrarySwapFee.toFixed(2)}
           </Text>
         </StyledDivForFee>
-        <Button size="humongous">Deposit</Button>
+        <Button size="humongous">{capitalizedTransactionType}</Button>
       </StyledContent>
     </Dialog>
   )

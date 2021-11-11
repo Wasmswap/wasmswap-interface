@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { CardWithSeparator } from '../CardWithSeparator'
 import { Text } from '../Text'
 import { CreditCardIcon } from '@heroicons/react/solid'
@@ -9,8 +8,13 @@ import {
 } from './card.styles'
 import { TokenAmountInput } from '../TokenAmountInput'
 
-export const WalletCardWithInput = ({}) => {
-  const [amount, setAmount] = useState(100)
+export const WalletCardWithInput = ({
+  tokenName,
+  value,
+  maxValue = 1000,
+  onChange,
+  walletAddress = 'No address found',
+}) => {
   return (
     <CardWithSeparator
       contents={[
@@ -37,7 +41,7 @@ export const WalletCardWithInput = ({}) => {
                 color="gray"
                 paddingTop="2"
               >
-                cosmos1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y
+                {walletAddress}
               </Text>
             </div>
           </StyledHeader>
@@ -53,13 +57,13 @@ export const WalletCardWithInput = ({}) => {
               color="lightBlue"
               paddingLeft="2"
             >
-              133 JUNO
+              {maxValue} {tokenName}
             </Text>
           </StyledDivForBalance>
           <TokenAmountInput
-            value={amount}
-            onAmountChange={setAmount}
-            maxValue={1000}
+            value={value}
+            onAmountChange={onChange}
+            maxValue={maxValue}
           />
         </>,
       ]}

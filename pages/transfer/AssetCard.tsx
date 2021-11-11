@@ -5,8 +5,19 @@ import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline'
 import { Button } from '../../components/Button'
 import { CardWithSeparator } from '../../components/CardWithSeparator'
 import { IconWrapper } from '../../components/IconWrapper'
+import { useTokenInfo } from '../../hooks/useTokenInfo'
 
-export const AssetCard = ({ tokenInfo: { name, symbol }, onActionClick }) => {
+type AssetCardProps = {
+  tokenSymbol: string
+  onActionClick: (args: {
+    tokenSymbol: string
+    actionType: 'deposit' | 'withdraw'
+  }) => void
+}
+
+export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
+  const { symbol, name } = useTokenInfo(tokenSymbol)
+
   return (
     <CardWithSeparator
       paddingTop={14}

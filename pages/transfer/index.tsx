@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useReducer } from 'react'
 import { Disclaimer } from 'components/SwapForm/Disclaimer'
 import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
 import { Text } from 'components/Text'
@@ -10,17 +10,30 @@ import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
 
 export default function Transfer() {
-  const tokenInfo = useTokenInfo('JUNO')
+  const [
+    { transactionKind, isTransferDialogShowing, selectedToken },
+    updateState,
+  ] = useReducer((store, updatedStore) => ({ ...store, ...updatedStore }), {
+    transactionKind: 'deposit',
+    isTransferDialogShowing: false,
+    selectedToken: 'JUNO',
+  })
 
-  const [isTransferDialogShowing, setTransferDialogShowing] = useState(false)
-
-  const openTransferDialog = () => setTransferDialogShowing(true)
+  function handleAssetCardActionClick({ actionType, tokenSymbol }) {
+    updateState({
+      transactionKind: actionType,
+      selectedToken: tokenSymbol,
+      isTransferDialogShowing: true,
+    })
+  }
 
   return (
     <>
       <TransferDialog
+        tokenSymbol={selectedToken}
+        transactionKind={transactionKind}
         isShowing={isTransferDialogShowing}
-        onRequestClose={() => setTransferDialogShowing(false)}
+        onRequestClose={() => updateState({ isTransferDialogShowing: false })}
       />
 
       <StyledSpacer />
@@ -38,12 +51,12 @@ export default function Transfer() {
           </StyledSubtitle>
           <StyledGrid>
             <AssetCard
-              tokenInfo={tokenInfo}
-              onActionClick={openTransferDialog}
+              tokenSymbol="JUNO"
+              onActionClick={handleAssetCardActionClick}
             />
             <AssetCard
-              tokenInfo={tokenInfo}
-              onActionClick={openTransferDialog}
+              tokenSymbol="JUNO"
+              onActionClick={handleAssetCardActionClick}
             />
           </StyledGrid>
         </StyledWrapper>

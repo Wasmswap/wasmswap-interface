@@ -1,36 +1,36 @@
 import { CardWithSeparator } from '../CardWithSeparator'
 import { Text } from '../Text'
-import {
-  StyledHeader,
-  StyledDivForBalance,
-  StyledIconWrapper,
-} from './card.styles'
-import { AppLogoIcon } from '../AppLogoIcon'
+import { StyledHeader, StyledDivForBalance, WalletIcon } from './card.styles'
+import { TransactionOrigin, TransactionType } from './types'
+
+type WalletCardWithBalanceProps = {
+  transactionType: TransactionType
+  transactionOrigin: TransactionOrigin
+  walletAddress: string
+  balance: number
+  tokenName: string
+}
 
 export const WalletCardWithBalance = ({
+  transactionType,
+  transactionOrigin,
   walletAddress = 'No address found',
   balance = 0,
   tokenName,
-}) => {
+}: WalletCardWithBalanceProps) => {
   return (
     <CardWithSeparator
       paddingBottom={0}
       contents={[
         <>
           <Text type="microscopic" variant="light">
-            TO
+            {transactionType === 'incoming' ? 'TO' : 'FROM'}
           </Text>
           <StyledHeader>
-            <StyledIconWrapper
-              size="44px"
-              color="#1a44af"
-              rounded
-              enableGradient
-              icon={<AppLogoIcon />}
-            />
+            <WalletIcon transactionOrigin={transactionOrigin} />
             <div>
               <Text type="body" variant="light">
-                Junoswap
+                {transactionOrigin === 'platform' ? 'Junoswap' : 'Keplr wallet'}
               </Text>
               <Text
                 type="microscopic"

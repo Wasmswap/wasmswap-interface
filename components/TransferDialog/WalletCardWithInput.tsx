@@ -1,39 +1,42 @@
 import { CardWithSeparator } from '../CardWithSeparator'
 import { Text } from '../Text'
-import { CreditCardIcon } from '@heroicons/react/solid'
-import {
-  StyledHeader,
-  StyledDivForBalance,
-  StyledIconWrapper,
-} from './card.styles'
+import { StyledHeader, StyledDivForBalance, WalletIcon } from './card.styles'
 import { TokenAmountInput } from '../TokenAmountInput'
+import { useTokenInfo } from '../../hooks/useTokenInfo'
+import { TransactionOrigin, TransactionType } from './types'
+
+type WalletCardWithInputProps = {
+  transactionType: TransactionType
+  transactionOrigin: TransactionOrigin
+  tokenSymbol: string
+  value: number
+  maxValue: number
+  onChange: (value: number) => void
+  walletAddress: string
+}
 
 export const WalletCardWithInput = ({
-  tokenName,
+  transactionType,
+  transactionOrigin,
+  tokenSymbol,
   value,
   maxValue = 1000,
   onChange,
   walletAddress = 'No address found',
-}) => {
+}: WalletCardWithInputProps) => {
+  const tokenInfo = useTokenInfo(tokenSymbol)
   return (
     <CardWithSeparator
       contents={[
         <>
           <Text type="microscopic" variant="light">
-            FROM
+            {transactionType === 'incoming' ? 'TO' : 'FROM'}
           </Text>
           <StyledHeader>
-            <StyledIconWrapper
-              size="44px"
-              color="#1a44af"
-              rounded
-              $enableGradient
-              $enablePadding
-              icon={<CreditCardIcon />}
-            />
+            <WalletIcon transactionOrigin={transactionOrigin} />
             <div>
               <Text type="body" variant="light">
-                Keplr wallet
+                {transactionOrigin === 'platform' ? 'Junoswap' : 'Keplr wallet'}
               </Text>
               <Text
                 type="microscopic"
@@ -57,13 +60,14 @@ export const WalletCardWithInput = ({
               color="lightBlue"
               paddingLeft="2"
             >
-              {maxValue} {tokenName}
+              {maxValue} {tokenInfo.name}
             </Text>
           </StyledDivForBalance>
           <TokenAmountInput
             value={value}
             onAmountChange={onChange}
             maxValue={maxValue}
+            tokenSymbol={tokenInfo.symbol}
           />
         </>,
       ]}

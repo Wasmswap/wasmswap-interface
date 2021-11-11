@@ -6,10 +6,11 @@ import { WalletCardWithBalance } from './WalletCardWithBalance'
 import { Button } from '../Button'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { useState } from 'react'
+import { TransactionKind } from './types'
 
 type TransferDialogProps = {
   tokenSymbol: string
-  transactionKind: 'deposit' | 'withdraw'
+  transactionKind: TransactionKind
   isShowing: boolean
   onRequestClose: () => void
 }
@@ -43,18 +44,46 @@ export const TransferDialog = ({
           How many {tokenInfo.name} would you like to {transactionKind}?
         </Text>
         <StyledDivForCards>
-          <WalletCardWithInput
-            value={tokenAmount}
-            onChange={setTokenAmount}
-            tokenName={tokenInfo.name}
-            maxValue={tokenMaxAvailableBalance}
-            walletAddress={walletAddressTransferringAssetsFrom}
-          />
-          <WalletCardWithBalance
-            walletAddress={walletAddressTransferringAssetsTo}
-            balance={availableAssetBalanceOnChain}
-            tokenName={tokenInfo.name}
-          />
+          {transactionKind === 'deposit' && (
+            <>
+              <WalletCardWithInput
+                transactionType="outgoing"
+                transactionOrigin="wallet"
+                value={tokenAmount}
+                onChange={setTokenAmount}
+                tokenSymbol={tokenSymbol}
+                maxValue={tokenMaxAvailableBalance}
+                walletAddress={walletAddressTransferringAssetsFrom}
+              />
+              <WalletCardWithBalance
+                transactionType="incoming"
+                transactionOrigin="platform"
+                walletAddress={walletAddressTransferringAssetsTo}
+                balance={availableAssetBalanceOnChain}
+                tokenName={tokenInfo.name}
+              />
+            </>
+          )}
+          {transactionKind === 'withdraw' && (
+            <>
+              <WalletCardWithInput
+                transactionType="outgoing"
+                transactionOrigin="platform"
+                value={tokenAmount}
+                onChange={setTokenAmount}
+                tokenSymbol={tokenSymbol}
+                maxValue={tokenMaxAvailableBalance}
+                walletAddress={walletAddressTransferringAssetsFrom}
+              />
+              <WalletCardWithBalance
+                transactionType="incoming"
+                transactionOrigin="wallet"
+                walletAddress={walletAddressTransferringAssetsTo}
+                balance={availableAssetBalanceOnChain}
+                tokenName={tokenInfo.name}
+              />
+            </>
+          )}
         </StyledDivForCards>
         <StyledDivForFee>
           <Text type="microscopic" variant="light">

@@ -1,6 +1,9 @@
 import { IconWrapper } from '../IconWrapper'
 import { spaces } from '../../util/constants'
 import styled from 'styled-components'
+import { CreditCardIcon } from '@heroicons/react/solid'
+import { AppLogoIcon } from '../AppLogoIcon'
+import { TransactionOrigin } from './types'
 
 export const StyledIconWrapper = styled(IconWrapper)`
   ${(p) =>
@@ -32,3 +35,26 @@ export const StyledDivForBalance = styled.div`
   line-height: 18px;
   padding: ${(p) => spaces[p.$paddingY] || p.$paddingY || '10px'} 0;
 `
+
+export const WalletIcon = ({
+  transactionOrigin,
+}: {
+  transactionOrigin: TransactionOrigin
+}) =>
+  transactionOrigin === 'wallet' ? (
+    <StyledIconWrapper
+      size="44px"
+      color="#1a44af"
+      rounded
+      $enableGradient
+      $enablePadding
+      icon={<CreditCardIcon />}
+    />
+  ) : (
+    <StyledIconWrapper
+      size="44px"
+      color="#1a44af"
+      rounded
+      icon={<AppLogoIcon />}
+    />
+  )

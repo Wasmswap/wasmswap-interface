@@ -5,7 +5,6 @@ import { Text } from 'components/Text'
 import styled from 'styled-components'
 import { Header } from './Header'
 import { AssetCard } from './AssetCard'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
 

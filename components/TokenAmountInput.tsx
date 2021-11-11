@@ -4,7 +4,19 @@ import { formatTokenBalance } from '../util/conversion'
 import { Text } from './Text'
 import { Button } from './Button'
 
-export const TokenAmountInput = ({ value, onAmountChange, maxValue }) => {
+type TokenAmountInputProps = {
+  value: number
+  onAmountChange: (amount: number) => void
+  maxValue: number
+  tokenSymbol: string
+}
+
+export const TokenAmountInput = ({
+  value,
+  onAmountChange,
+  maxValue,
+  tokenSymbol,
+}: TokenAmountInputProps) => {
   function handleChange({ target: { value: rawInput } }) {
     const formattedValue = formatTokenBalance(rawInput)
     const validatedValue = formattedValue > maxValue ? maxValue : formattedValue
@@ -27,7 +39,7 @@ export const TokenAmountInput = ({ value, onAmountChange, maxValue }) => {
         />
         <StyledDivForTokenName>
           <Text type="microscopic" variant="bold">
-            JUNO
+            {tokenSymbol}
           </Text>
         </StyledDivForTokenName>
       </Text>

@@ -6,17 +6,19 @@ import { Button } from '../../components/Button'
 import { CardWithSeparator } from '../../components/CardWithSeparator'
 import { IconWrapper } from '../../components/IconWrapper'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
+import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
 
 type AssetCardProps = {
   tokenSymbol: string
   onActionClick: (args: {
     tokenSymbol: string
-    actionType: 'deposit' | 'withdraw'
+    actionType: 'deposit' | 'withdraw',
   }) => void
 }
 
 export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
-  const { symbol, name } = useIBCAssetInfo(tokenSymbol)
+  const { symbol, name, chain_id} = useIBCAssetInfo(tokenSymbol)
+  const connectWallet = useConnectIBCWallet(chain_id)
 
   return (
     <CardWithSeparator
@@ -51,6 +53,7 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
             <Button
               onClick={() => {
                 console.log(`deposit ${symbol}`)
+                connectWallet()
                 onActionClick({
                   tokenSymbol: symbol,
                   actionType: 'deposit',
@@ -68,9 +71,11 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
             </Button>
             <Button
               onClick={() => {
+                connectWallet()
                 onActionClick({
                   tokenSymbol: symbol,
                   actionType: 'withdraw',
+                  connectIBCWallet: connectWallet
                 })
               }}
               size="small"

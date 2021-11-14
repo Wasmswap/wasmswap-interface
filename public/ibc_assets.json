@@ -2,11 +2,13 @@
     "tokens": [
         {
             "name":"ATOM",
-            "symbol": "ATOM"
+            "symbol": "ATOM",
+            "chain_id": "cosmoshub-4"
         },
         {
             "name":"UST",
-            "symbol":"UST"
+            "symbol":"UST",
+            "chain_id":"terra-1"
         }
     ]
 

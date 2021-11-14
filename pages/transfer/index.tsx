@@ -7,6 +7,8 @@ import { Header } from './Header'
 import { AssetCard } from './AssetCard'
 import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
+import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
 
 export default function Transfer() {
   const [
@@ -18,7 +20,7 @@ export default function Transfer() {
     selectedToken: 'ATOM',
   })
 
-  function handleAssetCardActionClick({ actionType, tokenSymbol }) {
+  function handleAssetCardActionClick({ actionType, tokenSymbol}) {
     updateState({
       transactionKind: actionType,
       selectedToken: tokenSymbol,

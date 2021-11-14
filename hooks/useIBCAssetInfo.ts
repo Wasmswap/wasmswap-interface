@@ -5,6 +5,7 @@ export type IBCAssetInfo = {
   name: String,
   symbol: String,
   chain_id: String,
+  denom: String
 }
 
 export const useIBCAssetInfo = (assetSymbol: string) => {

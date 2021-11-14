@@ -9,7 +9,9 @@ import { TransactionKind } from './types'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { ibcWalletState } from 'state/atoms/walletAtoms'
+import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -30,12 +32,13 @@ export const TransferDialog = ({
   const tokenInfo = useIBCAssetInfo(tokenSymbol)
 
   console.log('connected')
-  const { address, client} = useRecoilValue(ibcWalletState)
+  const { address: ibcAddress, client: ibcClient} = useRecoilValue(ibcWalletState)
 
   const [tokenAmount, setTokenAmount] = useState(0)
-  const tokenMaxAvailableBalance = 1000
-  const walletAddressTransferringAssetsFrom = address
+  const {balance: tokenMaxAvailableBalance} = useIBCTokenBalance(tokenInfo.denom)
+  const walletAddressTransferringAssetsFrom = ibcAddress
 
+  // const {address, client} = useRecoilValue(walletState)
   const walletAddressTransferringAssetsTo =
     'juno1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y'
   const availableAssetBalanceOnChain = 399

@@ -75,7 +75,6 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
                 onActionClick({
                   tokenSymbol: symbol,
                   actionType: 'withdraw',
-                  connectIBCWallet: connectWallet
                 })
               }}
               size="small"

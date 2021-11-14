@@ -4,9 +4,9 @@ import { Text } from '../Text'
 import { WalletCardWithInput } from './WalletCardWithInput'
 import { WalletCardWithBalance } from './WalletCardWithBalance'
 import { Button } from '../Button'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { useState } from 'react'
 import { TransactionKind } from './types'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -24,7 +24,7 @@ export const TransferDialog = ({
   const capitalizedTransactionType =
     transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
 
-  const tokenInfo = useTokenInfo(tokenSymbol)
+  const tokenInfo = useIBCAssetInfo(tokenSymbol)
 
   const [tokenAmount, setTokenAmount] = useState(0)
   const tokenMaxAvailableBalance = 1000

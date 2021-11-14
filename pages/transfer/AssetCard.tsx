@@ -5,7 +5,7 @@ import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline'
 import { Button } from '../../components/Button'
 import { CardWithSeparator } from '../../components/CardWithSeparator'
 import { IconWrapper } from '../../components/IconWrapper'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 
 type AssetCardProps = {
   tokenSymbol: string
@@ -16,7 +16,7 @@ type AssetCardProps = {
 }
 
 export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
-  const { symbol, name } = useTokenInfo(tokenSymbol)
+  const { symbol, name } = useIBCAssetInfo(tokenSymbol)
 
   return (
     <CardWithSeparator
@@ -50,6 +50,7 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
           <StyledButtonsWrapper>
             <Button
               onClick={() => {
+                console.log(`deposit ${symbol}`)
                 onActionClick({
                   tokenSymbol: symbol,
                   actionType: 'deposit',

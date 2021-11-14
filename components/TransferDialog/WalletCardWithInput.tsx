@@ -4,6 +4,7 @@ import { StyledHeader, StyledDivForBalance, WalletIcon } from './card.styles'
 import { TokenAmountInput } from '../TokenAmountInput'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { TransactionOrigin, TransactionType } from './types'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 
 type WalletCardWithInputProps = {
   transactionType: TransactionType
@@ -24,7 +25,7 @@ export const WalletCardWithInput = ({
   onChange,
   walletAddress = 'No address found',
 }: WalletCardWithInputProps) => {
-  const tokenInfo = useTokenInfo(tokenSymbol)
+  const tokenInfo = useIBCAssetInfo(tokenSymbol)
   return (
     <CardWithSeparator
       contents={[

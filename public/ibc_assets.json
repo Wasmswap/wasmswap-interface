@@ -1,0 +1,13 @@
+{
+    "tokens": [
+        {
+            "name":"ATOM",
+            "symbol": "ATOM"
+        },
+        {
+            "name":"UST",
+            "symbol":"UST"
+        }
+    ]
+
+}

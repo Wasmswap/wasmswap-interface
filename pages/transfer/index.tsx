@@ -15,7 +15,7 @@ export default function Transfer() {
   ] = useReducer((store, updatedStore) => ({ ...store, ...updatedStore }), {
     transactionKind: 'deposit',
     isTransferDialogShowing: false,
-    selectedToken: 'JUNO',
+    selectedToken: 'ATOM',
   })
 
   function handleAssetCardActionClick({ actionType, tokenSymbol }) {
@@ -25,6 +25,7 @@ export default function Transfer() {
       isTransferDialogShowing: true,
     })
   }
+  console.log(selectedToken)
 
   return (
     <>
@@ -50,11 +51,11 @@ export default function Transfer() {
           </StyledSubtitle>
           <StyledGrid>
             <AssetCard
-              tokenSymbol="JUNO"
+              tokenSymbol="ATOM"
               onActionClick={handleAssetCardActionClick}
             />
             <AssetCard
-              tokenSymbol="JUNO"
+              tokenSymbol="UST"
               onActionClick={handleAssetCardActionClick}
             />
           </StyledGrid>

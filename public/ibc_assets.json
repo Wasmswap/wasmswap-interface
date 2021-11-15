@@ -4,13 +4,17 @@
             "name":"ATOM",
             "symbol": "ATOM",
             "chain_id": "cosmoshub-4",
-            "denom":"uatom"
+            "denom":"uatom",
+            "channel":"channel-207",
+            "juno_channel":"channel-1"
         },
         {
             "name":"UST",
             "symbol":"UST",
             "chain_id":"terra-1",
-            "denom":"uust"
+            "denom":"uust",
+            "channel":"info",
+            "juno_channel":"channel-7"
         }
     ]
 

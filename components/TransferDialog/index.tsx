@@ -12,8 +12,11 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { Coin } from '@cosmjs/stargate'
+import { BroadcastTxResponse, Coin, MsgTransferEncodeObject, StdFee } from '@cosmjs/stargate'
 import Long from 'long'
+import { Height } from '@cosmjs/stargate/build/codec/ibc/core/client/v1/client'
+import { MsgTransfer } from '@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx'
+import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -21,6 +24,37 @@ type TransferDialogProps = {
   isShowing: boolean
   onRequestClose: () => void
 }
+
+const sendIbcTokens = (
+    senderAddress: string,
+    recipientAddress: string,
+    transferAmount: Coin,
+    sourcePort: string,
+    sourceChannel: string,
+    timeoutHeight: Height | undefined,
+    /** timeout in seconds */
+    timeoutTimestamp: number | undefined,
+    fee: StdFee,
+    memo = "",
+    client: SigningCosmWasmClient
+  ): Promise<BroadcastTxResponse> => {
+    const timeoutTimestampNanoseconds = timeoutTimestamp
+      ? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000)
+      : undefined;
+    const transferMsg: MsgTransferEncodeObject = {
+      typeUrl: "/ibc.applications.transfer.v1.MsgTransfer",
+      value: MsgTransfer.fromPartial({
+        sourcePort: sourcePort,
+        sourceChannel: sourceChannel,
+        sender: senderAddress,
+        receiver: recipientAddress,
+        token: transferAmount,
+        timeoutHeight: timeoutHeight,
+        timeoutTimestamp: timeoutTimestampNanoseconds,
+      }),
+    };
+    return client.signAndBroadcast(senderAddress, [transferMsg], fee, memo);
+  }
 
 export const TransferDialog = ({
   tokenSymbol,
@@ -49,7 +83,13 @@ export const TransferDialog = ({
   const ibcTransfer = async () => {
     const time = new Date()
     console.log(time.getTime())
-    ibcClient.sendIbcTokens(ibcAddress,address,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer","channel-207",undefined, time.getTime() + 600000)
+    const time_seconds = Math.floor(time.getTime() / 1000)
+    const timeout = time_seconds + 300
+    if (transactionKind == 'deposit') {
+      await ibcClient.sendIbcTokens(ibcAddress,address,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer",tokenInfo.channel,undefined, timeout)
+    } else if (transactionKind == 'withdraw') {
+      await sendIbcTokens(address,ibcAddress,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer",tokenInfo.juno_channel,undefined, timeout, client.fees.send,'',client)
+    }
   }
 
   return (
@@ -89,12 +129,12 @@ export const TransferDialog = ({
                 onChange={setTokenAmount}
                 tokenSymbol={tokenSymbol}
                 maxValue={tokenMaxAvailableBalance}
-                walletAddress={walletAddressTransferringAssetsFrom}
+                walletAddress={walletAddressTransferringAssetsTo}
               />
               <WalletCardWithBalance
                 transactionType="incoming"
                 transactionOrigin="wallet"
-                walletAddress={walletAddressTransferringAssetsTo}
+                walletAddress={walletAddressTransferringAssetsFrom}
                 balance={availableAssetBalanceOnChain}
                 tokenName={tokenInfo.name}
               />

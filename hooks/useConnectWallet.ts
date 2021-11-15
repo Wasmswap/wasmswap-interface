@@ -11,6 +11,7 @@ export const useConnectWallet = () => {
     await (window as any).keplr?.enable(chainId)
     const offlineSigner = await (window as any).getOfflineSigner(chainId)
 
+    console.log(process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT)
     const wasmChainClient = await SigningCosmWasmClient.connectWithSigner(
       process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
       offlineSigner

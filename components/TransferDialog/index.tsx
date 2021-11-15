@@ -12,6 +12,8 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+import { Coin } from '@cosmjs/stargate'
+import Long from 'long'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -38,11 +40,17 @@ export const TransferDialog = ({
   const {balance: tokenMaxAvailableBalance} = useIBCTokenBalance(tokenInfo.denom)
   const walletAddressTransferringAssetsFrom = ibcAddress
 
-  // const {address, client} = useRecoilValue(walletState)
+  const {address, client} = useRecoilValue(walletState)
   const walletAddressTransferringAssetsTo =
-    'juno1uw6ls6y8du6d1uw6ls6y8du6d1uw6ls6y'
+    address
   const availableAssetBalanceOnChain = 399
-  const arbitrarySwapFee = 0.03
+  const arbitrarySwapFee = 0.03 
+
+  const ibcTransfer = async () => {
+    const time = new Date()
+    console.log(time.getTime())
+    ibcClient.sendIbcTokens(ibcAddress,address,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer","channel-207",undefined, time.getTime() + 600000)
+  }
 
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
@@ -101,7 +109,7 @@ export const TransferDialog = ({
             ${arbitrarySwapFee.toFixed(2)}
           </Text>
         </StyledDivForFee>
-        <Button size="humongous">{capitalizedTransactionType}</Button>
+        <Button size="humongous" onClick={()=>ibcTransfer()}>{capitalizedTransactionType}</Button>
       </StyledContent>
     </Dialog>
   )

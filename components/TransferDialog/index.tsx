@@ -74,10 +74,11 @@ export const TransferDialog = ({
   const {balance: ibcTokenMaxAvailableBalance} = useIBCTokenBalance(tokenInfo.denom)
   const walletAddressTransferringAssetsFrom = ibcAddress
 
+  const {balance: availableAssetBalanceOnChain} = useTokenBalance({native:true,denom:tokenInfo.juno_denom,token_address:"",chain_id:"",swap_address:"",symbol:"",name:"",decimals:1,logoURI:"",tags:[]});
+
   const {address, client} = useRecoilValue(walletState)
   const walletAddressTransferringAssetsTo =
     address
-  const availableAssetBalanceOnChain = 399
   const arbitrarySwapFee = 0.03 
 
   const ibcTransfer = async () => {
@@ -88,7 +89,9 @@ export const TransferDialog = ({
     if (transactionKind == 'deposit') {
       await ibcClient.sendIbcTokens(ibcAddress,address,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer",tokenInfo.channel,undefined, timeout)
     } else if (transactionKind == 'withdraw') {
-      await sendIbcTokens(address,ibcAddress,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer",tokenInfo.juno_channel,undefined, timeout, client.fees.send,'',client)
+      console.log(tokenAmount)
+      console.log(tokenAmount*1000000)
+      await sendIbcTokens(address,ibcAddress,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.juno_denom},"transfer",tokenInfo.juno_channel,undefined, timeout, client.fees.exec,'',client)
     }
   }
 
@@ -128,14 +131,14 @@ export const TransferDialog = ({
                 value={tokenAmount}
                 onChange={setTokenAmount}
                 tokenSymbol={tokenSymbol}
-                maxValue={ibcTokenMaxAvailableBalance}
+                maxValue={availableAssetBalanceOnChain}
                 walletAddress={walletAddressTransferringAssetsTo}
               />
               <WalletCardWithBalance
                 transactionType="incoming"
                 transactionOrigin="wallet"
                 walletAddress={walletAddressTransferringAssetsFrom}
-                balance={availableAssetBalanceOnChain}
+                balance={ibcTokenMaxAvailableBalance}
                 tokenName={tokenInfo.name}
               />
             </>

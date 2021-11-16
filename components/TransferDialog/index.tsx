@@ -71,7 +71,7 @@ export const TransferDialog = ({
   const { address: ibcAddress, client: ibcClient} = useRecoilValue(ibcWalletState)
 
   const [tokenAmount, setTokenAmount] = useState(0)
-  const {balance: tokenMaxAvailableBalance} = useIBCTokenBalance(tokenInfo.denom)
+  const {balance: ibcTokenMaxAvailableBalance} = useIBCTokenBalance(tokenInfo.denom)
   const walletAddressTransferringAssetsFrom = ibcAddress
 
   const {address, client} = useRecoilValue(walletState)
@@ -108,7 +108,7 @@ export const TransferDialog = ({
                 value={tokenAmount}
                 onChange={setTokenAmount}
                 tokenSymbol={tokenSymbol}
-                maxValue={tokenMaxAvailableBalance}
+                maxValue={ibcTokenMaxAvailableBalance}
                 walletAddress={walletAddressTransferringAssetsFrom}
               />
               <WalletCardWithBalance
@@ -128,7 +128,7 @@ export const TransferDialog = ({
                 value={tokenAmount}
                 onChange={setTokenAmount}
                 tokenSymbol={tokenSymbol}
-                maxValue={tokenMaxAvailableBalance}
+                maxValue={ibcTokenMaxAvailableBalance}
                 walletAddress={walletAddressTransferringAssetsTo}
               />
               <WalletCardWithBalance

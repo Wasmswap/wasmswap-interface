@@ -18,7 +18,9 @@
       "name": "Juno",
       "decimals": 6,
       "logoURI": "",
-      "tags": ["native"]
+      "tags": ["native"],
+      "native":true,
+      "denom":"ujuno"
     },
     {
       "chain_id": "lucina",
@@ -28,7 +30,9 @@
       "name": "Poodle Coin",
       "decimals": 6,
       "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
-      "tags": ["memecoin"]
+      "tags": ["memecoin"],
+      "native":false,
+      "denom":"upood"
     },
     {
       "chain_id": "lucina",
@@ -38,7 +42,9 @@
       "name": "Crab Coin",
       "decimals": 6,
       "logoURI": "",
-      "tags": ["memecoin"] 
+      "tags": ["memecoin"],
+      "native":false,
+      "denom":"ucrab"
     },
     {
       "chain_id": "lucina",
@@ -48,7 +54,9 @@
       "name": "DAO Coin",
       "decimals": 6,
       "logoURI": "",
-      "tags": ["memecoin"] 
+      "tags": ["memecoin"],
+      "native":false,
+      "denom":"udao"
     }
   ],
   "version": {

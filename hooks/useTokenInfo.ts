@@ -10,6 +10,8 @@ export type TokenInfo = {
   decimals: number
   logoURI: string
   tags: string[]
+  denom: string,
+  native: boolean,
 }
 
 export const useTokenInfo = (tokenSymbol: string) => {

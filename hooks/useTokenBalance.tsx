@@ -4,14 +4,14 @@ import { CW20 } from '../services/cw20'
 import { TokenInfo } from './useTokenInfo'
 import { useQuery } from 'react-query'
 
-export const useTokenBalance = ({ symbol, token_address }: TokenInfo) => {
+export const useTokenBalance = ({ token_address, native, denom}: TokenInfo) => {
   const { address, client } = useRecoilValue(walletState)
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`tokenBalance/${symbol}`, address, token_address],
+    [`tokenBalance/${denom}`, address, token_address],
     async () => {
-      if (symbol === 'JUNO') {
-        const coin = await client.getBalance(address, 'ujuno')
+      if (native) {
+        const coin = await client.getBalance(address, denom)
         const amount = coin ? Number(coin.amount) : 0
         return amount / 1000000
       }

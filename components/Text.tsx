@@ -1,17 +1,23 @@
-import React, { HTMLProps } from 'react'
-import styled from 'styled-components'
-import { colorTokens } from '../util/constants'
+import React, { ForwardedRef, forwardRef, HTMLProps } from 'react'
+import styled, { css } from 'styled-components'
+import { colorTokens, spaces } from '../util/constants'
 
 const fontWeightTokens = {
-  bold: 700,
-  normal: 600,
+  bold: 600,
+  normal: 500,
   light: 400,
 }
 
 type TextProps = {
-  type?: 'heading' | 'title' | 'body' | 'subtitle' | 'caption'
+  type?: 'heading' | 'title' | 'body' | 'subtitle' | 'caption' | 'microscopic'
   color?: keyof typeof colorTokens
   variant?: keyof typeof fontWeightTokens
+  paddingTop?: string
+  paddingBottom?: string
+  paddingLeft?: string
+  paddingRight?: string
+  paddingY?: string
+  paddingX?: string
 }
 
 const colorTokenSelector = (props: TextProps) => {
@@ -22,11 +28,33 @@ const fontWeightSelector = (props: TextProps) => {
   return fontWeightTokens[props.variant] || fontWeightTokens.normal
 }
 
+const paddingMixin = css`
+  ${(p) =>
+    p.paddingTop ? `padding-top: ${spaces[p.paddingTop] || p.paddingTop}` : ''};
+  ${(p) =>
+    p.paddingBottom
+      ? `padding-bottom: ${spaces[p.paddingBottom] || p.paddingBottom}`
+      : ''};
+  ${(p) =>
+    p.paddingLeft
+      ? `padding-left: ${spaces[p.paddingLeft] || p.paddingLeft}`
+      : ''};
+  ${(p) =>
+    p.paddingRight
+      ? `padding-right: ${spaces[p.paddingRight] || p.paddingRight}`
+      : ''};
+  ${(p) =>
+    p.paddingY || p.paddingX
+      ? `padding: ${p.paddingY || 0} ${p.paddingX || 0}`
+      : ''};
+`
+
 const Title = styled.p<TextProps>`
   font-size: 32px;
   line-height: 44px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
+  ${paddingMixin};
 `
 
 const Heading = styled.p<TextProps>`
@@ -34,6 +62,7 @@ const Heading = styled.p<TextProps>`
   line-height: 27px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
+  ${paddingMixin};
 `
 
 const Paragraph = styled.p<TextProps>`
@@ -41,6 +70,7 @@ const Paragraph = styled.p<TextProps>`
   line-height: 24px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
+  ${paddingMixin};
 `
 
 const Subtitle = styled.p<TextProps>`
@@ -48,6 +78,7 @@ const Subtitle = styled.p<TextProps>`
   line-height: 18px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
+  ${paddingMixin};
 `
 
 const Caption = styled.p<TextProps>`
@@ -55,6 +86,15 @@ const Caption = styled.p<TextProps>`
   line-height: 18px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
+  ${paddingMixin};
+`
+
+const Microscopic = styled.p<TextProps>`
+  font-size: 12px;
+  line-height: 16px;
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+  ${paddingMixin};
 `
 
 const map = {
@@ -63,12 +103,15 @@ const map = {
   heading: Heading,
   title: Title,
   subtitle: Subtitle,
+  microscopic: Microscopic,
 }
 
-export const Text = ({
-  type = 'body',
-  ...props
-}: TextProps & HTMLProps<HTMLParagraphElement>) => {
+const TextComponent = (
+  { type = 'body', ...props }: TextProps & HTMLProps<HTMLParagraphElement>,
+  ref: ForwardedRef<any>
+) => {
   const TextComponent = map[type] || Paragraph
-  return <TextComponent {...props} />
+  return <TextComponent ref={ref} {...props} />
 }
+
+export const Text = forwardRef(TextComponent) as typeof TextComponent

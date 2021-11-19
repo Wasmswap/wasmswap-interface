@@ -1,5 +1,6 @@
 import 'styles/globals.css'
 import 'normalize.css'
+import 'react-toastify/dist/ReactToastify.css'
 import type { AppProps } from 'next/app'
 import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'
@@ -9,7 +10,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
     },
   },
 })

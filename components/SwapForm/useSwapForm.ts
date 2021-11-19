@@ -8,10 +8,7 @@ import {
   tokenBNameState,
 } from '../../state/atoms/tokenAtoms'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import {
-  useInvalidateBalances,
-  useTokenBalance,
-} from '../../hooks/useTokenBalance'
+import { useTokenBalance } from '../../hooks/useTokenBalance'
 import { useTokenPrice } from '../../hooks/useTokenPrice'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
@@ -21,10 +18,12 @@ import {
   swapTokenForToken,
 } from '../../services/swap'
 import TokenList from '../../public/token_list.json'
+import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 
 export const useSwapForm = () => {
   const { address, client } = useRecoilValue(walletState)
   const connectWallet = useConnectWallet()
+  const refetchQueries = useRefetchQueries()
 
   const [transactionStatus, setTransactionState] = useRecoilState(
     transactionStatusState
@@ -41,8 +40,6 @@ export const useSwapForm = () => {
   const tokenBInfo = useTokenInfo(tokenBName)
   const tokenBPrice = useTokenPrice(tokenAInfo, tokenBInfo, tokenAmount)
   const { balance: tokenBBalance } = useTokenBalance(tokenBInfo)
-
-  const invalidateBalances = useInvalidateBalances()
 
   // Reset transaction state everytime token names or amount names change
   useEffect(() => {
@@ -74,6 +71,7 @@ export const useSwapForm = () => {
     setTokenAmount(tokenBPrice)
   }
 
+  // @todo refactor this to make it a react-query mutation
   const handleSwap = async () => {
     if (!client) {
       toast.error('Please connect wallet', {
@@ -141,7 +139,7 @@ export const useSwapForm = () => {
       } finally {
         setTransactionState('IDLE')
         // invalidate token balances and refetch them all
-        invalidateBalances()
+        refetchQueries()
       }
     }
   }

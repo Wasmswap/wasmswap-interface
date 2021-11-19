@@ -13,6 +13,7 @@ export const useTokenPrice = (
 ) => {
   const [price, setPrice] = useState(0)
 
+  // @todo refactor this to react-query
   useEffect(() => {
     const getPrice = async () => {
       if (fromTokenInfo.symbol === 'JUNO') {

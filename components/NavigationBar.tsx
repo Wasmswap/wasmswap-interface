@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import Link from 'next/link'
 import { Container } from './Container'
 import { Text } from './Text'
 import { Button } from './Button'
 import { useConnectWallet } from '../hooks/useConnectWallet'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
+import { useRouter } from 'next/router'
 
 export function NavigationBar() {
   const connectWallet = useConnectWallet()
@@ -14,9 +16,20 @@ export function NavigationBar() {
   return (
     <Container>
       <StyledWrapper>
-        <Text type="heading" variant="bold">
-          Wasmswap
-        </Text>
+        <StyledContainer>
+          <Link href="/" passHref>
+            <Text
+              as="a"
+              style={{ marginRight: 40 }}
+              type="heading"
+              variant="bold"
+            >
+              Junoswap
+            </Text>
+          </Link>
+
+          <AppLinks />
+        </StyledContainer>
 
         <StyledButton
           size="medium"
@@ -31,12 +44,67 @@ export function NavigationBar() {
   )
 }
 
+function AppLinks() {
+  const { pathname } = useRouter()
+  const getIsActive = (path) => pathname === path
+
+  return (
+    <>
+      <Link href="/" passHref>
+        <StyledLink
+          as="a"
+          type="body"
+          variant="light"
+          $active={getIsActive('/')}
+        >
+          Swap
+        </StyledLink>
+      </Link>
+      <Link href="/transfer" passHref>
+        <StyledLink
+          as="a"
+          type="body"
+          variant="light"
+          $active={getIsActive('/transfer')}
+        >
+          Transfer
+        </StyledLink>
+      </Link>
+      <Link href="/pools" passHref>
+        <StyledLink
+          as="a"
+          type="body"
+          variant="light"
+          $active={getIsActive('/pools')}
+        >
+          Pools
+        </StyledLink>
+      </Link>
+    </>
+  )
+}
+
 const StyledWrapper = styled.div`
-  padding: 18px 0;
+  padding: 12px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+`
+
+const StyledContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+`
+
+const StyledLink = styled(Text)`
+  padding: 0 12px;
+  opacity: ${(p) => (p.$active ? 1 : 0.4)};
+  transition: opacity 0.15s ease-out;
+  &:hover {
+    opacity: 1;
+  }
 `
 
 const StyledButton = styled(Button)`

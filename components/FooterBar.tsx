@@ -23,7 +23,7 @@ export const FooterBar = () => (
         </StyledLink>
       </StyledRow>
       <Text color="gray" variant="light">
-        Wasmswap | 2021
+        Junoswap | 2021
       </Text>
     </StyledRow>
   </Container>

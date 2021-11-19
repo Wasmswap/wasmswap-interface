@@ -1,4 +1,4 @@
-import React, { HTMLProps, FC } from 'react'
+import React, { HTMLProps, FC, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
@@ -17,6 +17,7 @@ export const resetStylesForButton = css`
 `
 
 type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
+  iconBefore?: ReactNode
   variant?: 'primary' | 'rounded'
   size?: 'humongous' | 'medium' | 'small'
 }
@@ -26,7 +27,7 @@ export const StyledButton = styled.button<ButtonProps>`
   text-align: center;
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   border-radius: ${(p) => (p.variant === 'rounded' ? '18px' : '6px')};
   padding: ${(props: ButtonProps) => {
@@ -36,6 +37,7 @@ export const StyledButton = styled.button<ButtonProps>`
       case 'medium':
         return props.variant === 'rounded' ? '9px 14px' : '12px 14px'
       case 'small':
+        return '8px 12px'
       default:
         return '5px 12px'
     }
@@ -62,19 +64,30 @@ export const StyledButton = styled.button<ButtonProps>`
   }
 `
 
+const mapTextSize = (size: ButtonProps['size']) => {
+  switch (size) {
+    case 'humongous':
+      return 'heading'
+    case 'small':
+      return 'subtitle'
+    default:
+      return 'body'
+  }
+}
+
 export const Button: FC<ButtonProps> = ({
   variant,
   size = 'medium',
   children,
+  iconBefore,
   ...props
 }) => (
   <StyledButton variant={variant} size={size} {...props}>
+    {iconBefore && (
+      <StyledIconWrapper $position="left">{iconBefore}</StyledIconWrapper>
+    )}
     {typeof children === 'string' ? (
-      <Text
-        type={size === 'humongous' ? 'heading' : 'body'}
-        variant="light"
-        color="white"
-      >
+      <Text type={mapTextSize(size)} variant="light" color="white">
         {children}
       </Text>
     ) : (
@@ -82,3 +95,8 @@ export const Button: FC<ButtonProps> = ({
     )}
   </StyledButton>
 )
+
+const StyledIconWrapper = styled.span`
+  display: inline-block;
+  padding: ${(p) => (p.$position === 'left' ? '0 6px 0 0' : '0 0 0 6px')};
+`

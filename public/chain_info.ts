@@ -1,12 +1,12 @@
 export const chainInfo = {
 	// Chain-id of the Cosmos SDK chain.
-	chainId: "lucina",
+	chainId: "juno-1",
 	// The name of the chain to be displayed to the user.
-	chainName: "Juno Testnet",
+	chainName: "Juno Mestnet",
 	// RPC endpoint of the chain.
-	rpc: "https://rpc.juno.giansalex.dev/" ,
+	rpc: "https://rpc-juno.itastakers.com",
 	// REST endpoint of the chain.
-	rest: "https://lcd.juno.giansalex.dev/",
+	rest: "https://lcd-juno.itastakers.com",
 	// Staking coin information
 	stakeCurrency: {
 	    // Coin denomination to be displayed to the user.

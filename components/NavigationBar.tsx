@@ -10,7 +10,7 @@ import { walletState } from '../state/atoms/walletAtoms'
 import { useRouter } from 'next/router'
 
 export function NavigationBar() {
-  const connectWallet = useConnectWallet()
+  const { mutate: connectWallet } = useConnectWallet()
   const { address } = useRecoilValue(walletState)
 
   return (

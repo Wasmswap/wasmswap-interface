@@ -9,11 +9,12 @@ export type IBCAssetInfo = {
   juno_denom: string
   juno_channel: string
   channel: string
+  logoURI: string
 }
 
-export const useIBCAssetInfo = (assetSymbol: string): IBCAssetInfo => {
-  return useMemo(
-    () => IBCAssetList.tokens.find((x) => x.symbol === assetSymbol),
-    [assetSymbol]
-  )
+export const getIBCAssetInfo = (assetSymbol: string): IBCAssetInfo =>
+  IBCAssetList.tokens.find((x) => x.symbol === assetSymbol)
+
+export const useIBCAssetInfo = (assetSymbol: string) => {
+  return useMemo(() => getIBCAssetInfo(assetSymbol), [assetSymbol])
 }

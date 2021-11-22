@@ -2,10 +2,13 @@ import { chainInfo } from '../public/chain_info'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useSetRecoilState } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
+import { useMutation } from 'react-query'
 
-export const useConnectWallet = () => {
+export const useConnectWallet = (
+  mutationOptions?: Parameters<typeof useMutation>[2]
+) => {
   const setWalletState = useSetRecoilState(walletState)
-  return async () => {
+  return useMutation(async () => {
     await (window as any).keplr?.experimentalSuggestChain(chainInfo)
     const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
     await (window as any).keplr?.enable(chainId)
@@ -23,5 +26,5 @@ export const useConnectWallet = () => {
       address,
       client: wasmChainClient,
     })
-  }
+  }, mutationOptions)
 }

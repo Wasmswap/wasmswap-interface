@@ -6,19 +6,19 @@ import { Button } from '../../components/Button'
 import { CardWithSeparator } from '../../components/CardWithSeparator'
 import { IconWrapper } from '../../components/IconWrapper'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
+import { useIBCTokenBalance } from '../../hooks/useIBCTokenBalance'
 
 type AssetCardProps = {
   tokenSymbol: string
   onActionClick: (args: {
     tokenSymbol: string
-    actionType: 'deposit' | 'withdraw',
+    actionType: 'deposit' | 'withdraw'
   }) => void
 }
 
 export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
-  const { symbol, name, chain_id} = useIBCAssetInfo(tokenSymbol)
-  const connectWallet = useConnectIBCWallet(chain_id)
+  const { symbol, name, logoURI } = useIBCAssetInfo(tokenSymbol)
+  const { balance, isLoading } = useIBCTokenBalance(tokenSymbol)
 
   return (
     <CardWithSeparator
@@ -26,7 +26,7 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
       contents={[
         <>
           <StyledHeader>
-            <StyledTokenAvatar />
+            <StyledTokenAvatar src={logoURI} />
             <StyledHeaderTextWrapper>
               <Text type="heading">{symbol}</Text>
               <Text type="body" variant="light">
@@ -37,10 +37,10 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
         </>,
         <>
           <Text paddingY={spaces[18]} type="caption" color="gray">
-            Current balance
+            {isLoading ? 'Loading your balance' : 'Current balance'}
           </Text>
           <StyledBalanceWrapper>
-            <Text type="title">34.3343</Text>
+            <Text type="title">{balance ? balance.toFixed(6) : '0.00'}</Text>
             <Text type="caption" paddingY="6px" paddingX="6px">
               {symbol}
             </Text>
@@ -52,8 +52,6 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
           <StyledButtonsWrapper>
             <Button
               onClick={() => {
-                console.log(`deposit ${symbol}`)
-                connectWallet()
                 onActionClick({
                   tokenSymbol: symbol,
                   actionType: 'deposit',
@@ -71,7 +69,6 @@ export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
             </Button>
             <Button
               onClick={() => {
-                connectWallet()
                 onActionClick({
                   tokenSymbol: symbol,
                   actionType: 'withdraw',
@@ -118,4 +115,5 @@ const StyledTokenAvatar = styled.img`
   height: 40px;
   border-radius: 50%;
   background-color: #ccc;
+  object-fit: contain;
 `

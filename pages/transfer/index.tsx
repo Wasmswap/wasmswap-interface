@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
 import { Text } from 'components/Text'
 import styled from 'styled-components'
@@ -6,6 +6,8 @@ import { Header } from './Header'
 import { AssetCard } from './AssetCard'
 import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
+import { useConnectIBCWallet } from '../../hooks/useConnectIBCWallet'
+import { toast } from 'react-toastify'
 
 export default function Transfer() {
   const [
@@ -17,7 +19,7 @@ export default function Transfer() {
     selectedToken: 'ATOM',
   })
 
-  function handleAssetCardActionClick({ actionType, tokenSymbol}) {
+  function handleAssetCardActionClick({ actionType, tokenSymbol }) {
     updateState({
       transactionKind: actionType,
       selectedToken: tokenSymbol,
@@ -28,6 +30,29 @@ export default function Transfer() {
   function handleTransferDialogClose() {
     updateState({ isTransferDialogShowing: false })
   }
+
+  const { mutate: connectWallet } = useConnectIBCWallet({
+    onError(error) {
+      toast.error(
+        `Couldn't connect to your wallet to retrieve the address for ${selectedToken}: ${error}`,
+        {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      )
+    },
+  })
+  useEffect(() => {
+    // connect wallet as soon as a token is selected
+    if (selectedToken) {
+      connectWallet(selectedToken)
+    }
+  }, [connectWallet, selectedToken])
 
   return (
     <>

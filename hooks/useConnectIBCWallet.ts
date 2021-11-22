@@ -1,18 +1,21 @@
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { useSetRecoilState } from 'recoil'
 import { ibcWalletState } from '../state/atoms/walletAtoms'
-import { useIBCAssetInfo } from './useIBCAssetInfo'
+import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { useMutation } from 'react-query'
 
-export const useConnectIBCWallet = (chainId: string) => {
+export const useConnectIBCWallet = (
+  mutationOptions?: Parameters<typeof useMutation>[2]
+) => {
   const setWalletState = useSetRecoilState(ibcWalletState)
-  return async () => {
-    console.log(chainId)
-    await (window as any).keplr?.enable(chainId)
-    const offlineSigner = await (window as any).getOfflineSigner(chainId)
-    console.log(offlineSigner);
-    console.log("hello");
+  return useMutation(async (tokenSymbol: string) => {
+    const { chain_id } = getIBCAssetInfo(tokenSymbol)
+
+    await (window as any).keplr?.enable(chain_id)
+    const offlineSigner = await (window as any).getOfflineSigner(chain_id)
+
     const wasmChainClient = await SigningStargateClient.connectWithSigner(
-      "https://cosmoshub.validator.network:443",
+      'https://cosmoshub.validator.network:443',
       offlineSigner
     )
 
@@ -22,5 +25,5 @@ export const useConnectIBCWallet = (chainId: string) => {
       address,
       client: wasmChainClient,
     })
-  }
+  }, mutationOptions)
 }

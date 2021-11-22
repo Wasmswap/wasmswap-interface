@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react'
-import { Disclaimer } from 'components/SwapForm/Disclaimer'
 import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
 import { Text } from 'components/Text'
 import styled from 'styled-components'
@@ -7,8 +6,6 @@ import { Header } from './Header'
 import { AssetCard } from './AssetCard'
 import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
-import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
 
 export default function Transfer() {
   const [
@@ -27,7 +24,10 @@ export default function Transfer() {
       isTransferDialogShowing: true,
     })
   }
-  console.log(selectedToken)
+
+  function handleTransferDialogClose() {
+    updateState({ isTransferDialogShowing: false })
+  }
 
   return (
     <>
@@ -35,7 +35,7 @@ export default function Transfer() {
         tokenSymbol={selectedToken}
         transactionKind={transactionKind}
         isShowing={isTransferDialogShowing}
-        onRequestClose={() => updateState({ isTransferDialogShowing: false })}
+        onRequestClose={handleTransferDialogClose}
       />
 
       <StyledSpacer />
@@ -63,10 +63,6 @@ export default function Transfer() {
           </StyledGrid>
         </StyledWrapper>
       </SwapFormFrame>
-      <Disclaimer delayMs={3000}>
-        Junoswap is currently in beta and operating on the Juno testnet. Keplr
-        connected to a ledger is currently unsupported.
-      </Disclaimer>
     </>
   )
 }

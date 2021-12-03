@@ -1,18 +1,18 @@
 export const chainInfo = {
 	// Chain-id of the Cosmos SDK chain.
-	chainId: "lucina",
+	chainId: "constantine-1",
 	// The name of the chain to be displayed to the user.
-	chainName: "Juno Testnet",
+	chainName: "Constantine Testnet",
 	// RPC endpoint of the chain.
-	rpc: "https://rpc.juno.giansalex.dev/" ,
+	rpc: "https://rpc.constantine-1.archway.tech" ,
 	// REST endpoint of the chain.
-	rest: "https://lcd.juno.giansalex.dev/",
+	rest: "https://lcd.constantine-1.archway.tech",
 	// Staking coin information
 	stakeCurrency: {
 	    // Coin denomination to be displayed to the user.
-	    coinDenom: "JUNO",
+	    coinDenom: "CONST",
 	    // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-	    coinMinimalDenom: "ujuno",
+	    coinMinimalDenom: "uconst",
 	    // # of decimal points to convert minimal denomination to user-facing denomination.
 	    coinDecimals: 6,
 	    // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
@@ -39,19 +39,19 @@ export const chainInfo = {
 	//   bech32PrefixConsPub: string;
 	// }
 	bech32Config: {
-	    bech32PrefixAccAddr: "juno",
-	    bech32PrefixAccPub: "junopub",
-	    bech32PrefixValAddr: "junovaloper",
-	    bech32PrefixValPub: "junovaloperpub",
-	    bech32PrefixConsAddr: "junovalcons",
-	    bech32PrefixConsPub: "junovalconspub"
+	    bech32PrefixAccAddr: "archway",
+	    bech32PrefixAccPub: "archwaypub",
+	    bech32PrefixValAddr: "archwayvaloper",
+	    bech32PrefixValPub: "archwayvaloperpub",
+	    bech32PrefixConsAddr: "archwayvalcons",
+	    bech32PrefixConsPub: "archwayvalconspub"
 	},
 	// List of all coin/tokens used in this chain.
 	currencies: [{
 	    // Coin denomination to be displayed to the user.
-	    coinDenom: "JUNO",
+	    coinDenom: "CONST",
 	    // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-	    coinMinimalDenom: "ujuno",
+	    coinMinimalDenom: "uconst",
 	    // # of decimal points to convert minimal denomination to user-facing denomination.
 	    coinDecimals: 6,
 	    // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
@@ -61,9 +61,9 @@ export const chainInfo = {
 	// List of coin/tokens used as a fee token in this chain.
 	feeCurrencies: [{
 	    // Coin denomination to be displayed to the user.
-	    coinDenom: "JUNO",
+	    coinDenom: "CONST",
 	    // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-	    coinMinimalDenom: "ujuno",
+	    coinMinimalDenom: "uconst",
 	    // # of decimal points to convert minimal denomination to user-facing denomination.
 	    coinDecimals: 6,
 	    // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.

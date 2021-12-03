@@ -10,20 +10,13 @@ export const FooterBar = () => (
       <StyledRow>
         <GithubIcon />
         <StyledLink
-          href="https://github.com/Wasmswap/wasmswap-interface"
+          href="https://github.com/coco-sha/arcswap"
           target="__blank"
         >
-          Interface
-        </StyledLink>
-        <StyledLink
-          href="https://github.com/ben2x4/crustacean-swap"
-          target="__blank"
-        >
-          Smart Contract
         </StyledLink>
       </StyledRow>
       <Text color="gray" variant="light">
-        Junoswap | 2021
+        Arcswap | 2021
       </Text>
     </StyledRow>
   </Container>

@@ -10,8 +10,8 @@ export const useTokenBalance = ({ symbol, token_address }: TokenInfo) => {
   const { data: balance = 0, isLoading } = useQuery(
     [`tokenBalance/${symbol}`, address, token_address],
     async () => {
-      if (symbol === 'JUNO') {
-        const coin = await client.getBalance(address, 'ujuno')
+      if (symbol === 'CONST') {
+        const coin = await client.getBalance(address, 'uconst')
         const amount = coin ? Number(coin.amount) : 0
         return amount / 1000000
       }

@@ -1,27 +1,27 @@
 {
-  "name": "Juno Token List",
+  "name": "Archway Token List",
   "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
   "keywords": ["special tokens"],
   "tags": {
-    "Juno": {
-      "name": "Juno",
-      "description": "Tokens that are listed on Juno"
+    "CONST": {
+      "name": "CONST",
+      "description": "Tokens that are listed on CONST"
     }
   },
   "timestamp": "2021-06-12T00:00:00+00:00",
   "tokens": [
     {
-      "chain_id": "lucina",
+      "chain_id": "constantine-1",
       "token_address": "",
       "swap_address": "",
-      "symbol": "JUNO",
-      "name": "Juno",
+      "symbol": "CONST",
+      "name": "CONST",
       "decimals": 6,
       "logoURI": "",
       "tags": ["native"]
     },
     {
-      "chain_id": "lucina",
+      "chain_id": "constantine-1",
       "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
       "swap_address": "juno1m3flnl63kv6l9f72lavetku63z083ms2kjan7c",
       "symbol": "POOD",
@@ -31,7 +31,7 @@
       "tags": ["memecoin"]
     },
     {
-      "chain_id": "lucina",
+      "chain_id": "constantine-1",
       "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
       "swap_address": "juno153lxnqqktphyga7pu78xuzruc0sanxwyf45zmd",
       "symbol": "CRAB",
@@ -41,7 +41,7 @@
       "tags": ["memecoin"] 
     },
     {
-      "chain_id": "lucina",
+      "chain_id": "constantine-1",
       "token_address": "juno1q3zr6asu48tjysqjeetwpes5evewsq6wf0kdat",
       "swap_address": "juno1ek5uy2uts6azjvynuvze2pj6psz580n8qnpc54",
       "symbol": "DAO",

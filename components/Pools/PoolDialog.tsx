@@ -24,7 +24,7 @@ import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
-  const { balance: junoBalance } = useTokenBalance(useTokenInfo('JUNO'))
+  const { balance: constBalance } = useTokenBalance(useTokenInfo('CONST'))
   const { balance: tokenBalance } = useTokenBalance(tokenInfo)
 
   const { myLPBalance, myLiquidity } = useLiquidity({
@@ -186,7 +186,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           <>
             <LiquidityInput
               tokenName="Juno"
-              balance={junoBalance ? junoBalance : 0}
+              balance={constBalance ? constBalance : 0}
               amount={tokenAAmount}
               ratio={50}
               onAmountChange={handleTokenAAmountChange}
@@ -215,7 +215,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
               color="black"
               variant="normal"
               type="body"
-              onClick={() => handleTokenAAmountChange(junoBalance)}
+              onClick={() => handleTokenAAmountChange(constBalance)}
             >
               Add maximum amounts
             </Link>

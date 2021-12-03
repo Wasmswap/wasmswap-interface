@@ -6,7 +6,7 @@ export const chainInfo = {
 	// RPC endpoint of the chain.
 	rpc: "https://rpc.constantine-1.archway.tech" ,
 	// REST endpoint of the chain.
-	rest: "https://lcd.constantine-1.archway.tech",
+	rest: "https://api.constantine-1.archway.tech",
 	// Staking coin information
 	stakeCurrency: {
 	    // Coin denomination to be displayed to the user.

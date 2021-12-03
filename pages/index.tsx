@@ -24,8 +24,7 @@ export default function Home() {
         {currentTab === 'swap' ? <SwapFormContent /> : <PoolsContent />}
       </SwapFormFrame>
       <Disclaimer delayMs={3000}>
-        Junoswap is currently in beta and operating on the Juno testnet. Keplr
-        connected to a ledger is currently unsupported.
+        Arcswap is currently in beta and operating on the constantine-1 testnet.
       </Disclaimer>
     </>
   )

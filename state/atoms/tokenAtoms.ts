@@ -7,7 +7,7 @@ export const tokenAmountState = atom({
 
 export const tokenANameState = atom({
   key: 'tokenAState',
-  default: 'JUNO',
+  default: 'CONST',
 })
 
 export const tokenBNameState = atom({

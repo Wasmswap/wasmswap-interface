@@ -15,7 +15,7 @@ export function NavigationBar() {
     <Container>
       <StyledWrapper>
         <Text type="heading" variant="bold">
-          Junoswap
+          Arcswap
         </Text>
 
         <StyledButton

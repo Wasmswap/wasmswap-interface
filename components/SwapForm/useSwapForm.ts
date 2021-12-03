@@ -22,7 +22,7 @@ import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 
 export const useSwapForm = () => {
   const { address, client } = useRecoilValue(walletState)
-  const connectWallet = useConnectWallet()
+  const { mutate: connectWallet } = useConnectWallet()
   const refetchQueries = useRefetchQueries()
 
   const [transactionStatus, setTransactionState] = useRecoilState(

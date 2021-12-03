@@ -10,13 +10,13 @@ export type TokenInfo = {
   decimals: number
   logoURI: string
   tags: string[]
-  denom: string,
-  native: boolean,
+  denom: string
+  native: boolean
 }
 
+export const getTokenInfo = (tokenSymbol: string): TokenInfo =>
+  TokenList.tokens.find((x) => x.symbol === tokenSymbol)
+
 export const useTokenInfo = (tokenSymbol: string) => {
-  return useMemo(
-    () => TokenList.tokens.find((x) => x.symbol === tokenSymbol),
-    [tokenSymbol]
-  )
+  return useMemo(() => getTokenInfo(tokenSymbol), [tokenSymbol])
 }

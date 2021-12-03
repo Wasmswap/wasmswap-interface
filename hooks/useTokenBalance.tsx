@@ -4,7 +4,11 @@ import { CW20 } from '../services/cw20'
 import { TokenInfo } from './useTokenInfo'
 import { useQuery } from 'react-query'
 
-export const useTokenBalance = ({ token_address, native, denom}: TokenInfo) => {
+export const useTokenBalance = ({
+  token_address,
+  native,
+  denom,
+}: Pick<TokenInfo, 'token_address' | 'native' | 'denom'>) => {
   const { address, client } = useRecoilValue(walletState)
 
   const { data: balance = 0, isLoading } = useQuery(

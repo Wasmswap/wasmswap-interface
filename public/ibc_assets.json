@@ -1,23 +1,24 @@
 {
-    "tokens": [
-        {
-            "name":"ATOM",
-            "symbol": "ATOM",
-            "chain_id": "cosmoshub-4",
-            "denom":"uatom",
-            "channel":"channel-207",
-            "juno_channel":"channel-1",
-            "juno_denom":"ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9"
-        },
-        {
-            "name":"UST",
-            "symbol":"UST",
-            "chain_id":"terra-1",
-            "denom":"uust",
-            "channel":"info",
-            "juno_channel":"channel-7",
-            "juno_denom":"ibc/test"
-        }
-    ]
-
+  "tokens": [
+    {
+      "name": "Atom",
+      "symbol": "ATOM",
+      "chain_id": "cosmoshub-4",
+      "denom": "uatom",
+      "channel": "channel-207",
+      "juno_channel": "channel-1",
+      "juno_denom": "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
+      "logoURI": "https://cryptologos.cc/logos/cosmos-atom-logo.svg?v=014"
+    },
+    {
+      "name": "UST",
+      "symbol": "UST",
+      "chain_id": "terra-1",
+      "denom": "uust",
+      "channel": "info",
+      "juno_channel": "channel-7",
+      "juno_denom": "ibc/test",
+      "logoURI": "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=014"
+    }
+  ]
 }

@@ -4,19 +4,16 @@ import { Text } from '../Text'
 import { WalletCardWithInput } from './WalletCardWithInput'
 import { WalletCardWithBalance } from './WalletCardWithBalance'
 import { Button } from '../Button'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { TransactionKind } from './types'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { BroadcastTxResponse, Coin, MsgTransferEncodeObject, StdFee } from '@cosmjs/stargate'
-import Long from 'long'
-import { Height } from '@cosmjs/stargate/build/codec/ibc/core/client/v1/client'
-import { MsgTransfer } from '@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx'
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { useTransferAssetMutation } from './useTransferAssetMutation'
+import { Spinner } from '../Spinner'
+import { toast } from 'react-toastify'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -25,75 +22,75 @@ type TransferDialogProps = {
   onRequestClose: () => void
 }
 
-const sendIbcTokens = (
-    senderAddress: string,
-    recipientAddress: string,
-    transferAmount: Coin,
-    sourcePort: string,
-    sourceChannel: string,
-    timeoutHeight: Height | undefined,
-    /** timeout in seconds */
-    timeoutTimestamp: number | undefined,
-    fee: StdFee,
-    memo = "",
-    client: SigningCosmWasmClient
-  ): Promise<BroadcastTxResponse> => {
-    const timeoutTimestampNanoseconds = timeoutTimestamp
-      ? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000)
-      : undefined;
-    const transferMsg: MsgTransferEncodeObject = {
-      typeUrl: "/ibc.applications.transfer.v1.MsgTransfer",
-      value: MsgTransfer.fromPartial({
-        sourcePort: sourcePort,
-        sourceChannel: sourceChannel,
-        sender: senderAddress,
-        receiver: recipientAddress,
-        token: transferAmount,
-        timeoutHeight: timeoutHeight,
-        timeoutTimestamp: timeoutTimestampNanoseconds,
-      }),
-    };
-    return client.signAndBroadcast(senderAddress, [transferMsg], fee, memo);
-  }
-
 export const TransferDialog = ({
   tokenSymbol,
   transactionKind,
   isShowing,
   onRequestClose,
 }: TransferDialogProps) => {
+  const tokenInfo = useIBCAssetInfo(tokenSymbol)
+  const [tokenAmount, setTokenAmount] = useState(0)
+
+  /* get the balances */
+  const { balance: availableAssetBalanceOnChain } = useTokenBalance({
+    native: true,
+    denom: tokenInfo.juno_denom,
+    token_address: '',
+  })
+  const { balance: ibcTokenMaxAvailableBalance } = useIBCTokenBalance(
+    tokenInfo.denom
+  )
+
+  const arbitrarySwapFee = 0.03
+
+  const { isLoading, mutate: mutateTransferAsset } = useTransferAssetMutation({
+    transactionKind,
+    tokenAmount,
+    tokenInfo,
+
+    onSuccess() {
+      // show toast
+      toast.success(
+        `🎉 ${transactionKind === 'deposit' ? 'Deposited' : 'Withdrawn'} ${
+          tokenInfo.name
+        } Successfully`,
+        {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      )
+
+      // close modal
+      requestAnimationFrame(onRequestClose)
+    },
+    onError(error) {
+      toast.error(
+        `Couldn't ${
+          transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
+        } the asset: ${error}`,
+        {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      )
+    },
+  })
+
+  const { address: ibcWalletAddress } = useRecoilValue(ibcWalletState)
+  const { address: walletAddress } = useRecoilValue(walletState)
+
   const capitalizedTransactionType =
     transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
-
-  const tokenInfo = useIBCAssetInfo(tokenSymbol)
-
-  console.log('connected')
-  const { address: ibcAddress, client: ibcClient} = useRecoilValue(ibcWalletState)
-
-  const [tokenAmount, setTokenAmount] = useState(0)
-  const {balance: ibcTokenMaxAvailableBalance} = useIBCTokenBalance(tokenInfo.denom)
-  const walletAddressTransferringAssetsFrom = ibcAddress
-
-  const {balance: availableAssetBalanceOnChain} = useTokenBalance({native:true,denom:tokenInfo.juno_denom,token_address:"",chain_id:"",swap_address:"",symbol:"",name:"",decimals:1,logoURI:"",tags:[]});
-
-  const {address, client} = useRecoilValue(walletState)
-  const walletAddressTransferringAssetsTo =
-    address
-  const arbitrarySwapFee = 0.03 
-
-  const ibcTransfer = async () => {
-    const time = new Date()
-    console.log(time.getTime())
-    const time_seconds = Math.floor(time.getTime() / 1000)
-    const timeout = time_seconds + 300
-    if (transactionKind == 'deposit') {
-      await ibcClient.sendIbcTokens(ibcAddress,address,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.denom},"transfer",tokenInfo.channel,undefined, timeout)
-    } else if (transactionKind == 'withdraw') {
-      console.log(tokenAmount)
-      console.log(tokenAmount*1000000)
-      await sendIbcTokens(address,ibcAddress,{amount: (tokenAmount*1000000).toString(), denom: tokenInfo.juno_denom},"transfer",tokenInfo.juno_channel,undefined, timeout, client.fees.exec,'',client)
-    }
-  }
 
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
@@ -112,12 +109,12 @@ export const TransferDialog = ({
                 onChange={setTokenAmount}
                 tokenSymbol={tokenSymbol}
                 maxValue={ibcTokenMaxAvailableBalance}
-                walletAddress={walletAddressTransferringAssetsFrom}
+                walletAddress={ibcWalletAddress}
               />
               <WalletCardWithBalance
                 transactionType="incoming"
                 transactionOrigin="platform"
-                walletAddress={walletAddressTransferringAssetsTo}
+                walletAddress={walletAddress}
                 balance={availableAssetBalanceOnChain}
                 tokenName={tokenInfo.name}
               />
@@ -132,12 +129,12 @@ export const TransferDialog = ({
                 onChange={setTokenAmount}
                 tokenSymbol={tokenSymbol}
                 maxValue={availableAssetBalanceOnChain}
-                walletAddress={walletAddressTransferringAssetsTo}
+                walletAddress={walletAddress}
               />
               <WalletCardWithBalance
                 transactionType="incoming"
                 transactionOrigin="wallet"
-                walletAddress={walletAddressTransferringAssetsFrom}
+                walletAddress={ibcWalletAddress}
                 balance={ibcTokenMaxAvailableBalance}
                 tokenName={tokenInfo.name}
               />
@@ -152,7 +149,13 @@ export const TransferDialog = ({
             ${arbitrarySwapFee.toFixed(2)}
           </Text>
         </StyledDivForFee>
-        <Button size="humongous" onClick={()=>ibcTransfer()}>{capitalizedTransactionType}</Button>
+        <Button
+          size="humongous"
+          disabled={isLoading}
+          onClick={isLoading ? undefined : (mutateTransferAsset as () => void)}
+        >
+          {isLoading ? <Spinner /> : capitalizedTransactionType}
+        </Button>
       </StyledContent>
     </Dialog>
   )

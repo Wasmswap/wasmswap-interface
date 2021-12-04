@@ -2,10 +2,12 @@ import 'styles/globals.css'
 import 'normalize.css'
 import 'react-toastify/dist/ReactToastify.css'
 import type { AppProps } from 'next/app'
-import Layout from 'components/Layout'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { Portal } from '@reach/portal'
+import { ToastContainer } from 'react-toastify'
+import React from 'react'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,9 +31,21 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <SafeHydrate>
           <ErrorBoundary>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <Component {...pageProps} />
+            <Portal>
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                toastStyle={{ zIndex: 150 }}
+              />
+            </Portal>
           </ErrorBoundary>
         </SafeHydrate>
       </QueryClientProvider>

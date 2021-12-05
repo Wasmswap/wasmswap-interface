@@ -31,7 +31,7 @@ export const PoolsContent = () => {
           .map((token, key) => (
             <PoolCard
               key={key}
-              tokenAName="Juno"
+              tokenAName="Const"
               tokenBName={formatTokenName(token.symbol)}
               tokenInfo={token}
               onButtonClick={() => openDialog(token)}

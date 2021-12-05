@@ -12,5 +12,5 @@ export const tokenANameState = atom({
 
 export const tokenBNameState = atom({
   key: 'tokenBState',
-  default: 'POOD',
+  default: 'uco',
 })

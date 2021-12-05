@@ -62,7 +62,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
       if (isAddingLiquidity) {
         return await addLiquidity({
           nativeAmount: Math.floor(tokenAAmount * 1000000),
-          nativeDenom: 'ujuno',
+          nativeDenom: 'uconst',
           maxToken: Math.floor(tokenBAmount * 1000000 + 5),
           minLiquidity: 0,
           swapAddress: tokenInfo.swap_address,
@@ -173,7 +173,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           variant="normal"
         >
           {isAddingLiquidity ? 'Add' : 'Remove'}{' '}
-          {`Juno / ${formatTokenName(tokenInfo.symbol)}`}
+          {`Const / ${formatTokenName(tokenInfo.symbol)}`}
         </StyledTitle>
 
         {!isAddingLiquidity && (
@@ -185,7 +185,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {isAddingLiquidity && (
           <>
             <LiquidityInput
-              tokenName="Juno"
+              tokenName="Const"
               balance={constBalance ? constBalance : 0}
               amount={tokenAAmount}
               ratio={50}

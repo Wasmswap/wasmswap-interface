@@ -16,39 +16,19 @@
       "swap_address": "",
       "symbol": "CONST",
       "name": "CONST",
-      "decimals": 6,
+      "decimals": 18,
       "logoURI": "",
       "tags": ["native"]
     },
     {
       "chain_id": "constantine-1",
-      "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
-      "swap_address": "juno1m3flnl63kv6l9f72lavetku63z083ms2kjan7c",
-      "symbol": "POOD",
-      "name": "Poodle Coin",
-      "decimals": 6,
-      "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
-      "tags": ["memecoin"]
-    },
-    {
-      "chain_id": "constantine-1",
-      "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
-      "swap_address": "juno153lxnqqktphyga7pu78xuzruc0sanxwyf45zmd",
-      "symbol": "CRAB",
-      "name": "Crab Coin",
-      "decimals": 6,
+      "token_address": "archway1zwv6feuzhy6a9wekh96cd57lsarmqlwxn054te",
+      "swap_address": "archway1unyuj8qnmygvzuex3dwmg9yzt9alhvye2canzt",
+      "symbol": "uco",
+      "name": "COCO",
+      "decimals": 18,
       "logoURI": "",
-      "tags": ["memecoin"] 
-    },
-    {
-      "chain_id": "constantine-1",
-      "token_address": "juno1q3zr6asu48tjysqjeetwpes5evewsq6wf0kdat",
-      "swap_address": "juno1ek5uy2uts6azjvynuvze2pj6psz580n8qnpc54",
-      "symbol": "DAO",
-      "name": "DAO Coin",
-      "decimals": 6,
-      "logoURI": "",
-      "tags": ["memecoin"] 
+      "tags": ["swapcoin"]
     }
   ],
   "version": {

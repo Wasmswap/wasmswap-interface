@@ -86,7 +86,7 @@ export const useSwapForm = () => {
     } else {
       setTransactionState('EXECUTING_SWAP')
       try {
-        if (tokenAName === 'JUNO') {
+        if (tokenAName === 'CONST') {
           await swapNativeForToken({
             nativeAmount: tokenAmount * 1000000,
             price: tokenBPrice * 1000000,

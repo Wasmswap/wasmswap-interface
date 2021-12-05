@@ -29,7 +29,7 @@ export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
     input.swapAddress,
     msg,
     undefined,
-    [coin(input.nativeAmount, 'ujuno')]
+    [coin(input.nativeAmount, 'uconst')]
   )
 }
 
@@ -161,8 +161,10 @@ export const getNativeForTokenPrice = async (
         native_amount: `${input.nativeAmount}`,
       },
     })
+    console.log(query);
     return query.token_amount
   } catch (e) {
+    console.log(e);
     console.error(e)
   }
 }

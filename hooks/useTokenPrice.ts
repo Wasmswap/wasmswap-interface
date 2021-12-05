@@ -16,15 +16,16 @@ export const useTokenPrice = (
   // @todo refactor this to react-query
   useEffect(() => {
     const getPrice = async () => {
-      if (fromTokenInfo.symbol === 'JUNO') {
+      if (fromTokenInfo.symbol === 'CONST') {
+        console.log("HERE!!!", value, toTokenInfo);
         return await getNativeForTokenPrice({
-          nativeAmount: value * 1000000,
+          nativeAmount: value,
           swapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })
       } else if (fromTokenInfo.token_address && !toTokenInfo.token_address) {
         return await getTokenForNativePrice({
-          tokenAmount: value * 1000000,
+          tokenAmount: value,
           swapAddress: fromTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })

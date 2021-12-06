@@ -5,6 +5,12 @@ import { walletState } from 'state/atoms/walletAtoms'
 import { useLiquidity } from '../../hooks/useLiquidity'
 import { styled } from '@stitches/react'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
+import Link from 'next/link'
+
+type PoolCardProps = {
+  tokenASymbol: string
+  tokenBSymbol: string
+}
 
 const parseCurrency = (value: number | string) =>
   Number(value).toLocaleString('en-US', {
@@ -12,7 +18,7 @@ const parseCurrency = (value: number | string) =>
     currency: 'USD',
   })
 
-export const PoolCard = ({ tokenASymbol, tokenBSymbol, onClick }) => {
+export const PoolCard = ({ tokenASymbol, tokenBSymbol }: PoolCardProps) => {
   const { address } = useRecoilValue(walletState)
 
   const tokenA = useTokenInfo(tokenASymbol)
@@ -27,59 +33,33 @@ export const PoolCard = ({ tokenASymbol, tokenBSymbol, onClick }) => {
   const hasProvidedLiquidity = typeof myLiquidity === 'number'
 
   return (
-    <StyledDivForCard onClick={onClick} role="button">
-      <>
-        <StyledDivForRowWrapper>
-          <StyledDivForTokenLogos>
-            <StyledImageForTokenLogo
-              src={tokenA.logoURI}
-              as={tokenA.logoURI ? 'img' : 'div'}
-            />
-            <StyledImageForTokenLogo
-              src={tokenB.logoURI}
-              as={tokenB.logoURI ? 'img' : 'div'}
-            />
-          </StyledDivForTokenLogos>
-          <Text type="caption" variant="normal">
-            Pool #1
-          </Text>
-          <StyledTextForTokenNames type="body" variant="normal">
-            {tokenA.symbol} <span /> {tokenB.symbol}
-          </StyledTextForTokenNames>
-        </StyledDivForRowWrapper>
-      </>
-
-      <StyledDivForSeparator />
-
-      <StyledDivForLiquidityRows highlighted={hasProvidedLiquidity}>
+    <Link href="/pools/ffa94571-8425-4de1-99cb-a4e99fd3e90f" passHref>
+      <StyledLinkForCard>
         <>
           <StyledDivForRowWrapper>
-            <StyledDivForRow>
-              <StyledTextForSubtitle
-                color="secondaryText"
-                type="caption"
-                variant="normal"
-              >
-                Total liquidity
-              </StyledTextForSubtitle>
-              <StyledTextForSubtitle
-                color="secondaryText"
-                type="caption"
-                variant="normal"
-              >
-                APR
-              </StyledTextForSubtitle>
-            </StyledDivForRow>
-            <StyledDivForRow>
-              <Text>{parseCurrency(totalLiquidity)}</Text>
-              <Text>150%</Text>
-            </StyledDivForRow>
+            <StyledDivForTokenLogos>
+              <StyledImageForTokenLogo
+                src={tokenA.logoURI}
+                as={tokenA.logoURI ? 'img' : 'div'}
+              />
+              <StyledImageForTokenLogo
+                src={tokenB.logoURI}
+                as={tokenB.logoURI ? 'img' : 'div'}
+              />
+            </StyledDivForTokenLogos>
+            <Text type="caption" variant="normal">
+              Pool #1
+            </Text>
+            <StyledTextForTokenNames type="body" variant="normal">
+              {tokenA.symbol} <span /> {tokenB.symbol}
+            </StyledTextForTokenNames>
           </StyledDivForRowWrapper>
         </>
 
-        {hasProvidedLiquidity && (
+        <StyledDivForSeparator />
+
+        <StyledDivForLiquidityRows highlighted={hasProvidedLiquidity}>
           <>
-            <StyledDivForSeparator />
             <StyledDivForRowWrapper>
               <StyledDivForRow>
                 <StyledTextForSubtitle
@@ -87,29 +67,57 @@ export const PoolCard = ({ tokenASymbol, tokenBSymbol, onClick }) => {
                   type="caption"
                   variant="normal"
                 >
-                  My liquidity
+                  Total liquidity
                 </StyledTextForSubtitle>
                 <StyledTextForSubtitle
                   color="secondaryText"
                   type="caption"
                   variant="normal"
                 >
-                  Bonded
+                  APR
                 </StyledTextForSubtitle>
               </StyledDivForRow>
               <StyledDivForRow>
-                <Text>{parseCurrency(myLiquidity)}</Text>
-                <Text>$999</Text>
+                <Text>{parseCurrency(totalLiquidity)}</Text>
+                <Text>150%</Text>
               </StyledDivForRow>
             </StyledDivForRowWrapper>
           </>
-        )}
-      </StyledDivForLiquidityRows>
-    </StyledDivForCard>
+
+          {hasProvidedLiquidity && (
+            <>
+              <StyledDivForSeparator />
+              <StyledDivForRowWrapper>
+                <StyledDivForRow>
+                  <StyledTextForSubtitle
+                    color="secondaryText"
+                    type="caption"
+                    variant="normal"
+                  >
+                    My liquidity
+                  </StyledTextForSubtitle>
+                  <StyledTextForSubtitle
+                    color="secondaryText"
+                    type="caption"
+                    variant="normal"
+                  >
+                    Bonded
+                  </StyledTextForSubtitle>
+                </StyledDivForRow>
+                <StyledDivForRow>
+                  <Text>{parseCurrency(myLiquidity)}</Text>
+                  <Text>$999</Text>
+                </StyledDivForRow>
+              </StyledDivForRowWrapper>
+            </>
+          )}
+        </StyledDivForLiquidityRows>
+      </StyledLinkForCard>
+    </Link>
   )
 }
 
-const StyledDivForCard = styled('div', {
+const StyledLinkForCard = styled('a', {
   cursor: 'pointer',
   borderRadius: 8,
   backgroundColor: 'rgba(25, 29, 32, 0.1)',

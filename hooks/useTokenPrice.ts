@@ -31,7 +31,7 @@ export const useTokenPrice = (
         })
       }
       return await getTokenForTokenPrice({
-        tokenAmount: value * 1000000,
+        tokenAmount: value,
         swapAddress: fromTokenInfo.swap_address,
         outputSwapAddress: toTokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
@@ -39,7 +39,7 @@ export const useTokenPrice = (
     }
     if (fromTokenInfo && value >= 0) {
       getPrice().then((receivedPrice) => {
-        setPrice(receivedPrice / 1000000)
+        setPrice(receivedPrice)
       })
     }
   }, [fromTokenInfo, toTokenInfo, value])

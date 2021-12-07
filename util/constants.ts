@@ -5,6 +5,9 @@ export const colorTokens = {
   lightBlue: '#2F80ED',
   white: '#ffffff',
   primary: '#0066DB',
+  secondaryText: 'rgba(25, 29, 32, 0.75)',
+  bodyText: 'rgba(25, 29, 32, 0.95)',
+  tertiaryText: 'rgba(25, 29, 32, 0.6)',
 }
 
 export const spaces = {

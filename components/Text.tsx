@@ -9,7 +9,15 @@ const fontWeightTokens = {
 }
 
 type TextProps = {
-  type?: 'heading' | 'title' | 'body' | 'subtitle' | 'caption' | 'microscopic'
+  type?:
+    | 'heading'
+    | 'title'
+    | 'title2'
+    | 'title3'
+    | 'body'
+    | 'subtitle'
+    | 'caption'
+    | 'microscopic'
   color?: keyof typeof colorTokens
   variant?: keyof typeof fontWeightTokens
   paddingTop?: string
@@ -52,6 +60,22 @@ const paddingMixin = css`
 const Title = styled.p<TextProps>`
   font-size: 32px;
   line-height: 44px;
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+  ${paddingMixin};
+`
+
+const Title2 = styled.p<TextProps>`
+  font-size: 30px;
+  line-height: 24px;
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+  ${paddingMixin};
+`
+
+const Title3 = styled.p<TextProps>`
+  font-size: 22px;
+  line-height: 24px;
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
   ${paddingMixin};
@@ -102,16 +126,22 @@ const map = {
   caption: Caption,
   heading: Heading,
   title: Title,
+  title2: Title2,
+  title3: Title3,
   subtitle: Subtitle,
   microscopic: Microscopic,
 }
 
 const TextComponent = (
-  { type = 'body', ...props }: TextProps & HTMLProps<HTMLParagraphElement>,
+  {
+    type = 'body',
+    variant = 'normal',
+    ...props
+  }: TextProps & HTMLProps<HTMLParagraphElement>,
   ref: ForwardedRef<any>
 ) => {
   const TextComponent = map[type] || Paragraph
-  return <TextComponent ref={ref} {...props} />
+  return <TextComponent ref={ref} variant={variant} {...props} />
 }
 
 export const Text = forwardRef(TextComponent) as typeof TextComponent

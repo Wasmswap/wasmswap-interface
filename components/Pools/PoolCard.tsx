@@ -1,10 +1,16 @@
-import styled from 'styled-components'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
-import { Button } from '../Button'
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
 import { useLiquidity } from '../../hooks/useLiquidity'
+import { styled } from '@stitches/react'
+import { useTokenInfo } from '../../hooks/useTokenInfo'
+import Link from 'next/link'
+
+type PoolCardProps = {
+  tokenASymbol: string
+  tokenBSymbol: string
+}
 
 const parseCurrency = (value: number | string) =>
   Number(value).toLocaleString('en-US', {
@@ -12,101 +18,188 @@ const parseCurrency = (value: number | string) =>
     currency: 'USD',
   })
 
-export const PoolCard = ({
-  tokenAName,
-  tokenBName,
-  tokenInfo,
-  onButtonClick,
-}) => {
+export const PoolCard = ({ tokenASymbol, tokenBSymbol }: PoolCardProps) => {
   const { address } = useRecoilValue(walletState)
 
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
+
   const { totalLiquidity, myLiquidity } = useLiquidity({
-    tokenName: tokenBName,
-    swapAddress: tokenInfo.swap_address,
+    tokenSymbol: tokenBSymbol,
+    swapAddress: tokenB.swap_address,
     address,
   })
 
+  const hasProvidedLiquidity = typeof myLiquidity === 'number'
+
   return (
-    <StyledDivForCard>
-      <StyledDivForContent>
-        <StyledDivForTitle>
-          <div>
-            <Text variant="normal">{tokenAName}</Text>
-            <Text color="gray" type="caption" variant="light">
-              50%
+    <Link href="/pools/ffa94571-8425-4de1-99cb-a4e99fd3e90f" passHref>
+      <StyledLinkForCard>
+        <>
+          <StyledDivForRowWrapper>
+            <StyledDivForTokenLogos>
+              <StyledImageForTokenLogo
+                src={tokenA.logoURI}
+                as={tokenA.logoURI ? 'img' : 'div'}
+              />
+              <StyledImageForTokenLogo
+                src={tokenB.logoURI}
+                as={tokenB.logoURI ? 'img' : 'div'}
+              />
+            </StyledDivForTokenLogos>
+            <Text type="caption" variant="normal">
+              Pool #1
             </Text>
-          </div>
-          <StyledDivForTitleSeparator>
-            <Text variant="normal">{' / '}</Text>
-          </StyledDivForTitleSeparator>
-          <div>
-            <Text variant="normal">{tokenBName}</Text>
-            <Text color="gray" type="caption" variant="light">
-              50%
-            </Text>
-          </div>
-        </StyledDivForTitle>
-        <StyledTextForAvailableLiquidity type="caption" variant="light">
-          Total liquidity: {parseCurrency(totalLiquidity)}
-        </StyledTextForAvailableLiquidity>
-      </StyledDivForContent>
-      <StyledDivForDivider />
-      <StyledDivForFooter>
-        <div data-my-liquidity="">
-          <Text color="gray" type="caption" variant="light">
-            My liquidity
-          </Text>
-          <StyledTextForLiquidity>
-            {parseCurrency(myLiquidity || 0)}
-          </StyledTextForLiquidity>
-        </div>
-        <Button onClick={onButtonClick} size="small">
-          {typeof myLiquidity === 'number' ? 'Manage' : 'Join'}
-        </Button>
-      </StyledDivForFooter>
-    </StyledDivForCard>
+            <StyledTextForTokenNames type="body" variant="normal">
+              {tokenA.symbol} <span /> {tokenB.symbol}
+            </StyledTextForTokenNames>
+          </StyledDivForRowWrapper>
+        </>
+
+        <StyledDivForSeparator />
+
+        <StyledDivForLiquidityRows highlighted={hasProvidedLiquidity}>
+          <>
+            <StyledDivForRowWrapper>
+              <StyledDivForRow>
+                <StyledTextForSubtitle
+                  color="secondaryText"
+                  type="caption"
+                  variant="normal"
+                >
+                  Total liquidity
+                </StyledTextForSubtitle>
+                <StyledTextForSubtitle
+                  color="secondaryText"
+                  type="caption"
+                  variant="normal"
+                >
+                  APR
+                </StyledTextForSubtitle>
+              </StyledDivForRow>
+              <StyledDivForRow>
+                <Text>{parseCurrency(totalLiquidity)}</Text>
+                <Text>150%</Text>
+              </StyledDivForRow>
+            </StyledDivForRowWrapper>
+          </>
+
+          {hasProvidedLiquidity && (
+            <>
+              <StyledDivForSeparator />
+              <StyledDivForRowWrapper>
+                <StyledDivForRow>
+                  <StyledTextForSubtitle
+                    color="secondaryText"
+                    type="caption"
+                    variant="normal"
+                  >
+                    My liquidity
+                  </StyledTextForSubtitle>
+                  <StyledTextForSubtitle
+                    color="secondaryText"
+                    type="caption"
+                    variant="normal"
+                  >
+                    Bonded
+                  </StyledTextForSubtitle>
+                </StyledDivForRow>
+                <StyledDivForRow>
+                  <Text>{parseCurrency(myLiquidity)}</Text>
+                  <Text>$999</Text>
+                </StyledDivForRow>
+              </StyledDivForRowWrapper>
+            </>
+          )}
+        </StyledDivForLiquidityRows>
+      </StyledLinkForCard>
+    </Link>
   )
 }
 
-const paddingX = 24
+const StyledLinkForCard = styled('a', {
+  cursor: 'pointer',
+  borderRadius: 8,
+  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  position: 'relative',
+})
 
-const StyledDivForCard = styled.div`
-  border-radius: 6px;
-  padding: 32px 0;
-  background-color: ${colorTokens.white};
-`
+const StyledDivForTokenLogos = styled('div', {
+  position: 'absolute',
+  right: 24,
+  top: 18,
+  display: 'flex',
+  alignItems: 'center',
+})
 
-const StyledDivForTitle = styled.div`
-  text-transform: uppercase;
-  display: flex;
-  align-items: flex-start;
-  width: 50%;
-  justify-content: space-between;
-`
+const StyledImageForTokenLogo = styled('img', {
+  width: 26,
+  height: 26,
+  borderRadius: '50%',
+  objectFit: 'fit',
+  backgroundColor: '#ccc',
+  position: 'relative',
+  zIndex: 0,
+  '&:first-child': {
+    boxShadow: '0 0 0 2px #E8E8E9',
+    zIndex: 1,
+  },
+})
 
-const StyledDivForTitleSeparator = styled.div``
+const StyledTextForTokenNames: typeof Text = styled(Text, {
+  paddingTop: 5,
+  paddingBottom: 4,
+  display: 'flex',
+  alignItems: 'center',
+  '& span': {
+    width: 4,
+    height: 4,
+    margin: '0 6px',
+    borderRadius: '50%',
+    backgroundColor: colorTokens.black,
+  },
+})
 
-const StyledTextForAvailableLiquidity = styled(Text)`
-  padding-top: 16px;
-`
+const StyledDivForSeparator = styled('hr', {
+  margin: '0 auto',
+  border: 'none',
+  borderTop: '1px solid rgba(25, 29, 32, 0.1)',
+  width: 'calc(100% - 48px)',
+  boxSizing: 'border-box',
+  height: 1,
+})
 
-const StyledDivForDivider = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${colorTokens.gray};
-  margin: 14px 0;
-`
+const StyledDivForRowWrapper = styled('div', {
+  padding: '20px 24px 24px',
+})
 
-const StyledTextForLiquidity = styled(Text)`
-  padding-top: 2px;
-`
-const StyledDivForFooter = styled.div`
-  padding: 0 ${paddingX}px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-`
+const StyledDivForRow = styled('div', {
+  display: 'flex',
+  justifyContent: 'space-between',
+})
 
-const StyledDivForContent = styled.div`
-  padding: 0 ${paddingX}px;
-`
+const StyledTextForSubtitle: typeof Text = styled(Text, {
+  paddingBottom: 4,
+})
+
+const StyledDivForLiquidityRows = styled('div', {
+  variants: {
+    highlighted: {
+      true: {
+        position: 'relative',
+        '&:after': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          background:
+            'radial-gradient(71.15% 71.14% at 29.4% 81.87%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
+          opacity: 0.4,
+        },
+      },
+    },
+  },
+})

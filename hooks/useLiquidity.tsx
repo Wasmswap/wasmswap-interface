@@ -2,12 +2,12 @@ import { useQuery } from 'react-query'
 import { getSwapInfo } from '../services/swap'
 import { getLiquidityBalance } from '../services/liquidity'
 
-export const useLiquidity = ({ tokenName, address, swapAddress }) => {
+export const useLiquidity = ({ tokenSymbol, address, swapAddress }) => {
   const {
     data: { native_reserve, lp_token_supply } = {},
     isLoading: fetchingTotalLiquidity,
   } = useQuery(
-    [`swapInfo/${tokenName}`, swapAddress],
+    [`swapInfo/${tokenSymbol}`, swapAddress],
     async () => {
       return await getSwapInfo(
         swapAddress,
@@ -23,7 +23,7 @@ export const useLiquidity = ({ tokenName, address, swapAddress }) => {
     data: { myLiquidity, myLPBalance } = {},
     isLoading: fetchingMyLiquidity,
   } = useQuery(
-    [`myLiquidity/${tokenName}`, address, native_reserve, lp_token_supply],
+    [`myLiquidity/${tokenSymbol}`, address, native_reserve, lp_token_supply],
     async () => {
       const balance = await getLiquidityBalance({
         address: address,

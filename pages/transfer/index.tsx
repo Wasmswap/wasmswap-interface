@@ -8,6 +8,7 @@ import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
 import { useConnectIBCWallet } from '../../hooks/useConnectIBCWallet'
 import { toast } from 'react-toastify'
+import { AppLayout } from '../../components/Layout/AppLayout'
 
 export default function Transfer() {
   const [
@@ -55,7 +56,7 @@ export default function Transfer() {
   }, [connectWallet, selectedToken])
 
   return (
-    <>
+    <AppLayout>
       <TransferDialog
         tokenSymbol={selectedToken}
         transactionKind={transactionKind}
@@ -88,7 +89,7 @@ export default function Transfer() {
           </StyledGrid>
         </StyledWrapper>
       </SwapFormFrame>
-    </>
+    </AppLayout>
   )
 }
 

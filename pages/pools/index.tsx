@@ -3,10 +3,11 @@ import { Disclaimer } from 'components/SwapForm/Disclaimer'
 import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
 import { PoolsContent } from 'components/Pools/PoolsContent'
 import styled from 'styled-components'
+import { AppLayout } from '../../components/Layout/AppLayout'
 
 export default function Pools() {
   return (
-    <>
+    <AppLayout>
       <StyledSpacer />
       <SwapFormFrame $expanded>
         <PoolsContent />
@@ -15,7 +16,7 @@ export default function Pools() {
         Junoswap is currently in beta and operating on the Juno testnet. Keplr
         connected to a ledger is currently unsupported.
       </Disclaimer>
-    </>
+    </AppLayout>
   )
 }
 

@@ -1,32 +1,24 @@
 import styled from 'styled-components'
-import { Container } from './Container'
 import { Text } from './Text'
 import { resetStylesForButton } from './Button'
 import { colorTokens } from '../util/constants'
 
 export const FooterBar = () => (
-  <Container as="footer">
-    <StyledRow $fullWidth>
-      <StyledRow>
-        <GithubIcon />
-        <StyledLink
-          href="https://github.com/Wasmswap/wasmswap-interface"
-          target="__blank"
-        >
-          Interface
-        </StyledLink>
-        <StyledLink
-          href="https://github.com/ben2x4/crustacean-swap"
-          target="__blank"
-        >
-          Smart Contract
-        </StyledLink>
-      </StyledRow>
-      <Text color="gray" variant="light">
-        Junoswap | 2021
-      </Text>
-    </StyledRow>
-  </Container>
+  <StyledRow $fullWidth>
+    <GithubIcon />
+    <StyledLink
+      href="https://github.com/Wasmswap/wasmswap-interface"
+      target="__blank"
+    >
+      Interface
+    </StyledLink>
+    <StyledLink
+      href="https://github.com/ben2x4/crustacean-swap"
+      target="__blank"
+    >
+      Smart Contract
+    </StyledLink>
+  </StyledRow>
 )
 
 const StyledGithubIconSvg = styled.svg`
@@ -61,13 +53,11 @@ const setMobileStyles = (styles) => `
   }
 `
 
-const StyledRow = styled.div<{ $fullWidth: boolean }>`
+const StyledRow = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  width: ${(p) => (p.$fullWidth ? '100%' : 'auto')};
-  padding: 18px 0;
+  width: 100%;
+  padding: 29px 0;
   ${setMobileStyles(`
     justify-content: center;
     flex-direction: column;

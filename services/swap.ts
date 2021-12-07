@@ -3,10 +3,11 @@ import {
   CosmWasmClient,
   MsgExecuteContractEncodeObject,
 } from '@cosmjs/cosmwasm-stargate'
-import { MsgExecuteContract } from '@cosmjs/cosmwasm-stargate/build/codec/cosmwasm/wasm/v1beta1/tx'
-import { toUtf8 } from '@cosmjs/encoding'
+//import { toUtf8 } from '@cosmjs/encoding'
 import { coin, StdFee } from '@cosmjs/launchpad'
 import { BroadcastTxResponse } from '@cosmjs/stargate'
+import { calculateFee, GasPrice } from "@cosmjs/stargate";
+//import { MsgDelegate } from "@cosmjs/stargate/build/codec/cosmos/staking/v1beta1/tx"; 
 
 export interface swapNativeForTokenInput {
   nativeAmount: number
@@ -18,19 +19,31 @@ export interface swapNativeForTokenInput {
 }
 
 export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
+  console.log(input);
   const minToken = Math.floor(input.price * (1 - input.slippage))
   const msg = {
     swap_native_for_token: {
-      min_token: `${minToken}`,
-    },
+      min_token: `${minToken}`
+    }
   }
-  return await input.client.execute(
+  const result =  await input.client.execute(
     input.senderAddress,
     input.swapAddress,
     msg,
+    calculateFee(300_000, GasPrice.fromString('0.002uconst')),
     undefined,
     [coin(input.nativeAmount, 'uconst')]
   )
+  return result;
+  // const msg = MsgDelegate.create({
+  //   swap_native_for_token: {
+  //     min_token: `${minToken}`
+  //   }
+  // });
+  // const msgAny = {
+  //   typeUrl: msgDelegateTypeUrl,
+  //   value: msg,
+  // };
 }
 
 export interface swapTokenForNativeInput {
@@ -53,38 +66,16 @@ export const swapTokenForNative = async (
       spender: `${input.swapAddress}`,
     },
   }
-  const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.tokenAddress,
-      msg: toUtf8(JSON.stringify(msg1)),
-      funds: [],
-    }),
-  }
   let msg2 = {
     swap_token_for_native: {
       min_native: `${minNative}`,
       token_amount: `${input.tokenAmount}`,
     },
   }
-  const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.swapAddress,
-      msg: toUtf8(JSON.stringify(msg2)),
-      funds: [],
-    }),
-  }
-  const fee: StdFee = {
-    amount: input.client.fees.exec.amount,
-    gas: (Number(input.client.fees.exec.gas) * 2).toString(),
-  }
   return await input.client.signAndBroadcast(
     input.senderAddress,
-    [executeContractMsg1, executeContractMsg2],
-    fee
+    [],
+    calculateFee(300_000, GasPrice.fromString('0.002uconst'))
   )
 }
 
@@ -109,15 +100,6 @@ export const swapTokenForToken = async (
       spender: `${input.swapAddress}`,
     },
   }
-  const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.tokenAddress,
-      msg: toUtf8(JSON.stringify(msg1)),
-      funds: [],
-    }),
-  }
   let msg2 = {
     swap_token_for_token: {
       output_min_token: `${minOutputToken}`,
@@ -125,22 +107,13 @@ export const swapTokenForToken = async (
       output_amm_address: input.outputSwapAddress,
     },
   }
-  const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.swapAddress,
-      msg: toUtf8(JSON.stringify(msg2)),
-      funds: [],
-    }),
-  }
   const fee: StdFee = {
     amount: input.client.fees.exec.amount,
     gas: (+input.client.fees.exec.gas * 3).toString(),
   }
   return await input.client.signAndBroadcast(
     input.senderAddress,
-    [executeContractMsg1, executeContractMsg2],
+    [],
     fee
   )
 }
@@ -156,12 +129,12 @@ export const getNativeForTokenPrice = async (
 ) => {
   try {
     const client = await CosmWasmClient.connect(input.rpcEndpoint)
-    const query = await client.queryContractSmart(input.swapAddress, {
+    let entrypoint = {
       native_for_token_price: {
         native_amount: `${input.nativeAmount}`,
-      },
-    })
-    console.log(query);
+      }
+    };
+    const query = await client.queryContractSmart(input.swapAddress, entrypoint)
     return query.token_amount
   } catch (e) {
     console.log(e);

@@ -22,8 +22,8 @@
     },
     {
       "chain_id": "constantine-1",
-      "token_address": "archway1zwv6feuzhy6a9wekh96cd57lsarmqlwxn054te",
-      "swap_address": "archway1unyuj8qnmygvzuex3dwmg9yzt9alhvye2canzt",
+      "token_address": "archway14nurau9scuqhr3sczktx63sr8kdpvwh0zynv63",
+      "swap_address": "archway1upvys78p4whku20c0addqurdt65y3l02ufh8wa",
       "symbol": "uco",
       "name": "COCO",
       "decimals": 18,

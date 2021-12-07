@@ -1,9 +1,8 @@
 import {
   SigningCosmWasmClient,
-  CosmWasmClient,
-  MsgExecuteContractEncodeObject,
+  CosmWasmClient
 } from '@cosmjs/cosmwasm-stargate'
-import { MsgExecuteContract } from '@cosmjs/cosmwasm-stargate/build/codec/cosmwasm/wasm/v1beta1/tx'
+//import { MsgExecuteContract } from '@cosmjs/cosmwasm-stargate/build/codec/cosmwasm/wasm/v1beta1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
 import { coin, StdFee } from '@cosmjs/launchpad'
 import { BroadcastTxResponse } from '@cosmjs/stargate'
@@ -28,14 +27,8 @@ export const addLiquidity = async (
       spender: `${input.swapAddress}`,
     },
   }
-  const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.tokenAddress,
-      msg: toUtf8(JSON.stringify(msg1)),
-      funds: [],
-    }),
+  const executeContractMsg1 = {
+    
   }
   let msg2 = {
     add_liquidity: {
@@ -43,14 +36,8 @@ export const addLiquidity = async (
       min_liquidity: `${input.minLiquidity}`,
     },
   }
-  const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.swapAddress,
-      msg: toUtf8(JSON.stringify(msg2)),
-      funds: [coin(input.nativeAmount, input.nativeDenom)],
-    }),
+  const executeContractMsg2 = {
+
   }
   const fee: StdFee = {
     amount: input.client.fees.exec.amount,
@@ -58,7 +45,7 @@ export const addLiquidity = async (
   }
   const executeAddLiquidity = await input.client.signAndBroadcast(
     input.senderAddress,
-    [executeContractMsg1, executeContractMsg2],
+    [],
     fee
   )
   return executeAddLiquidity
@@ -87,7 +74,7 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
     input.swapAddress,
     msg,
     undefined,
-    []
+    ""
   )
   return execute
 }

@@ -1,23 +1,37 @@
 import { useRecoilValue } from 'recoil'
-import { ibcWalletState } from '../state/atoms/walletAtoms'
+import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useQuery } from 'react-query'
-import { useIBCAssetInfo } from './useIBCAssetInfo'
+import { getIBCAssetInfo } from './useIBCAssetInfo'
 
-export const useIBCTokenBalance = (tokenSymbol: string) => {
+const useGetWalletStatus = () => {
+  const walletValue = useRecoilValue(ibcWalletState)
+
+  return {
+    isConnecting:
+      walletValue.status === WalletStatusType.connecting ||
+      walletValue.status === WalletStatusType.restored,
+    isConnected: walletValue.status === WalletStatusType.connected,
+  }
+}
+
+export const useIBCTokenBalance = (tokenSymbol) => {
   const { address, client } = useRecoilValue(ibcWalletState)
-  const { denom } = useIBCAssetInfo(tokenSymbol) || {}
+  const { isConnecting, isConnected } = useGetWalletStatus()
+
+  const enabled = isConnected && Boolean(client)
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`tokenBalance/${denom}`, address],
+    [`tokenBalance/${tokenSymbol}`, address],
     async () => {
+      const { denom } = getIBCAssetInfo(tokenSymbol)
       const coin = await client.getBalance(address, denom)
       const amount = coin ? Number(coin.amount) : 0
       return amount / 1000000
     },
     {
-      enabled: Boolean(address && denom),
+      enabled,
     }
   )
 
-  return { balance, isLoading }
+  return { balance, enabled, isLoading: isLoading || isConnecting }
 }

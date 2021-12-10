@@ -33,13 +33,13 @@ export const useSwapForm = () => {
   const [tokenAName, setTokenAName] = useRecoilState(tokenANameState)
   const [tokenAmount, setTokenAmount] = useRecoilState(tokenAmountState)
   const tokenAInfo = useTokenInfo(tokenAName)
-  const { balance: tokenABalance } = useTokenBalance(tokenAInfo)
+  const { balance: tokenABalance } = useTokenBalance(tokenAInfo.symbol)
 
   // Token B related states
   const [tokenBName, setTokenBName] = useRecoilState(tokenBNameState)
   const tokenBInfo = useTokenInfo(tokenBName)
   const tokenBPrice = useTokenPrice(tokenAInfo, tokenBInfo, tokenAmount)
-  const { balance: tokenBBalance } = useTokenBalance(tokenBInfo)
+  const { balance: tokenBBalance } = useTokenBalance(tokenBInfo.symbol)
 
   // Reset transaction state everytime token names or amount names change
   useEffect(() => {

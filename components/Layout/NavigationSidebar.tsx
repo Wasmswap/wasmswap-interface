@@ -12,7 +12,7 @@ import { IconWrapper } from '../IconWrapper'
 
 export function NavigationSidebar() {
   const { mutate: connectWallet } = useConnectWallet()
-  const { address } = useRecoilValue(walletState)
+  const { key } = useRecoilValue(walletState)
 
   const { pathname } = useRouter()
   const getIsActive = (path) => pathname === path
@@ -26,12 +26,9 @@ export function NavigationSidebar() {
           </StyledLogoText>
         </Link>
 
-        <StyledButton
-          size="medium"
-          onClick={address ? undefined : connectWallet}
-        >
+        <StyledButton size="medium" onClick={key ? undefined : connectWallet}>
           <StyledText color="white" variant="light">
-            {address || 'Connect Wallet'}
+            {key?.name || 'Connect Wallet'}
           </StyledText>
         </StyledButton>
 
@@ -72,7 +69,6 @@ export function NavigationSidebar() {
 
       <StyledFooterText variant="light">Junoswap — 2021</StyledFooterText>
 
-      <StyledSpringTop src="/spring-right.png" />
       <StyledSpringBottom src="/spring-left.png" />
     </StyledWrapper>
   )
@@ -127,16 +123,6 @@ const StyledSpringBottom = styled.img`
   width: 275%;
   z-index: 0;
   transform: translate(20%, 20%);
-  user-select: none;
-`
-
-const StyledSpringTop = styled.img`
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 225%;
-  z-index: 0;
-  transform: translate(55%, -35%) rotate(-25deg);
   user-select: none;
 `
 

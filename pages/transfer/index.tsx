@@ -1,14 +1,11 @@
 import React, { useEffect, useReducer } from 'react'
-import { SwapFormFrame } from 'components/SwapForm/SwapFormFrame'
-import { Text } from 'components/Text'
 import styled from 'styled-components'
-import { Header } from './Header'
-import { AssetCard } from './AssetCard'
-import { spaces } from '../../util/constants'
 import { TransferDialog } from '../../components/TransferDialog'
 import { useConnectIBCWallet } from '../../hooks/useConnectIBCWallet'
 import { toast } from 'react-toastify'
 import { AppLayout } from '../../components/Layout/AppLayout'
+import { PageHeader } from '../../components/Layout/PageHeader'
+import { AssetsList } from './AssetsList'
 
 export default function Transfer() {
   const [
@@ -48,6 +45,7 @@ export default function Transfer() {
       )
     },
   })
+
   useEffect(() => {
     // connect wallet as soon as a token is selected
     if (selectedToken) {
@@ -56,60 +54,27 @@ export default function Transfer() {
   }, [connectWallet, selectedToken])
 
   return (
-    <AppLayout>
+    <>
+      <AppLayout>
+        <StyledWrapper>
+          <PageHeader
+            title="IBC Transfer"
+            subtitle="Easily and quickly initiate payments in between interchain wallets."
+          />
+
+          <AssetsList onActionClick={handleAssetCardActionClick} />
+        </StyledWrapper>
+      </AppLayout>
       <TransferDialog
         tokenSymbol={selectedToken}
         transactionKind={transactionKind}
         isShowing={isTransferDialogShowing}
         onRequestClose={handleTransferDialogClose}
       />
-
-      <StyledSpacer />
-      <SwapFormFrame $expanded={true}>
-        <StyledWrapper>
-          <Header title="IBC Transfer">
-            Easily and quickly initiate payments in between interchain wallets.
-          </Header>
-          <StyledSubtitle
-            paddingBottom={spaces[24]}
-            type="title"
-            variant="bold"
-          >
-            My assets
-          </StyledSubtitle>
-          <StyledGrid>
-            <AssetCard
-              tokenSymbol="ATOM"
-              onActionClick={handleAssetCardActionClick}
-            />
-            <AssetCard
-              tokenSymbol="UST"
-              onActionClick={handleAssetCardActionClick}
-            />
-          </StyledGrid>
-        </StyledWrapper>
-      </SwapFormFrame>
-    </AppLayout>
+    </>
   )
 }
 
 const StyledWrapper = styled.section`
   padding-bottom: 34px;
-`
-
-const StyledSubtitle = styled(Text)`
-  font-size: 24px;
-  line-height: 35px;
-`
-
-const StyledGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 14px;
-`
-
-const StyledSpacer = styled.div`
-  height: calc(13.5vh - 84px);
-  max-height: 400px;
-  width: 100%;
 `

@@ -1,23 +1,24 @@
-import { Text } from '../../components/Text'
+import React from 'react'
+import { Text } from '../Text'
 import styled from 'styled-components'
 
-export const Header = ({ title, children }) => {
+export const PageHeader = ({ title, subtitle }) => {
   return (
     <>
       <StyledTitle type="title" variant="bold">
         {title}
       </StyledTitle>
       <StyledSubtitle type="body" variant="light">
-        {children}
+        {subtitle}
       </StyledSubtitle>
     </>
   )
 }
 
 const StyledTitle = styled(Text)`
-  padding: 36px 0 12px;
+  padding: 32px 0 18px;
 `
 
 const StyledSubtitle = styled(Text)`
-  padding-bottom: 48px;
+  padding-bottom: 29px;
 `

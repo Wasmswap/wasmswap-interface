@@ -1,119 +1,155 @@
-import styled from 'styled-components'
-import { colorTokens, spaces } from '../../util/constants'
-import { Text } from 'components/Text'
-import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/outline'
-import { Button } from '../../components/Button'
-import { CardWithSeparator } from '../../components/CardWithSeparator'
-import { IconWrapper } from '../../components/IconWrapper'
+import { styled } from '@stitches/react'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useIBCTokenBalance } from '../../hooks/useIBCTokenBalance'
+import { Text } from '../../components/Text'
+import { IconWrapper } from '../../components/IconWrapper'
+import { DoubleArrow } from '../../icons/DoubleArrow'
+import { colorTokens } from '../../util/constants'
+import { HTMLProps } from 'react'
 
-type AssetCardProps = {
-  tokenSymbol: string
-  onActionClick: (args: {
+export enum AssetCardState {
+  fetching = 'FETCHING',
+  active = 'ACTIVE',
+}
+
+type AssetCardProps = Exclude<HTMLProps<HTMLDivElement>, 'children'> & {
+  tokenSymbol?: string
+  onActionClick?: (args: {
     tokenSymbol: string
     actionType: 'deposit' | 'withdraw'
   }) => void
+  balance?: number
+  state?: AssetCardState
 }
 
-export const AssetCard = ({ tokenSymbol, onActionClick }: AssetCardProps) => {
-  const { symbol, name, logoURI } = useIBCAssetInfo(tokenSymbol)
-  const { balance, isLoading } = useIBCTokenBalance(tokenSymbol)
+export const AssetCard = ({
+  tokenSymbol,
+  onActionClick,
+  balance,
+  state,
+  ...htmlProps
+}: AssetCardProps) => {
+  const { symbol, name, logoURI } = useIBCAssetInfo(tokenSymbol) || {}
+
+  const handleDepositClick = () =>
+    onActionClick({
+      tokenSymbol: symbol,
+      actionType: 'deposit',
+    })
+
+  const handleWithdrawClick = () =>
+    onActionClick({
+      tokenSymbol: symbol,
+      actionType: 'withdraw',
+    })
+
+  if (state === AssetCardState.fetching) {
+    return (
+      <StyledElementForCard {...(htmlProps as any)} kind="wrapper">
+        <StyledElementForCard kind="content">
+          <StyledElementForToken>
+            <StyledTokenImage as="div" />
+          </StyledElementForToken>
+        </StyledElementForCard>
+        <div />
+      </StyledElementForCard>
+    )
+  }
 
   return (
-    <CardWithSeparator
-      paddingTop={14}
-      contents={[
-        <>
-          <StyledHeader>
-            <StyledTokenAvatar src={logoURI} />
-            <StyledHeaderTextWrapper>
-              <Text type="heading">{symbol}</Text>
-              <Text type="body" variant="light">
-                {name} mainnet
-              </Text>
-            </StyledHeaderTextWrapper>
-          </StyledHeader>
-        </>,
-        <>
-          <Text paddingY={spaces[18]} type="caption" color="gray">
-            {isLoading ? 'Loading your balance' : 'Current balance'}
+    <StyledElementForCard {...(htmlProps as any)} kind="wrapper">
+      <StyledElementForCard kind="content">
+        <StyledElementForToken>
+          <StyledTokenImage src={logoURI} />
+          <Text type="subtitle" variant="bold">
+            {balance} {name}
           </Text>
-          <StyledBalanceWrapper>
-            <Text type="title">{balance ? balance.toFixed(6) : '0.00'}</Text>
-            <Text type="caption" paddingY="6px" paddingX="6px">
-              {symbol}
-            </Text>
-          </StyledBalanceWrapper>
-          <Text type="subtitle" variant="light">
-            $116.33
-          </Text>
+        </StyledElementForToken>
+      </StyledElementForCard>
 
-          <StyledButtonsWrapper>
-            <Button
-              onClick={() => {
-                onActionClick({
-                  tokenSymbol: symbol,
-                  actionType: 'deposit',
-                })
-              }}
-              size="small"
-              iconBefore={
-                <IconWrapper
-                  icon={<ArrowDownIcon />}
-                  color={colorTokens.white}
-                />
-              }
-            >
-              Deposit
-            </Button>
-            <Button
-              onClick={() => {
-                onActionClick({
-                  tokenSymbol: symbol,
-                  actionType: 'withdraw',
-                })
-              }}
-              size="small"
-              iconBefore={
-                <IconWrapper icon={<ArrowUpIcon />} color={colorTokens.white} />
-              }
-            >
-              Withdraw
-            </Button>
-          </StyledButtonsWrapper>
-        </>,
-      ]}
-    />
+      <StyledElementForCard kind="actions">
+        <StyledActionButton onClick={handleDepositClick}>
+          <IconWrapper size="16px" icon={<DoubleArrow />} />
+          Deposit
+        </StyledActionButton>
+        <StyledActionButton onClick={handleWithdrawClick}>
+          <IconWrapper size="16px" icon={<DoubleArrow />} />
+          Withdraw
+        </StyledActionButton>
+      </StyledElementForCard>
+
+      {state === AssetCardState.active && (
+        <StyledElementForCard kind="background" />
+      )}
+    </StyledElementForCard>
   )
 }
 
-const StyledButtonsWrapper = styled.div`
-  display: grid;
-  column-gap: 8px;
-  grid-template-columns: 1fr 1fr;
-  padding-top: 33px;
-`
+const StyledElementForCard = styled('div', {
+  variants: {
+    kind: {
+      wrapper: {
+        background: 'rgba(25, 29, 32, 0.1)',
+        borderRadius: '8px',
+        padding: '18px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      },
+      content: {
+        display: 'grid',
+        gridAutoFlow: 'column',
+        columnGap: '21px',
+        position: 'relative',
+        zIndex: 1,
+      },
+      actions: {
+        display: 'grid',
+        gridAutoFlow: 'column',
+        columnGap: '12px',
+        position: 'relative',
+        zIndex: 1,
+      },
+      background: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 0,
+        background:
+          'radial-gradient(92.33% 382.8% at 4.67% 100%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
+        opacity: 0.4,
+      },
+    },
+  },
+})
 
-const StyledBalanceWrapper = styled.div`
-  display: flex;
-  align-items: flex-end;
-`
+const StyledElementForToken = styled('div', {
+  display: 'grid',
+  gridAutoFlow: 'column',
+  columnGap: '7px',
+  alignItems: 'center',
+})
 
-const StyledHeader = styled.div`
-  display: flex;
-  align-items: center;
-  padding-bottom: ${spaces[24]};
-`
+const StyledTokenImage = styled('img', {
+  width: 26,
+  height: 26,
+  borderRadius: '50%',
+  backgroundColor: '#ccc',
+})
 
-const StyledHeaderTextWrapper = styled.div`
-  padding-left: ${spaces[18]};
-`
-
-const StyledTokenAvatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ccc;
-  object-fit: contain;
-`
+const StyledActionButton = styled('button', {
+  display: 'grid',
+  gridAutoFlow: 'column',
+  columnGap: '5px',
+  alignItems: 'center',
+  transition: 'color .15s ease-out',
+  fontSize: '17px',
+  lineHeight: '20px',
+  fontWeight: 500,
+  '&:hover': {
+    color: colorTokens.gray,
+  },
+})

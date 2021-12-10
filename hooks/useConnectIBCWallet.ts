@@ -70,5 +70,18 @@ export const useConnectIBCWallet = (
     }
   }, [status, mutation.mutate, storedTokenSymbol])
 
+  useEffect(() => {
+    function reconnectWallet() {
+      if (storedTokenSymbol && status === WalletStatusType.connected) {
+        mutation.mutate(storedTokenSymbol)
+      }
+    }
+
+    window.addEventListener('keplr_keystorechange', reconnectWallet)
+    return () => {
+      window.removeEventListener('keplr_keystorechange', reconnectWallet)
+    }
+  }, [storedTokenSymbol, status]) // eslint-disable-line
+
   return mutation
 }

@@ -18,7 +18,7 @@ type TextProps = {
     | 'subtitle'
     | 'caption'
     | 'microscopic'
-  color?: keyof typeof colorTokens
+  color?: keyof typeof colorTokens | string
   variant?: keyof typeof fontWeightTokens
   paddingTop?: string
   paddingBottom?: string
@@ -29,7 +29,7 @@ type TextProps = {
 }
 
 const colorTokenSelector = (props: TextProps) => {
-  return colorTokens[props.color] || colorTokens.black
+  return colorTokens[props.color] || props.color || colorTokens.black
 }
 
 const fontWeightSelector = (props: TextProps) => {

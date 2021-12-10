@@ -1,18 +1,29 @@
-import React from 'react'
+import React, { ForwardedRef, forwardRef, useState } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { Text } from '../Text'
-import { Button } from '../Button'
 import { useConnectWallet } from '../../hooks/useConnectWallet'
-import { useRecoilValue } from 'recoil'
-import { walletState } from '../../state/atoms/walletAtoms'
+import { useRecoilState } from 'recoil'
+import { walletState, WalletStatusType } from '../../state/atoms/walletAtoms'
 import { useRouter } from 'next/router'
-import { Address, Open, Arrow } from '../../icons'
+import { Address, Arrow, Open } from '../../icons'
 import { IconWrapper } from '../IconWrapper'
+import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
 export function NavigationSidebar() {
   const { mutate: connectWallet } = useConnectWallet()
-  const { key } = useRecoilValue(walletState)
+  const [{ key }, setWalletState] = useRecoilState(walletState)
+
+  function resetWalletConnection() {
+    setWalletState({
+      status: WalletStatusType.idle,
+      address: '',
+      key: null,
+      client: null,
+    })
+  }
+
+  const hasWalletName = Boolean(key?.name)
 
   const { pathname } = useRouter()
   const getIsActive = (path) => pathname === path
@@ -21,16 +32,15 @@ export function NavigationSidebar() {
     <StyledWrapper>
       <StyledMenuContainer>
         <Link href="/" passHref>
-          <StyledLogoText type="heading" variant="bold">
-            Junoswap
-          </StyledLogoText>
+          <AppLogo />
         </Link>
 
-        <StyledButton size="medium" onClick={key ? undefined : connectWallet}>
-          <StyledText color="white" variant="light">
-            {key?.name || 'Connect Wallet'}
-          </StyledText>
-        </StyledButton>
+        <StyledConnectedWalletButton
+          onClick={
+            hasWalletName ? resetWalletConnection : () => connectWallet(null)
+          }
+          walletName={key?.name}
+        />
 
         <Link href="/" passHref>
           <StyledLink
@@ -74,6 +84,28 @@ export function NavigationSidebar() {
   )
 }
 
+const AppLogo = () => {
+  const [isLoaded, setIsLoaded] = useState(false)
+  return (
+    <StyledImageForLogo
+      onLoad={() => {
+        setIsLoaded(true)
+      }}
+      src="/junoswap.png"
+      title="Junoswap"
+      alt="Junoswap"
+      style={{ minHeight: isLoaded ? 'unset' : 42 }}
+    />
+  )
+}
+
+const TextAsLink = forwardRef(function TextAsLinkComponent(
+  props,
+  ref: ForwardedRef<any>
+) {
+  return <Text as="a" {...props} ref={ref} />
+})
+
 const StyledWrapper = styled.div`
   position: sticky;
   display: flex;
@@ -90,13 +122,6 @@ const StyledMenuContainer = styled.div`
   position: relative;
   z-index: 1;
   padding: 21px 0;
-`
-
-const TextAsLink = (props) => <Text as="a" {...props} />
-
-const StyledLogoText = styled(TextAsLink)`
-  height: 47px;
-  padding-bottom: 16px;
 `
 
 const StyledLink = styled(TextAsLink)`
@@ -126,28 +151,17 @@ const StyledSpringBottom = styled.img`
   user-select: none;
 `
 
-const StyledButton = styled(Button)`
-  background: #161616;
-  margin-bottom: 8px;
-`
-
 const StyledFooterText = styled(Text)`
   padding-bottom: 29px;
   position: relative;
   z-index: 1;
 `
 
-const StyledText = styled(Text)`
-  @media only screen and (max-width: 768px) {
-    max-width: 150px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  @media only screen and (max-width: 400px) {
-    max-width: 90px;
-  }
-  @media only screen and (max-width: 350px) {
-    max-width: 70px;
-  }
+const StyledConnectedWalletButton = styled(ConnectedWalletButton)`
+  margin-bottom: 8px;
+`
+
+const StyledImageForLogo = styled.img`
+  width: 80%;
+  margin-bottom: 18px;
 `

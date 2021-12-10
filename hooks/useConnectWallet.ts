@@ -66,5 +66,18 @@ export const useConnectWallet = (
     }
   }, [status]) // eslint-disable-line
 
+  useEffect(() => {
+    function reconnectWallet() {
+      if (status === WalletStatusType.connected) {
+        mutation.mutate(null)
+      }
+    }
+
+    window.addEventListener('keplr_keystorechange', reconnectWallet)
+    return () => {
+      window.removeEventListener('keplr_keystorechange', reconnectWallet)
+    }
+  }, [status]) // eslint-disable-line
+
   return mutation
 }

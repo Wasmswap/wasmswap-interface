@@ -15,16 +15,24 @@ const useGetWalletStatus = () => {
 }
 
 export const useIBCTokenBalance = (tokenSymbol) => {
-  const { address, client } = useRecoilValue(ibcWalletState)
+  const {
+    address,
+    tokenSymbol: connectedTokenSymbol,
+    client,
+  } = useRecoilValue(ibcWalletState)
+
   const { isConnecting, isConnected } = useGetWalletStatus()
 
-  const enabled = isConnected && Boolean(client)
+  const enabled =
+    isConnected && connectedTokenSymbol === tokenSymbol && Boolean(client)
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`tokenBalance/${tokenSymbol}`, address],
+    [`individialIbcTokenBalance/${tokenSymbol}`, address],
     async () => {
       const { denom } = getIBCAssetInfo(tokenSymbol)
       const coin = await client.getBalance(address, denom)
+      const test = await client.getAllBalances(address)
+      console.log({ coin, test })
       const amount = coin ? Number(coin.amount) : 0
       return amount / 1000000
     },
@@ -32,6 +40,13 @@ export const useIBCTokenBalance = (tokenSymbol) => {
       enabled,
     }
   )
+
+  console.log({
+    balance,
+    enabled,
+    isLoading,
+    isConnecting,
+  })
 
   return { balance, enabled, isLoading: isLoading || isConnecting }
 }

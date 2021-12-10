@@ -5,6 +5,7 @@ import { getTokenInfo } from './useTokenInfo'
 import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
+import { getIBCAssetInfo } from './useIBCAssetInfo'
 
 async function fetchTokenBalance({
   client,
@@ -15,14 +16,30 @@ async function fetchTokenBalance({
   tokenSymbol: string
   address: string
 }) {
-  const { token_address, native, denom } = getTokenInfo(tokenSymbol)
+  const tokenInfo = getTokenInfo(tokenSymbol)
+  const ibcAssetInfo = getIBCAssetInfo(tokenSymbol)
 
-  if (native) {
+  if (!tokenInfo && !ibcAssetInfo) {
+    throw new Error(
+      `Provided tokenSymbol: ${tokenSymbol} doesn't exist on the platform.`
+    )
+  }
+
+  /*
+   * if this is a native asset or an ibc asset that has juno_denom
+   *  */
+  if (tokenInfo?.native || ibcAssetInfo?.denom) {
+    const denom = tokenInfo?.native ? tokenInfo.denom : ibcAssetInfo.juno_denom
+
     const coin = await client.getBalance(address, denom)
     const amount = coin ? Number(coin.amount) : 0
     return amount / 1000000
   }
 
+  /*
+   * everything else
+   *  */
+  const { token_address } = tokenInfo
   if (token_address) {
     const balance = await CW20(client).use(token_address).balance(address)
     return Number(balance) / 1000000
@@ -52,7 +69,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
 }
 
 export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
-  const { address, client } = useRecoilValue(walletState)
+  const { address, status, client } = useRecoilValue(walletState)
 
   const queryKey = useMemo(
     () => `multipleTokenBalances/${tokenSymbols.join('+')}`,
@@ -81,6 +98,7 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
       enabled: Boolean(
         status === WalletStatusType.connected && tokenSymbols?.length
       ),
+      refetchOnMount: 'always',
     }
   )
 

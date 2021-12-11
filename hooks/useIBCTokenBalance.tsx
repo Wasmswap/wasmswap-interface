@@ -2,6 +2,7 @@ import { useRecoilValue } from 'recoil'
 import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useQuery } from 'react-query'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
 const useGetWalletStatus = () => {
   const walletValue = useRecoilValue(ibcWalletState)
@@ -23,30 +24,23 @@ export const useIBCTokenBalance = (tokenSymbol) => {
 
   const { isConnecting, isConnected } = useGetWalletStatus()
 
-  const enabled =
-    isConnected && connectedTokenSymbol === tokenSymbol && Boolean(client)
+  const enabled = isConnected && connectedTokenSymbol === tokenSymbol
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`individialIbcTokenBalance/${tokenSymbol}`, address],
+    [`ibcTokenBalance/${tokenSymbol}`, address],
     async () => {
       const { denom } = getIBCAssetInfo(tokenSymbol)
       const coin = await client.getBalance(address, denom)
-      const test = await client.getAllBalances(address)
-      console.log({ coin, test })
       const amount = coin ? Number(coin.amount) : 0
       return amount / 1000000
     },
     {
       enabled,
+      refetchOnMount: 'always',
+      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+      refetchIntervalInBackground: true,
     }
   )
-
-  console.log({
-    balance,
-    enabled,
-    isLoading,
-    isConnecting,
-  })
 
   return { balance, enabled, isLoading: isLoading || isConnecting }
 }

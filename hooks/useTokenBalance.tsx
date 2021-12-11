@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
 async function fetchTokenBalance({
   client,
@@ -62,6 +63,9 @@ export const useTokenBalance = (tokenSymbol: string) => {
     },
     {
       enabled: Boolean(tokenSymbol && status === WalletStatusType.connected),
+      refetchOnMount: 'always',
+      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+      refetchIntervalInBackground: true,
     }
   )
 
@@ -99,6 +103,8 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
         status === WalletStatusType.connected && tokenSymbols?.length
       ),
       refetchOnMount: 'always',
+      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+      refetchIntervalInBackground: true,
     }
   )
 

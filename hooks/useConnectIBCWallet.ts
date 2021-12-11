@@ -5,7 +5,7 @@ import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { useMutation } from 'react-query'
 import { useEffect } from 'react'
 
-/* shares very similar logic with `useConnectWallet` and is a subject to refactpr */
+/* shares very similar logic with `useConnectWallet` and is a subject to refactor */
 export const useConnectIBCWallet = (
   mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
@@ -14,12 +14,14 @@ export const useConnectIBCWallet = (
 
   const mutation = useMutation(async (tokenSymbol: string) => {
     if (window && !window?.keplr) {
-      alert('Please install Keplr extension and refresh the app.')
+      alert('Please install Keplr extension and refresh the page.')
       return
     }
 
     if (!tokenSymbol) {
-      throw new Error('Please provide tokenSymbol')
+      throw new Error(
+        'You must provide `tokenSymbol` before connecting to the wallet.'
+      )
     }
 
     /* set the fetching state */
@@ -64,11 +66,11 @@ export const useConnectIBCWallet = (
   }, mutationOptions)
 
   useEffect(() => {
-    /* restore wallet connection if the state has been set with the */
+    /* restore wallet connection */
     if (status === WalletStatusType.restored && storedTokenSymbol) {
       mutation.mutate(storedTokenSymbol)
     }
-  }, [status, mutation.mutate, storedTokenSymbol])
+  }, [status, mutation.mutate, storedTokenSymbol]) // eslint-disable-line
 
   useEffect(() => {
     function reconnectWallet() {

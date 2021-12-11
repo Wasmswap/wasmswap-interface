@@ -13,7 +13,7 @@ export const useConnectWallet = (
   const [{ status }, setWalletState] = useRecoilState(walletState)
   const mutation = useMutation(async () => {
     if (window && !window?.keplr) {
-      alert('Please install Keplr extension and refresh the app.')
+      alert('Please install Keplr extension and refresh the page.')
       return
     }
 

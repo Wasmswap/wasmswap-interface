@@ -18,3 +18,5 @@ export const getIBCAssetInfo = (assetSymbol: string): IBCAssetInfo =>
 export const useIBCAssetInfo = (assetSymbol: string) => {
   return useMemo(() => getIBCAssetInfo(assetSymbol), [assetSymbol])
 }
+
+export const ibcAssetList = IBCAssetList.tokens as Array<IBCAssetInfo>

@@ -14,6 +14,7 @@ import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useTransferAssetMutation } from './useTransferAssetMutation'
 import { Spinner } from '../Spinner'
 import { toast } from 'react-toastify'
+import { useQueryClient } from 'react-query'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -29,19 +30,20 @@ export const TransferDialog = ({
   onRequestClose,
 }: TransferDialogProps) => {
   const tokenInfo = useIBCAssetInfo(tokenSymbol)
+
   const [tokenAmount, setTokenAmount] = useState(0)
 
   /* get the balances */
-  const { balance: availableAssetBalanceOnChain } = useTokenBalance({
-    native: true,
-    denom: tokenInfo.juno_denom,
-    token_address: '',
-  })
-  const { balance: ibcTokenMaxAvailableBalance } = useIBCTokenBalance(
-    tokenInfo.denom
+  const { balance: availableAssetBalanceOnChain } = useTokenBalance(
+    tokenInfo.symbol
   )
 
+  const { balance: ibcTokenMaxAvailableBalance } =
+    useIBCTokenBalance(tokenSymbol)
+
   const arbitrarySwapFee = 0.03
+
+  const queryClient = useQueryClient()
 
   const { isLoading, mutate: mutateTransferAsset } = useTransferAssetMutation({
     transactionKind,
@@ -49,6 +51,13 @@ export const TransferDialog = ({
     tokenInfo,
 
     onSuccess() {
+      // reset cache
+      queryClient
+        .resetQueries(['tokenBalance', 'ibcTokenBalance'])
+        .then((...args) => {
+          console.log('Refetched queries', ...args)
+        })
+
       // show toast
       toast.success(
         `🎉 ${transactionKind === 'deposit' ? 'Deposited' : 'Withdrawn'} ${

@@ -32,3 +32,16 @@ input[type=number] {
 p {
   margin: 0;
 }
+
+button {
+  text-transform: none;
+  -webkit-appearance: button;
+  padding: 0;
+  border: none;
+  outline: none;
+  font: inherit;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+  user-select: none;
+}

@@ -15,7 +15,6 @@ import { getSwapInfo } from 'services/swap'
 import { addLiquidity, removeLiquidity } from 'services/liquidity'
 import { Spinner } from '../Spinner'
 import { useTokenBalance } from '../../hooks/useTokenBalance'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { useLiquidity } from '../../hooks/useLiquidity'
 import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
@@ -24,11 +23,11 @@ import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
-  const { balance: junoBalance } = useTokenBalance(useTokenInfo('JUNO'))
-  const { balance: tokenBalance } = useTokenBalance(tokenInfo)
+  const { balance: junoBalance } = useTokenBalance('JUNO')
+  const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
 
   const { myLPBalance, myLiquidity } = useLiquidity({
-    tokenName: tokenInfo.symbol,
+    tokenSymbol: tokenInfo.symbol,
     swapAddress: tokenInfo.swap_address,
     address: address,
   })

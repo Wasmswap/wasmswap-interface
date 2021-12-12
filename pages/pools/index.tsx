@@ -5,12 +5,14 @@ import TokenList from '../../public/token_list.json'
 import { PoolCard } from '../../components/Pools/PoolCard'
 import { PoolDialog } from '../../components/Pools/PoolDialog'
 import { TokenInfo } from '../../hooks/useTokenInfo'
-import { Text } from '../../components/Text'
+import { PageHeader } from '../../components/Layout/PageHeader'
 
 export default function Pools() {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
   const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
 
+  // wire the dialog up with the pools page inside
+  // @ts-ignore
   const openDialog = (tokenInfo) => {
     setTokenInfo(tokenInfo)
     setIsDialogShowing(true)
@@ -18,13 +20,11 @@ export default function Pools() {
 
   return (
     <AppLayout>
-      <StyledTitle type="title" variant="bold">
-        Pools
-      </StyledTitle>
-      <StyledSubtitle type="body" variant="light">
-        Provide liquidity to the market by adding assets to the pools and
-        receive swap fees from each trade.
-      </StyledSubtitle>
+      <PageHeader
+        title="Pools"
+        subtitle="Provide liquidity to the market by adding assets to the pools and
+        receive swap fees from each trade."
+      />
 
       <StyledDivForPoolsGrid>
         {TokenList.tokens
@@ -34,7 +34,6 @@ export default function Pools() {
               key={key}
               tokenASymbol="JUNO"
               tokenBSymbol={token.symbol}
-              onClick={() => openDialog(token)}
             />
           ))}
       </StyledDivForPoolsGrid>
@@ -46,14 +45,6 @@ export default function Pools() {
     </AppLayout>
   )
 }
-
-const StyledTitle = styled(Text)`
-  padding: 32px 0 18px;
-`
-
-const StyledSubtitle = styled(Text)`
-  padding-bottom: 29px;
-`
 
 const StyledDivForPoolsGrid = styled.div`
   display: grid;

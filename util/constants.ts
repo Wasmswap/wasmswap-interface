@@ -19,3 +19,5 @@ export const spaces = {
   18: '18px',
   24: '24px',
 }
+
+export const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10000

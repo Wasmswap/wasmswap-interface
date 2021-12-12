@@ -1,20 +1,7 @@
 import React, { HTMLProps, FC, ReactNode } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
-
-export const resetStylesForButton = css`
-  text-transform: none;
-  -webkit-appearance: button;
-  padding: 0;
-  border: none;
-  outline: none;
-  font: inherit;
-  color: inherit;
-  background: none;
-  cursor: pointer;
-  user-select: none;
-`
 
 type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
   iconBefore?: ReactNode
@@ -23,7 +10,6 @@ type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
 }
 
 export const StyledButton = styled.button<ButtonProps>`
-  ${resetStylesForButton};
   text-align: center;
   display: flex;
   justify-content: center;

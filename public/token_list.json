@@ -17,7 +17,7 @@
       "symbol": "JUNO",
       "name": "Juno",
       "decimals": 6,
-      "logoURI": "",
+      "logoURI": "https://junochain.com/assets/logos/logo_512x512.png",
       "tags": ["native"],
       "native":true,
       "denom":"ujuno"

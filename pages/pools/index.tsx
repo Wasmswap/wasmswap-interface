@@ -6,6 +6,7 @@ import { PoolCard } from '../../components/Pools/PoolCard'
 import { PoolDialog } from '../../components/Pools/PoolDialog'
 import { TokenInfo } from '../../hooks/useTokenInfo'
 import { PageHeader } from '../../components/Layout/PageHeader'
+import { useQuery } from 'react-query'
 
 export default function Pools() {
   const [isDialogShowing, setIsDialogShowing] = useState(false)
@@ -17,6 +18,23 @@ export default function Pools() {
     setTokenInfo(tokenInfo)
     setIsDialogShowing(true)
   }
+
+  /* lets fetch all the swaps/pools all the info needed for the app */
+  const { data, isLoading } = useQuery('all-the-app-needed-data', async () => {
+    // fetches and returns all the pools
+    // return await fetchAllTheSwaps();
+  })
+
+  const { data, isLoading } = useQuery(
+    'pool-list',
+    async () => {
+      // fetches and returns all the pools
+      // return await fetchPoolsData(data.poolsQueryOrArgumentsOrWhatNot)
+    },
+    {
+      enabled: Boolean(data),
+    }
+  )
 
   return (
     <AppLayout>

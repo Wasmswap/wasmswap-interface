@@ -8,13 +8,21 @@ import { PoolAvailableLiquidityCard } from '../../components/Pools/PoolAvailable
 import { PoolBondedLiquidityCard } from '../../components/Pools/PoolBondedLiquidityCard'
 import { Button } from '../../components/Button'
 import { UnbondingLiquidityCard } from '../../components/Pools/UnbondingLiquidityCard'
+import { useQuery } from 'react-query'
 
 export default function Pool() {
   const {
+    // pool swap address
     query: { pool },
   } = useRouter()
 
-  console.log({ pool })
+  const { data, isLoading } = useQuery(`pool/${pool}`, async () => {
+    // ... request for the pool's details
+  })
+
+  if (!data) {
+    return null
+  }
 
   return (
     <AppLayout>

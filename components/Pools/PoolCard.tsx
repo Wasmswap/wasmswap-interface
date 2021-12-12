@@ -33,7 +33,8 @@ export const PoolCard = ({ tokenASymbol, tokenBSymbol }: PoolCardProps) => {
   const hasProvidedLiquidity = typeof myLiquidity === 'number'
 
   return (
-    <Link href="/pools/ffa94571-8425-4de1-99cb-a4e99fd3e90f" passHref>
+    // put the pools swap address here instead
+    <Link href={`/pools/${tokenBSymbol}`} passHref>
       <StyledLinkForCard>
         <>
           <StyledDivForRowWrapper>

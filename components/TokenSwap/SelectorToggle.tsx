@@ -40,7 +40,11 @@ export const SelectorToggle = ({
       )}
       {!isSelecting && hasTokenSelected && (
         <>
-          <StyledImgForTokenLogo src={logoURI} alt={tokenSymbol} />
+          <StyledImgForTokenLogo
+            as={logoURI ? 'img' : 'div'}
+            src={logoURI}
+            alt={tokenSymbol}
+          />
           <div>
             <Text type="caption" variant="bold">
               {tokenSymbol}
@@ -68,6 +72,9 @@ const StyledDivForSelector = styled('div', {
   '&:hover': {
     backgroundColor: 'rgba(25, 29, 32, 0.1)',
   },
+  '&:active': {
+    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+  },
   variants: {
     state: {
       selected: {
@@ -76,7 +83,6 @@ const StyledDivForSelector = styled('div', {
         gridTemplateColumns: '30px 1fr 16px',
       },
       selecting: {
-        backgroundColor: 'rgba(25, 29, 32, 0.05)',
         padding: '12px 16px',
         columnGap: '8px',
         gridTemplateColumns: '1fr 16px',
@@ -89,4 +95,5 @@ const StyledImgForTokenLogo = styled('img', {
   width: '30px',
   height: '30px',
   borderRadius: '50%',
+  backgroundColor: '#ccc',
 })

@@ -1,0 +1,28 @@
+$OpenSansPath: "./font" !default;
+$OpenSansVersion: "1.101" !default;
+
+@mixin fontdef($FontType: "Regular") {
+  src: url("#{$OpenSansPath}/#{$FontType}/OpenSans-#{$FontType}.woff2?v=#{$OpenSansVersion}") format("woff2"),
+  url("#{$OpenSansPath}/#{$FontType}/OpenSans-#{$FontType}.woff?v=#{$OpenSansVersion}") format("woff");
+}
+
+@font-face {
+  font-family: "Open Sans";
+  @include fontdef("Bold");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  @include fontdef("Regular");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  @include fontdef("Light");
+  font-weight: 400;
+  font-style: normal;
+}

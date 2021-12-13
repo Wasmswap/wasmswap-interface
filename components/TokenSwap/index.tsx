@@ -5,13 +5,20 @@ import { styled } from '@stitches/react'
 import { TransactionTips } from './TransactionTips'
 import { TransactionAction } from './TransactionAction'
 import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
+import { useTokenToTokenPrice } from './useTokenToTokenPrice'
 
 export const TokenSwap = () => {
   const [[tokenA, tokenB], setTokenSwapState] = useRecoilState(tokenSwapAtom)
 
-  const [[tokenADollarPrice, tokenBDollarPrice]] = useTokenDollarValue(
+  const [[tokenAPrice, tokenBPrice]] = useTokenDollarValue(
     [tokenA?.tokenSymbol, tokenB?.tokenSymbol].filter(Boolean)
   )
+
+  const [tokenPrice] = useTokenToTokenPrice({
+    tokenASymbol: tokenA?.tokenSymbol,
+    tokenBSymbol: tokenB?.tokenSymbol,
+    tokenAmount: tokenA?.amount,
+  })
 
   return (
     <>
@@ -24,25 +31,21 @@ export const TokenSwap = () => {
           }}
         />
         <TransactionTips
-          dollarValue={(tokenADollarPrice || 0) * (tokenA.amount || 0)}
+          dollarValue={(tokenAPrice || 0) * (tokenA.amount || 0)}
         />
         <TokenSelector
+          readOnly
           tokenSymbol={tokenB.tokenSymbol}
-          amount={tokenB.amount}
+          amount={tokenPrice || 0}
           onChange={(updatedTokenB) => {
             setTokenSwapState([tokenA, updatedTokenB])
           }}
         />
       </StyledDivForWrapper>
       <TransactionAction
-        tokenA={{
-          tokenSymbol: tokenA?.tokenSymbol,
-          price: tokenADollarPrice,
-        }}
-        tokenB={{
-          tokenSymbol: tokenB?.tokenSymbol,
-          price: tokenBDollarPrice,
-        }}
+        tokenAPrice={tokenAPrice}
+        tokenBPrice={tokenBPrice}
+        tokenToTokenPrice={tokenPrice || 0}
       />
     </>
   )

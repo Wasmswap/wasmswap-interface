@@ -1,13 +1,13 @@
 import 'normalize.css'
 import 'react-toastify/dist/ReactToastify.css'
-import 'styles/globals.css'
+import 'styles/globals.scss'
+
 import type { AppProps } from 'next/app'
 import { RecoilRoot } from 'recoil'
 import { ErrorBoundary } from '../components/ErrorBoundary'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Portal } from '@reach/portal'
 import { ToastContainer } from 'react-toastify'
-import React from 'react'
 
 const queryClient = new QueryClient({
   defaultOptions: {

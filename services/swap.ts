@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { BroadcastTxResponse, StdFee, coin} from '@cosmjs/stargate'
+import { BroadcastTxResponse, StdFee, coin } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 
 export interface swapNativeForTokenInput {
@@ -164,7 +164,7 @@ export const getNativeForTokenPrice = async (
     })
     return query.token_amount
   } catch (e) {
-    console.error(e)
+    console.error('err(getNativeForTokenPrice):', e)
   }
 }
 
@@ -186,7 +186,7 @@ export const getTokenForNativePrice = async (
     })
     return query.native_amount
   } catch (e) {
-    console.error(e)
+    console.error('error(getTokenForNativePrice):', e)
   }
 }
 
@@ -213,7 +213,7 @@ export const getTokenForTokenPrice = async (
       rpcEndpoint: input.rpcEndpoint,
     })
   } catch (e) {
-    console.error(e)
+    console.error('error(getTokenForTokenPrice)', e)
   }
 }
 

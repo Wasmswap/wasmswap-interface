@@ -30,8 +30,8 @@ export const StyledButton = styled.button<ButtonProps>`
   }};
   width: ${(props: ButtonProps) =>
     props.size === 'humongous' ? '100%' : 'auto'};
-  background-color: ${({ disabled, color }) => {
-    return disabled
+  background-color: ${({ disabled, type, color }) => {
+    return disabled || type === 'disabled'
       ? colorTokens.gray
       : colorTokens[color] || color || colorTokens.black
   }};

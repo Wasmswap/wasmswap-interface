@@ -15,6 +15,7 @@ export const AppLayout = ({
           <main>{children}</main>
           {footerBar}
         </StyledContainer>
+        <StyledSpringBottom src="/springs-bg.png" />
       </StyledWrapper>
     </>
   )
@@ -35,4 +36,15 @@ const StyledContainer = styled.div`
   & main {
     max-width: ${590 + 80}px;
   }
+`
+
+const StyledSpringBottom = styled.img`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 35%;
+  max-width: 500px;
+  z-index: 0;
+  user-select: none;
+  user-drag: none;
 `

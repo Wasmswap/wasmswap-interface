@@ -83,8 +83,6 @@ export function NavigationSidebar() {
       </StyledMenuContainer>
 
       <StyledFooterText variant="light">Junoswap — 2021</StyledFooterText>
-
-      <StyledSpringBottom src="/spring-left.png" />
     </StyledWrapper>
   )
 }
@@ -102,8 +100,9 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding: 0 32px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   overflow: hidden;
+  border-right: 1px solid #eaeaea;
 `
 
 const StyledMenuContainer = styled.div`
@@ -135,16 +134,6 @@ const StyledLink = styled(TextAsLink)`
   & span {
     margin-left: 10px;
   }
-`
-
-const StyledSpringBottom = styled.img`
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 275%;
-  z-index: 0;
-  transform: translate(20%, 20%);
-  user-select: none;
 `
 
 const StyledFooterText = styled(Text)`

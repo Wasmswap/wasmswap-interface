@@ -1,6 +1,6 @@
 import { atom } from 'recoil'
 
-type TokenItemState = {
+export type TokenItemState = {
   tokenSymbol: string
   amount: number
 }

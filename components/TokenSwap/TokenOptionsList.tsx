@@ -75,6 +75,9 @@ const StyledDivForRow = styled('div', {
   '&:hover': {
     backgroundColor: 'rgba(25, 29, 32, 0.1)',
   },
+  '&:active': {
+    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+  },
   '&:last-child': {
     marginBottom: 0,
   },

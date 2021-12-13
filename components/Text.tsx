@@ -1,6 +1,6 @@
 import React, { ForwardedRef, forwardRef, HTMLProps } from 'react'
 import styled, { css } from 'styled-components'
-import { colorTokens, spaces } from '../util/constants'
+import { colorTokens, fonts, spaces } from '../util/constants'
 
 const fontWeightTokens = {
   bold: 600,
@@ -18,6 +18,7 @@ type TextProps = {
     | 'subtitle'
     | 'caption'
     | 'microscopic'
+  font?: keyof typeof fonts
   color?: keyof typeof colorTokens | string
   variant?: keyof typeof fontWeightTokens
   paddingTop?: string
@@ -34,6 +35,10 @@ const colorTokenSelector = (props: TextProps) => {
 
 const fontWeightSelector = (props: TextProps) => {
   return fontWeightTokens[props.variant] || fontWeightTokens.normal
+}
+
+const fontFamilySelector = (props: TextProps) => {
+  return fonts[props.font] || fonts.primary
 }
 
 const paddingMixin = css`
@@ -57,68 +62,59 @@ const paddingMixin = css`
       : ''};
 `
 
+const mixins = css`
+  color: ${colorTokenSelector};
+  font-weight: ${fontWeightSelector};
+  font-family: ${fontFamilySelector};
+  ${paddingMixin};
+`
+
 const Title = styled.p<TextProps>`
   font-size: 32px;
   line-height: 44px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Title2 = styled.p<TextProps>`
   font-size: 30px;
   line-height: 24px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Title3 = styled.p<TextProps>`
   font-size: 22px;
   line-height: 24px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Heading = styled.p<TextProps>`
   font-size: 20px;
   line-height: 27px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Paragraph = styled.p<TextProps>`
   font-size: 18px;
   line-height: 24px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Subtitle = styled.p<TextProps>`
   font-size: 16px;
   line-height: 18px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Caption = styled.p<TextProps>`
   font-size: 14px;
   line-height: 18px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const Microscopic = styled.p<TextProps>`
   font-size: 12px;
   line-height: 16px;
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  ${paddingMixin};
+  ${mixins};
 `
 
 const map = {

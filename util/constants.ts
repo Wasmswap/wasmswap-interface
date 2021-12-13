@@ -21,4 +21,10 @@ export const spaces = {
   24: '24px',
 }
 
+export const fonts = {
+  primary:
+    '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+  mono: '"JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+}
+
 export const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10000

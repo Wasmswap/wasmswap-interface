@@ -9,12 +9,14 @@ import { SelectorToggle } from './SelectorToggle'
 import { SelectorInput } from './SelectorInput'
 
 type TokenSelectorProps = {
+  readOnly?: boolean
   amount: number
   tokenSymbol: string
   onChange: (token: { tokenSymbol; amount }) => void
 }
 
 export const TokenSelector = ({
+  readOnly,
   tokenSymbol,
   amount,
   onChange,
@@ -47,7 +49,7 @@ export const TokenSelector = ({
           {!isTokenListShowing && (
             <SelectorInput
               amount={amount}
-              disabled={!tokenSymbol}
+              disabled={!tokenSymbol || readOnly}
               onAmountChange={(amount) => onChange({ tokenSymbol, amount })}
               onMaxAmountApply={() => {
                 onChange({ tokenSymbol, amount: availableAmount })
@@ -72,7 +74,7 @@ export const TokenSelector = ({
 }
 
 const StyledDivForWrapper = styled('div', {
-  padding: '10px 14px',
+  padding: '10px 30px 10px 14px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',

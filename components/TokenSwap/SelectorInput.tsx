@@ -24,11 +24,13 @@ export const SelectorInput = ({
 
   return (
     <>
-      <StyledButton onClick={onMaxAmountApply}>
-        <Text type="subtitle" variant="light">
-          Max
-        </Text>
-      </StyledButton>
+      {!disabled && (
+        <StyledButton onClick={onMaxAmountApply}>
+          <Text type="subtitle" variant="light">
+            Max
+          </Text>
+        </StyledButton>
+      )}
       <Text variant="bold">
         <StyledInput
           type="number"

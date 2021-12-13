@@ -105,6 +105,7 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,
+
       onError(error) {
         console.error(error)
       },

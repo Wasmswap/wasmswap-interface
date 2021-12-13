@@ -1,4 +1,4 @@
-import React, { ForwardedRef, forwardRef, useState } from 'react'
+import React, { ForwardedRef, forwardRef } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
 import { Text } from '../Text'
@@ -9,6 +9,8 @@ import { useRouter } from 'next/router'
 import { Address, Arrow, Open } from '../../icons'
 import { IconWrapper } from '../IconWrapper'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
+import { Logo } from '../../icons/Logo'
+import { LogoText } from '../../icons/LogoText'
 
 export function NavigationSidebar() {
   const { mutate: connectWallet } = useConnectWallet()
@@ -32,7 +34,10 @@ export function NavigationSidebar() {
     <StyledWrapper>
       <StyledMenuContainer>
         <Link href="/" passHref>
-          <AppLogo />
+          <StyledDivForLogo as="a">
+            <Logo data-logo="" width="37px" height="47px" />
+            <LogoText />
+          </StyledDivForLogo>
         </Link>
 
         <StyledConnectedWalletButton
@@ -84,21 +89,6 @@ export function NavigationSidebar() {
   )
 }
 
-const AppLogo = () => {
-  const [isLoaded, setIsLoaded] = useState(false)
-  return (
-    <StyledImageForLogo
-      onLoad={() => {
-        setIsLoaded(true)
-      }}
-      src="/junoswap.png"
-      title="Junoswap"
-      alt="Junoswap"
-      style={{ minHeight: isLoaded ? 'unset' : 42 }}
-    />
-  )
-}
-
 const TextAsLink = forwardRef(function TextAsLinkComponent(
   props,
   ref: ForwardedRef<any>
@@ -128,13 +118,19 @@ const StyledLink = styled(TextAsLink)`
   padding: 10px 10px;
   border-radius: 6px;
   background-color: ${(p) =>
-    p.$active ? 'rgba(25, 29, 32, 0.1)' : 'rgba(25, 29, 32, 0)'};
+    p.$active ? 'rgba(25, 29, 32, 0.05)' : 'rgba(25, 29, 32, 0)'};
   backdrop-filter: ${(p) => (p.$active ? 'blur(4px)' : 'unset')};
   transition: background-color 0.15s ease-out;
   display: flex;
   align-items: center;
+  &:not(&:last-child) {
+    margin-bottom: 2px;
+  }
   &:hover {
-    opacity: 1;
+    background-color: rgba(25, 29, 32, 0.1);
+  }
+  &:active {
+    background-color: rgba(25, 29, 32, 0.05);
   }
   & span {
     margin-left: 10px;
@@ -161,7 +157,13 @@ const StyledConnectedWalletButton = styled(ConnectedWalletButton)`
   margin-bottom: 8px;
 `
 
-const StyledImageForLogo = styled.img`
-  width: 80%;
-  margin-bottom: 18px;
+const StyledDivForLogo = styled.div`
+  display: grid;
+  grid-template-columns: 37px 1fr;
+  column-gap: 9px;
+  align-items: center;
+  padding-bottom: 16px;
+  & [data-logo] {
+    margin-bottom: 4px;
+  }
 `

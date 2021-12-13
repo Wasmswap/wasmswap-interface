@@ -55,17 +55,14 @@ const StyledElementForButton = styled('button', {
         textAlign: 'left',
         gridTemplateColumns: '16px 1fr 9px',
         color: colorTokens.black,
-        '&:hover': {
-          backgroundColor: colorTokens.black,
-          color: colorTokens.white,
-        },
       },
       false: {
         color: colorTokens.white,
         backgroundColor: colorTokens.black,
         '&:hover': {
           backgroundColor: colorTokens.gray,
-          color: colorTokens.black,
+          borderColor: colorTokens.gray,
+          color: colorTokens.white,
         },
       },
     },

@@ -4,16 +4,17 @@ import {
   MsgTransferEncodeObject,
   StdFee,
 } from '@cosmjs/stargate'
-import { Height } from '@cosmjs/stargate/build/codec/ibc/core/client/v1/client'
+import { Height } from 'cosmjs-types/ibc/core/client/v1/client'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import Long from 'long'
-import { MsgTransfer } from '@cosmjs/stargate/build/codec/ibc/applications/transfer/v1/tx'
+import { MsgTransfer } from 'cosmjs-types/ibc/applications/transfer/v1/tx'
 import { useMutation } from 'react-query'
 import dayjs from 'dayjs'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from '../../state/atoms/walletAtoms'
 import { TransactionKind } from './types'
 import { IBCAssetInfo } from '../../hooks/useIBCAssetInfo'
+import { defaultExecuteFee } from 'util/fees'
 
 type UseTransferAssetMutationArgs = {
   transactionKind: TransactionKind
@@ -73,7 +74,8 @@ export const useTransferAssetMutation = ({
         'transfer',
         tokenInfo.channel,
         undefined,
-        timeout
+        timeout,
+        defaultExecuteFee
       )
     }
 
@@ -89,7 +91,7 @@ export const useTransferAssetMutation = ({
         tokenInfo.juno_channel,
         undefined,
         timeout,
-        client.fees.exec,
+        defaultExecuteFee,
         '',
         client
       )

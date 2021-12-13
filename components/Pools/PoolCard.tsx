@@ -26,7 +26,7 @@ export const PoolCard = ({ tokenASymbol, tokenBSymbol }: PoolCardProps) => {
 
   const { totalLiquidity, myLiquidity } = useLiquidity({
     tokenSymbol: tokenBSymbol,
-    swapAddress: tokenB.swap_address,
+    swapAddress: (tokenB as any).swap_address,
     address,
   })
 

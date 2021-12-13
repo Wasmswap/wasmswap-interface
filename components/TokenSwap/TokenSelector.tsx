@@ -7,6 +7,7 @@ import { Union } from '../../icons/Union'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { SelectorToggle } from './SelectorToggle'
 import { SelectorInput } from './SelectorInput'
+import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
 
 type TokenSelectorProps = {
   readOnly?: boolean
@@ -29,15 +30,25 @@ export const TokenSelector = ({
     setTokenListShowing(false)
   })
 
+  const handleAmountChange = (amount) => onChange({ tokenSymbol, amount })
+
   return (
     <div ref={wrapperRef} data-token-selector="">
       <StyledDivForWrapper>
-        <SelectorToggle
-          availableAmount={availableAmount}
-          tokenSymbol={tokenSymbol}
-          isSelecting={isTokenListShowing}
-          onToggle={() => setTokenListShowing((isShowing) => !isShowing)}
-        />
+        <StyledDivForSelector>
+          <SelectorToggle
+            availableAmount={availableAmount}
+            tokenSymbol={tokenSymbol}
+            isSelecting={isTokenListShowing}
+            onToggle={() => setTokenListShowing((isShowing) => !isShowing)}
+          />
+          {!isTokenListShowing && tokenSymbol && !readOnly && (
+            <ConvenienceBalanceButtons
+              availableAmount={availableAmount}
+              onChange={handleAmountChange}
+            />
+          )}
+        </StyledDivForSelector>
         <StyledDivForAmountWrapper>
           {isTokenListShowing && (
             <IconWrapper
@@ -50,10 +61,7 @@ export const TokenSelector = ({
             <SelectorInput
               amount={amount}
               disabled={!tokenSymbol || readOnly}
-              onAmountChange={(amount) => onChange({ tokenSymbol, amount })}
-              onMaxAmountApply={() => {
-                onChange({ tokenSymbol, amount: availableAmount })
-              }}
+              onAmountChange={handleAmountChange}
             />
           )}
         </StyledDivForAmountWrapper>
@@ -78,6 +86,11 @@ const StyledDivForWrapper = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+})
+
+const StyledDivForSelector = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
 })
 
 const StyledDivForAmountWrapper = styled('div', {

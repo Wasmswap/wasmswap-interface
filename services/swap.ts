@@ -3,10 +3,10 @@ import {
   CosmWasmClient,
   MsgExecuteContractEncodeObject,
 } from '@cosmjs/cosmwasm-stargate'
-import { MsgExecuteContract } from '@cosmjs/cosmwasm-stargate/build/codec/cosmwasm/wasm/v1beta1/tx'
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { coin, StdFee } from '@cosmjs/launchpad'
-import { BroadcastTxResponse } from '@cosmjs/stargate'
+import { BroadcastTxResponse, StdFee, coin} from '@cosmjs/stargate'
+import { defaultExecuteFee } from 'util/fees'
 
 export interface swapNativeForTokenInput {
   nativeAmount: number
@@ -28,6 +28,7 @@ export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
     input.senderAddress,
     input.swapAddress,
     msg,
+    defaultExecuteFee,
     undefined,
     [coin(input.nativeAmount, 'ujuno')]
   )
@@ -54,7 +55,7 @@ export const swapTokenForNative = async (
     },
   }
   const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: MsgExecuteContract.fromPartial({
       sender: input.senderAddress,
       contract: input.tokenAddress,
@@ -69,7 +70,7 @@ export const swapTokenForNative = async (
     },
   }
   const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: MsgExecuteContract.fromPartial({
       sender: input.senderAddress,
       contract: input.swapAddress,
@@ -78,8 +79,8 @@ export const swapTokenForNative = async (
     }),
   }
   const fee: StdFee = {
-    amount: input.client.fees.exec.amount,
-    gas: (Number(input.client.fees.exec.gas) * 2).toString(),
+    amount: defaultExecuteFee.amount,
+    gas: (Number(defaultExecuteFee.gas) * 2).toString(),
   }
   return await input.client.signAndBroadcast(
     input.senderAddress,
@@ -110,7 +111,7 @@ export const swapTokenForToken = async (
     },
   }
   const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: MsgExecuteContract.fromPartial({
       sender: input.senderAddress,
       contract: input.tokenAddress,
@@ -126,7 +127,7 @@ export const swapTokenForToken = async (
     },
   }
   const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: MsgExecuteContract.fromPartial({
       sender: input.senderAddress,
       contract: input.swapAddress,
@@ -135,8 +136,8 @@ export const swapTokenForToken = async (
     }),
   }
   const fee: StdFee = {
-    amount: input.client.fees.exec.amount,
-    gas: (+input.client.fees.exec.gas * 3).toString(),
+    amount: defaultExecuteFee.amount,
+    gas: (+defaultExecuteFee.gas * 3).toString(),
   }
   return await input.client.signAndBroadcast(
     input.senderAddress,

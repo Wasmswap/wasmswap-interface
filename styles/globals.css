@@ -45,3 +45,15 @@ button {
   cursor: pointer;
   user-select: none;
 }
+
+input {
+  border: none;
+  outline: none;
+  display: block;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  background: transparent;
+  line-height: inherit;
+}

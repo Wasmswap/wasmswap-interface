@@ -1,14 +1,17 @@
 import React from 'react'
-import { SwapFormContent } from '../components/SwapForm/SwapFormContent'
-import { SwapFormFrame } from '../components/SwapForm/SwapFormFrame'
 import { AppLayout } from '../components/Layout/AppLayout'
+import { TokenSwap } from '../components/TokenSwap'
+import { PageHeader } from '../components/Layout/PageHeader'
 
 export default function Home() {
   return (
     <AppLayout>
-      <SwapFormFrame $expanded={false}>
-        <SwapFormContent />
-      </SwapFormFrame>
+      <PageHeader
+        title="Pools"
+        subtitle="Provide liquidity to the market by adding assets to the pools and
+        receive swap fees from each trade."
+      />
+      <TokenSwap />
     </AppLayout>
   )
 }

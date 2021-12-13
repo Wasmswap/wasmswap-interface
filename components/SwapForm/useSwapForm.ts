@@ -7,7 +7,7 @@ import {
   tokenANameState,
   tokenBNameState,
 } from '../../state/atoms/tokenAtoms'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
+import { TokenInfo, useTokenInfo } from '../../hooks/useTokenInfo'
 import { useTokenBalance } from '../../hooks/useTokenBalance'
 import { useTokenPrice } from '../../hooks/useTokenPrice'
 import { useEffect } from 'react'
@@ -92,17 +92,17 @@ export const useSwapForm = () => {
             price: tokenBPrice * 1000000,
             slippage: 0.1,
             senderAddress: address,
-            swapAddress: tokenBInfo.swap_address,
+            swapAddress: (tokenBInfo as TokenInfo).swap_address,
             client,
           })
-        } else if (tokenAInfo.token_address && !tokenBInfo.token_address) {
+        } else if (tokenAInfo?.token_address && !tokenBInfo?.token_address) {
           await swapTokenForNative({
             tokenAmount: tokenAmount * 1000000,
             price: tokenBPrice * 1000000,
             slippage: 0.1,
             senderAddress: address,
-            tokenAddress: tokenAInfo.token_address,
-            swapAddress: tokenAInfo.swap_address,
+            tokenAddress: (tokenAInfo as TokenInfo).token_address,
+            swapAddress: (tokenAInfo as TokenInfo).swap_address,
             client,
           })
         } else {
@@ -111,9 +111,9 @@ export const useSwapForm = () => {
             price: tokenBPrice * 1000000,
             slippage: 0.1,
             senderAddress: address,
-            tokenAddress: tokenAInfo.token_address,
-            swapAddress: tokenAInfo.swap_address,
-            outputSwapAddress: tokenBInfo.swap_address,
+            tokenAddress: (tokenAInfo as TokenInfo).token_address,
+            swapAddress: (tokenAInfo as TokenInfo).swap_address,
+            outputSwapAddress: (tokenBInfo as TokenInfo).swap_address,
             client,
           })
         }

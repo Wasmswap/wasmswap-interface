@@ -11,18 +11,20 @@
   "timestamp": "2021-06-12T00:00:00+00:00",
   "tokens": [
     {
+      "id": "juno-network",
       "chain_id": "lucina",
       "token_address": "",
       "swap_address": "",
       "symbol": "JUNO",
       "name": "Juno",
       "decimals": 6,
-      "logoURI": "",
+      "logoURI": "https://junochain.com/assets/logos/logo_512x512.png",
       "tags": ["native"],
       "native":true,
       "denom":"ujuno"
     },
     {
+      "id": "juno-network",
       "chain_id": "lucina",
       "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
       "swap_address": "juno1m3flnl63kv6l9f72lavetku63z083ms2kjan7c",
@@ -35,6 +37,7 @@
       "denom":"upood"
     },
     {
+      "id": "juno-network",
       "chain_id": "lucina",
       "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
       "swap_address": "juno153lxnqqktphyga7pu78xuzruc0sanxwyf45zmd",
@@ -47,6 +50,7 @@
       "denom":"ucrab"
     },
     {
+      "id": "juno-network",
       "chain_id": "lucina",
       "token_address": "juno1q3zr6asu48tjysqjeetwpes5evewsq6wf0kdat",
       "swap_address": "juno1ek5uy2uts6azjvynuvze2pj6psz580n8qnpc54",

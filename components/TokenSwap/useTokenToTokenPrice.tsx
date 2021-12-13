@@ -19,17 +19,17 @@ export const useTokenToTokenPrice = ({
       const toTokenInfo = getTokenInfo(tokenBSymbol)
 
       if (fromTokenInfo.symbol === 'JUNO') {
-        return await getNativeForTokenPrice({
+        return (await getNativeForTokenPrice({
           nativeAmount: tokenAmount * 1000000,
           swapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-        })
+        })) / 1000000
       } else if (fromTokenInfo.token_address && !toTokenInfo.token_address) {
-        return await getTokenForNativePrice({
+        return (await getTokenForNativePrice({
           tokenAmount: tokenAmount * 1000000,
           swapAddress: fromTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-        })
+        })) / 1000000
       }
 
       return await getTokenForTokenPrice({

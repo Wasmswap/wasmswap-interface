@@ -5,6 +5,7 @@ import {
   getTokenForTokenPrice,
 } from '../../services/swap'
 import { getTokenInfo } from '../../hooks/useTokenInfo'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../util/constants'
 
 export const useTokenToTokenPrice = ({
   tokenBSymbol,
@@ -40,6 +41,9 @@ export const useTokenToTokenPrice = ({
     },
     {
       enabled: Boolean(tokenBSymbol && tokenAmount && tokenAmount > 0),
+      refetchOnMount: 'always',
+      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+      refetchIntervalInBackground: true,
     }
   )
 

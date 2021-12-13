@@ -74,7 +74,7 @@ export const TokenSelector = ({
 }
 
 const StyledDivForWrapper = styled('div', {
-  padding: '10px 14px',
+  padding: '10px 30px 10px 14px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',

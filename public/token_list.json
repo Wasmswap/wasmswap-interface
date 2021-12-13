@@ -26,8 +26,8 @@
     {
       "id": "juno-network",
       "chain_id": "lucina",
-      "token_address": "juno1xj36t2tzczpuxdyr04efndq797dxpyvcxkvtfm",
-      "swap_address": "juno1m3flnl63kv6l9f72lavetku63z083ms2kjan7c",
+      "token_address": "juno1wl59k23zngj34l7d42y9yltask7rjlnxgccawc7ltrknp6n52fpsndlmj0",
+      "swap_address": "juno182nff4ttmvshn6yjlqj5czapfcav9434l2qzz8aahf5pxnyd33tstk25ur",
       "symbol": "POOD",
       "name": "Poodle Coin",
       "decimals": 6,
@@ -39,8 +39,8 @@
     {
       "id": "juno-network",
       "chain_id": "lucina",
-      "token_address": "juno15axtalhkngq6pa9shdlrjsnf4t8pz25egw5rq5",
-      "swap_address": "juno153lxnqqktphyga7pu78xuzruc0sanxwyf45zmd",
+      "token_address": "juno14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skjuwg8",
+      "swap_address": "juno1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrq68ev2p",
       "symbol": "CRAB",
       "name": "Crab Coin",
       "decimals": 6,
@@ -52,8 +52,8 @@
     {
       "id": "juno-network",
       "chain_id": "lucina",
-      "token_address": "juno1q3zr6asu48tjysqjeetwpes5evewsq6wf0kdat",
-      "swap_address": "juno1ek5uy2uts6azjvynuvze2pj6psz580n8qnpc54",
+      "token_address": "juno1yw4xvtc43me9scqfr2jr2gzvcxd3a9y4eq7gaukreugw2yd2f8ts9z8cq8",
+      "swap_address": "juno1hulx7cgvpfcvg83wk5h96sedqgn72n026w6nl47uht554xhvj9ns263mx9",
       "symbol": "DAO",
       "name": "DAO Coin",
       "decimals": 6,

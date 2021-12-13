@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { Text } from './Text'
-import { resetStylesForButton } from './Button'
 import { colorTokens } from '../util/constants'
 
 export const FooterBar = () => (
@@ -66,7 +65,6 @@ const StyledRow = styled.div`
 `
 
 const StyledLink = styled(Text).attrs(() => ({ variant: 'light', as: 'a' }))`
-  ${resetStylesForButton};
   color: ${colorTokens.gray};
   transition: opacity 0.1s ease-out, color 0.1s ease-out;
   padding: 0 10px;

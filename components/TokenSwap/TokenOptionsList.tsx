@@ -71,13 +71,17 @@ const StyledDivForRow = styled('div', {
   userSelect: 'none',
   cursor: 'pointer',
   transition: 'background-color 0.1s ease-out',
+  marginBottom: 5,
   '&:hover': {
     backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  },
+  '&:last-child': {
+    marginBottom: 0,
   },
   variants: {
     active: {
       true: {
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        backgroundColor: 'rgba(25, 29, 32, 0.05)',
       },
       false: {
         backgroundColor: 'rgba(25, 29, 32, 0)',

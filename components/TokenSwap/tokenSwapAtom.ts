@@ -22,7 +22,9 @@ export const tokenSwapAtom = atom<[TokenItemState, TokenItemState]>({
       onSet((newValue, oldValue) => {
         const [tokenA, tokenB] = newValue
         if (tokenA.tokenSymbol === tokenB.tokenSymbol) {
-          setSelf([oldValue[1], oldValue[0]])
+          requestAnimationFrame(() => {
+            setSelf([oldValue[1], oldValue[0]])
+          })
         }
       })
     },

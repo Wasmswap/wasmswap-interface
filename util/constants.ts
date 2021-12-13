@@ -8,6 +8,7 @@ export const colorTokens = {
   secondaryText: 'rgba(25, 29, 32, 0.75)',
   bodyText: 'rgba(25, 29, 32, 0.95)',
   tertiaryText: 'rgba(25, 29, 32, 0.6)',
+  disabled: '#858585',
 }
 
 export const spaces = {

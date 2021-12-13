@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import IBCAssetList from '../public/ibc_assets.json'
 
 export type IBCAssetInfo = {
+  id: string
   name: string
   symbol: string
   chain_id: string

@@ -3,6 +3,7 @@ import TokenList from '../public/token_list.json'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
 
 export type TokenInfo = {
+  id: string
   chain_id: string
   token_address: string
   swap_address: string

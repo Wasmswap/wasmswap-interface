@@ -1,6 +1,7 @@
 {
   "tokens": [
     {
+      "id": "cosmos",
       "name": "Atom",
       "symbol": "ATOM",
       "chain_id": "cosmoshub-4",
@@ -11,6 +12,7 @@
       "logoURI": "https://cryptologos.cc/logos/cosmos-atom-logo.svg?v=014"
     },
     {
+      "id": "terrausd",
       "name": "UST",
       "symbol": "UST",
       "chain_id": "terra-1",

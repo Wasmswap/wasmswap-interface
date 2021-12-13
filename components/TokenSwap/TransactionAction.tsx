@@ -63,12 +63,12 @@ export const TransactionAction = ({
         </Text>
       </StyledDivForInfo>
       <Button
+        type={status === WalletStatusType.connected ? 'primary' : 'disabled'}
         disabled={
-          status !== WalletStatusType.connected ||
           transactionStatus === 'EXECUTING_SWAP' ||
           !tokenB.tokenSymbol ||
           !tokenA.tokenSymbol ||
-          tokenA.amount <= 0
+          (status === WalletStatusType.connected && tokenA.amount <= 0)
         }
         onClick={
           transactionStatus !== 'EXECUTING_SWAP'

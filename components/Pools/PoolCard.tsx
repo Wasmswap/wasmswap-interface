@@ -42,7 +42,7 @@ export const PoolCard = ({
   const [[junoPrice]] = useTokenDollarValue(['JUNO'])
 
   return (
-    <Link href={`/pools/${tokenAddress}`} passHref>
+    <Link href={`/pools/${poolId}`} passHref>
       <StyledLinkForCard>
         <>
           <StyledDivForRowWrapper>

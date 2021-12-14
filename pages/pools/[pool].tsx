@@ -26,7 +26,7 @@ export default function Pool() {
 
   const [[junoPrice]] = useTokenDollarValue(['JUNO'])
   const tokenInfo = useMemo(
-    () => tokenList.find(({ token_address }) => token_address === pool),
+    () => tokenList.find(({ pool_id }) => pool_id === +pool),
     [pool]
   )
 

@@ -100,6 +100,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         requestAnimationFrame(onRequestClose)
       },
       onError(error) {
+        console.log(error)
         toast.error(
           `Couldn't ${
             isAddingLiquidity ? 'Add' : 'Remove'

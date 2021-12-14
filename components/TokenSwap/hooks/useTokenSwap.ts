@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 import {
-  swapNativeForToken,
-  swapTokenForNative,
+  swapToken1ForToken2,
+  swapToken2ForToken1,
   swapTokenForToken,
 } from '../../../services/swap'
 import { getTokenInfo } from '../../../hooks/useTokenInfo'
@@ -37,7 +37,7 @@ export const useTokenSwap = ({
       setTransactionState('EXECUTING_SWAP')
       try {
         if (tokenASymbol === 'JUNO') {
-          await swapNativeForToken({
+          await swapToken1ForToken2({
             nativeAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,
             slippage: 0.1,
@@ -45,14 +45,16 @@ export const useTokenSwap = ({
             swapAddress: tokenBInfo.swap_address,
             client,
           })
-        } else if (tokenAInfo?.token_address && !tokenBInfo?.token_address) {
-          await swapTokenForNative({
+        } else if (tokenBSymbol === 'JUNO') {
+          await swapToken2ForToken1({
             tokenAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,
             slippage: 0.1,
             senderAddress: address,
             tokenAddress: tokenAInfo.token_address,
+            tokenDenom: tokenAInfo.denom,
             swapAddress: tokenAInfo.swap_address,
+            token2_native: tokenAInfo.native,
             client,
           })
         } else {
@@ -63,6 +65,8 @@ export const useTokenSwap = ({
             senderAddress: address,
             tokenAddress: tokenAInfo.token_address,
             swapAddress: tokenAInfo.swap_address,
+            tokenNative: tokenAInfo.native,
+            tokenDenom: tokenAInfo.denom,
             outputSwapAddress: tokenBInfo.swap_address,
             client,
           })

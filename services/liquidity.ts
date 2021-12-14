@@ -56,12 +56,11 @@ export const addLiquidity = async (
     amount: defaultExecuteFee.amount,
     gas: (Number(defaultExecuteFee.gas) * 2).toString(),
   }
-  const executeAddLiquidity = await input.client.signAndBroadcast(
+  return await input.client.signAndBroadcast(
     input.senderAddress,
     [executeContractMsg1, executeContractMsg2],
     fee
   )
-  return executeAddLiquidity
 }
 
 export type RemoveLiquidityInput = {
@@ -82,7 +81,7 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
       min_token: `${input.minToken}`,
     },
   }
-  const execute = await input.client.execute(
+  return await input.client.execute(
     input.senderAddress,
     input.swapAddress,
     msg,
@@ -90,23 +89,22 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
     undefined,
     []
   )
-  return execute
 }
 
 export type GetLiquidityBalanceInput = {
   address: string
-  swapAddress: string
+  tokenAddress: string
   rpcEndpoint: string
 }
 
 export const getLiquidityBalance = async ({
   rpcEndpoint,
-  swapAddress,
+  tokenAddress,
   address,
 }: GetLiquidityBalanceInput) => {
   try {
     const client = await CosmWasmClient.connect(rpcEndpoint)
-    const query = await client.queryContractSmart(swapAddress, {
+    const query = await client.queryContractSmart(tokenAddress, {
       balance: { address },
     })
     console.log({

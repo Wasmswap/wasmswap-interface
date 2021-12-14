@@ -15,6 +15,7 @@ import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenT
 import { useLiquidity } from '../../hooks/useLiquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../../state/atoms/walletAtoms'
+import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
 
 export default function Pool() {
   const {
@@ -23,6 +24,7 @@ export default function Pool() {
 
   const [isDialogShowing, setIsDialogShowing] = useState(false)
 
+  const [[tokenAPrice]] = useTokenDollarValue(['JUNO'])
   const tokenInfo = useMemo(
     () => tokenList.find(({ token_address }) => token_address === pool),
     [pool]
@@ -35,7 +37,7 @@ export default function Pool() {
   })
 
   const { address } = useRecoilValue(walletState)
-  const { myLiquidity, myLPBalance, totalLiquidity, isLoading } = useLiquidity({
+  const {totalLiquidityCoins, myLiquidityCoins, myToken1Reserve, myToken2Reserve, token1_reserve, isLoading } = useLiquidity({
     tokenSymbol: tokenInfo?.symbol,
     swapAddress: tokenInfo?.swap_address,
     address,
@@ -123,7 +125,7 @@ export default function Pool() {
           </StyledElementForLiquidity>
           <StyledElementForLiquidity kind="row">
             <Text type="title3" variant="bold">
-              ${totalLiquidity}
+              ${(token1_reserve / 1000000) * tokenAPrice * 2}
             </Text>
             <Text type="title3" variant="bold">
               159%
@@ -144,8 +146,11 @@ export default function Pool() {
           </Text>
           <StyledDivForCards>
             <PoolAvailableLiquidityCard
-              myLiquidity={myLiquidity}
-              totalLiquidity={totalLiquidity}
+              myLiquidity={myLiquidityCoins}
+              totalLiquidity={totalLiquidityCoins}
+              myToken1Reserve={myToken1Reserve}
+              myToken2Reserve={myToken2Reserve}
+              token1DollarValue={tokenAPrice}
               onButtonClick={() => setIsDialogShowing(true)}
             />
             <PoolBondedLiquidityCard />

@@ -7,6 +7,9 @@ export const PoolAvailableLiquidityCard = ({
   onButtonClick,
   myLiquidity,
   totalLiquidity,
+  myToken1Reserve,
+  myToken2Reserve,
+  token1DollarValue,
 }) => {
   return (
     <StyledElementForCardLayout kind="wrapper">
@@ -19,24 +22,24 @@ export const PoolAvailableLiquidityCard = ({
         >
           {typeof myLiquidity === 'number'
             ? `You own ${formatTokenBalance(
-                myLiquidity / totalLiquidity
+                myLiquidity / totalLiquidity * 100
               )}% of the pool`
             : 'Your liquidity'}
         </Text>
-        <StyledTextForAmount>${myLiquidity || '0.00'}</StyledTextForAmount>
+        <StyledTextForAmount>${(myToken1Reserve / 1000000) * token1DollarValue * 2 || '0.00'}</StyledTextForAmount>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
         <StyledElementForTokens kind="wrapper">
           <StyledElementForTokens kind="element">
             <StyledImageForToken src="/crab.png" />
             <Text color="bodyText" type="microscopic">
-              325 juno
+              {myToken1Reserve / 1000000} juno
             </Text>
           </StyledElementForTokens>
           <StyledElementForTokens kind="element">
             <StyledImageForToken src="/crab.png" />
             <Text color="bodyText" type="microscopic">
-              577 atom
+              {myToken2Reserve / 1000000} atom
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>

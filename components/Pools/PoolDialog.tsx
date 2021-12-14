@@ -32,7 +32,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     address: address,
   })
 
-  const { data: { token_reserve, native_reserve, lp_token_supply } = {} } =
+  const { data: { token2_reserve, token1_reserve, lp_token_supply } = {} } =
     useQuery(
       `swapInfo/${tokenInfo.swap_address}`,
       async () => {
@@ -131,12 +131,12 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
 
   const handleTokenAAmountChange = (val: number) => {
     setTokenAAmount(val)
-    setTokenBAmount((Number(token_reserve) / Number(native_reserve)) * val)
+    setTokenBAmount((Number(token2_reserve) / Number(token1_reserve)) * val)
   }
 
   const handleTokenBAmountChange = (val: number) => {
     setTokenBAmount(val)
-    setTokenAAmount((Number(native_reserve) / Number(token_reserve)) * val)
+    setTokenAAmount((Number(token1_reserve) / Number(token2_reserve)) * val)
   }
 
   const [isAddingLiquidity, setAddingLiquidity] = useState(true)
@@ -226,13 +226,13 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
             <Text>
               Juno:{' '}
               {balanceFormatter.format(
-                ((myLPBalance / +lp_token_supply) * +native_reserve) / 1000000
+                ((myLPBalance / +lp_token_supply) * +token1_reserve) / 1000000
               )}
             </Text>
             <Text>
               {tokenInfo.symbol}:{' '}
               {balanceFormatter.format(
-                ((myLPBalance / +lp_token_supply) * +token_reserve) / 1000000
+                ((myLPBalance / +lp_token_supply) * +token2_reserve) / 1000000
               )}
             </Text>
           </StyledDivForLiquiditySummary>

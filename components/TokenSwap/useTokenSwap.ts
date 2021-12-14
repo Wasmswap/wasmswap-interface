@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify'
 import {
-  swapNativeForToken,
-  swapTokenForNative,
+  swapToken1ForToken2,
+  swapToken2ForToken1,
   swapTokenForToken,
 } from '../../services/swap'
 import { getTokenInfo } from '../../hooks/useTokenInfo'
@@ -37,7 +37,7 @@ export const useTokenSwap = ({
       setTransactionState('EXECUTING_SWAP')
       try {
         if (tokenASymbol === 'JUNO') {
-          await swapNativeForToken({
+          await swapToken1ForToken2({
             nativeAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,
             slippage: 0.1,
@@ -46,7 +46,7 @@ export const useTokenSwap = ({
             client,
           })
         } else if (tokenAInfo?.token_address && !tokenBInfo?.token_address) {
-          await swapTokenForNative({
+          await swapToken2ForToken1({
             tokenAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,
             slippage: 0.1,

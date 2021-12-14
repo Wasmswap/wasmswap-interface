@@ -8,7 +8,7 @@ import { toUtf8 } from '@cosmjs/encoding'
 import { BroadcastTxResponse, StdFee, coin } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 
-export interface swapNativeForTokenInput {
+export interface swapToken1ForToken2Input {
   nativeAmount: number
   price: number
   slippage: number
@@ -17,7 +17,7 @@ export interface swapNativeForTokenInput {
   client: SigningCosmWasmClient
 }
 
-export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
+export const swapToken1ForToken2 = async (input: swapToken1ForToken2Input) => {
   const minToken = Math.floor(input.price * (1 - input.slippage))
   const msg = {
     swap_token1_for_token2: {
@@ -35,7 +35,7 @@ export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
   )
 }
 
-export interface swapTokenForNativeInput {
+export interface swapToken2ForToken1Input {
   tokenAmount: number
   price: number
   slippage: number
@@ -45,8 +45,8 @@ export interface swapTokenForNativeInput {
   client: SigningCosmWasmClient
 }
 
-export const swapTokenForNative = async (
-  input: swapTokenForNativeInput
+export const swapToken2ForToken1 = async (
+  input: swapToken2ForToken1Input
 ): Promise<BroadcastTxResponse> => {
   const minNative = Math.floor(input.price * (1 - input.slippage))
   let msg1 = {
@@ -147,14 +147,14 @@ export const swapTokenForToken = async (
   )
 }
 
-export interface getNativeForTokenPriceInput {
+export interface getToken1ForToken2PriceInput {
   nativeAmount: number
   swapAddress: string
   rpcEndpoint: string
 }
 
-export const getNativeForTokenPrice = async (
-  input: getNativeForTokenPriceInput
+export const getToken1ForToken2Price = async (
+  input: getToken1ForToken2PriceInput
 ) => {
   try {
     const client = await CosmWasmClient.connect(input.rpcEndpoint)
@@ -169,14 +169,14 @@ export const getNativeForTokenPrice = async (
   }
 }
 
-export interface getTokenForNativePriceInput {
+export interface getToken2ForToken1PriceInput {
   tokenAmount: number
   swapAddress: string
   rpcEndpoint: string
 }
 
-export const getTokenForNativePrice = async (
-  input: getTokenForNativePriceInput
+export const getToken2ForToken1Price = async (
+  input: getToken2ForToken1PriceInput
 ) => {
   try {
     const client = await CosmWasmClient.connect(input.rpcEndpoint)
@@ -202,13 +202,13 @@ export const getTokenForTokenPrice = async (
   input: getTokenForTokenPriceInput
 ) => {
   try {
-    const nativePrice = await getTokenForNativePrice({
+    const nativePrice = await getToken2ForToken1Price({
       tokenAmount: input.tokenAmount,
       swapAddress: input.swapAddress,
       rpcEndpoint: input.rpcEndpoint,
     })
 
-    return getNativeForTokenPrice({
+    return getToken1ForToken2Price({
       nativeAmount: nativePrice,
       swapAddress: input.outputSwapAddress,
       rpcEndpoint: input.rpcEndpoint,

@@ -6,6 +6,7 @@ import { useLiquidity } from '../../hooks/useLiquidity'
 import { styled } from '@stitches/react'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 import Link from 'next/link'
+import {useTokenDollarValue} from "../../hooks/useTokenDollarValue";
 
 type PoolCardProps = {
   tokenASymbol: string
@@ -13,7 +14,7 @@ type PoolCardProps = {
   tokenAddress: string
 }
 
-const parseCurrency = (value: number | string) =>
+export const parseCurrency = (value: number | string) =>
   Number(value).toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -29,13 +30,14 @@ export const PoolCard = ({
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const { totalLiquidity, myLiquidity } = useLiquidity({
+  const { token1_reserve, myLiquidity } = useLiquidity({
     tokenSymbol: tokenBSymbol,
     swapAddress: (tokenB as any).swap_address,
     address,
   })
-
   const hasProvidedLiquidity = typeof myLiquidity === 'number'
+
+  const [[junoPrice]] = useTokenDollarValue(['JUNO'])
 
   return (
     <Link href={`/pools/${tokenAddress}`} passHref>
@@ -83,7 +85,7 @@ export const PoolCard = ({
                 </StyledTextForSubtitle>
               </StyledDivForRow>
               <StyledDivForRow>
-                <Text>{parseCurrency(totalLiquidity)}</Text>
+                <Text>{parseCurrency(token1_reserve / 1000000 * junoPrice * 2)}</Text>
                 <Text>150%</Text>
               </StyledDivForRow>
             </StyledDivForRowWrapper>

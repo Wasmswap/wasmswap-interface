@@ -2,6 +2,7 @@ import { styled } from '@stitches/react'
 import { Text } from '../Text'
 import { Button } from '../Button'
 import { formatTokenBalance } from '../../util/conversion'
+import {parseCurrency} from "./PoolCard";
 
 export const PoolAvailableLiquidityCard = ({
   onButtonClick,
@@ -26,7 +27,7 @@ export const PoolAvailableLiquidityCard = ({
               )}% of the pool`
             : 'Your liquidity'}
         </Text>
-        <StyledTextForAmount>${(myToken1Reserve / 1000000) * token1DollarValue * 2 || '0.00'}</StyledTextForAmount>
+        <StyledTextForAmount>{parseCurrency((myToken1Reserve / 1000000) * token1DollarValue * 2 || '0.00')}</StyledTextForAmount>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
         <StyledElementForTokens kind="wrapper">

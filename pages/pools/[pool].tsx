@@ -24,7 +24,7 @@ export default function Pool() {
 
   const [isDialogShowing, setIsDialogShowing] = useState(false)
 
-  const [[tokenAPrice]] = useTokenDollarValue(['JUNO'])
+  const [[junoPrice]] = useTokenDollarValue(['JUNO'])
   const tokenInfo = useMemo(
     () => tokenList.find(({ token_address }) => token_address === pool),
     [pool]
@@ -125,7 +125,7 @@ export default function Pool() {
           </StyledElementForLiquidity>
           <StyledElementForLiquidity kind="row">
             <Text type="title3" variant="bold">
-              ${(token1_reserve / 1000000) * tokenAPrice * 2}
+              ${(token1_reserve / 1000000) * junoPrice * 2}
             </Text>
             <Text type="title3" variant="bold">
               159%
@@ -150,7 +150,7 @@ export default function Pool() {
               totalLiquidity={totalLiquidityCoins}
               myToken1Reserve={myToken1Reserve}
               myToken2Reserve={myToken2Reserve}
-              token1DollarValue={tokenAPrice}
+              token1DollarValue={junoPrice}
               onButtonClick={() => setIsDialogShowing(true)}
             />
             <PoolBondedLiquidityCard />

@@ -42,12 +42,6 @@ export const useLiquidity = ({ tokenSymbol, address, swapAddress }) => {
       ),
     }
   )
-  console.log("start");
-  console.log(+token1_reserve * (+myLiquidityCoins/+lp_token_supply))
-  console.log((+token1_reserve * (+myLiquidityCoins/+lp_token_supply)) / 1000000)
-
-  console.log(lp_token_supply)
-  console.log(myLiquidityCoins)
   return {
     totalLiquidityCoins: +lp_token_supply,
     myLiquidityCoins: +myLiquidityCoins,

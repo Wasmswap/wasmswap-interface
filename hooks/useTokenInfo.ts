@@ -21,3 +21,5 @@ export const getTokenInfo = (tokenSymbol: string): TokenInfo =>
 export const useTokenInfo = (tokenSymbol: string) => {
   return useMemo(() => getTokenInfo(tokenSymbol), [tokenSymbol])
 }
+
+export const tokenList: Array<TokenInfo> = TokenList.tokens

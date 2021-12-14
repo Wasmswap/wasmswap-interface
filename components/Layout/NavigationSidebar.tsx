@@ -95,14 +95,20 @@ const TextAsLink = forwardRef(function TextAsLinkComponent(
 })
 
 const StyledWrapper = styled.div`
-  position: sticky;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0 32px;
   background-color: #ffffff;
-  overflow: hidden;
+  overflow: auto;
   border-right: 1px solid #eaeaea;
+
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
 `
 
 const StyledMenuContainer = styled.div`

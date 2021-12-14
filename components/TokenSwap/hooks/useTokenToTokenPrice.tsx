@@ -15,8 +15,6 @@ export const useTokenToTokenPrice = ({
   const { data, isLoading } = useQuery(
     `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
     async (): Promise<number | undefined> => {
-      console.log('fetching stuff')
-
       const fromTokenInfo = getTokenInfo(tokenASymbol)
       const toTokenInfo = getTokenInfo(tokenBSymbol)
 

@@ -10,6 +10,7 @@ import Link from 'next/link'
 type PoolCardProps = {
   tokenASymbol: string
   tokenBSymbol: string
+  tokenAddress: string
 }
 
 const parseCurrency = (value: number | string) =>
@@ -18,7 +19,11 @@ const parseCurrency = (value: number | string) =>
     currency: 'USD',
   })
 
-export const PoolCard = ({ tokenASymbol, tokenBSymbol }: PoolCardProps) => {
+export const PoolCard = ({
+  tokenASymbol,
+  tokenBSymbol,
+  tokenAddress,
+}: PoolCardProps) => {
   const { address } = useRecoilValue(walletState)
 
   const tokenA = useTokenInfo(tokenASymbol)
@@ -33,7 +38,7 @@ export const PoolCard = ({ tokenASymbol, tokenBSymbol }: PoolCardProps) => {
   const hasProvidedLiquidity = typeof myLiquidity === 'number'
 
   return (
-    <Link href="/pools/ffa94571-8425-4de1-99cb-a4e99fd3e90f" passHref>
+    <Link href={`/pools/${tokenAddress}`} passHref>
       <StyledLinkForCard>
         <>
           <StyledDivForRowWrapper>

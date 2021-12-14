@@ -29,6 +29,8 @@ const StyledWrapper = styled.div`
 `
 
 const StyledContainer = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -39,7 +41,7 @@ const StyledContainer = styled.div`
 `
 
 const StyledSpringBottom = styled.img`
-  position: absolute;
+  position: fixed;
   right: 0;
   bottom: 0;
   width: 35%;

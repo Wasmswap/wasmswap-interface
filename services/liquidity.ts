@@ -109,6 +109,9 @@ export const getLiquidityBalance = async ({
     const query = await client.queryContractSmart(swapAddress, {
       balance: { address },
     })
+    console.log({
+      query,
+    })
     return query.balance
   } catch (e) {
     console.error('Cannot get liquidity balance:', e)

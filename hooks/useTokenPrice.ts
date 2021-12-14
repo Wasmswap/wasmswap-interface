@@ -22,7 +22,7 @@ export const useTokenPrice = (
           swapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })
-      } else if (fromTokenInfo.token_address && !toTokenInfo.token_address) {
+      } else if (toTokenInfo.symbol === 'JUNO') {
         return await getToken2ForToken1Price({
           tokenAmount: value * 1000000,
           swapAddress: fromTokenInfo.swap_address,

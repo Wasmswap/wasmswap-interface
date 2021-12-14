@@ -45,14 +45,16 @@ export const useTokenSwap = ({
             swapAddress: tokenBInfo.swap_address,
             client,
           })
-        } else if (tokenAInfo?.token_address && !tokenBInfo?.token_address) {
+        } else if (tokenBSymbol === 'JUNO') {
           await swapToken2ForToken1({
             tokenAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,
             slippage: 0.1,
             senderAddress: address,
             tokenAddress: tokenAInfo.token_address,
+            tokenDenom: tokenAInfo.denom,
             swapAddress: tokenAInfo.swap_address,
+            token2_native: tokenAInfo.native,
             client,
           })
         } else {

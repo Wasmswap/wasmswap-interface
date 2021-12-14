@@ -42,52 +42,66 @@ export interface swapToken2ForToken1Input {
   senderAddress: string
   swapAddress: string
   tokenAddress: string
+  tokenDenom: string
+  token2_native: boolean
   client: SigningCosmWasmClient
 }
 
 export const swapToken2ForToken1 = async (
   input: swapToken2ForToken1Input
-): Promise<BroadcastTxResponse> => {
+): Promise<any> => {
   const minNative = Math.floor(input.price * (1 - input.slippage))
-  let msg1 = {
-    increase_allowance: {
-      amount: `${input.tokenAmount}`,
-      spender: `${input.swapAddress}`,
-    },
-  }
-  const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.tokenAddress,
-      msg: toUtf8(JSON.stringify(msg1)),
-      funds: [],
-    }),
-  }
-  let msg2 = {
+  let swap_msg = {
     swap_token2_for_token1: {
       min_token1: `${minNative}`,
       token2_amount: `${input.tokenAmount}`,
     },
   }
-  const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.swapAddress,
-      msg: toUtf8(JSON.stringify(msg2)),
-      funds: [],
-    }),
+  if (input.token2_native) {
+    let msg1 = {
+      increase_allowance: {
+        amount: `${input.tokenAmount}`,
+        spender: `${input.swapAddress}`,
+      },
+    }
+    const executeContractMsg1: MsgExecuteContractEncodeObject = {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.tokenAddress,
+        msg: toUtf8(JSON.stringify(msg1)),
+        funds: [],
+      }),
+    }
+
+    const executeContractMsg2: MsgExecuteContractEncodeObject = {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.swapAddress,
+        msg: toUtf8(JSON.stringify(swap_msg)),
+        funds: [],
+      }),
+    }
+    const fee: StdFee = {
+      amount: defaultExecuteFee.amount,
+      gas: (Number(defaultExecuteFee.gas) * 2).toString(),
+    }
+    return await input.client.signAndBroadcast(
+      input.senderAddress,
+      [executeContractMsg1, executeContractMsg2],
+      fee
+    )
+  } else {
+    return await input.client.execute(
+      input.senderAddress,
+      input.swapAddress,
+      swap_msg,
+      defaultExecuteFee,
+      undefined,
+      [{amount: input.tokenAmount.toString(), denom: input.tokenDenom}]
+    )
   }
-  const fee: StdFee = {
-    amount: defaultExecuteFee.amount,
-    gas: (Number(defaultExecuteFee.gas) * 2).toString(),
-  }
-  return await input.client.signAndBroadcast(
-    input.senderAddress,
-    [executeContractMsg1, executeContractMsg2],
-    fee
-  )
 }
 
 export interface swapTokenForTokenInput {

@@ -67,6 +67,8 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
           tokenAddress: tokenInfo.token_address,
+          tokenDenom: tokenInfo.denom,
+          tokenNative: tokenInfo.native,
           client,
         })
       } else {

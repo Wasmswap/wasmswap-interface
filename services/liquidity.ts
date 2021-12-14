@@ -16,51 +16,66 @@ export type AddLiquidityInput = {
   senderAddress: string
   swapAddress: string
   tokenAddress: string
+  tokenDenom: string
+  tokenNative: boolean
   client: SigningCosmWasmClient
 }
 
 export const addLiquidity = async (
   input: AddLiquidityInput
-): Promise<BroadcastTxResponse> => {
-  let msg1 = {
-    increase_allowance: {
-      amount: `${input.maxToken}`,
-      spender: `${input.swapAddress}`,
-    },
-  }
-  const executeContractMsg1: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.tokenAddress,
-      msg: toUtf8(JSON.stringify(msg1)),
-      funds: [],
-    }),
-  }
-  let msg2 = {
+): Promise<any> => {
+  let add_liquidity_msg = {
     add_liquidity: {
-      max_token: `${input.maxToken}`,
+      token1_amount: `${input.nativeAmount}`,
+      max_token2: `${input.maxToken}`,
       min_liquidity: `${input.minLiquidity}`,
     },
   }
-  const executeContractMsg2: MsgExecuteContractEncodeObject = {
-    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-    value: MsgExecuteContract.fromPartial({
-      sender: input.senderAddress,
-      contract: input.swapAddress,
-      msg: toUtf8(JSON.stringify(msg2)),
-      funds: [coin(input.nativeAmount, input.nativeDenom)],
-    }),
+  if (!input.tokenNative) {
+    let msg1 = {
+      increase_allowance: {
+        amount: `${input.maxToken}`,
+        spender: `${input.swapAddress}`,
+      },
+    }
+    const executeContractMsg1: MsgExecuteContractEncodeObject = {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.tokenAddress,
+        msg: toUtf8(JSON.stringify(msg1)),
+        funds: [],
+      }),
+    }
+
+    const executeContractMsg2: MsgExecuteContractEncodeObject = {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.swapAddress,
+        msg: toUtf8(JSON.stringify(add_liquidity_msg)),
+        funds: [coin(input.nativeAmount, input.nativeDenom)],
+      }),
+    }
+    const fee: StdFee = {
+      amount: defaultExecuteFee.amount,
+      gas: (Number(defaultExecuteFee.gas) * 2).toString(),
+    }
+    return await input.client.signAndBroadcast(
+      input.senderAddress,
+      [executeContractMsg1, executeContractMsg2],
+      fee
+    )
+  } else {
+    return await input.client.execute(
+      input.senderAddress,
+      input.swapAddress,
+      add_liquidity_msg,
+      defaultExecuteFee,
+      undefined,
+      [{ amount: input.nativeAmount.toString(), denom: input.nativeDenom }]
+    )
   }
-  const fee: StdFee = {
-    amount: defaultExecuteFee.amount,
-    gas: (Number(defaultExecuteFee.gas) * 2).toString(),
-  }
-  return await input.client.signAndBroadcast(
-    input.senderAddress,
-    [executeContractMsg1, executeContractMsg2],
-    fee
-  )
 }
 
 export type RemoveLiquidityInput = {

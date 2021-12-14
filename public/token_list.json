@@ -61,6 +61,19 @@
       "tags": ["memecoin"],
       "native":false,
       "denom":"udao"
+    },
+    {
+      "id": "juno-network",
+      "chain_id": "lucina",
+      "token_address": "",
+      "swap_address": "juno1yg8930mj8pk288lmkjex0qz85mj8wgtns5uzwyn2hs25pwdnw42slx2lw6",
+      "symbol": "COSM",
+      "name": "Cosm",
+      "decimals": 6,
+      "logoURI": "",
+      "tags": ["memecoin"],
+      "native":true,
+      "denom":"ucosm"
     }
   ],
   "version": {

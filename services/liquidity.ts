@@ -80,8 +80,8 @@ export const addLiquidity = async (
 
 export type RemoveLiquidityInput = {
   amount: number
-  minNative: number
-  minToken: number
+  minToken1: number
+  minToken2: number
   senderAddress: string
   swapAddress: string
   tokenAddress: string
@@ -92,8 +92,8 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
   const msg = {
     remove_liquidity: {
       amount: `${input.amount}`,
-      min_native: `${input.minNative}`,
-      min_token: `${input.minToken}`,
+      min_token1: `${input.minToken1}`,
+      min_token2: `${input.minToken2}`,
     },
   }
   return await input.client.execute(

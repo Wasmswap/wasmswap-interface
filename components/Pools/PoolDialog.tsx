@@ -74,8 +74,8 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
       } else {
         return await removeLiquidity({
           amount: Math.floor((removeLiquidityPercent * myLPBalance) / 100),
-          minNative: 0,
-          minToken: 0,
+          minToken1: 0,
+          minToken2: 0,
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
           tokenAddress: tokenInfo.token_address,

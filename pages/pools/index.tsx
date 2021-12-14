@@ -16,7 +16,7 @@ export default function Pools() {
 
       <StyledDivForPoolsGrid>
         {TokenList.tokens
-          .filter((x) => x.token_address)
+          .filter((x) => x.symbol != "JUNO")
           .map((token, key) => (
             <PoolCard
               key={key}

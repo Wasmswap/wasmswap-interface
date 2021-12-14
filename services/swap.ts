@@ -20,8 +20,9 @@ export interface swapNativeForTokenInput {
 export const swapNativeForToken = async (input: swapNativeForTokenInput) => {
   const minToken = Math.floor(input.price * (1 - input.slippage))
   const msg = {
-    swap_native_for_token: {
-      min_token: `${minToken}`,
+    swap_token1_for_token2: {
+      token1_amount: `${input.nativeAmount}`,
+      min_token2: `${minToken}`,
     },
   }
   return await input.client.execute(
@@ -64,9 +65,9 @@ export const swapTokenForNative = async (
     }),
   }
   let msg2 = {
-    swap_token_for_native: {
-      min_native: `${minNative}`,
-      token_amount: `${input.tokenAmount}`,
+    swap_token2_for_token1: {
+      min_token1: `${minNative}`,
+      token2_amount: `${input.tokenAmount}`,
     },
   }
   const executeContractMsg2: MsgExecuteContractEncodeObject = {
@@ -158,11 +159,11 @@ export const getNativeForTokenPrice = async (
   try {
     const client = await CosmWasmClient.connect(input.rpcEndpoint)
     const query = await client.queryContractSmart(input.swapAddress, {
-      native_for_token_price: {
-        native_amount: `${input.nativeAmount}`,
+      token1_for_token2_price: {
+        token1_amount: `${input.nativeAmount}`,
       },
     })
-    return query.token_amount
+    return query.token2_amount
   } catch (e) {
     console.error('err(getNativeForTokenPrice):', e)
   }
@@ -180,11 +181,11 @@ export const getTokenForNativePrice = async (
   try {
     const client = await CosmWasmClient.connect(input.rpcEndpoint)
     const query = await client.queryContractSmart(input.swapAddress, {
-      token_for_native_price: {
-        token_amount: `${input.tokenAmount}`,
+      token2_for_token1_price: {
+        token2_amount: `${input.tokenAmount}`,
       },
     })
-    return query.native_amount
+    return query.token1_amount
   } catch (e) {
     console.error('error(getTokenForNativePrice):', e)
   }

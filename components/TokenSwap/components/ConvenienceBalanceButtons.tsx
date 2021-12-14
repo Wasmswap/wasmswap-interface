@@ -1,4 +1,4 @@
-import { Text } from '../Text'
+import { Text } from '../../Text'
 import React from 'react'
 import { styled } from '@stitches/react'
 

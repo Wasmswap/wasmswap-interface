@@ -38,7 +38,7 @@ export const ConnectedWalletButton = ({
           <IconWrapper icon={<Union />} onClick={onDisconnect} type="button" />
         </>
       ) : (
-        <Text type="subtitle" variant="light" color="inherit">
+        <Text type="subtitle" variant="normal" color="inherit">
           Connect Keplr
         </Text>
       )}

@@ -3,11 +3,11 @@ import {
   swapNativeForToken,
   swapTokenForNative,
   swapTokenForToken,
-} from '../../services/swap'
-import { getTokenInfo } from '../../hooks/useTokenInfo'
+} from '../../../services/swap'
+import { getTokenInfo } from '../../../hooks/useTokenInfo'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { transactionStatusState } from '../../state/atoms/transactionAtoms'
-import { walletState } from '../../state/atoms/walletAtoms'
+import { transactionStatusState } from '../../../state/atoms/transactionAtoms'
+import { walletState } from '../../../state/atoms/walletAtoms'
 
 export const useTokenSwap = ({
   tokenASymbol,

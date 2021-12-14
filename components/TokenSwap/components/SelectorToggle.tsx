@@ -1,10 +1,10 @@
-import { Text } from '../Text'
-import { IconWrapper } from '../IconWrapper'
-import { Chevron } from '../../icons/Chevron'
+import { Text } from '../../Text'
+import { IconWrapper } from '../../IconWrapper'
+import { Chevron } from '../../../icons/Chevron'
 import React from 'react'
-import { formatTokenBalance } from '../../util/conversion'
+import { formatTokenBalance } from '../../../util/conversion'
 import { styled } from '@stitches/react'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
+import { useTokenInfo } from '../../../hooks/useTokenInfo'
 
 type SelectorToggleProps = {
   isSelecting: boolean
@@ -26,7 +26,7 @@ export const SelectorToggle = ({
 
   return (
     <StyledDivForSelector
-      state={isSelecting ? 'selecting' : 'selected'}
+      state={isSelecting || !tokenSymbol ? 'selecting' : 'selected'}
       onClick={onToggle}
       role="button"
     >
@@ -35,7 +35,11 @@ export const SelectorToggle = ({
           <Text type="caption" variant="bold">
             Select a token
           </Text>
-          <IconWrapper size="16px" rotation="90deg" icon={<Chevron />} />
+          <IconWrapper
+            size="16px"
+            rotation={tokenSymbol ? '90deg' : '-90deg'}
+            icon={<Chevron />}
+          />
         </>
       )}
       {!isSelecting && hasTokenSelected && (
@@ -69,6 +73,7 @@ const StyledDivForSelector = styled('div', {
   transition: 'background-color .1s ease-out',
   maxWidth: 231,
   userSelect: 'none',
+  whiteSpace: 'pre',
   '&:hover': {
     backgroundColor: 'rgba(25, 29, 32, 0.1)',
   },

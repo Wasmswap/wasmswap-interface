@@ -3,9 +3,9 @@ import {
   getNativeForTokenPrice,
   getTokenForNativePrice,
   getTokenForTokenPrice,
-} from '../../services/swap'
-import { getTokenInfo } from '../../hooks/useTokenInfo'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../util/constants'
+} from '../../../services/swap'
+import { getTokenInfo } from '../../../hooks/useTokenInfo'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
 
 export const useTokenToTokenPrice = ({
   tokenBSymbol,
@@ -19,17 +19,21 @@ export const useTokenToTokenPrice = ({
       const toTokenInfo = getTokenInfo(tokenBSymbol)
 
       if (fromTokenInfo.symbol === 'JUNO') {
-        return (await getNativeForTokenPrice({
-          nativeAmount: tokenAmount * 1000000,
-          swapAddress: toTokenInfo.swap_address,
-          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-        })) / 1000000
+        return (
+          (await getNativeForTokenPrice({
+            nativeAmount: tokenAmount * 1000000,
+            swapAddress: toTokenInfo.swap_address,
+            rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+          })) / 1000000
+        )
       } else if (fromTokenInfo.token_address && !toTokenInfo.token_address) {
-        return (await getTokenForNativePrice({
-          tokenAmount: tokenAmount * 1000000,
-          swapAddress: fromTokenInfo.swap_address,
-          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-        })) / 1000000
+        return (
+          (await getTokenForNativePrice({
+            tokenAmount: tokenAmount * 1000000,
+            swapAddress: fromTokenInfo.swap_address,
+            rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+          })) / 1000000
+        )
       }
 
       return await getTokenForTokenPrice({

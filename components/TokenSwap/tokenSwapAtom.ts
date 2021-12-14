@@ -13,7 +13,7 @@ export const tokenSwapAtom = atom<[TokenItemState, TokenItemState]>({
       amount: 0,
     },
     {
-      tokenSymbol: 'ATOM',
+      tokenSymbol: null,
       amount: 0,
     },
   ],

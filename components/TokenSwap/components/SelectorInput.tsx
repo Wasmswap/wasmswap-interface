@@ -1,7 +1,7 @@
-import { Text } from '../Text'
+import { Text } from '../../Text'
 import React from 'react'
 import { styled } from '@stitches/react'
-import { formatTokenBalance } from '../../util/conversion'
+import { formatTokenBalance } from '../../../util/conversion'
 
 type SelectorInputProps = {
   amount: number

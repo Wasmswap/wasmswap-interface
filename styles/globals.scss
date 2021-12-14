@@ -1,4 +1,4 @@
-@import "fonts/Inter/index";
+@import "./fonts/Inter/index";
 @import "./fonts/JetBrainsMono/index";
 
 
@@ -7,7 +7,7 @@ body {
   background-color: #F5F5F5;
   padding: 0;
   margin: 0;
-  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   min-width: 320px;
   width: 100%;
   overflow-x: hidden;

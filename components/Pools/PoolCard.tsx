@@ -9,6 +9,7 @@ import Link from 'next/link'
 import {useTokenDollarValue} from "../../hooks/useTokenDollarValue";
 
 type PoolCardProps = {
+  poolId: number
   tokenASymbol: string
   tokenBSymbol: string
   tokenAddress: string
@@ -21,6 +22,7 @@ export const parseCurrency = (value: number | string) =>
   })
 
 export const PoolCard = ({
+  poolId,
   tokenASymbol,
   tokenBSymbol,
   tokenAddress,
@@ -55,7 +57,7 @@ export const PoolCard = ({
               />
             </StyledDivForTokenLogos>
             <Text type="caption" variant="normal">
-              Pool #1
+              Pool #{poolId}
             </Text>
             <StyledTextForTokenNames type="body" variant="normal">
               {tokenA.symbol} <span /> {tokenB.symbol}

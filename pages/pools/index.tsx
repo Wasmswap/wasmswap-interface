@@ -20,6 +20,7 @@ export default function Pools() {
           .map((token, key) => (
             <PoolCard
               key={key}
+              poolId={token.pool_id}
               tokenASymbol="JUNO"
               tokenBSymbol={token.symbol}
               tokenAddress={token.token_address}

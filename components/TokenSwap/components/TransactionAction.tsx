@@ -12,14 +12,12 @@ import { transactionStatusState } from '../../../state/atoms/transactionAtoms'
 import { Spinner } from '../../Spinner'
 
 type TransactionTipsProps = {
-  tokenAPrice?: number
-  tokenBPrice?: number
+  isPriceLoading?: boolean
   tokenToTokenPrice?: number
 }
 
 export const TransactionAction = ({
-  tokenAPrice,
-  tokenBPrice,
+  isPriceLoading,
   tokenToTokenPrice,
 }: TransactionTipsProps) => {
   const { status } = useRecoilValue(walletState)
@@ -32,7 +30,7 @@ export const TransactionAction = ({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
     tokenAmount: tokenA?.amount,
-    tokenToTokenPrice,
+    tokenToTokenPrice: tokenToTokenPrice || 0,
   })
 
   const handleSwapButtonClick = () => {
@@ -51,11 +49,19 @@ export const TransactionAction = ({
         </Text>
         <Text type="microscopic" variant="bold" color="disabled" font="mono">
           <>
-            {typeof tokenAPrice === 'number' &&
-              typeof tokenBPrice === 'number' && (
+            {Boolean(
+              !isPriceLoading &&
+                tokenA?.tokenSymbol &&
+                tokenB?.tokenSymbol &&
+                tokenToTokenPrice > 0
+            ) &&
+              Boolean(
+                typeof tokenA.amount === 'number' &&
+                  typeof tokenToTokenPrice === 'number'
+              ) && (
                 <>
                   1 {tokenA.tokenSymbol} ={' '}
-                  {formatTokenBalance(tokenAPrice / tokenBPrice)}{' '}
+                  {formatTokenBalance(tokenA.amount / tokenToTokenPrice)}{' '}
                   {tokenB.tokenSymbol}
                 </>
               )}
@@ -71,7 +77,7 @@ export const TransactionAction = ({
           (status === WalletStatusType.connected && tokenA.amount <= 0)
         }
         onClick={
-          transactionStatus !== 'EXECUTING_SWAP'
+          transactionStatus !== 'EXECUTING_SWAP' && !isPriceLoading
             ? handleSwapButtonClick
             : undefined
         }

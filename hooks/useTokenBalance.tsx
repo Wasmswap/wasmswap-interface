@@ -52,7 +52,7 @@ const mapIbcTokenToNative = (ibcToken?: IBCAssetInfo) => {
     return {
       ...ibcToken,
       native: true,
-      denom: ibcToken.denom,
+      denom: ibcToken.juno_denom,
     }
   }
   return undefined

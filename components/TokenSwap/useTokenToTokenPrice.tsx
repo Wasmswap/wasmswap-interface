@@ -31,12 +31,12 @@ export const useTokenToTokenPrice = ({
         })) / 1000000
       }
 
-      return await getTokenForTokenPrice({
+      return (await getTokenForTokenPrice({
         tokenAmount: tokenAmount * 1000000,
         swapAddress: fromTokenInfo.swap_address,
         outputSwapAddress: toTokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
-      })
+      })) / 1000000
     },
     {
       enabled: Boolean(tokenBSymbol && tokenAmount && tokenAmount > 0),

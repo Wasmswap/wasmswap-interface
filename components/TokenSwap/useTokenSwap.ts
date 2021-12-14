@@ -65,6 +65,8 @@ export const useTokenSwap = ({
             senderAddress: address,
             tokenAddress: tokenAInfo.token_address,
             swapAddress: tokenAInfo.swap_address,
+            tokenNative: tokenAInfo.native,
+            tokenDenom: tokenAInfo.denom,
             outputSwapAddress: tokenBInfo.swap_address,
             client,
           })

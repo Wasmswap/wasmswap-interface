@@ -1,6 +1,6 @@
-import { IconWrapper } from '../IconWrapper'
-import { Exchange } from '../../icons/Exchange'
-import { Text } from '../Text'
+import { IconWrapper } from '../../IconWrapper'
+import { Exchange } from '../../../icons/Exchange'
+import { Text } from '../../Text'
 import React from 'react'
 import { styled } from '@stitches/react'
 

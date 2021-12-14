@@ -4,36 +4,41 @@ import { Union } from '../icons/Union'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
 import { HTMLProps } from 'react'
+import { IconWrapper } from './IconWrapper'
 
 type ConnectedWalletButtonProps = Omit<
   HTMLProps<HTMLButtonElement>,
   'children' | 'type' | 'ref'
 > & {
   walletName?: string
-  onClick: () => void
+  onConnect: () => void
+  onDisconnect: () => void
+  connected: boolean
 }
 
 export const ConnectedWalletButton = ({
-  onClick,
+  onConnect,
+  connected,
+  onDisconnect,
   walletName,
   ...props
 }: ConnectedWalletButtonProps) => {
   return (
     <StyledElementForButton
       {...props}
-      onClick={onClick}
+      onClick={!connected ? onConnect : undefined}
       connected={Boolean(walletName)}
     >
-      {walletName ? (
+      {connected ? (
         <>
           <Wallet />
           <Text type="subtitle" variant="light" color="inherit">
             {walletName}
           </Text>
-          <Union />
+          <IconWrapper icon={<Union />} onClick={onDisconnect} type="button" />
         </>
       ) : (
-        <Text type="subtitle" variant="light" color="inherit">
+        <Text type="subtitle" variant="normal" color="inherit">
           Connect Keplr
         </Text>
       )}

@@ -1,16 +1,11 @@
-import nativeTokenList from '../../public/token_list.json'
-import externalTokenList from '../../public/ibc_assets.json'
-import { IBCAssetInfo } from '../../hooks/useIBCAssetInfo'
-import { TokenInfo } from '../../hooks/useTokenInfo'
 import { styled } from '@stitches/react'
-import { Text } from '../Text'
-import { formatTokenBalance } from '../../util/conversion'
-import { useTokenBalance } from '../../hooks/useTokenBalance'
+import nativeTokenList from '../../../public/token_list.json'
+import { TokenInfo } from '../../../hooks/useTokenInfo'
+import { Text } from '../../Text'
+import { formatTokenBalance } from '../../../util/conversion'
+import { useTokenBalance } from '../../../hooks/useTokenBalance'
 
-const tokenList: Array<IBCAssetInfo | TokenInfo> = [
-  ...(nativeTokenList.tokens as Array<TokenInfo>),
-  ...(externalTokenList.tokens as Array<IBCAssetInfo>),
-]
+const tokenList: Array<TokenInfo> = nativeTokenList.tokens as Array<TokenInfo>
 
 export const TokenOptionsList = ({ activeTokenSymbol, onSelect }) => {
   return (

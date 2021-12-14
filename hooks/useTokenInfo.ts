@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import TokenList from '../public/token_list.json'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
 
 export type TokenInfo = {
   id: string
@@ -20,8 +19,7 @@ export const getTokenInfo = (tokenSymbol: string): TokenInfo =>
   TokenList.tokens.find((x) => x.symbol === tokenSymbol)
 
 export const useTokenInfo = (tokenSymbol: string) => {
-  return useMemo(
-    () => getTokenInfo(tokenSymbol) || getIBCAssetInfo(tokenSymbol),
-    [tokenSymbol]
-  )
+  return useMemo(() => getTokenInfo(tokenSymbol), [tokenSymbol])
 }
+
+export const tokenList: Array<TokenInfo> = TokenList.tokens

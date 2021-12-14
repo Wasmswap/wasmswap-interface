@@ -25,8 +25,6 @@ export function NavigationSidebar() {
     })
   }
 
-  const hasWalletName = Boolean(key?.name)
-
   const { pathname } = useRouter()
   const getIsActive = (path) => pathname === path
 
@@ -41,10 +39,10 @@ export function NavigationSidebar() {
         </Link>
 
         <StyledConnectedWalletButton
-          onClick={
-            hasWalletName ? resetWalletConnection : () => connectWallet(null)
-          }
+          connected={Boolean(key?.name)}
           walletName={key?.name}
+          onConnect={() => connectWallet(null)}
+          onDisconnect={resetWalletConnection}
         />
 
         <Link href="/" passHref>
@@ -82,7 +80,9 @@ export function NavigationSidebar() {
         </Link>
       </StyledMenuContainer>
 
-      <StyledFooterText variant="light">Junoswap — 2021</StyledFooterText>
+      <StyledFooterText variant="light" color="tertiaryText">
+        Junoswap — v1.0/2021
+      </StyledFooterText>
     </StyledWrapper>
   )
 }
@@ -95,14 +95,20 @@ const TextAsLink = forwardRef(function TextAsLinkComponent(
 })
 
 const StyledWrapper = styled.div`
-  position: sticky;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 0 32px;
   background-color: #ffffff;
-  overflow: hidden;
+  overflow: auto;
   border-right: 1px solid #eaeaea;
+
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
 `
 
 const StyledMenuContainer = styled.div`

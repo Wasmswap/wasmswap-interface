@@ -8,21 +8,21 @@ $InterVersion: "3.19" !default;
 
 @font-face {
   font-family: "Inter";
-  @include fontdef("Bold");
+  @include fontdef("SemiBold");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Inter";
-  @include fontdef("Regular");
+  @include fontdef("Medium");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Inter";
-  @include fontdef("Light");
+  @include fontdef("Regular");
   font-weight: 400;
   font-style: normal;
 }

@@ -1,20 +1,20 @@
-import { TokenSelector } from './TokenSelector'
+import { TokenSelector } from './components/TokenSelector'
 import { useRecoilState } from 'recoil'
 import { tokenSwapAtom } from './tokenSwapAtom'
 import { styled } from '@stitches/react'
-import { TransactionTips } from './TransactionTips'
-import { TransactionAction } from './TransactionAction'
+import { TransactionTips } from './components/TransactionTips'
+import { TransactionAction } from './components/TransactionAction'
 import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
-import { useTokenToTokenPrice } from './useTokenToTokenPrice'
+import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
 
 export const TokenSwap = () => {
   const [[tokenA, tokenB], setTokenSwapState] = useRecoilState(tokenSwapAtom)
 
-  const [[tokenAPrice, tokenBPrice]] = useTokenDollarValue(
+  const [[tokenAPrice]] = useTokenDollarValue(
     [tokenA?.tokenSymbol, tokenB?.tokenSymbol].filter(Boolean)
   )
 
-  const [tokenPrice] = useTokenToTokenPrice({
+  const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
     tokenAmount: tokenA?.amount,
@@ -43,8 +43,7 @@ export const TokenSwap = () => {
         />
       </StyledDivForWrapper>
       <TransactionAction
-        tokenAPrice={tokenAPrice}
-        tokenBPrice={tokenBPrice}
+        isPriceLoading={isPriceLoading}
         tokenToTokenPrice={tokenPrice || 0}
       />
     </>

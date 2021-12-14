@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { colorTokens } from '../util/constants'
 import { HTMLProps, ReactNode } from 'react'
 
@@ -36,6 +36,22 @@ export const IconWrapper = ({
   </StyledIcon>
 )
 
+const buttonStyles = css`
+  cursor: pointer;
+  transition: box-shadow 0.1s ease-out, background-color 0.1s ease-out;
+  background-color: rgba(25, 29, 32, 0);
+  box-shadow: 0 0 0 0px rgba(25, 29, 32, 0);
+  border-radius: 50%;
+  &:hover {
+    background-color: rgba(25, 29, 32, 0.1);
+    box-shadow: 0 0 0 8px rgba(25, 29, 32, 0.1);
+  }
+  &:active {
+    background-color: rgba(25, 29, 32, 0.05);
+    box-shadow: 0 0 0 8px rgba(25, 29, 32, 0.05);
+  }
+`
+
 const StyledIcon = styled.div`
   display: flex;
   justify-content: center;
@@ -48,5 +64,5 @@ const StyledIcon = styled.div`
   border-radius: ${(p) => (p.$rounded ? '50%' : 'unset')};
   transform: ${(p) => (p.$rotation ? `rotateZ(${p.$rotation})` : 'unset')};
   fill: currentColor;
-  cursor: ${(p) => (p.$isButton ? 'pointer' : 'auto')};
+  ${(p) => (p.$isButton ? buttonStyles : undefined)}
 `

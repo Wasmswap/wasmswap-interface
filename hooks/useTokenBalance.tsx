@@ -5,33 +5,32 @@ import { getTokenInfo } from './useTokenInfo'
 import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { getIBCAssetInfo, IBCAssetInfo } from './useIBCAssetInfo'
 
 async function fetchTokenBalance({
   client,
-  tokenSymbol,
+  token: { denom, native, token_address },
   address,
 }: {
   client: SigningCosmWasmClient
-  tokenSymbol: string
+  token: {
+    denom?: string
+    token_address?: string
+    native?: boolean
+  }
   address: string
 }) {
-  const tokenInfo = getTokenInfo(tokenSymbol)
-  const ibcAssetInfo = getIBCAssetInfo(tokenSymbol)
-
-  if (!tokenInfo && !ibcAssetInfo) {
+  if (!denom && !token_address) {
     throw new Error(
-      `Provided tokenSymbol: ${tokenSymbol} doesn't exist on the platform.`
+      `No denom or token_address were provided to fetch the balance.`
     )
   }
 
   /*
    * if this is a native asset or an ibc asset that has juno_denom
    *  */
-  if (tokenInfo?.native || ibcAssetInfo?.denom) {
-    const denom = tokenInfo?.native ? tokenInfo.denom : ibcAssetInfo.juno_denom
-
+  if (native) {
     const coin = await client.getBalance(address, denom)
     const amount = coin ? Number(coin.amount) : 0
     return amount / 1000000
@@ -40,13 +39,23 @@ async function fetchTokenBalance({
   /*
    * everything else
    *  */
-  const { token_address } = tokenInfo
   if (token_address) {
     const balance = await CW20(client).use(token_address).balance(address)
     return Number(balance) / 1000000
   }
 
   return 0
+}
+
+const mapIbcTokenToNative = (ibcToken?: IBCAssetInfo) => {
+  if (ibcToken?.juno_denom) {
+    return {
+      ...ibcToken,
+      native: true,
+      denom: ibcToken.juno_denom,
+    }
+  }
+  return undefined
 }
 
 export const useTokenBalance = (tokenSymbol: string) => {
@@ -58,7 +67,10 @@ export const useTokenBalance = (tokenSymbol: string) => {
       return await fetchTokenBalance({
         client,
         address,
-        tokenSymbol,
+        token:
+          getTokenInfo(tokenSymbol) ||
+          mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
+          {},
       })
     },
     {
@@ -88,7 +100,10 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
           fetchTokenBalance({
             client,
             address,
-            tokenSymbol,
+            token:
+              getTokenInfo(tokenSymbol) ||
+              mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
+              {},
           })
         )
       )
@@ -102,6 +117,7 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
       enabled: Boolean(
         status === WalletStatusType.connected && tokenSymbols?.length
       ),
+
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,

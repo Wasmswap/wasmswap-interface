@@ -18,6 +18,7 @@ type TextProps = {
     | 'subtitle'
     | 'caption'
     | 'microscopic'
+  textTransform?: 'uppercase' | 'lowercase' | 'capitalize'
   font?: keyof typeof fonts
   color?: keyof typeof colorTokens | string
   variant?: keyof typeof fontWeightTokens
@@ -62,11 +63,17 @@ const paddingMixin = css`
       : ''};
 `
 
+const textTransformMixin = css`
+  ${(p) =>
+    p.textTransform ? `text-transform: ${p.textTransform};` : undefined}
+`
+
 const mixins = css`
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
   font-family: ${fontFamilySelector};
   ${paddingMixin};
+  ${textTransformMixin}
 `
 
 const Title = styled.p<TextProps>`

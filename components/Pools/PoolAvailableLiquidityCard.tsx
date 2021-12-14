@@ -1,8 +1,13 @@
 import { styled } from '@stitches/react'
 import { Text } from '../Text'
 import { Button } from '../Button'
+import { formatTokenBalance } from '../../util/conversion'
 
-export const PoolAvailableLiquidityCard = () => {
+export const PoolAvailableLiquidityCard = ({
+  onButtonClick,
+  myLiquidity,
+  totalLiquidity,
+}) => {
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
@@ -12,9 +17,13 @@ export const PoolAvailableLiquidityCard = () => {
           variant="light"
           paddingBottom="9px"
         >
-          You own 2.12% of the pool
+          {typeof myLiquidity === 'number'
+            ? `You own ${formatTokenBalance(
+                myLiquidity / totalLiquidity
+              )}% of the pool`
+            : 'Your liquidity'}
         </Text>
-        <StyledTextForAmount>$32,034.00</StyledTextForAmount>
+        <StyledTextForAmount>${myLiquidity || '0.00'}</StyledTextForAmount>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
         <StyledElementForTokens kind="wrapper">
@@ -31,7 +40,9 @@ export const PoolAvailableLiquidityCard = () => {
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>
-        <StyledButton>Add / Remove liquidity</StyledButton>
+        <StyledButton onClick={onButtonClick}>
+          Add / Remove liquidity
+        </StyledButton>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
   )

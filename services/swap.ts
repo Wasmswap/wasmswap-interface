@@ -99,7 +99,7 @@ export const swapToken2ForToken1 = async (
       swap_msg,
       defaultExecuteFee,
       undefined,
-      [{amount: input.tokenAmount.toString(), denom: input.tokenDenom}]
+      [{ amount: input.tokenAmount.toString(), denom: input.tokenDenom }]
     )
   }
 }
@@ -121,17 +121,17 @@ export const swapTokenForToken = async (
   input: swapTokenForTokenInput
 ): Promise<any> => {
   const minOutputToken = Math.floor(input.price * (1 - input.slippage))
-  let swapMsg = {
+  const swapMsg = {
     pass_through_swap: {
       output_min_token: `${minOutputToken}`,
-      input_token: "Token2",
-      output_token: "Token2",
+      input_token: 'Token2',
+      output_token: 'Token2',
       input_token_amount: `${input.tokenAmount}`,
       output_amm_address: input.outputSwapAddress,
     },
   }
   if (!input.tokenNative) {
-    let msg1 = {
+    const msg1 = {
       increase_allowance: {
         amount: `${input.tokenAmount}`,
         spender: `${input.swapAddress}`,
@@ -175,7 +175,7 @@ export const swapTokenForToken = async (
       gas: (+defaultExecuteFee.gas * 2).toString(),
     },
     undefined,
-    [{amount: input.tokenAmount.toString(), denom: input.tokenDenom}]
+    [{ amount: input.tokenAmount.toString(), denom: input.tokenDenom }]
   )
 }
 
@@ -272,6 +272,7 @@ export const getSwapInfo = async (
         })}`
       )
     }
+
     const client = await CosmWasmClient.connect(rpcEndpoint)
     return await client.queryContractSmart(swapAddress, {
       info: {},

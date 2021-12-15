@@ -19,11 +19,12 @@ import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
+import { getBaseToken } from 'hooks/useTokenInfo'
 
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
-  const { balance: junoBalance } = useTokenBalance('JUNO')
+  const { balance: junoBalance } = useTokenBalance(getBaseToken().symbol)
   const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
 
   const { myLiquidity, myReserve } = usePoolLiquidity({
@@ -59,7 +60,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
       if (isAddingLiquidity) {
         return await addLiquidity({
           nativeAmount: Math.floor(tokenAAmount * 1000000),
-          nativeDenom: 'ujuno',
+          nativeDenom: getBaseToken().denom,
           maxToken: Math.floor(tokenBAmount * 1000000 + 5),
           minLiquidity: 0,
           swapAddress: tokenInfo.swap_address,
@@ -187,7 +188,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {isAddingLiquidity && (
           <>
             <LiquidityInput
-              tokenName="Juno"
+              tokenName={formatTokenName(getBaseToken().symbol)}
               balance={junoBalance ? junoBalance : 0}
               amount={tokenAAmount}
               ratio={50}
@@ -227,7 +228,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {!isAddingLiquidity && (
           <StyledDivForLiquiditySummary>
             <Text>
-              Juno:{' '}
+              {getBaseToken().symbol}:{' '}
               {balanceFormatter.format(
                 (myReserve[0] / 1000000) * (removeLiquidityPercent / 100)
               )}

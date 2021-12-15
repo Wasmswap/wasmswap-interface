@@ -1,3 +1,4 @@
+import { getBaseToken } from 'hooks/useTokenInfo'
 import { atom } from 'recoil'
 
 export const tokenAmountState = atom({
@@ -7,7 +8,7 @@ export const tokenAmountState = atom({
 
 export const tokenANameState = atom({
   key: 'tokenAState',
-  default: 'JUNO',
+  default: getBaseToken().symbol,
 })
 
 export const tokenBNameState = atom({

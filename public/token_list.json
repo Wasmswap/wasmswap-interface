@@ -9,6 +9,20 @@
     }
   },
   "timestamp": "2021-06-12T00:00:00+00:00",
+  "base_token": {
+      "id": "juno-network",
+      "pool_id": "JUNO+JUNO",
+      "chain_id": "lucina",
+      "token_address": "",
+      "swap_address": "",
+      "symbol": "JUNO",
+      "name": "Juno",
+      "decimals": 6,
+      "logoURI": "https://junochain.com/assets/logos/logo_512x512.png",
+      "tags": ["native"],
+      "native":true,
+      "denom":"ujuno"
+    },
   "tokens": [
     {
       "id": "juno-network",

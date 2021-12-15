@@ -4,7 +4,7 @@ import {
   swapToken2ForToken1,
   swapTokenForToken,
 } from '../../../services/swap'
-import { getTokenInfo } from '../../../hooks/useTokenInfo'
+import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { transactionStatusState } from '../../../state/atoms/transactionAtoms'
 import { walletState } from '../../../state/atoms/walletAtoms'
@@ -22,6 +22,7 @@ export const useTokenSwap = ({
   async function swapTokens() {
     const tokenAInfo = getTokenInfo(tokenASymbol)
     const tokenBInfo = getTokenInfo(tokenBSymbol)
+    const baseToken = getBaseToken()
 
     if (!client) {
       toast.error('Please connect wallet', {
@@ -36,7 +37,7 @@ export const useTokenSwap = ({
     } else {
       setTransactionState('EXECUTING_SWAP')
       try {
-        if (tokenASymbol === 'JUNO') {
+        if (tokenASymbol === baseToken.symbol) {
           await swapToken1ForToken2({
             nativeAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,
@@ -45,7 +46,7 @@ export const useTokenSwap = ({
             swapAddress: tokenBInfo.swap_address,
             client,
           })
-        } else if (tokenBSymbol === 'JUNO') {
+        } else if (tokenBSymbol === baseToken.symbol) {
           await swapToken2ForToken1({
             tokenAmount: tokenAmount * 1000000,
             price: tokenToTokenPrice * 1000000,

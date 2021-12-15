@@ -4,7 +4,7 @@ import {
   getToken2ForToken1Price,
   getTokenForTokenPrice,
 } from '../../../services/swap'
-import { getTokenInfo } from '../../../hooks/useTokenInfo'
+import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
 
 export const useTokenToTokenPrice = ({
@@ -19,8 +19,9 @@ export const useTokenToTokenPrice = ({
       const toTokenInfo = getTokenInfo(tokenBSymbol)
 
       const formatPrice = (price) => price / 1000000
+      const base_token = getBaseToken()
 
-      if (fromTokenInfo.symbol === 'JUNO') {
+      if (fromTokenInfo.symbol === base_token.symbol) {
         return formatPrice(
           await getToken1ForToken2Price({
             nativeAmount: tokenAmount * 1000000,
@@ -28,7 +29,7 @@ export const useTokenToTokenPrice = ({
             rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
           })
         )
-      } else if (toTokenInfo.symbol === 'JUNO') {
+      } else if (toTokenInfo.symbol === base_token.symbol) {
         return formatPrice(
           await getToken2ForToken1Price({
             tokenAmount: tokenAmount * 1000000,

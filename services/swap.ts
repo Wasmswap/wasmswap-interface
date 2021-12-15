@@ -7,6 +7,7 @@ import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
 import { StdFee, coin } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
+import { getBaseToken } from 'hooks/useTokenInfo'
 
 export interface swapToken1ForToken2Input {
   nativeAmount: number
@@ -31,7 +32,7 @@ export const swapToken1ForToken2 = async (input: swapToken1ForToken2Input) => {
     msg,
     defaultExecuteFee,
     undefined,
-    [coin(input.nativeAmount, 'ujuno')]
+    [coin(input.nativeAmount, getBaseToken().denom)]
   )
 }
 

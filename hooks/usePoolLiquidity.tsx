@@ -3,7 +3,7 @@ import { getSwapInfo } from '../services/swap'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
-import { useTokenInfoByPoolId } from './useTokenInfo'
+import { getBaseToken, useTokenInfoByPoolId } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 
 export type LiquidityInfoType = {
@@ -74,7 +74,8 @@ export const usePoolLiquidity = ({
     }
   )
 
-  const [[junoPrice]] = useTokenDollarValue(['JUNO'])
+  const [[junoPrice]] = useTokenDollarValue([getBaseToken().symbol])
+  console.log(junoPrice)
 
   /* provide dollar value for reserves as well */
   const reserve: [number, number] = [

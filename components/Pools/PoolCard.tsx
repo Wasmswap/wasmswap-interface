@@ -6,7 +6,7 @@ import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 
 type PoolCardProps = {
-  poolId: number
+  poolId: string
   tokenASymbol: string
   tokenBSymbol: string
 }

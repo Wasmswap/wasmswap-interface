@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { BroadcastTxResponse, coin, StdFee } from '@cosmjs/stargate'
+import {BroadcastTxResponse, coin, coins, StdFee} from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 
 export type AddLiquidityInput = {
@@ -67,13 +67,14 @@ export const addLiquidity = async (
       fee
     )
   } else {
-    return await input.client.execute(
-      input.senderAddress,
-      input.swapAddress,
-      add_liquidity_msg,
-      defaultExecuteFee,
-      undefined,
-      [{ amount: input.nativeAmount.toString(), denom: input.nativeDenom }]
+    let funds = [coin(10, "ujuno"), coin(10, "ucosm")]
+    await input.client.execute(
+        input.senderAddress,
+        input.swapAddress,
+        add_liquidity_msg,
+        defaultExecuteFee,
+        undefined,
+        funds
     )
   }
 }
@@ -84,25 +85,51 @@ export type RemoveLiquidityInput = {
   minToken2: number
   senderAddress: string
   swapAddress: string
-  tokenAddress: string
+  lpTokenAddress: string
   client: SigningCosmWasmClient
 }
 
 export const removeLiquidity = async (input: RemoveLiquidityInput) => {
-  const msg = {
+
+  let msg1 = {
+    increase_allowance: {
+      amount: `${input.amount}`,
+      spender: `${input.swapAddress}`,
+    },
+  }
+  const executeContractMsg1: MsgExecuteContractEncodeObject = {
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+    value: MsgExecuteContract.fromPartial({
+      sender: input.senderAddress,
+      contract: input.lpTokenAddress,
+      msg: toUtf8(JSON.stringify(msg1)),
+      funds: [],
+    }),
+  }
+  const msg2 = {
     remove_liquidity: {
       amount: `${input.amount}`,
       min_token1: `${input.minToken1}`,
       min_token2: `${input.minToken2}`,
     },
   }
-  return await input.client.execute(
+  const executeContractMsg2: MsgExecuteContractEncodeObject = {
+    typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+    value: MsgExecuteContract.fromPartial({
+      sender: input.senderAddress,
+      contract: input.swapAddress,
+      msg: toUtf8(JSON.stringify(msg2)),
+      funds: [],
+    }),
+  }
+  const fee: StdFee = {
+    amount: defaultExecuteFee.amount,
+    gas: (Number(defaultExecuteFee.gas) * 2).toString(),
+  }
+  return await input.client.signAndBroadcast(
     input.senderAddress,
-    input.swapAddress,
-    msg,
-    defaultExecuteFee,
-    undefined,
-    []
+    [executeContractMsg1, executeContractMsg2],
+    fee
   )
 }
 

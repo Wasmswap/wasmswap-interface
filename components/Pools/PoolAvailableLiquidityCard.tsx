@@ -11,6 +11,8 @@ export const PoolAvailableLiquidityCard = ({
   myToken1Reserve,
   myToken2Reserve,
   token1DollarValue,
+  tokenASymbol,
+  tokenBSymbol
 }) => {
   return (
     <StyledElementForCardLayout kind="wrapper">
@@ -34,13 +36,13 @@ export const PoolAvailableLiquidityCard = ({
           <StyledElementForTokens kind="element">
             <StyledImageForToken src="/crab.png" />
             <Text color="bodyText" type="microscopic">
-              {myToken1Reserve / 1000000} juno
+              {myToken1Reserve / 1000000} {tokenASymbol}
             </Text>
           </StyledElementForTokens>
           <StyledElementForTokens kind="element">
             <StyledImageForToken src="/crab.png" />
             <Text color="bodyText" type="microscopic">
-              {myToken2Reserve / 1000000} atom
+              {myToken2Reserve / 1000000} {tokenBSymbol}
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>

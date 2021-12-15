@@ -151,6 +151,8 @@ export default function Pool() {
               myToken1Reserve={myToken1Reserve}
               myToken2Reserve={myToken2Reserve}
               token1DollarValue={junoPrice}
+              tokenASymbol={"JUNO"}
+              tokenBSymbol={tokenInfo.symbol}
               onButtonClick={() => setIsDialogShowing(true)}
             />
             <PoolBondedLiquidityCard />

@@ -7,7 +7,7 @@ export const UnbondingLiquidityCard = () => {
       <StyledElementForCard kind="content">
         <StyledElementForCard kind="columnLeft">
           <Text type="caption" color="secondaryText" variant="light">
-            Unbonded tokens
+            Unstaked tokens
           </Text>
           <Text type="caption" color="bodyText" variant="light">
             + $999.00

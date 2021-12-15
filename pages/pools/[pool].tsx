@@ -130,7 +130,7 @@ export default function Pool() {
               {parseCurrency(totalLiquidity.dollarValue)}
             </Text>
             <Text type="title3" variant="bold">
-              Coming soon
+              0%
             </Text>
           </StyledElementForLiquidity>
         </StyledElementForLiquidity>

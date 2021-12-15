@@ -15,7 +15,7 @@ export const PoolBondedLiquidityCard = () => {
           Bonded tokens
         </Text>
         <Text type="title2" variant="bold">
-          $24,034.00
+          $0.00
         </Text>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
@@ -25,7 +25,7 @@ export const PoolBondedLiquidityCard = () => {
           variant="light"
           color="tertiaryText"
         >
-          Available reward
+          Bonding/unbonding is coming soon
         </Text>
         <Text
           paddingBottom="4px"
@@ -33,25 +33,25 @@ export const PoolBondedLiquidityCard = () => {
           variant="light"
           color="tertiaryText"
         >
-          Based on your $8,000.00 available
+          Baking in together with rewards
         </Text>
 
         <StyledElementForTokens kind="wrapper">
           <StyledElementForTokens kind="element">
-            <StyledImageForToken src="/crab.png" />
+            <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
             <Text color="bodyText" type="microscopic">
-              +34 juno/14d
+              +0 juno/14d
             </Text>
           </StyledElementForTokens>
           <StyledElementForTokens kind="element">
-            <StyledImageForToken src="/crab.png" />
+            <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
             <Text color="bodyText" type="microscopic">
-              +57 juno/14d
+              +0 juno/14d
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>
 
-        <StyledButton>Bond / Unbond tokens</StyledButton>
+        <StyledButton disabled>Bond / Unbond tokens</StyledButton>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
   )

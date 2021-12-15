@@ -6,7 +6,7 @@ import { walletState } from '../state/atoms/walletAtoms'
 import { useTokenInfoByPoolId } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 
-type LiquidityInfoType = {
+export type LiquidityInfoType = {
   reserve: [number, number]
   myReserve: [number, number]
   totalLiquidity: {
@@ -21,9 +21,9 @@ type LiquidityInfoType = {
   tokenDollarValue: number
 }
 
-export const useLiquidity = ({
+export const usePoolLiquidity = ({
   poolId,
-}): LiquidityInfoType & { isLoading: true } => {
+}): LiquidityInfoType & { isLoading: boolean } => {
   const { address } = useRecoilValue(walletState)
 
   const { swap_address, symbol: tokenSymbol } =
@@ -76,6 +76,7 @@ export const useLiquidity = ({
 
   const [[junoPrice]] = useTokenDollarValue(['JUNO'])
 
+  /* provide dollar value for reserves as well */
   const reserve: [number, number] = [
     Number(token1_reserve),
     Number(token2_reserve),

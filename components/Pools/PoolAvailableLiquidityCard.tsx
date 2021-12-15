@@ -2,18 +2,31 @@ import { styled } from '@stitches/react'
 import { Text } from '../Text'
 import { Button } from '../Button'
 import { formatTokenBalance } from '../../util/conversion'
-import {parseCurrency} from "./PoolCard";
+import { parseCurrency } from './PoolCard'
+import { LiquidityInfoType } from '../../hooks/usePoolLiquidity'
+import { useTokenInfo } from '../../hooks/useTokenInfo'
+
+type PoolAvailableLiquidityCardProps = Pick<
+  LiquidityInfoType,
+  'myLiquidity' | 'myReserve' | 'totalLiquidity' | 'tokenDollarValue'
+> & {
+  onButtonClick: () => void
+  tokenASymbol: string
+  tokenBSymbol: string
+}
 
 export const PoolAvailableLiquidityCard = ({
   onButtonClick,
   myLiquidity,
+  myReserve,
+  tokenDollarValue,
   totalLiquidity,
-  myToken1Reserve,
-  myToken2Reserve,
-  token1DollarValue,
   tokenASymbol,
-  tokenBSymbol
-}) => {
+  tokenBSymbol,
+}: PoolAvailableLiquidityCardProps) => {
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
+
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
@@ -25,24 +38,38 @@ export const PoolAvailableLiquidityCard = ({
         >
           {typeof myLiquidity === 'number'
             ? `You own ${formatTokenBalance(
-                myLiquidity / totalLiquidity * 100
+                ((myLiquidity as LiquidityInfoType['myLiquidity']).coins /
+                  totalLiquidity.coins) *
+                  100
               )}% of the pool`
             : 'Your liquidity'}
         </Text>
-        <StyledTextForAmount>{parseCurrency((myToken1Reserve / 1000000) * token1DollarValue * 2 || '0.00')}</StyledTextForAmount>
+        <StyledTextForAmount>
+          {parseCurrency(
+            (myReserve[0] / 1000000) * tokenDollarValue * 2 || '0.00'
+          )}
+        </StyledTextForAmount>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
         <StyledElementForTokens kind="wrapper">
           <StyledElementForTokens kind="element">
-            <StyledImageForToken src="/crab.png" />
+            <StyledImageForToken
+              as={tokenA?.logoURI ? 'img' : 'div'}
+              src={tokenA?.logoURI}
+              alt={tokenASymbol}
+            />
             <Text color="bodyText" type="microscopic">
-              {myToken1Reserve / 1000000} {tokenASymbol}
+              {formatTokenBalance(myReserve[0] / 1000000)} {tokenASymbol}
             </Text>
           </StyledElementForTokens>
           <StyledElementForTokens kind="element">
-            <StyledImageForToken src="/crab.png" />
+            <StyledImageForToken
+              as={tokenA?.logoURI ? 'img' : 'div'}
+              src={tokenB?.logoURI}
+              alt={tokenBSymbol}
+            />
             <Text color="bodyText" type="microscopic">
-              {myToken2Reserve / 1000000} {tokenBSymbol}
+              {formatTokenBalance(myReserve[1] / 1000000)} {tokenBSymbol}
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>

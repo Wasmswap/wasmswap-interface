@@ -6,39 +6,41 @@ import { useLiquidity } from '../../hooks/useLiquidity'
 import { styled } from '@stitches/react'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
 import Link from 'next/link'
+import {useTokenDollarValue} from "../../hooks/useTokenDollarValue";
 
 type PoolCardProps = {
+  poolId: number
   tokenASymbol: string
   tokenBSymbol: string
-  tokenAddress: string
 }
 
-const parseCurrency = (value: number | string) =>
+export const parseCurrency = (value: number | string) =>
   Number(value).toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
   })
 
 export const PoolCard = ({
+  poolId,
   tokenASymbol,
   tokenBSymbol,
-  tokenAddress,
 }: PoolCardProps) => {
   const { address } = useRecoilValue(walletState)
 
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const { totalLiquidity, myLiquidity } = useLiquidity({
+  const { token1_reserve, myLiquidity } = useLiquidity({
     tokenSymbol: tokenBSymbol,
     swapAddress: (tokenB as any).swap_address,
     address,
   })
-
   const hasProvidedLiquidity = typeof myLiquidity === 'number'
 
+  const [[junoPrice]] = useTokenDollarValue(['JUNO'])
+
   return (
-    <Link href={`/pools/${tokenAddress}`} passHref>
+    <Link href={`/pools/${poolId}`} passHref>
       <StyledLinkForCard>
         <>
           <StyledDivForRowWrapper>
@@ -53,7 +55,7 @@ export const PoolCard = ({
               />
             </StyledDivForTokenLogos>
             <Text type="caption" variant="normal">
-              Pool #1
+              Pool #{poolId}
             </Text>
             <StyledTextForTokenNames type="body" variant="normal">
               {tokenA.symbol} <span /> {tokenB.symbol}
@@ -83,7 +85,7 @@ export const PoolCard = ({
                 </StyledTextForSubtitle>
               </StyledDivForRow>
               <StyledDivForRow>
-                <Text>{parseCurrency(totalLiquidity)}</Text>
+                <Text>{parseCurrency(token1_reserve / 1000000 * junoPrice * 2)}</Text>
                 <Text>150%</Text>
               </StyledDivForRow>
             </StyledDivForRowWrapper>

@@ -1,7 +1,7 @@
 import { styled } from '@stitches/react'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { Text } from '../../components/Text'
-import { IconWrapper } from '../../components/IconWrapper'
+import { Text } from '../Text'
+import { IconWrapper } from '../IconWrapper'
 import { DoubleArrow } from '../../icons/DoubleArrow'
 import { colorTokens } from '../../util/constants'
 import { HTMLProps } from 'react'
@@ -83,8 +83,6 @@ export const AssetCard = ({
     </StyledElementForCard>
   )
 }
-
-export default AssetCard
 
 const StyledElementForCard = styled('div', {
   variants: {

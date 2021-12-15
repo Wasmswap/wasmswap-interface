@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { NavigationSidebar } from './NavigationSidebar'
-import { FooterBar } from '../FooterBar'
+import { FooterBar } from './FooterBar'
 
 export const AppLayout = ({
   navigationSidebar = <NavigationSidebar />,

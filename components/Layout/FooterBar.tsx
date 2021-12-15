@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Text } from './Text'
-import { colorTokens } from '../util/constants'
+import { Text } from '../Text'
+import { colorTokens } from '../../util/constants'
 
 export const FooterBar = () => (
   <StyledRow $fullWidth>

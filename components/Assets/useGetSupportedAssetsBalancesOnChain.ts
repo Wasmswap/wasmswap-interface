@@ -34,5 +34,3 @@ export const useGetSupportedAssetsBalancesOnChain = () => {
 
   return [loadingBalances, categorizedBalances] as const
 }
-
-export default useGetSupportedAssetsBalancesOnChain

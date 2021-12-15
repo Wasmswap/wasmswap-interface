@@ -11,7 +11,7 @@ import { PoolBondedLiquidityCard } from '../../components/Pools/PoolBondedLiquid
 import { Button } from '../../components/Button'
 import { UnbondingLiquidityCard } from '../../components/Pools/UnbondingLiquidityCard'
 import { PoolDialog } from '../../components/Pools/PoolDialog'
-import { useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
+import { getBaseToken, useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
 import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenToTokenPrice'
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { parseCurrency } from '../../components/Pools/PoolCard'
@@ -28,7 +28,7 @@ export default function Pool() {
   const tokenInfo = useTokenInfoByPoolId(pool as string)
 
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
-    tokenASymbol: 'JUNO',
+    tokenASymbol: getBaseToken().symbol,
     tokenBSymbol: tokenInfo?.symbol,
     tokenAmount: 1,
   })
@@ -77,7 +77,7 @@ export default function Pool() {
               <StyledTextForTokens kind="element">
                 <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
                 <Text color="bodyText" type="microscopic">
-                  Juno
+                  {getBaseToken().symbol}
                 </Text>
               </StyledTextForTokens>
               <StyledTextForTokens kind="element">
@@ -86,7 +86,7 @@ export default function Pool() {
                   src={tokenInfo.logoURI}
                 />
                 <Text color="bodyText" type="microscopic">
-                  {tokenInfo.name}
+                  {tokenInfo.name}{getBaseToken().name}
                 </Text>
               </StyledTextForTokens>
             </StyledTextForTokens>
@@ -99,7 +99,7 @@ export default function Pool() {
             >
               {isPriceLoading
                 ? ''
-                : `1 juno = ${tokenPrice} ${tokenInfo.symbol}`}
+                : `1 ${getBaseToken().symbol} = ${tokenPrice} ${tokenInfo.symbol}`}
             </Text>
           </StyledRowForTokensInfo>
         </StyledRowForTokensInfo>
@@ -152,7 +152,7 @@ export default function Pool() {
               myReserve={myReserve}
               totalLiquidity={totalLiquidity}
               tokenDollarValue={tokenDollarValue}
-              tokenASymbol="JUNO"
+              tokenASymbol={getBaseToken().symbol}
               tokenBSymbol={tokenInfo.symbol}
               onButtonClick={() => setIsDialogShowing(true)}
             />

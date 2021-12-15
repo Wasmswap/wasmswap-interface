@@ -4,6 +4,7 @@ import { AppLayout } from '../../components/Layout/AppLayout'
 import TokenList from '../../public/token_list.json'
 import { PoolCard } from '../../components/Pools/PoolCard'
 import { PageHeader } from '../../components/Layout/PageHeader'
+import { getBaseToken } from 'hooks/useTokenInfo'
 
 export default function Pools() {
   return (
@@ -16,14 +17,13 @@ export default function Pools() {
 
       <StyledDivForPoolsGrid>
         {TokenList.tokens
-          .filter((x) => x.symbol != "JUNO")
+          .filter((x) => x.symbol != getBaseToken().symbol)
           .map((token, key) => (
             <PoolCard
               key={key}
               poolId={token.pool_id}
-              tokenASymbol="JUNO"
+              tokenASymbol={getBaseToken().symbol}
               tokenBSymbol={token.symbol}
-              tokenAddress={token.token_address}
             />
           ))}
       </StyledDivForPoolsGrid>

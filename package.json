@@ -24,6 +24,8 @@
     "@reach/portal": "^0.16.0",
     "@stargazefi/util": "^0.0.3",
     "@stitches/react": "^1.2.6",
+    "@react-three/drei":"8.2.1",
+    "@react-three/fiber":"7.0.24",
     "bufferutil": "^4.0.3",
     "dayjs": "^1.10.7",
     "gsap": "^3.7.1",

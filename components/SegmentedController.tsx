@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { colorTokens } from '../util/constants'
-import { resetStylesForButton } from './Button'
 import gsap from 'gsap'
 import { HTMLProps, useMemo, useState, useRef, useEffect } from 'react'
 
@@ -72,7 +71,6 @@ const StyledButtonForController = styled.button<{
   $width: number
   $hovered: boolean
 }>`
-  ${resetStylesForButton};
   background-color: ${(p) =>
     p.$hovered && !p.$active ? colorTokens.white : 'transparent'};
   color: ${(p) => {

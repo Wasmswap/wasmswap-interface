@@ -81,6 +81,8 @@ export const AssetsList = ({ onActionClick }) => {
   )
 }
 
+export default AssetsList
+
 const StyledGrid = styled('div', {
   display: 'grid',
   rowGap: '8px',

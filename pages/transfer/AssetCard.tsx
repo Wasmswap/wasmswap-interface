@@ -84,6 +84,8 @@ export const AssetCard = ({
   )
 }
 
+export default AssetCard
+
 const StyledElementForCard = styled('div', {
   variants: {
     kind: {

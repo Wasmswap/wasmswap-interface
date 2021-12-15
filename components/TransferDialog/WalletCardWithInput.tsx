@@ -2,7 +2,6 @@ import { CardWithSeparator } from '../CardWithSeparator'
 import { Text } from '../Text'
 import { StyledHeader, StyledDivForBalance, WalletIcon } from './card.styles'
 import { TokenAmountInput } from '../TokenAmountInput'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
 import { TransactionOrigin, TransactionType } from './types'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 

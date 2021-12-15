@@ -1,18 +1,14 @@
+import Link from 'next/link'
+import { styled } from '@stitches/react'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
-import { useRecoilValue } from 'recoil'
-import { walletState } from 'state/atoms/walletAtoms'
-import { useLiquidity } from '../../hooks/useLiquidity'
-import { styled } from '@stitches/react'
+import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import Link from 'next/link'
-import {useTokenDollarValue} from "../../hooks/useTokenDollarValue";
 
 type PoolCardProps = {
   poolId: number
   tokenASymbol: string
   tokenBSymbol: string
-  tokenAddress: string
 }
 
 export const parseCurrency = (value: number | string) =>
@@ -25,21 +21,15 @@ export const PoolCard = ({
   poolId,
   tokenASymbol,
   tokenBSymbol,
-  tokenAddress,
 }: PoolCardProps) => {
-  const { address } = useRecoilValue(walletState)
-
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const { token1_reserve, myLiquidity } = useLiquidity({
-    tokenSymbol: tokenBSymbol,
-    swapAddress: (tokenB as any).swap_address,
-    address,
+  const { totalLiquidity, myLiquidity } = usePoolLiquidity({
+    poolId,
   })
-  const hasProvidedLiquidity = typeof myLiquidity === 'number'
 
-  const [[junoPrice]] = useTokenDollarValue(['JUNO'])
+  const hasProvidedLiquidity = typeof myLiquidity.coins === 'number'
 
   return (
     <Link href={`/pools/${poolId}`} passHref>
@@ -87,7 +77,7 @@ export const PoolCard = ({
                 </StyledTextForSubtitle>
               </StyledDivForRow>
               <StyledDivForRow>
-                <Text>{parseCurrency(token1_reserve / 1000000 * junoPrice * 2)}</Text>
+                <Text>{parseCurrency(totalLiquidity.dollarValue)}</Text>
                 <Text>150%</Text>
               </StyledDivForRow>
             </StyledDivForRowWrapper>
@@ -114,7 +104,7 @@ export const PoolCard = ({
                   </StyledTextForSubtitle>
                 </StyledDivForRow>
                 <StyledDivForRow>
-                  <Text>{parseCurrency(myLiquidity)}</Text>
+                  <Text>{parseCurrency(myLiquidity.dollarValue)}</Text>
                   <Text>$999</Text>
                 </StyledDivForRow>
               </StyledDivForRowWrapper>

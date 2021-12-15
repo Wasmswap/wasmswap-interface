@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { colorTokens } from '../util/constants'
-import { HTMLProps, ReactNode } from 'react'
+import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
 
 type IconWrapperProps = Omit<
   HTMLProps<HTMLDivElement>,
@@ -14,17 +14,21 @@ type IconWrapperProps = Omit<
   rotation?: string
 }
 
-export const IconWrapper = ({
-  icon,
-  rounded,
-  color,
-  size = '16px',
-  rotation,
-  type,
-  ...props
-}: IconWrapperProps) => (
+const IconWrapperComponent = (
+  {
+    icon,
+    rounded,
+    color,
+    size = '16px',
+    rotation,
+    type,
+    ...props
+  }: IconWrapperProps,
+  ref: ForwardedRef<any>
+) => (
   <StyledIcon
     {...props}
+    ref={ref}
     role={type === 'button' ? 'button' : undefined}
     $color={color}
     $rounded={rounded}
@@ -66,3 +70,5 @@ const StyledIcon = styled.div`
   fill: currentColor;
   ${(p) => (p.$isButton ? buttonStyles : undefined)}
 `
+
+export const IconWrapper = forwardRef(IconWrapperComponent)

@@ -15,7 +15,7 @@ import { getSwapInfo } from 'services/swap'
 import { addLiquidity, removeLiquidity } from 'services/liquidity'
 import { Spinner } from '../Spinner'
 import { useTokenBalance } from '../../hooks/useTokenBalance'
-import { useLiquidity } from '../../hooks/useLiquidity'
+import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
@@ -26,10 +26,8 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { balance: junoBalance } = useTokenBalance('JUNO')
   const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
 
-  const { myLiquidityCoins, myToken1Reserve, myToken2Reserve} = useLiquidity({
-    tokenSymbol: tokenInfo.symbol,
-    swapAddress: tokenInfo.swap_address,
-    address: address,
+  const { myLiquidity, myReserve } = usePoolLiquidity({
+    poolId: tokenInfo.pool_id,
   })
 
   const { data: { token2_reserve, token1_reserve, lp_token_address } = {} } =
@@ -73,7 +71,9 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor((removeLiquidityPercent / 100) * myLiquidityCoins ),
+          amount: Math.floor(
+            (removeLiquidityPercent / 100) * myLiquidity.coins
+          ),
           minToken1: 0,
           minToken2: 0,
           swapAddress: tokenInfo.swap_address,
@@ -100,7 +100,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         requestAnimationFrame(onRequestClose)
       },
       onError(error) {
-        console.log(error)
+        console.error(error)
         toast.error(
           `Couldn't ${
             isAddingLiquidity ? 'Add' : 'Remove'
@@ -152,7 +152,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
-        {typeof myToken1Reserve === 'number' && (
+        {typeof myReserve[0] === 'number' && (
           <StyledDivForButtons>
             <StyledSwitchButton
               onClick={() => setAddingLiquidity(true)}
@@ -229,13 +229,13 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
             <Text>
               Juno:{' '}
               {balanceFormatter.format(
-                myToken1Reserve / 1000000
+                (myReserve[0] / 1000000) * (removeLiquidityPercent / 100)
               )}
             </Text>
             <Text>
               {tokenInfo.symbol}:{' '}
               {balanceFormatter.format(
-                myToken2Reserve / 1000000
+                (myReserve[1] / 1000000) * (removeLiquidityPercent / 100)
               )}
             </Text>
           </StyledDivForLiquiditySummary>

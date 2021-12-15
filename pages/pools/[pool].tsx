@@ -1,7 +1,9 @@
+import React, { useState } from 'react'
+import { styled } from '@stitches/react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { AppLayout } from '../../components/Layout/AppLayout'
 import { Text } from '../../components/Text'
-import { styled } from '@stitches/react'
 import { Chevron } from '../../icons/Chevron'
 import { IconWrapper } from '../../components/IconWrapper'
 import { PoolAvailableLiquidityCard } from '../../components/Pools/PoolAvailableLiquidityCard'
@@ -9,13 +11,12 @@ import { PoolBondedLiquidityCard } from '../../components/Pools/PoolBondedLiquid
 import { Button } from '../../components/Button'
 import { UnbondingLiquidityCard } from '../../components/Pools/UnbondingLiquidityCard'
 import { PoolDialog } from '../../components/Pools/PoolDialog'
-import React, { useMemo, useState } from 'react'
-import { tokenList } from '../../hooks/useTokenInfo'
+import { useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
 import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenToTokenPrice'
-import { useLiquidity } from '../../hooks/useLiquidity'
-import { useRecoilValue } from 'recoil'
-import { walletState } from '../../state/atoms/walletAtoms'
-import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
+import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
+import { parseCurrency } from '../../components/Pools/PoolCard'
+
+const __REWARDS_ENABLED__ = false
 
 export default function Pool() {
   const {
@@ -24,11 +25,7 @@ export default function Pool() {
 
   const [isDialogShowing, setIsDialogShowing] = useState(false)
 
-  const [[junoPrice]] = useTokenDollarValue(['JUNO'])
-  const tokenInfo = useMemo(
-    () => tokenList.find(({ pool_id }) => pool_id === +pool),
-    [pool]
-  )
+  const tokenInfo = useTokenInfoByPoolId(pool as string)
 
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: 'JUNO',
@@ -36,14 +33,12 @@ export default function Pool() {
     tokenAmount: 1,
   })
 
-  const { address } = useRecoilValue(walletState)
-  const {totalLiquidityCoins, myLiquidityCoins, myToken1Reserve, myToken2Reserve, token1_reserve, isLoading } = useLiquidity({
-    tokenSymbol: tokenInfo?.symbol,
-    swapAddress: tokenInfo?.swap_address,
-    address,
-  })
+  const { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } =
+    usePoolLiquidity({
+      poolId: pool,
+    })
 
-  if (!tokenInfo) {
+  if (!tokenInfo || !pool) {
     return 'No token info was provided.'
   }
 
@@ -57,7 +52,14 @@ export default function Pool() {
       <AppLayout>
         <StyledWrapperForNavigation>
           <StyledNavElement position="left">
-            <IconWrapper size="20px" icon={<Chevron />} />
+            <Link href="/pools" passHref>
+              <IconWrapper
+                as="a"
+                type="button"
+                size="20px"
+                icon={<Chevron />}
+              />
+            </Link>
           </StyledNavElement>
           <StyledNavElement position="center">
             <Text type="heading" textTransform="capitalize">
@@ -70,7 +72,7 @@ export default function Pool() {
 
         <StyledRowForTokensInfo kind="wrapper">
           <StyledRowForTokensInfo kind="column">
-            <Text paddingRight="26px">Pool #1</Text>
+            <Text paddingRight="26px">Pool #{tokenInfo.pool_id}</Text>
             <StyledTextForTokens kind="wrapper">
               <StyledTextForTokens kind="element">
                 <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
@@ -125,10 +127,10 @@ export default function Pool() {
           </StyledElementForLiquidity>
           <StyledElementForLiquidity kind="row">
             <Text type="title3" variant="bold">
-              ${(token1_reserve / 1000000) * junoPrice * 2}
+              {parseCurrency(totalLiquidity.dollarValue)}
             </Text>
             <Text type="title3" variant="bold">
-              159%
+              Coming soon
             </Text>
           </StyledElementForLiquidity>
         </StyledElementForLiquidity>
@@ -146,12 +148,11 @@ export default function Pool() {
           </Text>
           <StyledDivForCards>
             <PoolAvailableLiquidityCard
-              myLiquidity={myLiquidityCoins}
-              totalLiquidity={totalLiquidityCoins}
-              myToken1Reserve={myToken1Reserve}
-              myToken2Reserve={myToken2Reserve}
-              token1DollarValue={junoPrice}
-              tokenASymbol={"JUNO"}
+              myLiquidity={myLiquidity}
+              myReserve={myReserve}
+              totalLiquidity={totalLiquidity}
+              tokenDollarValue={tokenDollarValue}
+              tokenASymbol="JUNO"
               tokenBSymbol={tokenInfo.symbol}
               onButtonClick={() => setIsDialogShowing(true)}
             />
@@ -168,49 +169,62 @@ export default function Pool() {
           >
             Rewards
           </Text>
-          <StyledDivForSeparator />
-          <StyledElementForRewards kind="wrapper">
-            <StyledElementForRewards kind="column">
-              <Text type="title2">$289.00</Text>
-            </StyledElementForRewards>
+          {__REWARDS_ENABLED__ && (
+            <>
+              <StyledDivForSeparator />
+              <StyledElementForRewards kind="wrapper">
+                <StyledElementForRewards kind="column">
+                  <Text type="title2">$289.00</Text>
+                </StyledElementForRewards>
 
-            <StyledElementForRewards kind="tokens">
-              <StyledTextForTokens kind="element">
-                <StyledImageForToken src="/crab.png" />
-                <Text color="bodyText" type="microscopic">
-                  11 juno
-                </Text>
-              </StyledTextForTokens>
-              <StyledTextForTokens kind="element">
-                <StyledImageForToken src="/crab.png" />
-                <Text color="bodyText" type="microscopic">
-                  31 atom
-                </Text>
-              </StyledTextForTokens>
-            </StyledElementForRewards>
+                <StyledElementForRewards kind="tokens">
+                  <StyledTextForTokens kind="element">
+                    <StyledImageForToken src="/crab.png" />
+                    <Text color="bodyText" type="microscopic">
+                      11 juno
+                    </Text>
+                  </StyledTextForTokens>
+                  <StyledTextForTokens kind="element">
+                    <StyledImageForToken src="/crab.png" />
+                    <Text color="bodyText" type="microscopic">
+                      31 atom
+                    </Text>
+                  </StyledTextForTokens>
+                </StyledElementForRewards>
 
-            <StyledElementForRewards kind="actions">
-              <Button className="action-btn">Claim</Button>
-            </StyledElementForRewards>
-          </StyledElementForRewards>
-          <StyledDivForSeparator />
+                <StyledElementForRewards kind="actions">
+                  <Button className="action-btn">Claim</Button>
+                </StyledElementForRewards>
+              </StyledElementForRewards>
+              <StyledDivForSeparator />
+            </>
+          )}
+          {!__REWARDS_ENABLED__ && (
+            <StyledDivForRewardsPlaceholder>
+              <Text color="secondaryText" type="caption" variant="light">
+                Work in progress. Stay tuned!
+              </Text>
+            </StyledDivForRewardsPlaceholder>
+          )}
         </>
 
-        <>
-          <Text
-            variant="bold"
-            paddingTop="24px"
-            paddingBottom="18px"
-            color="bodyText"
-          >
-            Unbonding Liquidity
-          </Text>
-          <StyledElementForUnbonding kind="list">
-            <UnbondingLiquidityCard />
-            <UnbondingLiquidityCard />
-            <UnbondingLiquidityCard />
-          </StyledElementForUnbonding>
-        </>
+        {__REWARDS_ENABLED__ && (
+          <>
+            <Text
+              variant="bold"
+              paddingTop="24px"
+              paddingBottom="18px"
+              color="bodyText"
+            >
+              Unbonding Liquidity
+            </Text>
+            <StyledElementForUnbonding kind="list">
+              <UnbondingLiquidityCard />
+              <UnbondingLiquidityCard />
+              <UnbondingLiquidityCard />
+            </StyledElementForUnbonding>
+          </>
+        )}
       </AppLayout>
     </>
   )
@@ -347,4 +361,11 @@ const StyledElementForUnbonding = styled('div', {
       },
     },
   },
+})
+
+const StyledDivForRewardsPlaceholder = styled('div', {
+  padding: '22px 24px',
+  borderRadius: '8px',
+  border: '1px solid #E7E7E7',
+  backgroundColor: 'rgba(25, 29, 32, 0.1)',
 })

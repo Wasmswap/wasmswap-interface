@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import {BroadcastTxResponse, coin, coins, StdFee} from '@cosmjs/stargate'
+import { coin, StdFee } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 
 export type AddLiquidityInput = {
@@ -21,23 +21,23 @@ export type AddLiquidityInput = {
   client: SigningCosmWasmClient
 }
 
-export const addLiquidity = async (
-  input: AddLiquidityInput
-): Promise<any> => {
-  let add_liquidity_msg = {
+export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
+  const add_liquidity_msg = {
     add_liquidity: {
       token1_amount: `${input.nativeAmount}`,
       max_token2: `${input.maxToken}`,
       min_liquidity: `${input.minLiquidity}`,
     },
   }
+
   if (!input.tokenNative) {
-    let msg1 = {
+    const msg1 = {
       increase_allowance: {
         amount: `${input.maxToken}`,
         spender: `${input.swapAddress}`,
       },
     }
+
     const executeContractMsg1: MsgExecuteContractEncodeObject = {
       typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
       value: MsgExecuteContract.fromPartial({
@@ -57,6 +57,7 @@ export const addLiquidity = async (
         funds: [coin(input.nativeAmount, input.nativeDenom)],
       }),
     }
+
     const fee: StdFee = {
       amount: defaultExecuteFee.amount,
       gas: (Number(defaultExecuteFee.gas) * 2).toString(),
@@ -67,14 +68,14 @@ export const addLiquidity = async (
       fee
     )
   } else {
-    let funds = [coin(10, "ujuno"), coin(10, "ucosm")]
+    const funds = [coin(10, 'ujuno'), coin(10, 'ucosm')]
     await input.client.execute(
-        input.senderAddress,
-        input.swapAddress,
-        add_liquidity_msg,
-        defaultExecuteFee,
-        undefined,
-        funds
+      input.senderAddress,
+      input.swapAddress,
+      add_liquidity_msg,
+      defaultExecuteFee,
+      undefined,
+      funds
     )
   }
 }
@@ -90,8 +91,7 @@ export type RemoveLiquidityInput = {
 }
 
 export const removeLiquidity = async (input: RemoveLiquidityInput) => {
-
-  let msg1 = {
+  const msg1 = {
     increase_allowance: {
       amount: `${input.amount}`,
       spender: `${input.swapAddress}`,
@@ -149,9 +149,7 @@ export const getLiquidityBalance = async ({
     const query = await client.queryContractSmart(tokenAddress, {
       balance: { address },
     })
-    console.log({
-      query,
-    })
+
     return query.balance
   } catch (e) {
     console.error('Cannot get liquidity balance:', e)

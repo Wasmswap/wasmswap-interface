@@ -273,8 +273,6 @@ export const getSwapInfo = async (
     }
 
     const client = await CosmWasmClient.connect(rpcEndpoint)
-    console.log("info")
-    console.log(swapAddress)
     return await client.queryContractSmart(swapAddress, {
       info: {},
     })

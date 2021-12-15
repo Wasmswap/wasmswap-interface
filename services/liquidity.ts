@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { BroadcastTxResponse, coin, StdFee } from '@cosmjs/stargate'
+import {BroadcastTxResponse, coin, coins, StdFee} from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 
 export type AddLiquidityInput = {
@@ -16,15 +16,84 @@ export type AddLiquidityInput = {
   senderAddress: string
   swapAddress: string
   tokenAddress: string
+  tokenDenom: string
+  tokenNative: boolean
   client: SigningCosmWasmClient
 }
 
 export const addLiquidity = async (
   input: AddLiquidityInput
-): Promise<BroadcastTxResponse> => {
+): Promise<any> => {
+  let add_liquidity_msg = {
+    add_liquidity: {
+      token1_amount: `${input.nativeAmount}`,
+      max_token2: `${input.maxToken}`,
+      min_liquidity: `${input.minLiquidity}`,
+    },
+  }
+  if (!input.tokenNative) {
+    let msg1 = {
+      increase_allowance: {
+        amount: `${input.maxToken}`,
+        spender: `${input.swapAddress}`,
+      },
+    }
+    const executeContractMsg1: MsgExecuteContractEncodeObject = {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.tokenAddress,
+        msg: toUtf8(JSON.stringify(msg1)),
+        funds: [],
+      }),
+    }
+
+    const executeContractMsg2: MsgExecuteContractEncodeObject = {
+      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
+      value: MsgExecuteContract.fromPartial({
+        sender: input.senderAddress,
+        contract: input.swapAddress,
+        msg: toUtf8(JSON.stringify(add_liquidity_msg)),
+        funds: [coin(input.nativeAmount, input.nativeDenom)],
+      }),
+    }
+    const fee: StdFee = {
+      amount: defaultExecuteFee.amount,
+      gas: (Number(defaultExecuteFee.gas) * 2).toString(),
+    }
+    return await input.client.signAndBroadcast(
+      input.senderAddress,
+      [executeContractMsg1, executeContractMsg2],
+      fee
+    )
+  } else {
+    let funds = [coin(10, "ujuno"), coin(10, "ucosm")]
+    await input.client.execute(
+        input.senderAddress,
+        input.swapAddress,
+        add_liquidity_msg,
+        defaultExecuteFee,
+        undefined,
+        funds
+    )
+  }
+}
+
+export type RemoveLiquidityInput = {
+  amount: number
+  minToken1: number
+  minToken2: number
+  senderAddress: string
+  swapAddress: string
+  lpTokenAddress: string
+  client: SigningCosmWasmClient
+}
+
+export const removeLiquidity = async (input: RemoveLiquidityInput) => {
+
   let msg1 = {
     increase_allowance: {
-      amount: `${input.maxToken}`,
+      amount: `${input.amount}`,
       spender: `${input.swapAddress}`,
     },
   }
@@ -32,15 +101,16 @@ export const addLiquidity = async (
     typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
     value: MsgExecuteContract.fromPartial({
       sender: input.senderAddress,
-      contract: input.tokenAddress,
+      contract: input.lpTokenAddress,
       msg: toUtf8(JSON.stringify(msg1)),
       funds: [],
     }),
   }
-  let msg2 = {
-    add_liquidity: {
-      max_token: `${input.maxToken}`,
-      min_liquidity: `${input.minLiquidity}`,
+  const msg2 = {
+    remove_liquidity: {
+      amount: `${input.amount}`,
+      min_token1: `${input.minToken1}`,
+      min_token2: `${input.minToken2}`,
     },
   }
   const executeContractMsg2: MsgExecuteContractEncodeObject = {
@@ -49,64 +119,34 @@ export const addLiquidity = async (
       sender: input.senderAddress,
       contract: input.swapAddress,
       msg: toUtf8(JSON.stringify(msg2)),
-      funds: [coin(input.nativeAmount, input.nativeDenom)],
+      funds: [],
     }),
   }
   const fee: StdFee = {
     amount: defaultExecuteFee.amount,
     gas: (Number(defaultExecuteFee.gas) * 2).toString(),
   }
-  const executeAddLiquidity = await input.client.signAndBroadcast(
+  return await input.client.signAndBroadcast(
     input.senderAddress,
     [executeContractMsg1, executeContractMsg2],
     fee
   )
-  return executeAddLiquidity
-}
-
-export type RemoveLiquidityInput = {
-  amount: number
-  minNative: number
-  minToken: number
-  senderAddress: string
-  swapAddress: string
-  tokenAddress: string
-  client: SigningCosmWasmClient
-}
-
-export const removeLiquidity = async (input: RemoveLiquidityInput) => {
-  const msg = {
-    remove_liquidity: {
-      amount: `${input.amount}`,
-      min_native: `${input.minNative}`,
-      min_token: `${input.minToken}`,
-    },
-  }
-  const execute = await input.client.execute(
-    input.senderAddress,
-    input.swapAddress,
-    msg,
-    defaultExecuteFee,
-    undefined,
-    []
-  )
-  return execute
 }
 
 export type GetLiquidityBalanceInput = {
   address: string
-  swapAddress: string
+  tokenAddress: string
   rpcEndpoint: string
 }
 
 export const getLiquidityBalance = async ({
   rpcEndpoint,
-  swapAddress,
+  tokenAddress,
   address,
 }: GetLiquidityBalanceInput) => {
   try {
     const client = await CosmWasmClient.connect(rpcEndpoint)
-    const query = await client.queryContractSmart(swapAddress, {
+    const query = await client.queryContractSmart(tokenAddress, {
       balance: { address },
     })
     console.log({

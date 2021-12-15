@@ -3,6 +3,7 @@ import TokenList from '../public/token_list.json'
 
 export type TokenInfo = {
   id: string
+  pool_id: number
   chain_id: string
   token_address: string
   swap_address: string

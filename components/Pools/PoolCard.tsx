@@ -78,7 +78,7 @@ export const PoolCard = ({
               </StyledDivForRow>
               <StyledDivForRow>
                 <Text>{parseCurrency(totalLiquidity.dollarValue)}</Text>
-                <Text>150%</Text>
+                <Text>0%</Text>
               </StyledDivForRow>
             </StyledDivForRowWrapper>
           </>
@@ -100,12 +100,12 @@ export const PoolCard = ({
                     type="caption"
                     variant="normal"
                   >
-                    Bonded
+                    Staked
                   </StyledTextForSubtitle>
                 </StyledDivForRow>
                 <StyledDivForRow>
                   <Text>{parseCurrency(myLiquidity.dollarValue)}</Text>
-                  <Text>$999</Text>
+                  <Text>$0</Text>
                 </StyledDivForRow>
               </StyledDivForRowWrapper>
             </>

@@ -16,6 +16,8 @@ import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenT
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { parseCurrency } from '../../components/Pools/PoolCard'
 
+const __REWARDS_ENABLED__ = false
+
 export default function Pool() {
   const {
     query: { pool },
@@ -128,7 +130,7 @@ export default function Pool() {
               {parseCurrency(totalLiquidity.dollarValue)}
             </Text>
             <Text type="title3" variant="bold">
-              159%
+              Coming soon
             </Text>
           </StyledElementForLiquidity>
         </StyledElementForLiquidity>
@@ -167,49 +169,62 @@ export default function Pool() {
           >
             Rewards
           </Text>
-          <StyledDivForSeparator />
-          <StyledElementForRewards kind="wrapper">
-            <StyledElementForRewards kind="column">
-              <Text type="title2">$289.00</Text>
-            </StyledElementForRewards>
+          {__REWARDS_ENABLED__ && (
+            <>
+              <StyledDivForSeparator />
+              <StyledElementForRewards kind="wrapper">
+                <StyledElementForRewards kind="column">
+                  <Text type="title2">$289.00</Text>
+                </StyledElementForRewards>
 
-            <StyledElementForRewards kind="tokens">
-              <StyledTextForTokens kind="element">
-                <StyledImageForToken src="/crab.png" />
-                <Text color="bodyText" type="microscopic">
-                  11 juno
-                </Text>
-              </StyledTextForTokens>
-              <StyledTextForTokens kind="element">
-                <StyledImageForToken src="/crab.png" />
-                <Text color="bodyText" type="microscopic">
-                  31 atom
-                </Text>
-              </StyledTextForTokens>
-            </StyledElementForRewards>
+                <StyledElementForRewards kind="tokens">
+                  <StyledTextForTokens kind="element">
+                    <StyledImageForToken src="/crab.png" />
+                    <Text color="bodyText" type="microscopic">
+                      11 juno
+                    </Text>
+                  </StyledTextForTokens>
+                  <StyledTextForTokens kind="element">
+                    <StyledImageForToken src="/crab.png" />
+                    <Text color="bodyText" type="microscopic">
+                      31 atom
+                    </Text>
+                  </StyledTextForTokens>
+                </StyledElementForRewards>
 
-            <StyledElementForRewards kind="actions">
-              <Button className="action-btn">Claim</Button>
-            </StyledElementForRewards>
-          </StyledElementForRewards>
-          <StyledDivForSeparator />
+                <StyledElementForRewards kind="actions">
+                  <Button className="action-btn">Claim</Button>
+                </StyledElementForRewards>
+              </StyledElementForRewards>
+              <StyledDivForSeparator />
+            </>
+          )}
+          {!__REWARDS_ENABLED__ && (
+            <StyledDivForRewardsPlaceholder>
+              <Text color="secondaryText" type="caption" variant="light">
+                Work in progress. Stay tuned!
+              </Text>
+            </StyledDivForRewardsPlaceholder>
+          )}
         </>
 
-        <>
-          <Text
-            variant="bold"
-            paddingTop="24px"
-            paddingBottom="18px"
-            color="bodyText"
-          >
-            Unbonding Liquidity
-          </Text>
-          <StyledElementForUnbonding kind="list">
-            <UnbondingLiquidityCard />
-            <UnbondingLiquidityCard />
-            <UnbondingLiquidityCard />
-          </StyledElementForUnbonding>
-        </>
+        {__REWARDS_ENABLED__ && (
+          <>
+            <Text
+              variant="bold"
+              paddingTop="24px"
+              paddingBottom="18px"
+              color="bodyText"
+            >
+              Unbonding Liquidity
+            </Text>
+            <StyledElementForUnbonding kind="list">
+              <UnbondingLiquidityCard />
+              <UnbondingLiquidityCard />
+              <UnbondingLiquidityCard />
+            </StyledElementForUnbonding>
+          </>
+        )}
       </AppLayout>
     </>
   )
@@ -346,4 +361,11 @@ const StyledElementForUnbonding = styled('div', {
       },
     },
   },
+})
+
+const StyledDivForRewardsPlaceholder = styled('div', {
+  padding: '22px 24px',
+  borderRadius: '8px',
+  border: '1px solid #E7E7E7',
+  backgroundColor: 'rgba(25, 29, 32, 0.1)',
 })

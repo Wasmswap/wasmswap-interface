@@ -1,5 +1,5 @@
 import { AssetCard, AssetCardState } from './AssetCard'
-import { Text } from '../../components/Text'
+import { Text } from '../Text'
 import { styled } from '@stitches/react'
 import { walletState } from '../../state/atoms/walletAtoms'
 import { useWalletConnectionStatus } from '../../hooks/useWalletConnectionStatus'

@@ -40,17 +40,17 @@
     },
     {
       "id": "juno-network",
-      "pool_id": "JUNOX-POOD",
+      "pool_id": "JUNOX-CRAB",
       "chain_id": "lucina",
       "token_address": "juno19n6heewxzlpmkape9fpx84fp7mvhnaptnjq08zd3pe8cguj8eyzqzz0rxv",
       "swap_address": "juno1t6yxhlqtp7lsz87rgyvkyhmc3dee35cl0p3jc7f4ymv8m9kk3clqhdacr3",
-      "symbol": "POOD",
-      "name": "Poodle",
+      "symbol": "CRAB",
+      "name": "Crab",
       "decimals": 6,
-      "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
+      "logoURI": "https://images.vexels.com/media/users/3/240566/isolated/lists/f4ca475e8c859261d4f2b8009e4f0ad6-christmas-crab-flat.png",
       "tags": ["memecoin"],
       "native":false,
-      "denom":"upood"
+      "denom":"ucrab"
     }
   ],
   "version": {

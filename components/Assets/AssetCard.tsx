@@ -5,6 +5,7 @@ import { IconWrapper } from '../IconWrapper'
 import { DoubleArrow } from '../../icons/DoubleArrow'
 import { colorTokens } from '../../util/constants'
 import { HTMLProps } from 'react'
+import { __TRANSFERS_ENABLED__ } from '../../util/constants'
 
 export enum AssetCardState {
   fetching = 'FETCHING',
@@ -61,17 +62,28 @@ export const AssetCard = ({
         <StyledElementForToken>
           <StyledTokenImage src={logoURI} />
           <Text type="subtitle" variant="bold">
-            {balance} {name}
+            {balance} {name}{' '}
+            {!__TRANSFERS_ENABLED__ && (
+              <Text paddingLeft="16px" as="span" type="subtitle" variant="bold">
+                Coming soon
+              </Text>
+            )}
           </Text>
         </StyledElementForToken>
       </StyledElementForCard>
 
       <StyledElementForCard kind="actions">
-        <StyledActionButton onClick={handleDepositClick}>
+        <StyledActionButton
+          disabled={!__TRANSFERS_ENABLED__}
+          onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
+        >
           <IconWrapper size="16px" icon={<DoubleArrow />} />
           Deposit
         </StyledActionButton>
-        <StyledActionButton onClick={handleWithdrawClick}>
+        <StyledActionButton
+          disabled={!__TRANSFERS_ENABLED__}
+          onClick={__TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined}
+        >
           <IconWrapper size="16px" icon={<DoubleArrow />} />
           Withdraw
         </StyledActionButton>
@@ -151,5 +163,14 @@ const StyledActionButton = styled('button', {
   fontWeight: 500,
   '&:hover': {
     color: colorTokens.gray,
+  },
+
+  variants: {
+    disabled: {
+      true: {
+        color: colorTokens.gray,
+        cursor: 'not-allowed',
+      },
+    },
   },
 })

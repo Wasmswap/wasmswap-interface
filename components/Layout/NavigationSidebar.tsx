@@ -34,7 +34,17 @@ export function NavigationSidebar() {
         <Link href="/" passHref>
           <StyledDivForLogo as="a">
             <Logo data-logo="" width="37px" height="47px" />
-            <LogoText />
+            <div data-logo-label="">
+              <StyledTextForLogoAnnotation
+                color="#ED5276"
+                paddingBottom="2px"
+                paddingLeft="6px"
+                variant="bold"
+              >
+                Testnet
+              </StyledTextForLogoAnnotation>
+              <LogoText />
+            </div>
           </StyledDivForLogo>
         </Link>
 
@@ -80,9 +90,20 @@ export function NavigationSidebar() {
         </Link>
       </StyledMenuContainer>
 
-      <StyledFooterText variant="light" color="tertiaryText">
-        Junoswap — v1.0/2021
-      </StyledFooterText>
+      <StyledDivForFooter data-footer="">
+        <Text
+          type="caption"
+          variant="light"
+          color="tertiaryText"
+          paddingY="12px"
+        >
+          Testnet testing
+        </Text>
+        <Text type="caption" variant="light" color="tertiaryText">
+          This website is in an early beta version. Let us know if you encounter
+          any bugs.
+        </Text>
+      </StyledDivForFooter>
     </StyledWrapper>
   )
 }
@@ -142,7 +163,12 @@ const StyledLink = styled(TextAsLink)`
   }
 `
 
-const StyledFooterText = styled(Text)`
+const StyledTextForLogoAnnotation = styled(Text)`
+  font-size: 11px;
+  line-height: 13px;
+`
+
+const StyledDivForFooter = styled.div`
   padding-bottom: 29px;
   position: relative;
   z-index: 1;

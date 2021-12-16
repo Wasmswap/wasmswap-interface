@@ -32,9 +32,14 @@ export const ConnectedWalletButton = ({
       {connected ? (
         <>
           <Wallet />
-          <Text type="subtitle" variant="light" color="inherit">
-            {walletName}
-          </Text>
+          <div>
+            <Text type="microscopic" variant="light" color="secondaryText">
+              Demo account
+            </Text>
+            <Text type="subtitle" variant="light" color="inherit">
+              {walletName}
+            </Text>
+          </div>
           <IconWrapper icon={<Union />} onClick={onDisconnect} type="button" />
         </>
       ) : (

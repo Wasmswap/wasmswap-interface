@@ -17,7 +17,7 @@ export const SelectorInput = ({
   const formattedAmount = formatTokenBalance(amount)
 
   const handleAmountChange = ({ target: { value } }) => {
-    onAmountChange(Number(value))
+    onAmountChange(formatTokenBalance(value))
   }
 
   return (
@@ -29,7 +29,7 @@ export const SelectorInput = ({
         // id="token-amount"
         placeholder="0.0"
         min={0}
-        value={formattedAmount}
+        value={String(formattedAmount)}
         onChange={!disabled ? handleAmountChange : undefined}
         autoComplete="off"
         readOnly={disabled}

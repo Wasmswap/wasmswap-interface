@@ -34,11 +34,19 @@ export const formatTokenName = (name: string) => {
   return ''
 }
 
-const balanceFormatter = new Intl.NumberFormat('en-US', {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 6,
-})
+export const createBalanceFormatter = ({ maximumFractionDigits = 6 } = {}) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+  })
+
+  return (value: number) => {
+    return Number(formatter.format(value).replace(/,/g, ''))
+  }
+}
+
+const balanceFormatter = createBalanceFormatter()
 
 export function formatTokenBalance(value: number | string) {
-  return Number(balanceFormatter.format(Number(value)).replace(/,|\s/g, ''))
+  return balanceFormatter(Number(value))
 }

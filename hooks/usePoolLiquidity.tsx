@@ -21,6 +21,8 @@ export type LiquidityInfoType = {
   tokenDollarValue: number
 }
 
+const protectAgainstNaN = (value: number) => (isNaN(value) ? 0 : value)
+
 export const usePoolLiquidity = ({
   poolId,
 }): LiquidityInfoType & { isLoading: boolean } => {
@@ -78,13 +80,17 @@ export const usePoolLiquidity = ({
 
   /* provide dollar value for reserves as well */
   const reserve: [number, number] = [
-    Number(token1_reserve),
-    Number(token2_reserve),
+    protectAgainstNaN(Number(token1_reserve)),
+    protectAgainstNaN(Number(token2_reserve)),
   ]
 
   const myReserve: [number, number] = [
-    reserve[0] * (myLiquidityCoins / Number(lp_token_supply)),
-    reserve[1] * (myLiquidityCoins / Number(lp_token_supply)),
+    protectAgainstNaN(
+      reserve[0] * (myLiquidityCoins / Number(lp_token_supply))
+    ),
+    protectAgainstNaN(
+      reserve[1] * (myLiquidityCoins / Number(lp_token_supply))
+    ),
   ]
 
   const totalLiquidity = {

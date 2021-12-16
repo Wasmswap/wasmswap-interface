@@ -32,6 +32,7 @@ export const TokenSwap = () => {
         />
         <TransactionTips
           dollarValue={(tokenAPrice || 0) * (tokenA.amount || 0)}
+          onTokenSwaps={() => setTokenSwapState([tokenB, tokenA])}
         />
         <TokenSelector
           readOnly

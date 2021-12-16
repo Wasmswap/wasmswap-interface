@@ -41,6 +41,7 @@ const IconWrapperComponent = (
 )
 
 const buttonStyles = css`
+  user-select: none;
   cursor: pointer;
   transition: box-shadow 0.1s ease-out, background-color 0.1s ease-out;
   background-color: rgba(25, 29, 32, 0);

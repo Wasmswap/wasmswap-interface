@@ -6,12 +6,22 @@ import { styled } from '@stitches/react'
 
 type TransactionTipsProps = {
   dollarValue: number
+  onTokenSwaps: () => void
 }
 
-export const TransactionTips = ({ dollarValue }: TransactionTipsProps) => {
+export const TransactionTips = ({
+  dollarValue,
+  onTokenSwaps,
+}: TransactionTipsProps) => {
   return (
     <StyledDivForWrapper>
-      <IconWrapper width="24px" height="20px" icon={<Exchange />} />
+      <IconWrapper
+        type="button"
+        width="24px"
+        height="20px"
+        icon={<Exchange />}
+        onClick={onTokenSwaps}
+      />
       <Text type="microscopic" variant="bold" color="disabled">
         ≈ $ {dollarValue}
       </Text>

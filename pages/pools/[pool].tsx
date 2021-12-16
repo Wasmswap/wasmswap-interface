@@ -15,8 +15,7 @@ import { getBaseToken, useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
 import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenToTokenPrice'
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { parseCurrency } from '../../components/Pools/PoolCard'
-
-const __REWARDS_ENABLED__ = false
+import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
 
 export default function Pool() {
   const {
@@ -86,7 +85,8 @@ export default function Pool() {
                   src={tokenInfo.logoURI}
                 />
                 <Text color="bodyText" type="microscopic">
-                  {tokenInfo.name}{getBaseToken().name}
+                  {tokenInfo.name}
+                  {getBaseToken().name}
                 </Text>
               </StyledTextForTokens>
             </StyledTextForTokens>
@@ -99,7 +99,9 @@ export default function Pool() {
             >
               {isPriceLoading
                 ? ''
-                : `1 ${getBaseToken().symbol} = ${tokenPrice} ${tokenInfo.symbol}`}
+                : `1 ${getBaseToken().symbol} = ${tokenPrice} ${
+                    tokenInfo.symbol
+                  }`}
             </Text>
           </StyledRowForTokensInfo>
         </StyledRowForTokensInfo>
@@ -169,7 +171,7 @@ export default function Pool() {
           >
             Rewards
           </Text>
-          {__REWARDS_ENABLED__ && (
+          {__POOL_REWARDS_ENABLED__ && (
             <>
               <StyledDivForSeparator />
               <StyledElementForRewards kind="wrapper">
@@ -199,7 +201,7 @@ export default function Pool() {
               <StyledDivForSeparator />
             </>
           )}
-          {!__REWARDS_ENABLED__ && (
+          {!__POOL_REWARDS_ENABLED__ && (
             <StyledDivForRewardsPlaceholder>
               <Text color="secondaryText" type="caption" variant="light">
                 Work in progress. Stay tuned!
@@ -208,7 +210,7 @@ export default function Pool() {
           )}
         </>
 
-        {__REWARDS_ENABLED__ && (
+        {__POOL_REWARDS_ENABLED__ && (
           <>
             <Text
               variant="bold"

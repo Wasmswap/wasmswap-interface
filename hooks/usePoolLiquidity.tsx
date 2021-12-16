@@ -75,7 +75,6 @@ export const usePoolLiquidity = ({
   )
 
   const [[junoPrice]] = useTokenDollarValue([getBaseToken().symbol])
-  console.log(junoPrice)
 
   /* provide dollar value for reserves as well */
   const reserve: [number, number] = [

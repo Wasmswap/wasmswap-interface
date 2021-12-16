@@ -1,20 +1,23 @@
 export const chainInfo = {
   // Chain-id of the Cosmos SDK chain.
-  chainId: 'uni',
+  chainId: 'testing',
   // The name of the chain to be displayed to the user.
-  chainName: 'Juno Uni Testnet',
+  chainName: 'Juno Local',
   // RPC endpoint of the chain.
-  rpc: 'https://rpc.uni.juno.deuslabs.fi:443/',
+  rpc: 'http://localhost:26657/',
   // REST endpoint of the chain.
-  rest: 'https://lcd.uni.juno.deuslabs.fi:443/',
+  rest: 'http://localhost:1317/',
   // Staking coin information
   stakeCurrency: {
     // Coin denomination to be displayed to the user.
-    coinDenom: 'JUNOX',
+    coinDenom: 'JUNO',
     // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-    coinMinimalDenom: 'ujunox',
+    coinMinimalDenom: 'ujuno',
     // # of decimal points to convert minimal denomination to user-facing denomination.
     coinDecimals: 6,
+    // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
+    // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
+    coinGeckoId: 'juno-network',
   },
   // (Optional) If you have a wallet webpage used to stake the coin then provide the url to the website in `walletUrlForStaking`.
   // The 'stake' button in Keplr extension will link to the webpage.
@@ -47,23 +50,31 @@ export const chainInfo = {
   currencies: [
     {
       // Coin denomination to be displayed to the user.
-      coinDenom: 'JUNOX',
+      coinDenom: 'JUNO',
       // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-      coinMinimalDenom: 'ujunox',
+      coinMinimalDenom: 'ujuno',
       // # of decimal points to convert minimal denomination to user-facing denomination.
       coinDecimals: 6,
       // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
       // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
       coinGeckoId: 'juno-network',
-    }
+    },
+    {
+      // Coin denomination to be displayed to the user.
+      coinDenom: 'COSM',
+      // Actual denom (i.e. uatom, uscrt) used by the blockchain.
+      coinMinimalDenom: 'ucosm',
+      // # of decimal points to convert minimal denomination to user-facing denomination.
+      coinDecimals: 6,
+    },
   ],
   // List of coin/tokens used as a fee token in this chain.
   feeCurrencies: [
     {
       // Coin denomination to be displayed to the user.
-      coinDenom: 'JUNOX',
+      coinDenom: 'JUNO',
       // Actual denom (i.e. uatom, uscrt) used by the blockchain.
-      coinMinimalDenom: 'ujunox',
+      coinMinimalDenom: 'ujuno',
       // # of decimal points to convert minimal denomination to user-facing denomination.
       coinDecimals: 6,
       // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
@@ -82,7 +93,7 @@ export const chainInfo = {
   // Currently, Keplr doesn't support dynamic calculation of the gas prices based on on-chain data.
   // Make sure that the gas prices are higher than the minimum gas prices accepted by chain validators and RPC/REST endpoint.
   gasPriceStep: {
-    low: 0.05,
+    low: 0,
     average: 0.1,
     high: 0.2,
   },

@@ -40,6 +40,20 @@
     },
     {
       "id": "juno-network",
+      "pool_id": "JUNO-POOD",
+      "chain_id": "lucina",
+      "token_address": "juno1w0mnunkrz8q9ufl5p9q2ly3t5jj2n8qykke532nv0k0ar35hg09smuw20a",
+      "swap_address": "juno1jn2afw2lzf2yuxj7vr46h35xm2r8mkynausdl86pdfrktwcdsm7sj74tcp",
+      "symbol": "POOD",
+      "name": "Poodle",
+      "decimals": 6,
+      "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
+      "tags": ["memecoin"],
+      "native":false,
+      "denom":"upood"
+    },
+    {
+      "id": "juno-network",
       "pool_id": "JUNOX-CRAB",
       "chain_id": "lucina",
       "token_address": "juno19n6heewxzlpmkape9fpx84fp7mvhnaptnjq08zd3pe8cguj8eyzqzz0rxv",
@@ -51,6 +65,20 @@
       "tags": ["memecoin"],
       "native":false,
       "denom":"ucrab"
+    },
+    {
+      "id": "juno-network",
+      "chain_id": "lucina",
+      "pool_id": "JUNO-DAO",
+      "token_address": "juno1nfrsmjaty4hnmfvzzp303adluxmllyv4ad405zg2jutqk2qcd2nsxzsmea",
+      "swap_address": "juno1jkvsn4n32dty3m63xj33xlpllnlzh8u56lspnrq323ugqpq0sehqmqz5du",
+      "symbol": "DAO",
+      "name": "DAO",
+      "decimals": 6,
+      "logoURI": "https://avatars.githubusercontent.com/u/92181505?s=200&v=4",
+      "tags": ["memecoin"],
+      "native":false,
+      "denom":"udao"
     }
   ],
   "version": {

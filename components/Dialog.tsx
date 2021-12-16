@@ -1,10 +1,24 @@
 import Portal from '@reach/portal'
 import styled from 'styled-components'
 import gsap from 'gsap'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, ReactNode } from 'react'
 import { colorTokens } from '../util/constants'
 
-export const Dialog = ({ children, isShowing, onRequestClose }) => {
+type DialogProps = {
+  children: ReactNode
+  isShowing: boolean
+  onRequestClose: () => void
+  kind?: 'blank'
+}
+
+const paddingX = 18
+
+export const Dialog = ({
+  children,
+  isShowing,
+  onRequestClose,
+  kind,
+}: DialogProps) => {
   const [isRenderingDialog, setIsRenderingDialog] = useState(false)
   const modalRef = useRef()
   const overlayRef = useRef()
@@ -51,7 +65,9 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
       {(isShowing || isRenderingDialog) && (
         <>
           <StyledDivForModal ref={modalRef}>
-            <StyledCloseIcon onClick={onRequestClose} />
+            {kind !== 'blank' && (
+              <StyledCloseIcon offset={paddingX} onClick={onRequestClose} />
+            )}
             {children}
           </StyledDivForModal>
           <StyledDivForOverlay
@@ -64,8 +80,6 @@ export const Dialog = ({ children, isShowing, onRequestClose }) => {
     </Portal>
   )
 }
-
-const paddingX = 18
 
 export const DialogBody = styled.div`
   padding: ${paddingX}px;
@@ -110,7 +124,7 @@ const CloseIcon = (props) => (
   </svg>
 )
 
-const StyledCloseIcon = styled(CloseIcon)`
+export const StyledCloseIcon = styled(CloseIcon)`
   width: 24px;
   height: 24px;
   color: #323232;
@@ -118,8 +132,8 @@ const StyledCloseIcon = styled(CloseIcon)`
   transition: opacity 0.15s ease-out;
   cursor: pointer;
   margin-left: auto;
-  margin-right: ${paddingX}px;
-  margin-top: ${paddingX}px;
+  margin-right: ${(p) => p.offset}px;
+  margin-top: ${(p) => p.offset}px;
   &:hover {
     opacity: 0.75;
   }

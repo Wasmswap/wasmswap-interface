@@ -20,11 +20,19 @@ import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import { getBaseToken } from 'hooks/useTokenInfo'
+import { useTokenToTokenPrice } from '../TokenSwap/hooks/useTokenToTokenPrice'
+
+const balanceFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 6,
+})
 
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
-  const { balance: junoBalance } = useTokenBalance(getBaseToken().symbol)
+  const baseTokenSymbol = getBaseToken().symbol
+
+  const { balance: junoBalance } = useTokenBalance(baseTokenSymbol)
   const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
 
   const { myLiquidity, myReserve } = usePoolLiquidity({
@@ -44,11 +52,6 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         enabled: Boolean(tokenInfo.swap_address),
       }
     )
-
-  const balanceFormatter = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 6,
-  })
 
   const {
     isLoading,
@@ -133,14 +136,42 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const [tokenAAmount, setTokenAAmount] = useState(1)
   const [tokenBAmount, setTokenBAmount] = useState(1)
 
-  const handleTokenAAmountChange = (val: number) => {
-    setTokenAAmount(val)
-    setTokenBAmount((Number(token2_reserve) / Number(token1_reserve)) * val)
+  const [tokenPrice] = useTokenToTokenPrice({
+    tokenASymbol: baseTokenSymbol,
+    tokenBSymbol: tokenInfo.symbol,
+    tokenAmount: 1,
+  })
+
+  const hasMoreBaseTokenValue = junoBalance * tokenPrice > tokenBalance
+
+  const maxApplicableBalanceForBaseToken = hasMoreBaseTokenValue
+    ? junoBalance - (junoBalance - tokenBalance / tokenPrice)
+    : junoBalance
+
+  const maxApplicableBalanceForToken = hasMoreBaseTokenValue
+    ? tokenBalance
+    : tokenBalance - (tokenBalance - junoBalance * tokenPrice)
+
+  const handleTokenAAmountChange = (input: number) => {
+    const value =
+      input > maxApplicableBalanceForBaseToken
+        ? maxApplicableBalanceForBaseToken
+        : input
+    setTokenAAmount(value)
+    setTokenBAmount((Number(token2_reserve) / Number(token1_reserve)) * value)
   }
 
-  const handleTokenBAmountChange = (val: number) => {
-    setTokenBAmount(val)
-    setTokenAAmount((Number(token1_reserve) / Number(token2_reserve)) * val)
+  const handleTokenBAmountChange = (input: number) => {
+    const value =
+      input > maxApplicableBalanceForToken
+        ? maxApplicableBalanceForToken
+        : input
+    setTokenBAmount(value)
+    setTokenAAmount((Number(token1_reserve) / Number(token2_reserve)) * value)
+  }
+
+  const handleApplyMaximumAmount = () => {
+    handleTokenAAmountChange(maxApplicableBalanceForBaseToken)
   }
 
   const [isAddingLiquidity, setAddingLiquidity] = useState(true)
@@ -188,7 +219,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {isAddingLiquidity && (
           <>
             <LiquidityInput
-              tokenName={formatTokenName(getBaseToken().symbol)}
+              tokenName={formatTokenName(baseTokenSymbol)}
               balance={junoBalance ? junoBalance : 0}
               amount={tokenAAmount}
               ratio={50}
@@ -218,7 +249,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
               color="black"
               variant="normal"
               type="body"
-              onClick={() => handleTokenAAmountChange(junoBalance)}
+              onClick={handleApplyMaximumAmount}
             >
               Add maximum amounts
             </Link>

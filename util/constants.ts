@@ -31,3 +31,5 @@ export const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10000
 
 export const __TRANSFERS_ENABLED__ = false
 export const __POOL_REWARDS_ENABLED__ = false
+
+export const __APPLY_MAX_BALANCE_ENABLED__ = false

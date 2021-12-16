@@ -29,7 +29,8 @@ export const PoolCard = ({
     poolId,
   })
 
-  const hasProvidedLiquidity = typeof myLiquidity.coins === 'number'
+  const hasProvidedLiquidity =
+    typeof myLiquidity.coins === 'number' && myLiquidity.coins > 0
 
   return (
     <Link href={`/pools/${poolId}`} passHref>

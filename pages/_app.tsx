@@ -8,6 +8,7 @@ import { ErrorBoundary } from '../components/ErrorBoundary'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Portal } from '@reach/portal'
 import { ToastContainer } from 'react-toastify'
+import { TestnetDialog } from '../components/TestnetDialog'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,6 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <SafeHydrate>
           <ErrorBoundary>
             <Component {...pageProps} />
+            <TestnetDialog />
             <Portal>
               <ToastContainer
                 position="top-right"

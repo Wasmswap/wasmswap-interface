@@ -97,11 +97,11 @@ export function NavigationSidebar() {
           color="tertiaryText"
           paddingY="12px"
         >
-          Testnet testing
+          Testnet
         </Text>
         <Text type="caption" variant="light" color="tertiaryText">
-          This website is in an early beta version. Let us know if you encounter
-          any bugs.
+          This website is in beta. Let us know if you encounter
+          any issues.
         </Text>
       </StyledDivForFooter>
     </StyledWrapper>

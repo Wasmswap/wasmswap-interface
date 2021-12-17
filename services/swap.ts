@@ -21,9 +21,10 @@ export interface swapToken1ForToken2Input {
 export const swapToken1ForToken2 = async (input: swapToken1ForToken2Input) => {
   const minToken = Math.floor(input.price * (1 - input.slippage))
   const msg = {
-    swap_token1_for_token2: {
-      token1_amount: `${input.nativeAmount}`,
-      min_token2: `${minToken}`,
+    swap: {
+      input_token: "Token1",
+      input_amount: `${input.nativeAmount}`,
+      min_output: `${minToken}`,
     },
   }
   return await input.client.execute(
@@ -53,9 +54,10 @@ export const swapToken2ForToken1 = async (
 ): Promise<any> => {
   const minNative = Math.floor(input.price * (1 - input.slippage))
   let swap_msg = {
-    swap_token2_for_token1: {
-      min_token1: `${minNative}`,
-      token2_amount: `${input.tokenAmount}`,
+    swap: {
+      input_token: "Token2",
+      input_amount: `${minNative}`,
+      min_output: `${input.tokenAmount}`,
     },
   }
   if (!input.token2_native) {
@@ -131,7 +133,6 @@ export const swapTokenForToken = async (
     pass_through_swap: {
       output_min_token: `${minOutputToken}`,
       input_token: 'Token2',
-      output_token: 'Token2',
       input_token_amount: `${input.tokenAmount}`,
       output_amm_address: input.outputSwapAddress,
     },

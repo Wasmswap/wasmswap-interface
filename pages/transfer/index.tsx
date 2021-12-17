@@ -87,7 +87,7 @@ export default function Transfer() {
         <StyledWrapper>
           <PageHeader
             title="IBC Transfer"
-            subtitle="Easily and quickly initiate payments in between interchain wallets."
+            subtitle="Easily and quickly initiate payments across IBC."
           />
           <AssetsList onActionClick={handleAssetCardActionClick} />
           <Text variant="light" paddingTop="24px" color="tertiaryText">

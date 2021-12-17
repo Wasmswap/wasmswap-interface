@@ -85,8 +85,7 @@ export default function Pool() {
                   src={tokenInfo.logoURI}
                 />
                 <Text color="bodyText" type="microscopic">
-                  {tokenInfo.name}
-                  {getBaseToken().name}
+                  {tokenInfo.symbol}
                 </Text>
               </StyledTextForTokens>
             </StyledTextForTokens>

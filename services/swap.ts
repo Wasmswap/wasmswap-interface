@@ -56,8 +56,8 @@ export const swapToken2ForToken1 = async (
   let swap_msg = {
     swap: {
       input_token: "Token2",
-      input_amount: `${minNative}`,
-      min_output: `${input.tokenAmount}`,
+      input_amount: `${input.tokenAmount}`,
+      min_output: `${minNative}`,
     },
   }
   if (!input.token2_native) {

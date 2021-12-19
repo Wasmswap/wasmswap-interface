@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
 import { getBaseToken, useTokenInfoByPoolId } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
-import { convertDenomToMicroDenom, convertMicroDenomToDenom } from 'util/conversion'
+import { convertMicroDenomToDenom } from 'util/conversion'
 
 export type LiquidityInfoType = {
   reserve: [number, number]

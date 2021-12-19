@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
 import { getBaseToken, useTokenInfoByPoolId } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
+import { convertMicroDenomToDenom } from 'util/conversion'
 
 export type LiquidityInfoType = {
   reserve: [number, number]
@@ -28,7 +29,7 @@ export const usePoolLiquidity = ({
 }): LiquidityInfoType & { isLoading: boolean } => {
   const { address } = useRecoilValue(walletState)
 
-  const { swap_address, symbol: tokenSymbol } =
+  const { swap_address, symbol: tokenSymbol} =
     useTokenInfoByPoolId(poolId) || {}
 
   const {
@@ -95,12 +96,12 @@ export const usePoolLiquidity = ({
 
   const totalLiquidity = {
     coins: Number(lp_token_supply),
-    dollarValue: (reserve[0] / 1000000) * junoPrice * 2,
+    dollarValue: (convertMicroDenomToDenom(reserve[0],getBaseToken().decimals)) * junoPrice * 2,
   }
 
   const myLiquidity = {
     coins: myLiquidityCoins,
-    dollarValue: (myReserve[0] / 1000000) * junoPrice * 2,
+    dollarValue: (convertMicroDenomToDenom(myReserve[0], getBaseToken().decimals)) * junoPrice * 2,
   }
 
   return {

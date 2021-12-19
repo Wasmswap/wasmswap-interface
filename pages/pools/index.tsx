@@ -1,12 +1,52 @@
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { AppLayout } from '../../components/Layout/AppLayout'
-import TokenList from '../../public/token_list.json'
-import { PoolCard } from '../../components/Pools/PoolCard'
+import { getBaseToken, tokenList } from '../../hooks/useTokenInfo'
+import { PoolCard, PoolCardFetching } from '../../components/Pools/PoolCard'
 import { PageHeader } from '../../components/Layout/PageHeader'
-import { getBaseToken } from 'hooks/useTokenInfo'
+import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
+import { Text } from '../../components/Text'
 
 export default function Pools() {
+  const [{ supportedTokens, poolIds }] = useState(() => {
+    const supportedTokens = tokenList.filter(({ swap_address }) =>
+      Boolean(swap_address)
+    )
+    const poolIds = supportedTokens
+      .map(({ pool_id }) => pool_id)
+      .filter(Boolean)
+    return {
+      supportedTokens,
+      poolIds,
+    }
+  })
+
+  const [liquidity, isLoading] = usePoolLiquidity({
+    poolIds,
+  })
+
+  const [myPools, allPools] = useMemo(() => {
+    if (!liquidity?.length) return []
+    const pools = [[], []]
+    liquidity.forEach((liquidityInfo, index) => {
+      const poolIndex = liquidityInfo.myLiquidity.coins > 0 ? 0 : 1
+      pools[poolIndex].push({
+        liquidityInfo,
+        tokenInfo: supportedTokens[index],
+      })
+    })
+
+    return pools
+  }, [liquidity, supportedTokens])
+
+  const baseTokenSymbol = getBaseToken().symbol
+
+  console.log({
+    myPools,
+    allPools,
+    liquidity,
+  })
+
   return (
     <AppLayout>
       <PageHeader
@@ -15,26 +55,85 @@ export default function Pools() {
         receive swap fees from each trade."
       />
 
-      <StyledDivForPoolsGrid>
-        {TokenList.tokens
-          .filter((x) => x.symbol != getBaseToken().symbol)
-          .map((token, key) => (
-            <PoolCard
-              key={key}
-              poolId={token.pool_id}
-              tokenASymbol={getBaseToken().symbol}
-              tokenBSymbol={token.symbol}
-            />
-          ))}
-      </StyledDivForPoolsGrid>
+      {isLoading && !liquidity?.length && (
+        <>
+          <SectionTitle>My pools</SectionTitle>
+          <StyledDivForPoolsGrid>
+            {new Array(2).fill(null).map((_, key: number) => (
+              <PoolCardFetching hasLiquidityProvided={true} key={key} />
+            ))}
+          </StyledDivForPoolsGrid>
+
+          <SectionTitle variant="all">All pools</SectionTitle>
+          <StyledDivForPoolsGrid>
+            {new Array(4).fill(null).map((_, key: number) => (
+              <PoolCardFetching hasLiquidityProvided={false} key={key} />
+            ))}
+          </StyledDivForPoolsGrid>
+        </>
+      )}
+
+      {!isLoading && Boolean(liquidity?.length) && (
+        <>
+          {Boolean(allPools?.length && myPools?.length) && (
+            <>
+              <SectionTitle>My pools</SectionTitle>
+              <StyledDivForPoolsGrid>
+                {myPools.map(({ liquidityInfo, tokenInfo }, key) => (
+                  <PoolCard
+                    key={key}
+                    tokenASymbol={baseTokenSymbol}
+                    poolId={tokenInfo.pool_id}
+                    tokenBSymbol={tokenInfo.symbol}
+                    myLiquidity={liquidityInfo.myLiquidity}
+                    totalLiquidity={liquidityInfo.totalLiquidity}
+                  />
+                ))}
+              </StyledDivForPoolsGrid>
+              {Boolean(allPools?.length) && (
+                <SectionTitle variant="all">All pools</SectionTitle>
+              )}
+            </>
+          )}
+          <StyledDivForPoolsGrid>
+            {allPools?.map(({ liquidityInfo, tokenInfo }, key) => (
+              <PoolCard
+                key={key}
+                tokenASymbol={baseTokenSymbol}
+                poolId={tokenInfo.pool_id}
+                tokenBSymbol={tokenInfo.symbol}
+                myLiquidity={liquidityInfo.myLiquidity}
+                totalLiquidity={liquidityInfo.totalLiquidity}
+              />
+            ))}
+          </StyledDivForPoolsGrid>
+        </>
+      )}
     </AppLayout>
   )
 }
 
+const rowGap = '24px'
+
 const StyledDivForPoolsGrid = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: minmax(auto, calc(50% - ${rowGap})) minmax(
+      auto,
+      calc(50%)
+    );
   column-gap: 20px;
-  row-gap: 24px;
-  padding-bottom: 24px;
+  row-gap: ${rowGap};
 `
+
+const SectionTitle = ({ variant = 'my', children }) => {
+  return (
+    <Text
+      type="body"
+      variant="light"
+      paddingBottom="21px"
+      paddingTop={variant === 'all' ? '39px' : '0px'}
+    >
+      {children}
+    </Text>
+  )
+}

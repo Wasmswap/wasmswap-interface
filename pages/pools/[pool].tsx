@@ -32,10 +32,16 @@ export default function Pool() {
     tokenAmount: 1,
   })
 
+  const [liquidty, isLoading] = usePoolLiquidity({
+    poolIds: pool ? [pool] : undefined,
+  })
+
   const { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } =
-    usePoolLiquidity({
-      poolId: pool,
-    })
+    liquidty?.[0] ?? {}
+
+  const baseTokenSymbol = getBaseToken().symbol
+
+  const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
 
   if (!tokenInfo || !pool) {
     return 'No token info was provided.'
@@ -69,162 +75,164 @@ export default function Pool() {
 
         <StyledDivForSeparator />
 
-        <StyledRowForTokensInfo kind="wrapper">
-          <StyledRowForTokensInfo kind="column">
-            <Text paddingRight="26px">Pool #{tokenInfo.pool_id}</Text>
-            <StyledTextForTokens kind="wrapper">
-              <StyledTextForTokens kind="element">
-                <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
-                <Text color="bodyText" type="microscopic">
-                  {getBaseToken().symbol}
-                </Text>
-              </StyledTextForTokens>
-              <StyledTextForTokens kind="element">
-                <StyledImageForToken
-                  as={tokenInfo.logoURI ? 'img' : 'div'}
-                  src={tokenInfo.logoURI}
-                />
-                <Text color="bodyText" type="microscopic">
-                  {tokenInfo.name}
-                  {getBaseToken().name}
-                </Text>
-              </StyledTextForTokens>
-            </StyledTextForTokens>
-          </StyledRowForTokensInfo>
-          <StyledRowForTokensInfo kind="column">
-            <Text
-              type="microscopic"
-              color="tertiaryText"
-              textTransform="lowercase"
-            >
-              {isPriceLoading
-                ? ''
-                : `1 ${getBaseToken().symbol} = ${tokenPrice} ${
-                    tokenInfo.symbol
-                  }`}
-            </Text>
-          </StyledRowForTokensInfo>
-        </StyledRowForTokensInfo>
-
-        <StyledDivForSeparator />
-
-        <StyledElementForLiquidity kind="wrapper">
-          <StyledElementForLiquidity kind="row">
-            <Text
-              type="caption"
-              variant="light"
-              color="secondaryText"
-              paddingBottom="6px"
-            >
-              Total Liquidity
-            </Text>
-            <Text
-              type="caption"
-              variant="light"
-              color="secondaryText"
-              paddingBottom="6px"
-            >
-              APR reward
-            </Text>
-          </StyledElementForLiquidity>
-          <StyledElementForLiquidity kind="row">
-            <Text type="title3" variant="bold">
-              {parseCurrency(totalLiquidity.dollarValue)}
-            </Text>
-            <Text type="title3" variant="bold">
-              0%
-            </Text>
-          </StyledElementForLiquidity>
-        </StyledElementForLiquidity>
-
-        <StyledDivForSeparator />
-
-        <>
-          <Text
-            variant="bold"
-            paddingTop="24px"
-            paddingBottom="18px"
-            color="bodyText"
-          >
-            Personal shares
-          </Text>
-          <StyledDivForCards>
-            <PoolAvailableLiquidityCard
-              myLiquidity={myLiquidity}
-              myReserve={myReserve}
-              totalLiquidity={totalLiquidity}
-              tokenDollarValue={tokenDollarValue}
-              tokenASymbol={getBaseToken().symbol}
-              tokenBSymbol={tokenInfo.symbol}
-              onButtonClick={() => setIsDialogShowing(true)}
-            />
-            <PoolBondedLiquidityCard />
-          </StyledDivForCards>
-        </>
-
-        <>
-          <Text
-            variant="bold"
-            paddingTop="24px"
-            paddingBottom="18px"
-            color="bodyText"
-          >
-            Rewards
-          </Text>
-          {__POOL_REWARDS_ENABLED__ && (
-            <>
-              <StyledDivForSeparator />
-              <StyledElementForRewards kind="wrapper">
-                <StyledElementForRewards kind="column">
-                  <Text type="title2">$289.00</Text>
-                </StyledElementForRewards>
-
-                <StyledElementForRewards kind="tokens">
-                  <StyledTextForTokens kind="element">
-                    <StyledImageForToken src="/crab.png" />
-                    <Text color="bodyText" type="microscopic">
-                      11 juno
-                    </Text>
-                  </StyledTextForTokens>
-                  <StyledTextForTokens kind="element">
-                    <StyledImageForToken src="/crab.png" />
-                    <Text color="bodyText" type="microscopic">
-                      31 atom
-                    </Text>
-                  </StyledTextForTokens>
-                </StyledElementForRewards>
-
-                <StyledElementForRewards kind="actions">
-                  <Button className="action-btn">Claim</Button>
-                </StyledElementForRewards>
-              </StyledElementForRewards>
-              <StyledDivForSeparator />
-            </>
-          )}
-          {!__POOL_REWARDS_ENABLED__ && (
-            <StyledDivForRewardsPlaceholder>
-              <Text color="secondaryText" type="caption" variant="light">
-                Work in progress. Stay tuned!
-              </Text>
-            </StyledDivForRewardsPlaceholder>
-          )}
-        </>
-
-        {__POOL_REWARDS_ENABLED__ && (
+        {!isLoadingInitial && (
           <>
-            <Text
-              variant="bold"
-              paddingTop="24px"
-              paddingBottom="18px"
-              color="bodyText"
-            >
-              Unbonding Liquidity
-            </Text>
-            <StyledElementForUnbonding kind="list">
-              <UnbondingLiquidityCard />
-              <UnbondingLiquidityCard />
-              <UnbondingLiquidityCard />
-            </StyledElementForUnbonding>
+            <StyledRowForTokensInfo kind="wrapper">
+              <StyledRowForTokensInfo kind="column">
+                <Text paddingRight="26px">Pool #{tokenInfo.pool_id}</Text>
+                <StyledTextForTokens kind="wrapper">
+                  <StyledTextForTokens kind="element">
+                    <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
+                    <Text color="bodyText" type="microscopic">
+                      {baseTokenSymbol}
+                    </Text>
+                  </StyledTextForTokens>
+                  <StyledTextForTokens kind="element">
+                    <StyledImageForToken
+                      as={tokenInfo.logoURI ? 'img' : 'div'}
+                      src={tokenInfo.logoURI}
+                    />
+                    <Text color="bodyText" type="microscopic">
+                      {tokenInfo.name}
+                      {baseTokenSymbol}
+                    </Text>
+                  </StyledTextForTokens>
+                </StyledTextForTokens>
+              </StyledRowForTokensInfo>
+              <StyledRowForTokensInfo kind="column">
+                <Text
+                  type="microscopic"
+                  color="tertiaryText"
+                  textTransform="lowercase"
+                >
+                  {isPriceLoading
+                    ? ''
+                    : `1 ${baseTokenSymbol} = ${tokenPrice} ${tokenInfo.symbol}`}
+                </Text>
+              </StyledRowForTokensInfo>
+            </StyledRowForTokensInfo>
+
+            <StyledDivForSeparator />
+
+            <StyledElementForLiquidity kind="wrapper">
+              <StyledElementForLiquidity kind="row">
+                <Text
+                  type="caption"
+                  variant="light"
+                  color="secondaryText"
+                  paddingBottom="6px"
+                >
+                  Total Liquidity
+                </Text>
+                <Text
+                  type="caption"
+                  variant="light"
+                  color="secondaryText"
+                  paddingBottom="6px"
+                >
+                  APR reward
+                </Text>
+              </StyledElementForLiquidity>
+              <StyledElementForLiquidity kind="row">
+                <Text type="title3" variant="bold">
+                  {parseCurrency(totalLiquidity?.dollarValue)}
+                </Text>
+                <Text type="title3" variant="bold">
+                  0%
+                </Text>
+              </StyledElementForLiquidity>
+            </StyledElementForLiquidity>
+
+            <StyledDivForSeparator />
+
+            <>
+              <Text
+                variant="bold"
+                paddingTop="24px"
+                paddingBottom="18px"
+                color="bodyText"
+              >
+                Personal shares
+              </Text>
+              <StyledDivForCards>
+                <PoolAvailableLiquidityCard
+                  myLiquidity={myLiquidity}
+                  myReserve={myReserve}
+                  totalLiquidity={totalLiquidity}
+                  tokenDollarValue={tokenDollarValue}
+                  tokenASymbol={getBaseToken().symbol}
+                  tokenBSymbol={tokenInfo.symbol}
+                  onButtonClick={() => setIsDialogShowing(true)}
+                />
+                <PoolBondedLiquidityCard />
+              </StyledDivForCards>
+            </>
+
+            <>
+              <Text
+                variant="bold"
+                paddingTop="24px"
+                paddingBottom="18px"
+                color="bodyText"
+              >
+                Rewards
+              </Text>
+              {__POOL_REWARDS_ENABLED__ && (
+                <>
+                  <StyledDivForSeparator />
+                  <StyledElementForRewards kind="wrapper">
+                    <StyledElementForRewards kind="column">
+                      <Text type="title2">$289.00</Text>
+                    </StyledElementForRewards>
+
+                    <StyledElementForRewards kind="tokens">
+                      <StyledTextForTokens kind="element">
+                        <StyledImageForToken src="/crab.png" />
+                        <Text color="bodyText" type="microscopic">
+                          11 juno
+                        </Text>
+                      </StyledTextForTokens>
+                      <StyledTextForTokens kind="element">
+                        <StyledImageForToken src="/crab.png" />
+                        <Text color="bodyText" type="microscopic">
+                          31 atom
+                        </Text>
+                      </StyledTextForTokens>
+                    </StyledElementForRewards>
+
+                    <StyledElementForRewards kind="actions">
+                      <Button className="action-btn">Claim</Button>
+                    </StyledElementForRewards>
+                  </StyledElementForRewards>
+                  <StyledDivForSeparator />
+                </>
+              )}
+              {!__POOL_REWARDS_ENABLED__ && (
+                <StyledDivForRewardsPlaceholder>
+                  <Text color="secondaryText" type="caption" variant="light">
+                    Work in progress. Stay tuned!
+                  </Text>
+                </StyledDivForRewardsPlaceholder>
+              )}
+            </>
+
+            {__POOL_REWARDS_ENABLED__ && (
+              <>
+                <Text
+                  variant="bold"
+                  paddingTop="24px"
+                  paddingBottom="18px"
+                  color="bodyText"
+                >
+                  Unbonding Liquidity
+                </Text>
+                <StyledElementForUnbonding kind="list">
+                  <UnbondingLiquidityCard />
+                  <UnbondingLiquidityCard />
+                  <UnbondingLiquidityCard />
+                </StyledElementForUnbonding>
+              </>
+            )}
           </>
         )}
       </AppLayout>

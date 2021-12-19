@@ -40,13 +40,14 @@ export const createBalanceFormatter = ({ maximumFractionDigits = 6 } = {}) => {
     maximumFractionDigits,
   })
 
-  return (value: number) => {
-    return Number(formatter.format(value).replace(/,/g, ''))
+  return (value: number, asString?: boolean) => {
+    const formattedValue = formatter.format(value)
+    return asString ? formattedValue : Number(formattedValue.replace(/,/g, ''))
   }
 }
 
 const balanceFormatter = createBalanceFormatter()
 
-export function formatTokenBalance(value: number | string) {
-  return balanceFormatter(Number(value))
+export function formatTokenBalance(value: number | string, asString?: boolean) {
+  return balanceFormatter(Number(value), asString)
 }

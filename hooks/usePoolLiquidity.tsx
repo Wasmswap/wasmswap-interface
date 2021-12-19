@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
 import { getBaseToken, getTokenInfoByPoolId } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
+import { convertMicroDenomToDenom } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
 export type LiquidityType = {
@@ -98,14 +99,16 @@ export const usePoolLiquidity = ({
       protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
     ]
 
+    const baseTokenDecimals = getBaseToken().decimals;
+
     const totalLiquidity = {
       coins: lp_token_supply,
-      dollarValue: (reserve[0] / 1000000) * junoPrice * 2,
+      dollarValue: (convertMicroDenomToDenom(reserve[0], baseTokenDecimals)) * junoPrice * 2,
     }
 
     const myLiquidity = {
       coins: balance,
-      dollarValue: (myReserve[0] / 1000000) * junoPrice * 2,
+      dollarValue: (convertMicroDenomToDenom(myReserve[0], baseTokenDecimals)) * junoPrice * 2,
     }
 
     return {

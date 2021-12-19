@@ -1,7 +1,7 @@
 import { styled } from '@stitches/react'
 import { Text } from '../Text'
 import { Button } from '../Button'
-import { formatTokenBalance } from '../../util/conversion'
+import { convertMicroDenomToDenom, formatTokenBalance } from '../../util/conversion'
 import { parseCurrency } from './PoolCard'
 import { LiquidityInfoType } from '../../hooks/usePoolLiquidity'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
@@ -46,7 +46,7 @@ export const PoolAvailableLiquidityCard = ({
         </Text>
         <StyledTextForAmount>
           {parseCurrency(
-            (myReserve[0] / 1000000) * tokenDollarValue * 2 || '0.00'
+            (convertMicroDenomToDenom(myReserve[0], tokenA.decimals)) * tokenDollarValue * 2 || '0.00'
           )}
         </StyledTextForAmount>
       </StyledElementForCardLayout>
@@ -59,7 +59,7 @@ export const PoolAvailableLiquidityCard = ({
               alt={tokenASymbol}
             />
             <Text color="bodyText" type="microscopic">
-              {formatTokenBalance(myReserve[0] / 1000000)} {tokenASymbol}
+              {formatTokenBalance(convertMicroDenomToDenom(myReserve[0], tokenA.decimals))} {tokenASymbol}
             </Text>
           </StyledElementForTokens>
           <StyledElementForTokens kind="element">
@@ -69,7 +69,7 @@ export const PoolAvailableLiquidityCard = ({
               alt={tokenBSymbol}
             />
             <Text color="bodyText" type="microscopic">
-              {formatTokenBalance(myReserve[1] / 1000000)} {tokenBSymbol}
+              {formatTokenBalance(convertMicroDenomToDenom(myReserve[1],tokenB.decimals))} {tokenBSymbol}
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>

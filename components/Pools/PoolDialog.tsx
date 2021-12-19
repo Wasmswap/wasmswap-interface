@@ -8,7 +8,7 @@ import { Text } from '../Text'
 import { LiquidityInput } from '../LiquidityInput'
 import { Link } from '../Link'
 import { Button } from '../Button'
-import { formatTokenName } from 'util/conversion'
+import { convertDenomToMicroDenom, convertMicroDenomToDenom, formatTokenName } from 'util/conversion'
 import { walletState } from 'state/atoms/walletAtoms'
 import { useEffect, useState } from 'react'
 import { getSwapInfo } from 'services/swap'
@@ -64,9 +64,9 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     async () => {
       if (isAddingLiquidity) {
         return await addLiquidity({
-          nativeAmount: Math.floor(tokenAAmount * 1000000),
+          nativeAmount: Math.floor(convertDenomToMicroDenom(tokenAAmount, getBaseToken().decimals)),
           nativeDenom: getBaseToken().denom,
-          maxToken: Math.floor(tokenBAmount * 1000000 + 5),
+          maxToken: Math.floor(convertDenomToMicroDenom(tokenBAmount, tokenInfo.decimals) + 5),
           minLiquidity: 0,
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
@@ -263,13 +263,13 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
             <Text>
               {baseTokenSymbol}:{' '}
               {balanceFormatter.format(
-                (myReserve[0] / 1000000) * (removeLiquidityPercent / 100)
+                (convertMicroDenomToDenom(myReserve[0], getBaseToken().decimals)) * (removeLiquidityPercent / 100)
               )}
             </Text>
             <Text>
               {tokenInfo.symbol}:{' '}
               {balanceFormatter.format(
-                (myReserve[1] / 1000000) * (removeLiquidityPercent / 100)
+                convertMicroDenomToDenom(myReserve[1], tokenInfo.decimals) * (removeLiquidityPercent / 100)
               )}
             </Text>
           </StyledDivForLiquiditySummary>

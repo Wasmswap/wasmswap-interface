@@ -6,6 +6,7 @@ import {
 } from '../../../services/swap'
 import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
+import { convertDenomToMicroDenom, convertMicroDenomToDenom } from 'util/conversion'
 
 export const useTokenToTokenPrice = ({
   tokenASymbol,
@@ -18,13 +19,14 @@ export const useTokenToTokenPrice = ({
       const fromTokenInfo = getTokenInfo(tokenASymbol)
       const toTokenInfo = getTokenInfo(tokenBSymbol)
 
-      const formatPrice = (price) => price / 1000000
+      const formatPrice = (price) => convertMicroDenomToDenom(price, toTokenInfo.decimals)
       const base_token = getBaseToken()
 
+      let convertedTokenAmount = convertDenomToMicroDenom(tokenAmount, fromTokenInfo.decimals)
       if (fromTokenInfo.symbol === base_token.symbol) {
         return formatPrice(
           await getToken1ForToken2Price({
-            nativeAmount: tokenAmount * 1000000,
+            nativeAmount: convertedTokenAmount,
             swapAddress: toTokenInfo.swap_address,
             rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
           })
@@ -32,7 +34,7 @@ export const useTokenToTokenPrice = ({
       } else if (toTokenInfo.symbol === base_token.symbol) {
         return formatPrice(
           await getToken2ForToken1Price({
-            tokenAmount: tokenAmount * 1000000,
+            tokenAmount: convertedTokenAmount,
             swapAddress: fromTokenInfo.swap_address,
             rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
           })
@@ -41,7 +43,7 @@ export const useTokenToTokenPrice = ({
 
       return formatPrice(
         await getTokenForTokenPrice({
-          tokenAmount: tokenAmount * 1000000,
+          tokenAmount: convertedTokenAmount,
           swapAddress: fromTokenInfo.swap_address,
           outputSwapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,

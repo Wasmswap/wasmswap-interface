@@ -1,11 +1,17 @@
-export function convertMicroDenomToDenom(value: number | string) {
-  const amount = Number(value) / 1000000
+export function convertMicroDenomToDenom(value: number | string, decimals: number): number {
+  if (decimals === 0) {
+    return +value
+  }
+  const amount = Number(value) / (Math.pow(10,decimals))
   return isNaN(amount) ? 0 : amount
 }
 
-export function convertDenomToMicroDenom(value: number | string): string {
-  const amount = Number(value) * 1000000
-  return String(isNaN(amount) ? 0 : amount)
+export function convertDenomToMicroDenom(value: number | string, decimals: number): number {
+  if (decimals === 0) {
+    return +value
+  }
+  const amount = Number(value) * (Math.pow(10,decimals))
+  return isNaN(amount) ? 0 : amount
 }
 
 export function convertFromMicroDenom(denom: string) {

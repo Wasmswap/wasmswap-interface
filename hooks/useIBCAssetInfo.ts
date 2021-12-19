@@ -7,6 +7,7 @@ export type IBCAssetInfo = {
   symbol: string
   chain_id: string
   denom: string
+  decimals: number
   juno_denom: string
   juno_channel: string
   channel: string

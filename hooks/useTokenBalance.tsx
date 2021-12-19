@@ -7,10 +7,11 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { getIBCAssetInfo, IBCAssetInfo } from './useIBCAssetInfo'
+import { convertMicroDenomToDenom } from 'util/conversion'
 
 async function fetchTokenBalance({
   client,
-  token: { denom, native, token_address },
+  token: { denom, native, token_address, decimals},
   address,
 }: {
   client: SigningCosmWasmClient
@@ -18,6 +19,7 @@ async function fetchTokenBalance({
     denom?: string
     token_address?: string
     native?: boolean
+    decimals?: number
   }
   address: string
 }) {
@@ -33,7 +35,7 @@ async function fetchTokenBalance({
   if (native) {
     const coin = await client.getBalance(address, denom)
     const amount = coin ? Number(coin.amount) : 0
-    return amount / 1000000
+    return convertMicroDenomToDenom(amount, decimals)
   }
 
   /*
@@ -41,7 +43,7 @@ async function fetchTokenBalance({
    *  */
   if (token_address) {
     const balance = await CW20(client).use(token_address).balance(address)
-    return Number(balance) / 1000000
+    return convertMicroDenomToDenom(Number(balance), decimals)
   }
 
   return 0

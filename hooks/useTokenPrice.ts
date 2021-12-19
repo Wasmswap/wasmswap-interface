@@ -5,6 +5,7 @@ import {
 } from '../services/swap'
 import { useEffect, useState } from 'react'
 import { TokenInfo } from './useTokenInfo'
+import { convertDenomToMicroDenom, convertMicroDenomToDenom } from 'util/conversion'
 
 export const useTokenPrice = (
   fromTokenInfo: TokenInfo,
@@ -16,21 +17,22 @@ export const useTokenPrice = (
   // @todo refactor this to react-query
   useEffect(() => {
     const getPrice = async () => {
+      let convertedValue = convertDenomToMicroDenom(value,fromTokenInfo.decimals)
       if (fromTokenInfo.symbol === 'JUNO') {
         return await getToken1ForToken2Price({
-          nativeAmount: value * 1000000,
+          nativeAmount: convertedValue,
           swapAddress: toTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })
       } else if (toTokenInfo.symbol === 'JUNO') {
         return await getToken2ForToken1Price({
-          tokenAmount: value * 1000000,
+          tokenAmount: convertedValue,
           swapAddress: fromTokenInfo.swap_address,
           rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
         })
       }
       return await getTokenForTokenPrice({
-        tokenAmount: value * 1000000,
+        tokenAmount: convertedValue,
         swapAddress: fromTokenInfo.swap_address,
         outputSwapAddress: toTokenInfo.swap_address,
         rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
@@ -38,7 +40,7 @@ export const useTokenPrice = (
     }
     if (fromTokenInfo && value >= 0) {
       getPrice().then((receivedPrice) => {
-        setPrice(receivedPrice / 1000000)
+        setPrice(convertMicroDenomToDenom(receivedPrice, toTokenInfo.decimals))
       })
     }
   }, [fromTokenInfo, toTokenInfo, value])

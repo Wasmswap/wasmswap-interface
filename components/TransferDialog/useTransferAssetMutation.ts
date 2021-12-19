@@ -15,6 +15,7 @@ import { ibcWalletState, walletState } from '../../state/atoms/walletAtoms'
 import { TransactionKind } from './types'
 import { IBCAssetInfo } from '../../hooks/useIBCAssetInfo'
 import { defaultExecuteFee } from 'util/fees'
+import { convertDenomToMicroDenom } from 'util/conversion'
 
 type UseTransferAssetMutationArgs = {
   transactionKind: TransactionKind
@@ -70,7 +71,7 @@ export const useTransferAssetMutation = ({
       return await ibcClient.sendIbcTokens(
         ibcAddress,
         address,
-        { amount: (tokenAmount * 1000000).toString(), denom: tokenInfo.denom },
+        { amount: (convertDenomToMicroDenom(tokenAmount, tokenInfo.decimals)).toString(), denom: tokenInfo.denom },
         'transfer',
         tokenInfo.channel,
         undefined,
@@ -84,7 +85,7 @@ export const useTransferAssetMutation = ({
         address,
         ibcAddress,
         {
-          amount: (tokenAmount * 1000000).toString(),
+          amount: convertDenomToMicroDenom(tokenAmount, tokenInfo.decimals).toString(),
           denom: tokenInfo.juno_denom,
         },
         'transfer',

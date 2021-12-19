@@ -8,6 +8,7 @@ import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { transactionStatusState } from '../../../state/atoms/transactionAtoms'
 import { walletState } from '../../../state/atoms/walletAtoms'
+import { convertDenomToMicroDenom } from 'util/conversion'
 
 export const useTokenSwap = ({
   tokenASymbol,
@@ -37,10 +38,12 @@ export const useTokenSwap = ({
     } else {
       setTransactionState('EXECUTING_SWAP')
       try {
+        let convertedTokenAmount = convertDenomToMicroDenom(tokenAmount, tokenAInfo.decimals)
+        let convertedPrice = convertDenomToMicroDenom(tokenToTokenPrice, tokenBInfo.decimals)
         if (tokenASymbol === baseToken.symbol) {
           await swapToken1ForToken2({
-            nativeAmount: tokenAmount * 1000000,
-            price: tokenToTokenPrice * 1000000,
+            nativeAmount:  convertedTokenAmount,
+            price: convertedPrice,
             slippage: 0.1,
             senderAddress: address,
             swapAddress: tokenBInfo.swap_address,
@@ -48,8 +51,8 @@ export const useTokenSwap = ({
           })
         } else if (tokenBSymbol === baseToken.symbol) {
           await swapToken2ForToken1({
-            tokenAmount: tokenAmount * 1000000,
-            price: tokenToTokenPrice * 1000000,
+            tokenAmount: convertedTokenAmount,
+            price: convertedPrice,
             slippage: 0.1,
             senderAddress: address,
             tokenAddress: tokenAInfo.token_address,
@@ -60,8 +63,8 @@ export const useTokenSwap = ({
           })
         } else {
           await swapTokenForToken({
-            tokenAmount: tokenAmount * 1000000,
-            price: tokenToTokenPrice * 1000000,
+            tokenAmount: convertedTokenAmount,
+            price: convertedPrice,
             slippage: 0.1,
             senderAddress: address,
             tokenAddress: tokenAInfo.token_address,

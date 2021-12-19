@@ -3,6 +3,7 @@ import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useQuery } from 'react-query'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { convertMicroDenomToDenom } from 'util/conversion'
 
 const useGetWalletStatus = () => {
   const walletValue = useRecoilValue(ibcWalletState)
@@ -29,10 +30,10 @@ export const useIBCTokenBalance = (tokenSymbol) => {
   const { data: balance = 0, isLoading } = useQuery(
     [`ibcTokenBalance/${tokenSymbol}`, address],
     async () => {
-      const { denom } = getIBCAssetInfo(tokenSymbol)
+      const { denom, decimals } = getIBCAssetInfo(tokenSymbol)
       const coin = await client.getBalance(address, denom)
       const amount = coin ? Number(coin.amount) : 0
-      return amount / 1000000
+      return convertMicroDenomToDenom(amount, decimals)
     },
     {
       enabled,

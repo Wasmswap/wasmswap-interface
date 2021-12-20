@@ -6,6 +6,7 @@ import { TransactionTips } from './components/TransactionTips'
 import { TransactionAction } from './components/TransactionAction'
 import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
 import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
+import { usePersistance } from '../../hooks/usePersistance'
 
 export const TokenSwap = () => {
   const [[tokenA, tokenB], setTokenSwapState] = useRecoilState(tokenSwapAtom)
@@ -14,11 +15,26 @@ export const TokenSwap = () => {
     [tokenA?.tokenSymbol, tokenB?.tokenSymbol].filter(Boolean)
   )
 
-  const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
+  const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
     tokenAmount: tokenA?.amount,
   })
+
+  /* persist token price when fetching api */
+  const persistTokenPrice = usePersistance(
+    isPriceLoading ? undefined : currentTokenPrice
+  )
+
+  const tokenPrice =
+    (isPriceLoading ? persistTokenPrice : currentTokenPrice) || 0
+
+  const handleSwapTokenPositions = () => {
+    setTokenSwapState([
+      tokenB ? { ...tokenB, amount: tokenPrice } : tokenB,
+      tokenA ? { ...tokenA, amount: tokenB.amount } : tokenA,
+    ])
+  }
 
   return (
     <>
@@ -32,12 +48,13 @@ export const TokenSwap = () => {
         />
         <TransactionTips
           dollarValue={(tokenAPrice || 0) * (tokenA.amount || 0)}
-          onTokenSwaps={() => setTokenSwapState([tokenB, tokenA])}
+          tokenToTokenPrice={tokenPrice}
+          onTokenSwaps={handleSwapTokenPositions}
         />
         <TokenSelector
           readOnly
           tokenSymbol={tokenB.tokenSymbol}
-          amount={tokenPrice || 0}
+          amount={tokenPrice}
           onChange={(updatedTokenB) => {
             setTokenSwapState([tokenA, updatedTokenB])
           }}
@@ -45,7 +62,7 @@ export const TokenSwap = () => {
       </StyledDivForWrapper>
       <TransactionAction
         isPriceLoading={isPriceLoading}
-        tokenToTokenPrice={tokenPrice || 0}
+        tokenToTokenPrice={tokenPrice}
       />
     </>
   )

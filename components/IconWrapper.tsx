@@ -20,6 +20,8 @@ const IconWrapperComponent = (
     rounded,
     color,
     size = '16px',
+    width,
+    height,
     rotation,
     type,
     ...props
@@ -30,11 +32,13 @@ const IconWrapperComponent = (
     {...props}
     ref={ref}
     role={type === 'button' ? 'button' : undefined}
+    $isButton={type === 'button'}
     $color={color}
     $rounded={rounded}
     $rotation={rotation}
     $size={size}
-    $isButton={type === 'button'}
+    $width={width}
+    $height={height}
   >
     {icon}
   </StyledIcon>
@@ -62,12 +66,12 @@ const StyledIcon = styled.div`
   justify-content: center;
   align-items: center;
   color: ${(p) => colorTokens[p.$color] || p.$color};
-  width: ${(p) => p.$size};
-  height: ${(p) => p.$size};
-  min-width: ${(p) => p.$size};
-  min-height: ${(p) => p.$size};
+  width: ${(p) => p.$width || p.$size};
+  height: ${(p) => p.$height || p.$size};
+  min-width: ${(p) => p.$width || p.$size};
+  min-height: ${(p) => p.$height || p.$size};
   border-radius: ${(p) => (p.$rounded ? '50%' : 'unset')};
-  transform: ${(p) => (p.$rotation ? `rotateZ(${p.$rotation})` : 'unset')};
+  ${(p) => (p.$rotation ? `transform: rotateZ(${p.$rotation})` : '')};
   fill: currentColor;
   ${(p) => (p.$isButton ? buttonStyles : undefined)}
 `

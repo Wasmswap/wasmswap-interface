@@ -68,12 +68,17 @@ const textTransformMixin = css`
     p.textTransform ? `text-transform: ${p.textTransform};` : undefined}
 `
 
+const wrapMixin = css`
+  ${(p) => (p.wrap ? `white-space: ${p.wrap};` : undefined)}
+`
+
 const mixins = css`
   color: ${colorTokenSelector};
   font-weight: ${fontWeightSelector};
   font-family: ${fontFamilySelector};
   ${paddingMixin};
   ${textTransformMixin}
+  ${wrapMixin};
 `
 
 const Title = styled.p<TextProps>`

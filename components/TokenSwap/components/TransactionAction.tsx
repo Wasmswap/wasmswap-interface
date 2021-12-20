@@ -10,6 +10,7 @@ import { useConnectWallet } from '../../../hooks/useConnectWallet'
 import { useTokenSwap } from '../hooks/useTokenSwap'
 import { transactionStatusState } from '../../../state/atoms/transactionAtoms'
 import { Spinner } from '../../Spinner'
+import { usePersistance } from '../../../hooks/usePersistance'
 
 type TransactionTipsProps = {
   isPriceLoading?: boolean
@@ -41,6 +42,19 @@ export const TransactionAction = ({
     connectWallet(null)
   }
 
+  const canShowRate =
+    Boolean(
+      tokenA?.tokenSymbol && tokenB?.tokenSymbol && tokenToTokenPrice > 0
+    ) &&
+    Boolean(
+      typeof tokenA.amount === 'number' && typeof tokenToTokenPrice === 'number'
+    )
+
+  const conversionRate = canShowRate ? tokenA.amount / tokenToTokenPrice : 0
+  const persistConversionRate = usePersistance(
+    isPriceLoading ? undefined : conversionRate
+  )
+
   return (
     <StyledDivForWrapper>
       <StyledDivForInfo>
@@ -49,22 +63,15 @@ export const TransactionAction = ({
         </Text>
         <Text type="microscopic" variant="bold" color="disabled" font="mono">
           <>
-            {Boolean(
-              !isPriceLoading &&
-                tokenA?.tokenSymbol &&
-                tokenB?.tokenSymbol &&
-                tokenToTokenPrice > 0
-            ) &&
-              Boolean(
-                typeof tokenA.amount === 'number' &&
-                  typeof tokenToTokenPrice === 'number'
-              ) && (
-                <>
-                  1 {tokenA.tokenSymbol} ={' '}
-                  {formatTokenBalance(tokenA.amount / tokenToTokenPrice)}{' '}
-                  {tokenB.tokenSymbol}
-                </>
-              )}
+            {canShowRate && (
+              <>
+                1 {tokenA.tokenSymbol} ={' '}
+                {formatTokenBalance(
+                  isPriceLoading ? persistConversionRate : conversionRate
+                )}{' '}
+                {tokenB.tokenSymbol}
+              </>
+            )}
           </>
         </Text>
       </StyledDivForInfo>

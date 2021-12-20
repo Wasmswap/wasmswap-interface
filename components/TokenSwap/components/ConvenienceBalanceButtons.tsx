@@ -36,11 +36,12 @@ const StyledButton = styled('button', {
   backgroundColor: 'rgba(25, 29, 32, 0.1)',
   borderRadius: '38px',
   marginRight: 6,
+  transition: 'background-color .1s ease-out',
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: 'rgba(25, 29, 32, 0.15)',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.1)',
+    backgroundColor: 'rgba(25, 29, 32, 0.2)',
   },
   '&:first-of-type': {
     marginLeft: 8,

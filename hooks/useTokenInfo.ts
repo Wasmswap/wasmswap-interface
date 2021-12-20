@@ -16,8 +16,7 @@ export type TokenInfo = {
   native: boolean
 }
 
-export const getBaseToken = (): TokenInfo =>
-  TokenList.base_token
+export const getBaseToken = (): TokenInfo => TokenList.base_token
 
 export const getTokenInfo = (tokenSymbol: string): TokenInfo =>
   TokenList.tokens.find((x) => x.symbol === tokenSymbol)

@@ -1,17 +1,23 @@
-export function convertMicroDenomToDenom(value: number | string, decimals: number): number {
-  if (decimals === 0) {
-    return +value
-  }
-  const amount = Number(value) / (Math.pow(10,decimals))
-  return isNaN(amount) ? 0 : amount
+export const protectAgainstNaN = (value: number) => (isNaN(value) ? 0 : value)
+
+export function convertMicroDenomToDenom(
+  value: number | string,
+  decimals: number
+): number {
+  if (decimals === 0) return Number(value)
+
+  return protectAgainstNaN(Number(value) / Math.pow(10, decimals))
 }
 
-export function convertDenomToMicroDenom(value: number | string, decimals: number): number {
-  if (decimals === 0) {
-    return +value
-  }
-  const amount = Number(value) * (Math.pow(10,decimals))
-  return isNaN(amount) ? 0 : amount
+export function convertDenomToMicroDenom(
+  value: number | string,
+  decimals: number
+): number {
+  if (decimals === 0) return Number(value)
+
+  return protectAgainstNaN(
+    parseInt(String(Number(value) * Math.pow(10, decimals)), 10)
+  )
 }
 
 export function convertFromMicroDenom(denom: string) {
@@ -40,19 +46,24 @@ export const formatTokenName = (name: string) => {
   return ''
 }
 
-export const createBalanceFormatter = ({ maximumFractionDigits = 6 } = {}) => {
+export const createBalanceFormatter = ({
+  maximumFractionDigits = 6,
+  ...options
+}: Parameters<typeof Intl.NumberFormat>[1] = {}) => {
   const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits,
+    ...options,
   })
 
-  return (value: number) => {
-    return Number(formatter.format(value).replace(/,/g, ''))
+  return (value: number, asString?: boolean) => {
+    const formattedValue = formatter.format(value)
+    return asString ? formattedValue : Number(formattedValue.replace(/,/g, ''))
   }
 }
 
 const balanceFormatter = createBalanceFormatter()
 
-export function formatTokenBalance(value: number | string) {
-  return balanceFormatter(Number(value))
+export function formatTokenBalance(value: number | string, asString?: boolean) {
+  return balanceFormatter(Number(value), asString)
 }

@@ -19,7 +19,7 @@ export const SelectorToggle = ({
   availableAmount,
   tokenSymbol,
 }: SelectorToggleProps) => {
-  const formattedAvailableAmount = formatTokenBalance(availableAmount)
+  const formattedAvailableAmount = formatTokenBalance(availableAmount, true)
   const { logoURI } = useTokenInfo(tokenSymbol) || {}
 
   const hasTokenSelected = Boolean(tokenSymbol)
@@ -71,7 +71,6 @@ const StyledDivForSelector = styled('div', {
   backgroundColor: 'rgba(25, 29, 32, 0)',
   borderRadius: '6px',
   transition: 'background-color .1s ease-out',
-  maxWidth: 231,
   userSelect: 'none',
   whiteSpace: 'pre',
   '&:hover': {
@@ -86,6 +85,7 @@ const StyledDivForSelector = styled('div', {
         padding: '8px 12px',
         columnGap: '12px',
         gridTemplateColumns: '30px 1fr 16px',
+        minWidth: 231,
       },
       selecting: {
         padding: '12px 16px',

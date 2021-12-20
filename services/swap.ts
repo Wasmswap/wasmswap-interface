@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import {StdFee, coin, isBroadcastTxFailure} from '@cosmjs/stargate'
+import { StdFee, coin, isBroadcastTxFailure } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 import { getBaseToken } from 'hooks/useTokenInfo'
 
@@ -22,7 +22,7 @@ export const swapToken1ForToken2 = async (input: swapToken1ForToken2Input) => {
   const minToken = Math.floor(input.price * (1 - input.slippage))
   const msg = {
     swap: {
-      input_token: "Token1",
+      input_token: 'Token1',
       input_amount: `${input.nativeAmount}`,
       min_output: `${minToken}`,
     },
@@ -55,7 +55,7 @@ export const swapToken2ForToken1 = async (
   const minNative = Math.floor(input.price * (1 - input.slippage))
   let swap_msg = {
     swap: {
-      input_token: "Token2",
+      input_token: 'Token2',
       input_amount: `${input.tokenAmount}`,
       min_output: `${minNative}`,
     },
@@ -96,10 +96,11 @@ export const swapToken2ForToken1 = async (
       fee
     )
     if (isBroadcastTxFailure(result)) {
-      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
+      throw new Error(
+        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+      )
     }
     return result
-
   } else {
     return await input.client.execute(
       input.senderAddress,
@@ -173,7 +174,9 @@ export const swapTokenForToken = async (
       fee
     )
     if (isBroadcastTxFailure(result)) {
-      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
+      throw new Error(
+        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+      )
     }
     return result
   }
@@ -208,7 +211,7 @@ export const getToken1ForToken2Price = async (
     })
     return query.token2_amount
   } catch (e) {
-    console.error('err(getNativeForTokenPrice):', e)
+    console.error('err(getToken1ForToken2Price):', e)
   }
 }
 
@@ -230,7 +233,7 @@ export const getToken2ForToken1Price = async (
     })
     return query.token1_amount
   } catch (e) {
-    console.error('error(getTokenForNativePrice):', e)
+    console.error('error(getToken2ForToken1Price):', e)
   }
 }
 

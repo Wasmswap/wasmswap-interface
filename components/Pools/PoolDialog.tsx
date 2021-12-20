@@ -35,9 +35,11 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { balance: junoBalance } = useTokenBalance(baseTokenSymbol)
   const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
 
-  const { myLiquidity, myReserve } = usePoolLiquidity({
-    poolId: tokenInfo.pool_id,
+  const [liquidity] = usePoolLiquidity({
+    poolIds: [tokenInfo.pool_id],
   })
+
+  const { myLiquidity, myReserve } = liquidity?.[0] ?? {}
 
   const { data: { token2_reserve, token1_reserve, lp_token_address } = {} } =
     useQuery(
@@ -184,7 +186,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
-        {typeof myReserve[0] === 'number' && (
+        {typeof myReserve?.[0] === 'number' && (
           <StyledDivForButtons>
             <StyledSwitchButton
               onClick={() => setAddingLiquidity(true)}
@@ -259,7 +261,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {!isAddingLiquidity && (
           <StyledDivForLiquiditySummary>
             <Text>
-              {getBaseToken().symbol}:{' '}
+              {baseTokenSymbol}:{' '}
               {balanceFormatter.format(
                 (convertMicroDenomToDenom(myReserve[0], getBaseToken().decimals)) * (removeLiquidityPercent / 100)
               )}

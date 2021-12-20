@@ -2,13 +2,15 @@ import Link from 'next/link'
 import { styled } from '@stitches/react'
 import { colorTokens } from '../../util/constants'
 import { Text } from '../Text'
-import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { useTokenInfo } from '../../hooks/useTokenInfo'
+import { LiquidityType } from '../../hooks/usePoolLiquidity'
 
 type PoolCardProps = {
   poolId: string
   tokenASymbol: string
   tokenBSymbol: string
+  totalLiquidity: LiquidityType
+  myLiquidity: LiquidityType
 }
 
 export const parseCurrency = (value: number | string) =>
@@ -21,13 +23,11 @@ export const PoolCard = ({
   poolId,
   tokenASymbol,
   tokenBSymbol,
+  totalLiquidity,
+  myLiquidity,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
-
-  const { totalLiquidity, myLiquidity } = usePoolLiquidity({
-    poolId,
-  })
 
   const hasProvidedLiquidity =
     typeof myLiquidity.coins === 'number' && myLiquidity.coins > 0
@@ -47,7 +47,7 @@ export const PoolCard = ({
                 as={tokenB.logoURI ? 'img' : 'div'}
               />
             </StyledDivForTokenLogos>
-            <Text type="caption" variant="normal">
+            <Text type="caption" variant="light">
               Pool #{poolId}
             </Text>
             <StyledTextForTokenNames type="body" variant="normal">
@@ -117,11 +117,43 @@ export const PoolCard = ({
   )
 }
 
+export const PoolCardFetching = ({ hasLiquidityProvided = true }) => {
+  return (
+    <StyledLinkForCard
+      as="div"
+      variant={hasLiquidityProvided ? 'fetching--active' : 'fetching'}
+    >
+      <StyledDivForTokenLogos>
+        <StyledImageForTokenLogo as="div" />
+        <StyledImageForTokenLogo as="div" />
+      </StyledDivForTokenLogos>
+      {hasLiquidityProvided && (
+        <>
+          <StyledDivForLiquidityRows highlighted={true} placeholder={true}>
+            <StyledDivForSeparator />
+            <StyledDivForSeparator />
+          </StyledDivForLiquidityRows>
+        </>
+      )}
+    </StyledLinkForCard>
+  )
+}
+
 const StyledLinkForCard = styled('a', {
   cursor: 'pointer',
   borderRadius: 8,
   backgroundColor: 'rgba(25, 29, 32, 0.1)',
   position: 'relative',
+  variants: {
+    variant: {
+      fetching: {
+        minHeight: '184px',
+      },
+      'fetching--active': {
+        minHeight: '288px',
+      },
+    },
+  },
 })
 
 const StyledDivForTokenLogos = styled('div', {
@@ -184,6 +216,17 @@ const StyledTextForSubtitle: typeof Text = styled(Text, {
 
 const StyledDivForLiquidityRows = styled('div', {
   variants: {
+    placeholder: {
+      true: {
+        display: 'grid',
+        rowGap: 0,
+        position: 'absolute !important',
+        left: 0,
+        bottom: 0,
+        width: '100%',
+        height: 'calc(100% - 100% / 3)',
+      },
+    },
     highlighted: {
       true: {
         position: 'relative',

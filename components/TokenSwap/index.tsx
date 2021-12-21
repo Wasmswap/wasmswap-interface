@@ -47,6 +47,7 @@ export const TokenSwap = () => {
           }}
         />
         <TransactionTips
+          isPriceLoading={isPriceLoading}
           dollarValue={(tokenAPrice || 0) * (tokenA.amount || 0)}
           tokenToTokenPrice={tokenPrice}
           onTokenSwaps={handleSwapTokenPositions}

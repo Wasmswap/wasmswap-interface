@@ -7,13 +7,16 @@ import { useConstant } from '@reach/utils'
 import {
   createBalanceFormatter,
   formatTokenBalance,
+  protectAgainstNaN,
 } from '../../../util/conversion'
 import { usePersistance } from '../../../hooks/usePersistance'
 import { useRecoilValue } from 'recoil'
 import { tokenSwapAtom } from '../tokenSwapAtom'
 
 type TransactionTipsProps = {
+  isPriceLoading: boolean
   dollarValue: number
+  tokenToTokenPrice: number
   onTokenSwaps: () => void
 }
 
@@ -26,6 +29,7 @@ export const TransactionTips = ({
   const formatter = useConstant(() =>
     createBalanceFormatter({ style: 'currency', currency: 'USD' })
   )
+
   const [swappedPosition, setSwappedPositions] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
 
@@ -39,12 +43,12 @@ export const TransactionTips = ({
 
   const conversionRate = canShowRate ? tokenA.amount / tokenToTokenPrice : 0
   const persistConversionRate = usePersistance(
-    isPriceLoading ? undefined : conversionRate
+    isPriceLoading || !canShowRate ? undefined : conversionRate
   )
 
-  const conversionRateInDollar = (tokenToTokenPrice / tokenA.amount) * 10
+  const conversionRateInDollar = (conversionRate * dollarValue) / tokenA.amount
   const persistConversionRateInDollar = usePersistance(
-    isPriceLoading ? undefined : conversionRateInDollar
+    isPriceLoading || !canShowRate ? undefined : conversionRateInDollar
   )
 
   return (
@@ -70,9 +74,11 @@ export const TransactionTips = ({
             {tokenB.tokenSymbol}
             {' ≈ '}
             {formatter(
-              isPriceLoading
-                ? persistConversionRateInDollar
-                : conversionRateInDollar,
+              protectAgainstNaN(
+                isPriceLoading
+                  ? persistConversionRateInDollar
+                  : conversionRateInDollar
+              ),
               true
             )}
           </Text>

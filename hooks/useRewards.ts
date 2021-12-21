@@ -22,7 +22,7 @@ export const useClaimableRewardsBalance = (rewardsAddress: string, decimals: num
     }
   )
 
-  return { rewards, isLoading }
+  return [rewards, isLoading]
 }
 
 export const useRewardsInfo = (rewardsAddress: string) => {

@@ -11,8 +11,7 @@ export const Chevron = (props: SVGProps<SVGSVGElement>) => (
   >
     <path
       d="M11.875 14.375L7.5 10L11.875 5.625"
-      stroke="#191D20"
-      strokeOpacity="0.9"
+      stroke="currentColor"
       strokeWidth="1.5625"
       strokeLinecap="square"
       strokeLinejoin="bevel"

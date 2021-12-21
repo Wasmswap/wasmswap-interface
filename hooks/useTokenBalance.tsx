@@ -11,7 +11,7 @@ import { convertMicroDenomToDenom } from 'util/conversion'
 
 async function fetchTokenBalance({
   client,
-  token: { denom, native, token_address, decimals},
+  token: { denom, native, token_address, decimals },
   address,
 }: {
   client: SigningCosmWasmClient
@@ -64,16 +64,18 @@ export const useTokenBalance = (tokenSymbol: string) => {
   const { address, status, client } = useRecoilValue(walletState)
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`tokenBalance/${tokenSymbol}`, address],
-    async () => {
-      return await fetchTokenBalance({
-        client,
-        address,
-        token:
-          getTokenInfo(tokenSymbol) ||
-          mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
-          {},
-      })
+    [`tokenBalance`, tokenSymbol, address],
+    async ({ queryKey: [, symbol] }) => {
+      if (symbol) {
+        return await fetchTokenBalance({
+          client,
+          address,
+          token:
+            getTokenInfo(symbol) ||
+            mapIbcTokenToNative(getIBCAssetInfo(symbol)) ||
+            {},
+        })
+      }
     },
     {
       enabled: Boolean(tokenSymbol && status === WalletStatusType.connected),

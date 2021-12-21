@@ -30,7 +30,7 @@ export const TokenOptionsList = ({ activeTokenSymbol, onSelect }) => {
                 <Text type="caption" variant="bold">
                   {tokenInfo.symbol}
                 </Text>
-                <Text type="caption" variant="bold" color="#858585">
+                <Text type="microscopic" variant="normal" color="disabled">
                   {tokenInfo.name}
                 </Text>
               </div>
@@ -41,7 +41,7 @@ export const TokenOptionsList = ({ activeTokenSymbol, onSelect }) => {
                   tokenSymbol={tokenInfo.symbol}
                 />
               </Text>
-              <Text type="caption" variant="bold" color="#858585">
+              <Text type="microscopic" variant="normal" color="disabled">
                 available
               </Text>
             </StyledDivForColumn>

@@ -11,6 +11,7 @@ import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
 
 type TokenSelectorProps = {
   readOnly?: boolean
+  disabled?: boolean
   amount: number
   tokenSymbol: string
   onChange: (token: { tokenSymbol; amount }) => void
@@ -18,6 +19,7 @@ type TokenSelectorProps = {
 
 export const TokenSelector = ({
   readOnly,
+  disabled,
   tokenSymbol,
   amount,
   onChange,
@@ -40,12 +42,16 @@ export const TokenSelector = ({
             availableAmount={availableAmount}
             tokenSymbol={tokenSymbol}
             isSelecting={isTokenListShowing}
-            onToggle={() => setTokenListShowing((isShowing) => !isShowing)}
+            onToggle={
+              !disabled
+                ? () => setTokenListShowing((isShowing) => !isShowing)
+                : undefined
+            }
           />
           {!isTokenListShowing && tokenSymbol && !readOnly && (
             <ConvenienceBalanceButtons
               availableAmount={availableAmount}
-              onChange={handleAmountChange}
+              onChange={!disabled ? handleAmountChange : () => {}}
             />
           )}
         </StyledDivForSelector>
@@ -60,7 +66,7 @@ export const TokenSelector = ({
           {!isTokenListShowing && (
             <SelectorInput
               amount={amount}
-              disabled={!tokenSymbol || readOnly}
+              disabled={!tokenSymbol || readOnly || disabled}
               onAmountChange={handleAmountChange}
             />
           )}

@@ -1,8 +1,11 @@
 import { atom } from 'recoil'
 
-type TransactionStatusType = 'IDLE' | 'EXECUTING_SWAP'
+export enum TransactionStatus {
+  IDLE = '@transaction-status/idle',
+  EXECUTING = '@transaction-status/executing',
+}
 
-export const transactionStatusState = atom<TransactionStatusType>({
+export const transactionStatusState = atom<TransactionStatus>({
   key: 'transactionState',
-  default: 'IDLE',
+  default: TransactionStatus.IDLE,
 })

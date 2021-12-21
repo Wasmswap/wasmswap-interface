@@ -7,14 +7,18 @@ import { useConstant } from '@reach/utils'
 import {
   createBalanceFormatter,
   formatTokenBalance,
+  protectAgainstNaN,
 } from '../../../util/conversion'
 import { usePersistance } from '../../../hooks/usePersistance'
 import { useRecoilValue } from 'recoil'
-import { tokenSwapAtom } from '../tokenSwapAtom'
+import { tokenSwapAtom } from '../swapAtoms'
 
 type TransactionTipsProps = {
+  isPriceLoading: boolean
   dollarValue: number
+  tokenToTokenPrice: number
   onTokenSwaps: () => void
+  disabled?: boolean
 }
 
 export const TransactionTips = ({
@@ -22,10 +26,12 @@ export const TransactionTips = ({
   isPriceLoading,
   tokenToTokenPrice,
   onTokenSwaps,
+  disabled,
 }: TransactionTipsProps) => {
   const formatter = useConstant(() =>
     createBalanceFormatter({ style: 'currency', currency: 'USD' })
   )
+
   const [swappedPosition, setSwappedPositions] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
 
@@ -39,12 +45,12 @@ export const TransactionTips = ({
 
   const conversionRate = canShowRate ? tokenA.amount / tokenToTokenPrice : 0
   const persistConversionRate = usePersistance(
-    isPriceLoading ? undefined : conversionRate
+    isPriceLoading || !canShowRate ? undefined : conversionRate
   )
 
-  const conversionRateInDollar = (tokenToTokenPrice / tokenA.amount) * 10
+  const conversionRateInDollar = (conversionRate * dollarValue) / tokenA.amount
   const persistConversionRateInDollar = usePersistance(
-    isPriceLoading ? undefined : conversionRateInDollar
+    isPriceLoading || !canShowRate ? undefined : conversionRateInDollar
   )
 
   return (
@@ -54,12 +60,17 @@ export const TransactionTips = ({
           type="button"
           width="24px"
           height="20px"
+          color="tertiaryIcon"
           icon={<Exchange />}
           flipped={swappedPosition}
-          onClick={() => {
-            setSwappedPositions(!swappedPosition)
-            onTokenSwaps()
-          }}
+          onClick={
+            !disabled
+              ? () => {
+                  setSwappedPositions(!swappedPosition)
+                  onTokenSwaps()
+                }
+              : undefined
+          }
         />
         {canShowRate && (
           <Text type="microscopic" variant="bold" color="disabled" wrap="pre">
@@ -70,9 +81,11 @@ export const TransactionTips = ({
             {tokenB.tokenSymbol}
             {' ≈ '}
             {formatter(
-              isPriceLoading
-                ? persistConversionRateInDollar
-                : conversionRateInDollar,
+              protectAgainstNaN(
+                isPriceLoading
+                  ? persistConversionRateInDollar
+                  : conversionRateInDollar
+              ),
               true
             )}
           </Text>

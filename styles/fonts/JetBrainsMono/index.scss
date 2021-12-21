@@ -11,13 +11,13 @@ $JetBrainsMonoVersion: "1.101" !default;
 //  font-weight: 600;
 //  font-style: normal;
 //}
-//
-//@font-face {
-//  font-family: "JetBrains Mono";
-//  @include fontdef("Regular");
-//  font-weight: 500;
-//  font-style: normal;
-//}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  @include fontdef("Regular");
+  font-weight: 500;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "JetBrains Mono";

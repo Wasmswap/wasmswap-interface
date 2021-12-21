@@ -2,15 +2,15 @@ import { styled } from '@stitches/react'
 import { Text } from '../../Text'
 import { Button } from '../../Button'
 import { formatTokenBalance } from '../../../util/conversion'
-import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { tokenSwapAtom } from '../tokenSwapAtom'
+import React, { useEffect, useState } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { walletState, WalletStatusType } from '../../../state/atoms/walletAtoms'
 import { useConnectWallet } from '../../../hooks/useConnectWallet'
 import { useTokenSwap } from '../hooks/useTokenSwap'
-import { transactionStatusState } from '../../../state/atoms/transactionAtoms'
 import { Spinner } from '../../Spinner'
-import { usePersistance } from '../../../hooks/usePersistance'
+import { SlippageSelector } from './SlippageSelector'
+import { NETWORK_FEE } from '../../../util/constants'
 
 type TransactionTipsProps = {
   isPriceLoading?: boolean
@@ -21,75 +21,81 @@ export const TransactionAction = ({
   isPriceLoading,
   tokenToTokenPrice,
 }: TransactionTipsProps) => {
-  const { status } = useRecoilValue(walletState)
-  const transactionStatus = useRecoilValue(transactionStatusState)
+  const [requestedSwap, setRequestedSwap] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
 
+  /* wallet state */
+  const { status } = useRecoilValue(walletState)
   const { mutate: connectWallet } = useConnectWallet()
 
-  const handleSwap = useTokenSwap({
-    tokenASymbol: tokenA?.tokenSymbol,
-    tokenBSymbol: tokenB?.tokenSymbol,
-    tokenAmount: tokenA?.amount,
-    tokenToTokenPrice: tokenToTokenPrice || 0,
-  })
+  const [slippage, setSlippage] = useRecoilState(slippageAtom)
+
+  const { mutate: handleSwap, isLoading: isExecutingTransaction } =
+    useTokenSwap({
+      tokenASymbol: tokenA?.tokenSymbol,
+      tokenBSymbol: tokenB?.tokenSymbol,
+      tokenAmount: tokenA?.amount,
+      tokenToTokenPrice: tokenToTokenPrice || 0,
+    })
 
   const handleSwapButtonClick = () => {
     if (status === WalletStatusType.connected) {
-      return handleSwap()
+      return setRequestedSwap(true)
     }
 
     connectWallet(null)
   }
 
-  const canShowRate =
-    Boolean(
-      tokenA?.tokenSymbol && tokenB?.tokenSymbol && tokenToTokenPrice > 0
-    ) &&
-    Boolean(
-      typeof tokenA.amount === 'number' && typeof tokenToTokenPrice === 'number'
-    )
-
-  const conversionRate = canShowRate ? tokenA.amount / tokenToTokenPrice : 0
-  const persistConversionRate = usePersistance(
-    isPriceLoading ? undefined : conversionRate
-  )
+  /* proceed with the swap only if the price is loaded */
+  useEffect(() => {
+    const shouldTriggerTransaction =
+      !isPriceLoading && !isExecutingTransaction && requestedSwap
+    if (shouldTriggerTransaction) {
+      handleSwap()
+      setRequestedSwap(false)
+    }
+  }, [isPriceLoading, isExecutingTransaction, requestedSwap, handleSwap])
 
   return (
     <StyledDivForWrapper>
       <StyledDivForInfo>
-        <Text type="microscopic" variant="bold" color="disabled" font="mono">
-          RATE
-        </Text>
-        <Text type="microscopic" variant="bold" color="disabled" font="mono">
-          <>
-            {canShowRate && (
+        <StyledDivColumnForInfo kind="slippage">
+          <SlippageSelector
+            slippage={slippage}
+            onSlippageChange={setSlippage}
+          />
+        </StyledDivColumnForInfo>
+        <StyledDivColumnForInfo kind="fees">
+          <Text type="microscopic" variant="bold" color="disabled">
+            <>
               <>
-                1 {tokenA.tokenSymbol} ={' '}
-                {formatTokenBalance(
-                  isPriceLoading ? persistConversionRate : conversionRate
-                )}{' '}
-                {tokenB.tokenSymbol}
+                Contract fee ({NETWORK_FEE * 100}%){' '}
+                {Boolean(tokenToTokenPrice && tokenB?.tokenSymbol) && (
+                  <>
+                    {formatTokenBalance(tokenToTokenPrice * NETWORK_FEE, true)}{' '}
+                    {tokenB?.tokenSymbol}
+                  </>
+                )}
               </>
-            )}
-          </>
-        </Text>
+            </>
+          </Text>
+        </StyledDivColumnForInfo>
       </StyledDivForInfo>
       <Button
         type={status === WalletStatusType.connected ? 'primary' : 'disabled'}
         disabled={
-          transactionStatus === 'EXECUTING_SWAP' ||
+          isExecutingTransaction ||
           !tokenB.tokenSymbol ||
           !tokenA.tokenSymbol ||
           (status === WalletStatusType.connected && tokenA.amount <= 0)
         }
         onClick={
-          transactionStatus !== 'EXECUTING_SWAP' && !isPriceLoading
+          !isExecutingTransaction && !isPriceLoading
             ? handleSwapButtonClick
             : undefined
         }
       >
-        {transactionStatus === 'EXECUTING_SWAP' ? (
+        {isExecutingTransaction ? (
           <Spinner />
         ) : (
           <Text type="subtitle" color="white" variant="light" paddingY="3px">
@@ -105,7 +111,7 @@ export const TransactionAction = ({
 
 const StyledDivForWrapper = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '1fr 184px',
+  gridTemplateColumns: '1fr 150px',
   columnGap: 12,
   alignItems: 'center',
   padding: '12px 0',
@@ -113,10 +119,27 @@ const StyledDivForWrapper = styled('div', {
 
 const StyledDivForInfo = styled('div', {
   display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'center',
-  backgroundColor: 'rgba(25, 29, 32, 0.05)',
-  padding: '16px 18px',
   textTransform: 'uppercase',
   borderRadius: 8,
+})
+
+const StyledDivColumnForInfo = styled('div', {
+  display: 'grid',
+  variants: {
+    kind: {
+      slippage: {
+        backgroundColor: 'transparent',
+        minWidth: '140px',
+        borderRadius: '8px 0 0 8px',
+        borderRight: '1px solid rgba(25, 29, 32, 0.2)',
+      },
+      fees: {
+        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        flex: 1,
+        padding: '16px 25px',
+        borderRadius: '0 8px 8px 0',
+      },
+    },
+  },
 })

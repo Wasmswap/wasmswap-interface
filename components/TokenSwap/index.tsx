@@ -1,15 +1,22 @@
 import { TokenSelector } from './components/TokenSelector'
-import { useRecoilState } from 'recoil'
-import { tokenSwapAtom } from './tokenSwapAtom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { tokenSwapAtom } from './swapAtoms'
 import { styled } from '@stitches/react'
 import { TransactionTips } from './components/TransactionTips'
 import { TransactionAction } from './components/TransactionAction'
 import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
 import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
 import { usePersistance } from '../../hooks/usePersistance'
+import {
+  TransactionStatus,
+  transactionStatusState,
+} from '../../state/atoms/transactionAtoms'
 
 export const TokenSwap = () => {
   const [[tokenA, tokenB], setTokenSwapState] = useRecoilState(tokenSwapAtom)
+  const transactionStatus = useRecoilValue(transactionStatusState)
+
+  const isUiDisabled = transactionStatus === TransactionStatus.EXECUTING
 
   const [[tokenAPrice]] = useTokenDollarValue(
     [tokenA?.tokenSymbol, tokenB?.tokenSymbol].filter(Boolean)
@@ -21,7 +28,7 @@ export const TokenSwap = () => {
     tokenAmount: tokenA?.amount,
   })
 
-  /* persist token price when fetching api */
+  /* persist token price when querying a new one */
   const persistTokenPrice = usePersistance(
     isPriceLoading ? undefined : currentTokenPrice
   )
@@ -45,8 +52,11 @@ export const TokenSwap = () => {
           onChange={(updateTokenA) => {
             setTokenSwapState([updateTokenA, tokenB])
           }}
+          disabled={isUiDisabled}
         />
         <TransactionTips
+          disabled={isUiDisabled}
+          isPriceLoading={isPriceLoading}
           dollarValue={(tokenAPrice || 0) * (tokenA.amount || 0)}
           tokenToTokenPrice={tokenPrice}
           onTokenSwaps={handleSwapTokenPositions}
@@ -58,6 +68,7 @@ export const TokenSwap = () => {
           onChange={(updatedTokenB) => {
             setTokenSwapState([tokenA, updatedTokenB])
           }}
+          disabled={isUiDisabled}
         />
       </StyledDivForWrapper>
       <TransactionAction

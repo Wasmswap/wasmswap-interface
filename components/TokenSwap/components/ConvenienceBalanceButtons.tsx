@@ -41,7 +41,7 @@ const StyledButton = styled('button', {
     backgroundColor: 'rgba(25, 29, 32, 0.15)',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.2)',
+    backgroundColor: 'rgba(25, 29, 32, 0.05)',
   },
   '&:first-of-type': {
     marginLeft: 8,

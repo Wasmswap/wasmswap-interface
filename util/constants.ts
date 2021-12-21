@@ -8,6 +8,7 @@ export const colorTokens = {
   secondaryText: 'rgba(25, 29, 32, 0.75)',
   bodyText: 'rgba(25, 29, 32, 0.95)',
   tertiaryText: 'rgba(25, 29, 32, 0.6)',
+  tertiaryIcon: 'rgba(25, 29, 32, 0.5)',
   disabled: '#858585',
 }
 
@@ -28,6 +29,8 @@ export const fonts = {
 }
 
 export const DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL = 10000
+export const SLIPPAGE_OPTIONS = [0.01, 0.02, 0.03, 0.05]
+export const NETWORK_FEE = 0.003
 
 export const __TRANSFERS_ENABLED__ = false
 export const __POOL_REWARDS_ENABLED__ = false

@@ -53,11 +53,16 @@ export const SelectorToggle = ({
             <Text type="caption" variant="bold">
               {tokenSymbol}
             </Text>
-            <Text type="caption" variant="bold" color="tertiaryText">
+            <Text type="microscopic" variant="normal" color="disabled">
               {formattedAvailableAmount} available
             </Text>
           </div>
-          <IconWrapper size="16px" rotation="-90deg" icon={<Chevron />} />
+          <IconWrapper
+            size="16px"
+            rotation="-90deg"
+            color="tertiaryIcon"
+            icon={<Chevron />}
+          />
         </>
       )}
     </StyledDivForSelector>

@@ -11,13 +11,14 @@ import {
 } from '../../../util/conversion'
 import { usePersistance } from '../../../hooks/usePersistance'
 import { useRecoilValue } from 'recoil'
-import { tokenSwapAtom } from '../tokenSwapAtom'
+import { tokenSwapAtom } from '../swapAtoms'
 
 type TransactionTipsProps = {
   isPriceLoading: boolean
   dollarValue: number
   tokenToTokenPrice: number
   onTokenSwaps: () => void
+  disabled?: boolean
 }
 
 export const TransactionTips = ({
@@ -25,6 +26,7 @@ export const TransactionTips = ({
   isPriceLoading,
   tokenToTokenPrice,
   onTokenSwaps,
+  disabled,
 }: TransactionTipsProps) => {
   const formatter = useConstant(() =>
     createBalanceFormatter({ style: 'currency', currency: 'USD' })
@@ -58,12 +60,17 @@ export const TransactionTips = ({
           type="button"
           width="24px"
           height="20px"
+          color="tertiaryIcon"
           icon={<Exchange />}
           flipped={swappedPosition}
-          onClick={() => {
-            setSwappedPositions(!swappedPosition)
-            onTokenSwaps()
-          }}
+          onClick={
+            !disabled
+              ? () => {
+                  setSwappedPositions(!swappedPosition)
+                  onTokenSwaps()
+                }
+              : undefined
+          }
         />
         {canShowRate && (
           <Text type="microscopic" variant="bold" color="disabled" wrap="pre">

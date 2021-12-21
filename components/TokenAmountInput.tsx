@@ -20,7 +20,7 @@ export const TokenAmountInput = ({
   function handleChange({ target: { value: rawInput } }) {
     const formattedValue = formatTokenBalance(rawInput)
     const validatedValue = formattedValue > maxValue ? maxValue : formattedValue
-    onAmountChange(validatedValue)
+    onAmountChange(Number(validatedValue))
   }
 
   return (

@@ -211,7 +211,7 @@
     pako "^2.0.2"
     protobufjs "~6.10.2"
 
-"@cosmjs/cosmwasm@0.25.6":
+"@cosmjs/cosmwasm@^0.25.6":
   version "0.25.6"
   resolved "https://registry.yarnpkg.com/@cosmjs/cosmwasm/-/cosmwasm-0.25.6.tgz#2615664f6e6a310160cd46a4140cf905231d550f"
   integrity sha512-o+YM2NvL3/2O5lnG/vHk9QE+DvDH6FNYfvzO/evit17sAr/m5G2E8fuROlU+Z9Ml6Nj0QXgqhsR81WCGcup1Sw==

@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { coin, StdFee, isBroadcastTxFailure } from '@cosmjs/stargate'
+import { coin, StdFee, isDeliverTxFailure } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 
 export type AddLiquidityInput = {
@@ -67,7 +67,7 @@ export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
       [executeContractMsg1, executeContractMsg2],
       fee
     )
-    if (isBroadcastTxFailure(result)) {
+    if (isDeliverTxFailure(result)) {
       throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
     }
     return result
@@ -136,7 +136,7 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
     [executeContractMsg1, executeContractMsg2],
     fee
   )
-  if (isBroadcastTxFailure(result)) {
+  if (isDeliverTxFailure(result)) {
     throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
   }
   return result

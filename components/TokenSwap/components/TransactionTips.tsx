@@ -58,8 +58,7 @@ export const TransactionTips = ({
       <StyledDivForRateWrapper>
         <StyledIconWrapper
           type="button"
-          width="24px"
-          height="20px"
+          size="20px"
           color="tertiaryIcon"
           icon={<Exchange />}
           flipped={swappedPosition}
@@ -104,6 +103,7 @@ const StyledDivForWrapper = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   justifyContent: 'space-between',
+  alignItems: 'center',
   textAlign: 'right',
   borderTop: '1px solid rgba(25, 29, 32, 0.1)',
   borderBottom: '1px solid rgba(25, 29, 32, 0.1)',

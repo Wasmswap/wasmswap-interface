@@ -75,7 +75,7 @@ export default function Pools() {
 
       {!isLoading && Boolean(liquidity?.length) && (
         <>
-          {Boolean(allPools?.length && myPools?.length) && (
+          {Boolean(myPools?.length) && (
             <>
               <SectionTitle>My pools</SectionTitle>
               <StyledDivForPoolsGrid>

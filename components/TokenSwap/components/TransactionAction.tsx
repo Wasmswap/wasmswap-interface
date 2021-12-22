@@ -1,7 +1,6 @@
 import { styled } from '@stitches/react'
 import { Text } from '../../Text'
 import { Button } from '../../Button'
-import { formatTokenBalance } from '../../../util/conversion'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'

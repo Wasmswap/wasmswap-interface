@@ -67,17 +67,7 @@ export const TransactionAction = ({
         </StyledDivColumnForInfo>
         <StyledDivColumnForInfo kind="fees">
           <Text type="microscopic" variant="bold" color="disabled">
-            <>
-              <>
-                Contract fee ({NETWORK_FEE * 100}%){' '}
-                {Boolean(tokenToTokenPrice && tokenB?.tokenSymbol) && (
-                  <>
-                    {formatTokenBalance(tokenToTokenPrice * NETWORK_FEE, true)}{' '}
-                    {tokenB?.tokenSymbol}
-                  </>
-                )}
-              </>
-            </>
+            Swap fee ({NETWORK_FEE * 100}%)
           </Text>
         </StyledDivColumnForInfo>
       </StyledDivForInfo>

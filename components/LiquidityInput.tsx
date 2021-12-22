@@ -20,7 +20,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
   onAmountChange,
 }) => {
   const handleAmountChange = ({ target: { value } }) =>
-    onAmountChange(formatTokenBalance(Number(value)))
+    onAmountChange(Number(formatTokenBalance(value)))
 
   return (
     <StyledInputBox>

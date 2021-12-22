@@ -17,7 +17,7 @@ export const SelectorInput = ({
   const formattedAmount = formatTokenBalance(amount)
 
   const handleAmountChange = ({ target: { value } }) => {
-    onAmountChange(formatTokenBalance(value))
+    onAmountChange(Number(formatTokenBalance(value)))
   }
 
   return (

@@ -25,7 +25,7 @@ export default function Pool() {
 
   const [isManageLiquidityDialogShowing, setIsManageLiquidityDialogShowing] =
     useState(false)
-  const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(true)
+  const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
 
@@ -59,7 +59,7 @@ export default function Pool() {
       />
       <BondLiquidityDialog
         isShowing={isBondingDialogShowing}
-        onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
+        onRequestClose={() => setIsBondingDialogShowing(false)}
         poolId={pool}
       />
       <AppLayout>

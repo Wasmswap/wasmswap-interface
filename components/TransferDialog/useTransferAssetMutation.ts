@@ -1,5 +1,5 @@
 import {
-  BroadcastTxResponse,
+  DeliverTxResponse,
   Coin,
   MsgTransferEncodeObject,
   StdFee,
@@ -35,7 +35,7 @@ const sendIbcTokens = (
   fee: StdFee,
   memo = '',
   client: SigningCosmWasmClient
-): Promise<BroadcastTxResponse> => {
+): Promise<DeliverTxResponse> => {
   const timeoutTimestampNanoseconds = timeoutTimestamp
     ? Long.fromNumber(timeoutTimestamp).multiply(1_000_000_000)
     : undefined

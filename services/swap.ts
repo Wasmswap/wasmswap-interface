@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { StdFee, coin, isBroadcastTxFailure } from '@cosmjs/stargate'
+import {StdFee, coin, isDeliverTxFailure} from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 import { getBaseToken } from 'hooks/useTokenInfo'
 
@@ -95,10 +95,8 @@ export const swapToken2ForToken1 = async (
       [executeContractMsg1, executeContractMsg2],
       fee
     )
-    if (isBroadcastTxFailure(result)) {
-      throw new Error(
-        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
-      )
+    if (isDeliverTxFailure(result)) {
+      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
     }
     return result
   } else {
@@ -173,10 +171,8 @@ export const swapTokenForToken = async (
       [executeContractMsg1, executeContractMsg2],
       fee
     )
-    if (isBroadcastTxFailure(result)) {
-      throw new Error(
-        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
-      )
+    if (isDeliverTxFailure(result)) {
+      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
     }
     return result
   }

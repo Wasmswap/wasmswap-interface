@@ -144,6 +144,13 @@ const StyledLinkForCard = styled('a', {
   borderRadius: 8,
   backgroundColor: 'rgba(25, 29, 32, 0.1)',
   position: 'relative',
+  transition: 'background-color 0.1s ease-out',
+  '&:hover': {
+    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+  },
+  '&:active': {
+    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+  },
   variants: {
     variant: {
       fetching: {
@@ -203,6 +210,8 @@ const StyledDivForSeparator = styled('hr', {
 
 const StyledDivForRowWrapper = styled('div', {
   padding: '20px 24px 24px',
+  position: 'relative',
+  zIndex: 1,
 })
 
 const StyledDivForRow = styled('div', {
@@ -233,6 +242,7 @@ const StyledDivForLiquidityRows = styled('div', {
         '&:after': {
           content: '""',
           position: 'absolute',
+          zIndex: 0,
           left: 0,
           top: 0,
           display: 'block',
@@ -241,6 +251,7 @@ const StyledDivForLiquidityRows = styled('div', {
           background:
             'radial-gradient(71.15% 71.14% at 29.4% 81.87%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
           opacity: 0.4,
+          borderRadius: '0 0 8px 8px',
         },
       },
     },

@@ -2,10 +2,11 @@ import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { AppLayout } from '../../components/Layout/AppLayout'
 import { getBaseToken, tokenList } from '../../hooks/useTokenInfo'
-import { PoolCard, PoolCardFetching } from '../../components/Pools/PoolCard'
+import { PoolCard } from '../../components/Pools/PoolCard'
 import { PageHeader } from '../../components/Layout/PageHeader'
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { Text } from '../../components/Text'
+import { Spinner } from '../../components/Spinner'
 
 export default function Pools() {
   const [{ supportedTokens, poolIds }] = useState(() => {
@@ -39,13 +40,10 @@ export default function Pools() {
     return pools
   }, [liquidity, supportedTokens])
 
-  const baseTokenSymbol = getBaseToken().symbol
+  const { symbol: baseTokenSymbol } = getBaseToken()
 
-  console.log({
-    myPools,
-    allPools,
-    liquidity,
-  })
+  const shouldShowFetchingState = isLoading || !liquidity?.length
+  const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
 
   return (
     <AppLayout>
@@ -55,25 +53,15 @@ export default function Pools() {
         receive swap fees from each trade."
       />
 
-      {isLoading && !liquidity?.length && (
+      {shouldShowFetchingState && (
         <>
-          <SectionTitle>My pools</SectionTitle>
-          <StyledDivForPoolsGrid>
-            {new Array(2).fill(null).map((_, key: number) => (
-              <PoolCardFetching hasLiquidityProvided={true} key={key} />
-            ))}
-          </StyledDivForPoolsGrid>
-
-          <SectionTitle variant="all">All pools</SectionTitle>
-          <StyledDivForPoolsGrid>
-            {new Array(4).fill(null).map((_, key: number) => (
-              <PoolCardFetching hasLiquidityProvided={false} key={key} />
-            ))}
-          </StyledDivForPoolsGrid>
+          <StyledDivForFullSpace>
+            <Spinner size={32} color="black" />
+          </StyledDivForFullSpace>
         </>
       )}
 
-      {!isLoading && Boolean(liquidity?.length) && (
+      {shouldRenderPools && (
         <>
           {Boolean(myPools?.length) && (
             <>
@@ -112,6 +100,14 @@ export default function Pools() {
     </AppLayout>
   )
 }
+
+const StyledDivForFullSpace = styled.div`
+  padding-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+`
 
 const rowGap = '24px'
 

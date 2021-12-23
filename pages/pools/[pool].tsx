@@ -16,13 +16,17 @@ import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenT
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { parseCurrency } from '../../components/Pools/PoolCard'
 import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
+import { BondLiquidityDialog } from '../../components/Liquidity/BondLiquidityDialog'
+import { Spinner } from '../../components/Spinner'
 
 export default function Pool() {
   const {
     query: { pool },
   } = useRouter()
 
-  const [isDialogShowing, setIsDialogShowing] = useState(false)
+  const [isManageLiquidityDialogShowing, setIsManageLiquidityDialogShowing] =
+    useState(false)
+  const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
 
@@ -32,12 +36,12 @@ export default function Pool() {
     tokenAmount: 1,
   })
 
-  const [liquidty, isLoading] = usePoolLiquidity({
+  const [liquidity, isLoading] = usePoolLiquidity({
     poolIds: pool ? [pool] : undefined,
   })
 
   const { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } =
-    liquidty?.[0] ?? {}
+    liquidity?.[0] ?? {}
 
   const baseTokenSymbol = getBaseToken().symbol
 
@@ -50,10 +54,17 @@ export default function Pool() {
   return (
     <>
       <PoolDialog
-        isShowing={isDialogShowing}
-        onRequestClose={() => setIsDialogShowing(false)}
+        isShowing={isManageLiquidityDialogShowing}
+        onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
         tokenInfo={tokenInfo || {}}
       />
+      {__POOL_REWARDS_ENABLED__ && (
+        <BondLiquidityDialog
+          isShowing={isBondingDialogShowing}
+          onRequestClose={() => setIsBondingDialogShowing(false)}
+          poolId={pool}
+        />
+      )}
       <AppLayout>
         <StyledWrapperForNavigation>
           <StyledNavElement position="left">
@@ -74,6 +85,12 @@ export default function Pool() {
         </StyledWrapperForNavigation>
 
         <StyledDivForSeparator />
+
+        {isLoadingInitial && (
+          <StyledDivForSpinner>
+            <Spinner color="black" size={32} />
+          </StyledDivForSpinner>
+        )}
 
         {!isLoadingInitial && (
           <>
@@ -162,9 +179,11 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={getBaseToken().symbol}
                   tokenBSymbol={tokenInfo.symbol}
-                  onButtonClick={() => setIsDialogShowing(true)}
+                  onButtonClick={() => setIsManageLiquidityDialogShowing(true)}
                 />
-                <PoolBondedLiquidityCard />
+                <PoolBondedLiquidityCard
+                  onButtonClick={() => setIsBondingDialogShowing(true)}
+                />
               </StyledDivForCards>
             </>
 
@@ -378,4 +397,11 @@ const StyledDivForRewardsPlaceholder = styled('div', {
   borderRadius: '8px',
   border: '1px solid #E7E7E7',
   backgroundColor: 'rgba(25, 29, 32, 0.1)',
+})
+
+const StyledDivForSpinner = styled('div', {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingTop: 143,
 })

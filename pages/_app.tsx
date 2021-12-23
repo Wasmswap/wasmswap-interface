@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 
 function SafeHydrate({ children }) {
   return (
-    <div suppressHydrationWarning>
+    <div data-app-wrapper="" suppressHydrationWarning>
       {typeof window === 'undefined' ? null : children}
     </div>
   )

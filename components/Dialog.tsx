@@ -9,6 +9,7 @@ type DialogProps = {
   isShowing: boolean
   onRequestClose: () => void
   kind?: 'blank'
+  width?: 'normal' | 'large'
 }
 
 const paddingX = 18
@@ -18,6 +19,7 @@ export const Dialog = ({
   isShowing,
   onRequestClose,
   kind,
+  ...props
 }: DialogProps) => {
   const [isRenderingDialog, setIsRenderingDialog] = useState(false)
   const modalRef = useRef()
@@ -64,7 +66,7 @@ export const Dialog = ({
     <Portal>
       {(isShowing || isRenderingDialog) && (
         <>
-          <StyledDivForModal ref={modalRef}>
+          <StyledDivForModal ref={modalRef} {...props}>
             {kind !== 'blank' && (
               <StyledCloseIcon offset={paddingX} onClick={onRequestClose} />
             )}
@@ -125,8 +127,8 @@ const CloseIcon = (props) => (
 )
 
 export const StyledCloseIcon = styled(CloseIcon)`
-  width: 24px;
-  height: 24px;
+  width: ${(p) => p.size || '24px'};
+  height: ${(p) => p.size || '24px'};
   color: #323232;
   display: block;
   transition: opacity 0.15s ease-out;

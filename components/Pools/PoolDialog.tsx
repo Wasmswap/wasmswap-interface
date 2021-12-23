@@ -293,7 +293,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           onClick={isLoading ? undefined : mutateAddLiquidity}
           disabled={isLoading}
         >
-          {isLoading ? <Spinner /> : submitButtonText}
+          {isLoading ? <Spinner instant /> : submitButtonText}
         </StyledButton>
       </DialogBody>
     </Dialog>

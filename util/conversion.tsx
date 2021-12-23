@@ -67,3 +67,7 @@ const balanceFormatter = createBalanceFormatter()
 export function formatTokenBalance(value: number | string, asString?: boolean) {
   return balanceFormatter(Number(value), asString)
 }
+
+export const dollarValueFormatter = createBalanceFormatter({
+  maximumFractionDigits: 2,
+})

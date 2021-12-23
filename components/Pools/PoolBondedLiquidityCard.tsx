@@ -2,7 +2,7 @@ import { styled } from '@stitches/react'
 import { Text } from '../Text'
 import { Button } from '../Button'
 
-export const PoolBondedLiquidityCard = () => {
+export const PoolBondedLiquidityCard = ({ onButtonClick }) => {
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
@@ -43,14 +43,16 @@ export const PoolBondedLiquidityCard = () => {
               +0 juno/14d
             </Text>
           </StyledElementForTokens>
-        <StyledElementForTokens kind="element">
+          <StyledElementForTokens kind="element">
             <StyledImageForToken src="https://cryptologos.cc/logos/cosmos-atom-logo.svg?v=014" />
             <Text color="bodyText" type="microscopic">
               +0 atom/14d
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>
-        <StyledButton disabled>Coming Soon</StyledButton>
+        <StyledButton onClick={onButtonClick}>
+          Bond / Unbond tokens
+        </StyledButton>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
   )

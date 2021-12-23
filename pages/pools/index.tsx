@@ -39,13 +39,10 @@ export default function Pools() {
     return pools
   }, [liquidity, supportedTokens])
 
-  const baseTokenSymbol = getBaseToken().symbol
+  const { symbol: baseTokenSymbol } = getBaseToken()
 
-  console.log({
-    myPools,
-    allPools,
-    liquidity,
-  })
+  const shouldShowFetchingState = isLoading || !liquidity?.length
+  const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
 
   return (
     <AppLayout>
@@ -55,7 +52,7 @@ export default function Pools() {
         receive swap fees from each trade."
       />
 
-      {isLoading && !liquidity?.length && (
+      {shouldShowFetchingState && (
         <>
           <SectionTitle>My pools</SectionTitle>
           <StyledDivForPoolsGrid>
@@ -73,7 +70,7 @@ export default function Pools() {
         </>
       )}
 
-      {!isLoading && Boolean(liquidity?.length) && (
+      {shouldRenderPools && (
         <>
           {Boolean(myPools?.length) && (
             <>

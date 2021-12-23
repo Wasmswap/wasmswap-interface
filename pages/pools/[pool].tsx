@@ -16,13 +16,16 @@ import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenT
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { parseCurrency } from '../../components/Pools/PoolCard'
 import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
+import { BondLiquidityDialog } from '../../components/Liquidity/BondLiquidityDialog'
 
 export default function Pool() {
   const {
     query: { pool },
   } = useRouter()
 
-  const [isDialogShowing, setIsDialogShowing] = useState(false)
+  const [isManageLiquidityDialogShowing, setIsManageLiquidityDialogShowing] =
+    useState(false)
+  const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(true)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
 
@@ -32,12 +35,12 @@ export default function Pool() {
     tokenAmount: 1,
   })
 
-  const [liquidty, isLoading] = usePoolLiquidity({
+  const [liquidity, isLoading] = usePoolLiquidity({
     poolIds: pool ? [pool] : undefined,
   })
 
   const { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } =
-    liquidty?.[0] ?? {}
+    liquidity?.[0] ?? {}
 
   const baseTokenSymbol = getBaseToken().symbol
 
@@ -50,9 +53,14 @@ export default function Pool() {
   return (
     <>
       <PoolDialog
-        isShowing={isDialogShowing}
-        onRequestClose={() => setIsDialogShowing(false)}
+        isShowing={isManageLiquidityDialogShowing}
+        onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
         tokenInfo={tokenInfo || {}}
+      />
+      <BondLiquidityDialog
+        isShowing={isBondingDialogShowing}
+        onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
+        poolId={pool}
       />
       <AppLayout>
         <StyledWrapperForNavigation>
@@ -162,9 +170,11 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={getBaseToken().symbol}
                   tokenBSymbol={tokenInfo.symbol}
-                  onButtonClick={() => setIsDialogShowing(true)}
+                  onButtonClick={() => setIsManageLiquidityDialogShowing(true)}
                 />
-                <PoolBondedLiquidityCard />
+                <PoolBondedLiquidityCard
+                  onButtonClick={() => setIsBondingDialogShowing(true)}
+                />
               </StyledDivForCards>
             </>
 

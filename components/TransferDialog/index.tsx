@@ -163,7 +163,7 @@ export const TransferDialog = ({
           disabled={isLoading}
           onClick={isLoading ? undefined : (mutateTransferAsset as () => void)}
         >
-          {isLoading ? <Spinner /> : capitalizedTransactionType}
+          {isLoading ? <Spinner instant /> : capitalizedTransactionType}
         </Button>
       </StyledContent>
     </Dialog>

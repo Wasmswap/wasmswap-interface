@@ -85,7 +85,7 @@ export const TransactionAction = ({
         }
       >
         {isExecutingTransaction ? (
-          <Spinner />
+          <Spinner instant />
         ) : (
           <Text type="subtitle" color="white" variant="light" paddingY="3px">
             {status === WalletStatusType.connected

@@ -8,7 +8,11 @@ import { Text } from '../Text'
 import { LiquidityInput } from '../LiquidityInput'
 import { Link } from '../Link'
 import { Button } from '../Button'
-import { convertDenomToMicroDenom, convertMicroDenomToDenom, formatTokenName } from 'util/conversion'
+import {
+  convertDenomToMicroDenom,
+  convertMicroDenomToDenom,
+  formatTokenName,
+} from 'util/conversion'
 import { walletState } from 'state/atoms/walletAtoms'
 import { useEffect, useState } from 'react'
 import { getSwapInfo } from 'services/swap'
@@ -64,9 +68,13 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     async () => {
       if (isAddingLiquidity) {
         return await addLiquidity({
-          nativeAmount: Math.floor(convertDenomToMicroDenom(tokenAAmount, getBaseToken().decimals)),
+          nativeAmount: Math.floor(
+            convertDenomToMicroDenom(tokenAAmount, getBaseToken().decimals)
+          ),
           nativeDenom: getBaseToken().denom,
-          maxToken: Math.floor(convertDenomToMicroDenom(tokenBAmount, tokenInfo.decimals) + 5),
+          maxToken: Math.floor(
+            convertDenomToMicroDenom(tokenBAmount, tokenInfo.decimals) + 5
+          ),
           minLiquidity: 0,
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
@@ -263,13 +271,18 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
             <Text>
               {baseTokenSymbol}:{' '}
               {balanceFormatter.format(
-                (convertMicroDenomToDenom(myReserve[0], getBaseToken().decimals)) * (removeLiquidityPercent / 100)
+                convertMicroDenomToDenom(
+                  myReserve[0],
+                  getBaseToken().decimals
+                ) *
+                  (removeLiquidityPercent / 100)
               )}
             </Text>
             <Text>
               {tokenInfo.symbol}:{' '}
               {balanceFormatter.format(
-                convertMicroDenomToDenom(myReserve[1], tokenInfo.decimals) * (removeLiquidityPercent / 100)
+                convertMicroDenomToDenom(myReserve[1], tokenInfo.decimals) *
+                  (removeLiquidityPercent / 100)
               )}
             </Text>
           </StyledDivForLiquiditySummary>
@@ -280,7 +293,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           onClick={isLoading ? undefined : mutateAddLiquidity}
           disabled={isLoading}
         >
-          {isLoading ? <Spinner /> : submitButtonText}
+          {isLoading ? <Spinner instant /> : submitButtonText}
         </StyledButton>
       </DialogBody>
     </Dialog>

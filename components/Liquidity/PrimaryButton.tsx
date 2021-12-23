@@ -25,7 +25,7 @@ export const PrimaryButton = ({
         type={size === ButtonSize.medium ? 'caption' : 'microscopic'}
         color="white"
       >
-        {loading ? <Spinner /> : children}
+        {loading ? <Spinner instant /> : children}
       </Text>
     </StyledButton>
   )

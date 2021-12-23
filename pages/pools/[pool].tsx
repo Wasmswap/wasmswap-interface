@@ -17,6 +17,7 @@ import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { parseCurrency } from '../../components/Pools/PoolCard'
 import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
 import { BondLiquidityDialog } from '../../components/Liquidity/BondLiquidityDialog'
+import { Spinner } from '../../components/Spinner'
 
 export default function Pool() {
   const {
@@ -57,11 +58,13 @@ export default function Pool() {
         onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
         tokenInfo={tokenInfo || {}}
       />
-      <BondLiquidityDialog
-        isShowing={isBondingDialogShowing}
-        onRequestClose={() => setIsBondingDialogShowing(false)}
-        poolId={pool}
-      />
+      {__POOL_REWARDS_ENABLED__ && (
+        <BondLiquidityDialog
+          isShowing={isBondingDialogShowing}
+          onRequestClose={() => setIsBondingDialogShowing(false)}
+          poolId={pool}
+        />
+      )}
       <AppLayout>
         <StyledWrapperForNavigation>
           <StyledNavElement position="left">
@@ -82,6 +85,12 @@ export default function Pool() {
         </StyledWrapperForNavigation>
 
         <StyledDivForSeparator />
+
+        {isLoadingInitial && (
+          <StyledDivForSpinner>
+            <Spinner color="black" size={32} />
+          </StyledDivForSpinner>
+        )}
 
         {!isLoadingInitial && (
           <>
@@ -388,4 +397,11 @@ const StyledDivForRewardsPlaceholder = styled('div', {
   borderRadius: '8px',
   border: '1px solid #E7E7E7',
   backgroundColor: 'rgba(25, 29, 32, 0.1)',
+})
+
+const StyledDivForSpinner = styled('div', {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingTop: 143,
 })

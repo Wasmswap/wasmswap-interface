@@ -1,6 +1,7 @@
 import { styled } from '@stitches/react'
 import { Text } from '../Text'
 import { Button } from '../Button'
+import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
 
 export const PoolBondedLiquidityCard = ({ onButtonClick }) => {
   return (
@@ -50,8 +51,11 @@ export const PoolBondedLiquidityCard = ({ onButtonClick }) => {
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>
-        <StyledButton onClick={onButtonClick}>
-          Bond / Unbond tokens
+        <StyledButton
+          disabled={!__POOL_REWARDS_ENABLED__}
+          onClick={__POOL_REWARDS_ENABLED__ ? onButtonClick : undefined}
+        >
+          {__POOL_REWARDS_ENABLED__ ? 'Bond / Unbond tokens' : 'Coming soon'}
         </StyledButton>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>

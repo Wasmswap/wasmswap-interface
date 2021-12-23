@@ -72,9 +72,9 @@ const useDrag = ({ getIsException, onProgressUpdate }) => {
 
   function handleMouseMove(e: MouseEvent<HTMLDivElement, MouseEvent>) {
     if (dragging.current) {
-      const { screenX } = e
+      const { clientX } = e
       const { left, width } = ref.current.getBoundingClientRect()
-      const progress = Math.max((screenX - left) / width, 0)
+      const progress = Math.max((clientX - left) / width, 0)
       onProgressUpdate(
         Math.min(progress > 0.99 ? 1 : Number(progress.toFixed(2)), 1)
       )

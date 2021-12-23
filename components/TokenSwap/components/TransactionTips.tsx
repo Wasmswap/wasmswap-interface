@@ -3,9 +3,8 @@ import { Exchange } from '../../../icons/Exchange'
 import { Text } from '../../Text'
 import React, { useState } from 'react'
 import { styled } from '@stitches/react'
-import { useConstant } from '@reach/utils'
 import {
-  createBalanceFormatter,
+  dollarValueFormatterWithDecimals,
   formatTokenBalance,
   protectAgainstNaN,
 } from '../../../util/conversion'
@@ -29,10 +28,6 @@ export const TransactionTips = ({
   onTokenSwaps,
   disabled,
 }: TransactionTipsProps) => {
-  const formatter = useConstant(() =>
-    createBalanceFormatter({ style: 'currency', currency: 'USD' })
-  )
-
   const [swappedPosition, setSwappedPositions] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
 
@@ -67,14 +62,17 @@ export const TransactionTips = ({
           <Text type="microscopic" variant="bold" color="disabled" wrap="pre">
             1 {tokenA.tokenSymbol} ≈ {formatTokenBalance(conversionRate)}{' '}
             {tokenB.tokenSymbol}
-            {' ≈ '}
-            {formatter(protectAgainstNaN(conversionRateInDollar), true)}
+            {' ≈ '}$
+            {dollarValueFormatterWithDecimals(
+              protectAgainstNaN(conversionRateInDollar),
+              true
+            )}
           </Text>
         )}
       </StyledDivForRateWrapper>
 
       <Text type="microscopic" variant="bold" color="secondaryText">
-        {formatter(dollarValue, true)}
+        ${dollarValueFormatterWithDecimals(dollarValue, true)}
       </Text>
     </StyledDivForWrapper>
   )

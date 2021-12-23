@@ -44,6 +44,7 @@ export default function Pool() {
     liquidity?.[0] ?? {}
 
   const baseTokenSymbol = getBaseToken().symbol
+  const baseTokenName = getBaseToken().symbol
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
 
@@ -79,7 +80,7 @@ export default function Pool() {
           </StyledNavElement>
           <StyledNavElement position="center">
             <Text type="heading" textTransform="capitalize">
-              Pool Juno + {tokenInfo.name}
+              Pool {baseTokenName} + {tokenInfo.name}
             </Text>
           </StyledNavElement>
         </StyledWrapperForNavigation>
@@ -110,8 +111,7 @@ export default function Pool() {
                       src={tokenInfo.logoURI}
                     />
                     <Text color="bodyText" type="microscopic">
-                      {tokenInfo.name}
-                      {baseTokenSymbol}
+                      {tokenInfo.symbol}
                     </Text>
                   </StyledTextForTokens>
                 </StyledTextForTokens>
@@ -183,6 +183,8 @@ export default function Pool() {
                 />
                 <PoolBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
+                  token1={getBaseToken()}
+                  token2={tokenInfo}
                 />
               </StyledDivForCards>
             </>

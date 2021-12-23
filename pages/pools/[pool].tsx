@@ -29,9 +29,10 @@ export default function Pool() {
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
+  const baseToken = getBaseToken()
 
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
-    tokenASymbol: getBaseToken().symbol,
+    tokenASymbol: baseToken.symbol,
     tokenBSymbol: tokenInfo?.symbol,
     tokenAmount: 1,
   })
@@ -42,9 +43,6 @@ export default function Pool() {
 
   const { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } =
     liquidity?.[0] ?? {}
-
-  const baseTokenSymbol = getBaseToken().symbol
-  const baseTokenName = getBaseToken().symbol
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
 
@@ -80,7 +78,7 @@ export default function Pool() {
           </StyledNavElement>
           <StyledNavElement position="center">
             <Text type="heading" textTransform="capitalize">
-              Pool {baseTokenName} + {tokenInfo.name}
+              Pool {baseToken.name} + {tokenInfo.name}
             </Text>
           </StyledNavElement>
         </StyledWrapperForNavigation>
@@ -102,7 +100,7 @@ export default function Pool() {
                   <StyledTextForTokens kind="element">
                     <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
                     <Text color="bodyText" type="microscopic">
-                      {baseTokenSymbol}
+                      {baseToken.symbol}
                     </Text>
                   </StyledTextForTokens>
                   <StyledTextForTokens kind="element">
@@ -124,7 +122,7 @@ export default function Pool() {
                 >
                   {isPriceLoading
                     ? ''
-                    : `1 ${baseTokenSymbol} = ${tokenPrice} ${tokenInfo.symbol}`}
+                    : `1 ${baseToken.symbol} = ${tokenPrice} ${tokenInfo.symbol}`}
                 </Text>
               </StyledRowForTokensInfo>
             </StyledRowForTokensInfo>
@@ -177,13 +175,13 @@ export default function Pool() {
                   myReserve={myReserve}
                   totalLiquidity={totalLiquidity}
                   tokenDollarValue={tokenDollarValue}
-                  tokenASymbol={getBaseToken().symbol}
+                  tokenASymbol={baseToken.symbol}
                   tokenBSymbol={tokenInfo.symbol}
                   onButtonClick={() => setIsManageLiquidityDialogShowing(true)}
                 />
                 <PoolBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
-                  token1={getBaseToken()}
+                  token1={baseToken}
                   token2={tokenInfo}
                 />
               </StyledDivForCards>

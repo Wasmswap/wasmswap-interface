@@ -73,7 +73,8 @@ export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
     return result
 
   } else {
-    const funds = [coin(10, 'ujuno'), coin(10, 'ucosm')]
+    let funds = [coin(input.nativeAmount, input.nativeDenom), coin(input.maxToken, input.tokenDenom)]
+    funds.sort((a,b)=>a.denom > b.denom ? 1 : -1)
     await input.client.execute(
       input.senderAddress,
       input.swapAddress,

@@ -1,6 +1,7 @@
 import { Text } from '../../Text'
 import React from 'react'
 import { styled } from '@stitches/react'
+import { StyledSecondaryButton } from '../../Button'
 
 type ConvenienceBalanceButtonsProps = {
   disabled?: boolean
@@ -31,18 +32,9 @@ export const ConvenienceBalanceButtons = ({
   )
 }
 
-const StyledButton = styled('button', {
-  padding: '8px 12px',
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+const StyledButton = styled(StyledSecondaryButton, {
   borderRadius: '38px',
   marginRight: 6,
-  transition: 'background-color .1s ease-out',
-  '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
-  },
-  '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
-  },
   '&:first-of-type': {
     marginLeft: 8,
   },

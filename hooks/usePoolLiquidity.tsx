@@ -57,9 +57,12 @@ export const usePoolLiquidity = ({
   )
 
   const { data: myLiquidityCoins, isLoading: fetchingMyLiquidity } = useQuery(
-    `myLiquidity/${swaps
-      ?.map(({ lp_token_address }) => lp_token_address)
-      .join('+')}`,
+    [
+      `myLiquidity/${swaps
+        ?.map(({ lp_token_address }) => lp_token_address)
+        .join('+')}`,
+      address,
+    ],
     async () => {
       const balances = await Promise.all(
         swaps.map(({ lp_token_address }) =>

@@ -1,5 +1,6 @@
 import React, { HTMLProps, FC, ReactNode } from 'react'
 import styled from 'styled-components'
+import { styled as stitchesStyled } from '@stitches/react'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
 
@@ -86,3 +87,16 @@ const StyledIconWrapper = styled.span`
   display: inline-block;
   padding: ${(p) => (p.$position === 'left' ? '0 6px 0 0' : '0 0 0 6px')};
 `
+
+export const StyledSecondaryButton = stitchesStyled('button', {
+  padding: '8px 12px',
+  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  borderRadius: '6px',
+  transition: 'background-color .1s ease-out',
+  '&:hover': {
+    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+  },
+  '&:active': {
+    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+  },
+})

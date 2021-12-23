@@ -3,55 +3,42 @@ import { Exchange } from '../../../icons/Exchange'
 import { Text } from '../../Text'
 import React, { useState } from 'react'
 import { styled } from '@stitches/react'
-import { useConstant } from '@reach/utils'
 import {
-  createBalanceFormatter,
+  dollarValueFormatterWithDecimals,
   formatTokenBalance,
   protectAgainstNaN,
 } from '../../../util/conversion'
 import { usePersistance } from '../../../hooks/usePersistance'
 import { useRecoilValue } from 'recoil'
 import { tokenSwapAtom } from '../swapAtoms'
+import { useTokenToTokenPrice } from '../hooks/useTokenToTokenPrice'
 
 type TransactionTipsProps = {
   isPriceLoading: boolean
-  dollarValue: number
+  tokenAPrice: number
   tokenToTokenPrice: number
   onTokenSwaps: () => void
   disabled?: boolean
 }
 
 export const TransactionTips = ({
-  dollarValue,
+  tokenAPrice,
   isPriceLoading,
   tokenToTokenPrice,
   onTokenSwaps,
   disabled,
 }: TransactionTipsProps) => {
-  const formatter = useConstant(() =>
-    createBalanceFormatter({ style: 'currency', currency: 'USD' })
-  )
-
   const [swappedPosition, setSwappedPositions] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
 
-  const canShowRate =
-    Boolean(
-      tokenA?.tokenSymbol && tokenB?.tokenSymbol && tokenToTokenPrice > 0
-    ) &&
-    Boolean(
-      typeof tokenA.amount === 'number' && typeof tokenToTokenPrice === 'number'
-    )
-
-  const conversionRate = canShowRate ? tokenA.amount / tokenToTokenPrice : 0
-  const persistConversionRate = usePersistance(
-    isPriceLoading || !canShowRate ? undefined : conversionRate
-  )
-
-  const conversionRateInDollar = (conversionRate * dollarValue) / tokenA.amount
-  const persistConversionRateInDollar = usePersistance(
-    isPriceLoading || !canShowRate ? undefined : conversionRateInDollar
-  )
+  const { isShowing, conversionRate, conversionRateInDollar, dollarValue } =
+    useTxRates({
+      tokenA,
+      tokenB,
+      tokenAPrice,
+      tokenToTokenPrice,
+      isLoading: isPriceLoading,
+    })
 
   return (
     <StyledDivForWrapper>
@@ -71,20 +58,13 @@ export const TransactionTips = ({
               : undefined
           }
         />
-        {canShowRate && (
+        {isShowing && (
           <Text type="microscopic" variant="bold" color="disabled" wrap="pre">
-            1 {tokenA.tokenSymbol} ≈{' '}
-            {formatTokenBalance(
-              isPriceLoading ? persistConversionRate : conversionRate
-            )}{' '}
+            1 {tokenA.tokenSymbol} ≈ {formatTokenBalance(conversionRate)}{' '}
             {tokenB.tokenSymbol}
-            {' ≈ '}
-            {formatter(
-              protectAgainstNaN(
-                isPriceLoading
-                  ? persistConversionRateInDollar
-                  : conversionRateInDollar
-              ),
+            {' ≈ '}$
+            {dollarValueFormatterWithDecimals(
+              protectAgainstNaN(conversionRateInDollar),
               true
             )}
           </Text>
@@ -92,10 +72,75 @@ export const TransactionTips = ({
       </StyledDivForRateWrapper>
 
       <Text type="microscopic" variant="bold" color="secondaryText">
-        {formatter(dollarValue, true)}
+        ${dollarValueFormatterWithDecimals(dollarValue, true)}
       </Text>
     </StyledDivForWrapper>
   )
+}
+
+const useTxRates = ({
+  tokenA,
+  tokenB,
+  tokenAPrice,
+  tokenToTokenPrice,
+  isLoading,
+}) => {
+  const oneTokenPrice = useOneTokenPrice()
+  const dollarValue = (tokenAPrice || 0) * (tokenA.amount || 0)
+
+  const shouldShowRates =
+    (Boolean(
+      tokenA?.tokenSymbol && tokenB?.tokenSymbol && tokenToTokenPrice > 0
+    ) &&
+      Boolean(
+        typeof tokenA.amount === 'number' &&
+          typeof tokenToTokenPrice === 'number'
+      )) ||
+    (oneTokenPrice && tokenA.amount === 0)
+
+  function calculateConversionRate() {
+    if (tokenA.amount === 0) {
+      return 1 / oneTokenPrice
+    }
+
+    return tokenA.amount / tokenToTokenPrice
+  }
+
+  const conversionRate = usePersistance(
+    isLoading || !shouldShowRates ? undefined : calculateConversionRate()
+  )
+
+  function calculateConversionRateInDollar() {
+    if (tokenA.amount === 0) {
+      return conversionRate * tokenAPrice
+    }
+
+    return (conversionRate * dollarValue) / tokenA.amount
+  }
+
+  const conversionRateInDollar = usePersistance(
+    isLoading || !shouldShowRates
+      ? undefined
+      : calculateConversionRateInDollar()
+  )
+
+  return {
+    isShowing: shouldShowRates,
+    conversionRate,
+    conversionRateInDollar,
+    dollarValue,
+  }
+}
+
+const useOneTokenPrice = () => {
+  const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
+  const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({
+    tokenASymbol: tokenA?.tokenSymbol,
+    tokenBSymbol: tokenB?.tokenSymbol,
+    tokenAmount: 1,
+  })
+
+  return usePersistance(isPriceLoading ? undefined : currentTokenPrice)
 }
 
 const StyledDivForWrapper = styled('div', {

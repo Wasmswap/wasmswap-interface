@@ -3,7 +3,7 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
 
-export const PoolBondedLiquidityCard = ({ onButtonClick }) => {
+export const PoolBondedLiquidityCard = ({ onButtonClick, token1, token2 }) => {
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
@@ -39,15 +39,15 @@ export const PoolBondedLiquidityCard = ({ onButtonClick }) => {
 
         <StyledElementForTokens kind="wrapper">
           <StyledElementForTokens kind="element">
-            <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
+            <StyledImageForToken src={token1.logoURI} />
             <Text color="bodyText" type="microscopic">
-              +0 juno/14d
+              +0 {token1.symbol}/14d
             </Text>
           </StyledElementForTokens>
           <StyledElementForTokens kind="element">
-            <StyledImageForToken src="https://cryptologos.cc/logos/cosmos-atom-logo.svg?v=014" />
+            <StyledImageForToken src={token2.logoURI} />
             <Text color="bodyText" type="microscopic">
-              +0 atom/14d
+              +0 {token2.symbol}/14d
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>

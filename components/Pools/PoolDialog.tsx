@@ -143,8 +143,8 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     }
   }, [isSuccess, refetchQueries, resetAddLiquidityMutation, isShowing])
 
-  const [tokenAAmount, setTokenAAmount] = useState(1)
-  const [tokenBAmount, setTokenBAmount] = useState(1)
+  const [tokenAAmount, setTokenAAmount] = useState(0)
+  const [tokenBAmount, setTokenBAmount] = useState(0)
 
   const [tokenPrice] = useTokenToTokenPrice({
     tokenASymbol: baseTokenSymbol,

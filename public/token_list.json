@@ -40,7 +40,7 @@
     },
     {
       "id": "juno-network",
-      "pool_id": "JUNO-POOD",
+      "pool_id": "JUNOX-POOD",
       "chain_id": "lucina",
       "token_address": "juno1w0mnunkrz8q9ufl5p9q2ly3t5jj2n8qykke532nv0k0ar35hg09smuw20a",
       "swap_address": "juno1jvhk0g2hvaecew55h9lqdu4dq9yk7cjezlzc682nvqtfajf3z8jsznfqyn",
@@ -69,7 +69,7 @@
     {
       "id": "juno-network",
       "chain_id": "lucina",
-      "pool_id": "JUNO-DAO",
+      "pool_id": "JUNOX-DAO",
       "token_address": "juno1nfrsmjaty4hnmfvzzp303adluxmllyv4ad405zg2jutqk2qcd2nsxzsmea",
       "swap_address": "juno1ag7y73749n2pevgn7ns9yn668zj8qrkfjsd5t54f6g8l5u4wf5ds07amnx",
       "symbol": "DAO",

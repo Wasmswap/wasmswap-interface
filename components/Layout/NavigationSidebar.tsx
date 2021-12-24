@@ -85,7 +85,7 @@ export function NavigationSidebar() {
             $active={getIsActive('/pools')}
           >
             <IconWrapper size="16px" icon={<Open />} />
-            <span>Pools</span>
+            <span>Liquidity</span>
           </StyledLink>
         </Link>
       </StyledMenuContainer>

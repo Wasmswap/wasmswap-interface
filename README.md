@@ -2,6 +2,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Setup you environment variables. To use the Juno Testnet:
+
+```bash
+cp .env.example .env
+```
+
 First, run the development server:
 
 ```bash

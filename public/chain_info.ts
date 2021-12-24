@@ -55,7 +55,7 @@ export const chainInfo = {
       // (Optional) Keplr can show the fiat value of the coin if a coingecko id is provided.
       // You can get id from https://api.coingecko.com/api/v3/coins/list if it is listed.
       coinGeckoId: 'juno-network',
-    }
+    },
   ],
   // List of coin/tokens used as a fee token in this chain.
   feeCurrencies: [
@@ -82,9 +82,9 @@ export const chainInfo = {
   // Currently, Keplr doesn't support dynamic calculation of the gas prices based on on-chain data.
   // Make sure that the gas prices are higher than the minimum gas prices accepted by chain validators and RPC/REST endpoint.
   gasPriceStep: {
-    low: 0.05,
-    average: 0.1,
-    high: 0.2,
+    low: 0.2,
+    average: 0.25,
+    high: 0.3,
   },
 
   features: ['cosmwasm'],

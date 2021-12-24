@@ -93,9 +93,9 @@ export const chainInfo = {
   // Currently, Keplr doesn't support dynamic calculation of the gas prices based on on-chain data.
   // Make sure that the gas prices are higher than the minimum gas prices accepted by chain validators and RPC/REST endpoint.
   gasPriceStep: {
-    low: 0,
-    average: 0.1,
-    high: 0.2,
+    low: 0.2,
+    average: 0.25,
+    high: 0.3,
   },
 
   features: ['cosmwasm'],

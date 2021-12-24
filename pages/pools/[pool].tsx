@@ -6,17 +6,19 @@ import { AppLayout } from '../../components/Layout/AppLayout'
 import { Text } from '../../components/Text'
 import { Chevron } from '../../icons/Chevron'
 import { IconWrapper } from '../../components/IconWrapper'
-import { PoolAvailableLiquidityCard } from '../../components/Pools/PoolAvailableLiquidityCard'
-import { PoolBondedLiquidityCard } from '../../components/Pools/PoolBondedLiquidityCard'
+import {
+  PoolBondedLiquidityCard,
+  UnbondingLiquidityCard,
+  ManagePoolDialog,
+  PoolAvailableLiquidityCard,
+} from '../../features/liquidity'
 import { Button } from '../../components/Button'
-import { UnbondingLiquidityCard } from '../../components/Pools/UnbondingLiquidityCard'
-import { PoolDialog } from '../../components/Pools/PoolDialog'
 import { getBaseToken, useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
-import { useTokenToTokenPrice } from '../../components/TokenSwap/hooks/useTokenToTokenPrice'
+import { useTokenToTokenPrice } from '../../features/swap/hooks/useTokenToTokenPrice'
 import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
-import { parseCurrency } from '../../components/Pools/PoolCard'
+import { parseCurrency } from '../../features/liquidity/components/PoolCard'
 import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
-import { BondLiquidityDialog } from '../../components/Liquidity/BondLiquidityDialog'
+import { BondLiquidityDialog } from '../../features/liquidity'
 import { Spinner } from '../../components/Spinner'
 
 export default function Pool() {
@@ -52,7 +54,7 @@ export default function Pool() {
 
   return (
     <>
-      <PoolDialog
+      <ManagePoolDialog
         isShowing={isManageLiquidityDialogShowing}
         onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
         tokenInfo={tokenInfo || {}}

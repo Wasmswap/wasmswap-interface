@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppLayout } from '../components/Layout/AppLayout'
-import { TokenSwap } from '../components/TokenSwap'
+import { TokenSwap } from '../features/swap'
 import { PageHeader } from '../components/Layout/PageHeader'
 
 export default function Home() {

@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import styled from 'styled-components'
 import { Text } from './Text'
 import { colorTokens } from '../util/constants'
+import { formatTokenBalance } from '../util/conversion'
 
 type LiquidityInputProps = {
   tokenName: string
@@ -11,11 +12,6 @@ type LiquidityInputProps = {
   onAmountChange: (value: number) => void
 }
 
-const balanceFormatter = new Intl.NumberFormat('en-US', {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 6,
-})
-
 export const LiquidityInput: FC<LiquidityInputProps> = ({
   tokenName,
   balance,
@@ -24,7 +20,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
   onAmountChange,
 }) => {
   const handleAmountChange = ({ target: { value } }) =>
-    onAmountChange(Number(value))
+    onAmountChange(Number(formatTokenBalance(value)))
 
   return (
     <StyledInputBox>
@@ -49,7 +45,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
           type="number"
           placeholder="0.0"
           min={0}
-          value={balanceFormatter.format(amount)}
+          value={String(formatTokenBalance(amount))}
           onChange={onAmountChange ? handleAmountChange : undefined}
           autoComplete="off"
           readOnly={!onAmountChange}

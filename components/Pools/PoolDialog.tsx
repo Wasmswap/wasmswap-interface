@@ -8,32 +8,44 @@ import { Text } from '../Text'
 import { LiquidityInput } from '../LiquidityInput'
 import { Link } from '../Link'
 import { Button } from '../Button'
-import { formatTokenName } from 'util/conversion'
+import {
+  convertDenomToMicroDenom,
+  convertMicroDenomToDenom,
+  formatTokenName,
+} from 'util/conversion'
 import { walletState } from 'state/atoms/walletAtoms'
 import { useEffect, useState } from 'react'
 import { getSwapInfo } from 'services/swap'
 import { addLiquidity, removeLiquidity } from 'services/liquidity'
 import { Spinner } from '../Spinner'
 import { useTokenBalance } from '../../hooks/useTokenBalance'
-import { useTokenInfo } from '../../hooks/useTokenInfo'
-import { useLiquidity } from '../../hooks/useLiquidity'
+import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
 import { colorTokens } from '../../util/constants'
 import { RemoveLiquidityInput } from '../RemoveLiquidityInput'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
+import { getBaseToken } from 'hooks/useTokenInfo'
+import { useTokenToTokenPrice } from '../TokenSwap/hooks/useTokenToTokenPrice'
+
+const balanceFormatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 6,
+})
 
 export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   const { address, client } = useRecoilValue(walletState)
 
-  const { balance: junoBalance } = useTokenBalance(useTokenInfo('JUNO'))
-  const { balance: tokenBalance } = useTokenBalance(tokenInfo)
+  const baseTokenSymbol = getBaseToken().symbol
 
-  const { myLPBalance, myLiquidity } = useLiquidity({
-    tokenName: tokenInfo.symbol,
-    swapAddress: tokenInfo.swap_address,
-    address: address,
+  const { balance: junoBalance } = useTokenBalance(baseTokenSymbol)
+  const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
+
+  const [liquidity] = usePoolLiquidity({
+    poolIds: [tokenInfo.pool_id],
   })
 
-  const { data: { token_reserve, native_reserve, lp_token_supply } = {} } =
+  const { myLiquidity, myReserve } = liquidity?.[0] ?? {}
+
+  const { data: { token2_reserve, token1_reserve, lp_token_address } = {} } =
     useQuery(
       `swapInfo/${tokenInfo.swap_address}`,
       async () => {
@@ -47,11 +59,6 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
       }
     )
 
-  const balanceFormatter = new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 6,
-  })
-
   const {
     isLoading,
     reset: resetAddLiquidityMutation,
@@ -61,23 +68,31 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     async () => {
       if (isAddingLiquidity) {
         return await addLiquidity({
-          nativeAmount: Math.floor(tokenAAmount * 1000000),
-          nativeDenom: 'ujuno',
-          maxToken: Math.floor(tokenBAmount * 1000000 + 5),
+          nativeAmount: Math.floor(
+            convertDenomToMicroDenom(tokenAAmount, getBaseToken().decimals)
+          ),
+          nativeDenom: getBaseToken().denom,
+          maxToken: Math.floor(
+            convertDenomToMicroDenom(tokenBAmount, tokenInfo.decimals) + 5
+          ),
           minLiquidity: 0,
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
           tokenAddress: tokenInfo.token_address,
+          tokenDenom: tokenInfo.denom,
+          tokenNative: tokenInfo.native,
           client,
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor((removeLiquidityPercent * myLPBalance) / 100),
-          minNative: 0,
-          minToken: 0,
+          amount: Math.floor(
+            (removeLiquidityPercent / 100) * myLiquidity.coins
+          ),
+          minToken1: 0,
+          minToken2: 0,
           swapAddress: tokenInfo.swap_address,
           senderAddress: address,
-          tokenAddress: tokenInfo.token_address,
+          lpTokenAddress: lp_token_address,
           client,
         })
       }
@@ -99,6 +114,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         requestAnimationFrame(onRequestClose)
       },
       onError(error) {
+        console.error(error)
         toast.error(
           `Couldn't ${
             isAddingLiquidity ? 'Add' : 'Remove'
@@ -127,17 +143,45 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
     }
   }, [isSuccess, refetchQueries, resetAddLiquidityMutation, isShowing])
 
-  const [tokenAAmount, setTokenAAmount] = useState(1)
-  const [tokenBAmount, setTokenBAmount] = useState(1)
+  const [tokenAAmount, setTokenAAmount] = useState(0)
+  const [tokenBAmount, setTokenBAmount] = useState(0)
 
-  const handleTokenAAmountChange = (val: number) => {
-    setTokenAAmount(val)
-    setTokenBAmount((Number(token_reserve) / Number(native_reserve)) * val)
+  const [tokenPrice] = useTokenToTokenPrice({
+    tokenASymbol: baseTokenSymbol,
+    tokenBSymbol: tokenInfo.symbol,
+    tokenAmount: 1,
+  })
+
+  const hasMoreBaseTokenValue = junoBalance * tokenPrice > tokenBalance
+
+  const maxApplicableBalanceForBaseToken = hasMoreBaseTokenValue
+    ? junoBalance - (junoBalance - tokenBalance / tokenPrice)
+    : junoBalance
+
+  const maxApplicableBalanceForToken = hasMoreBaseTokenValue
+    ? tokenBalance
+    : tokenBalance - (tokenBalance - junoBalance * tokenPrice)
+
+  const handleTokenAAmountChange = (input: number) => {
+    const value =
+      input > maxApplicableBalanceForBaseToken
+        ? maxApplicableBalanceForBaseToken
+        : input
+    setTokenAAmount(value)
+    setTokenBAmount((Number(token2_reserve) / Number(token1_reserve)) * value)
   }
 
-  const handleTokenBAmountChange = (val: number) => {
-    setTokenBAmount(val)
-    setTokenAAmount((Number(native_reserve) / Number(token_reserve)) * val)
+  const handleTokenBAmountChange = (input: number) => {
+    const value =
+      input > maxApplicableBalanceForToken
+        ? maxApplicableBalanceForToken
+        : input
+    setTokenBAmount(value)
+    setTokenAAmount((Number(token1_reserve) / Number(token2_reserve)) * value)
+  }
+
+  const handleApplyMaximumAmount = () => {
+    handleTokenAAmountChange(maxApplicableBalanceForBaseToken)
   }
 
   const [isAddingLiquidity, setAddingLiquidity] = useState(true)
@@ -150,7 +194,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
-        {typeof myLiquidity === 'number' && (
+        {myReserve?.[0] > 0 && (
           <StyledDivForButtons>
             <StyledSwitchButton
               onClick={() => setAddingLiquidity(true)}
@@ -185,7 +229,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {isAddingLiquidity && (
           <>
             <LiquidityInput
-              tokenName="Juno"
+              tokenName={formatTokenName(baseTokenSymbol)}
               balance={junoBalance ? junoBalance : 0}
               amount={tokenAAmount}
               ratio={50}
@@ -215,7 +259,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
               color="black"
               variant="normal"
               type="body"
-              onClick={() => handleTokenAAmountChange(junoBalance)}
+              onClick={handleApplyMaximumAmount}
             >
               Add maximum amounts
             </Link>
@@ -225,15 +269,20 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {!isAddingLiquidity && (
           <StyledDivForLiquiditySummary>
             <Text>
-              Juno:{' '}
+              {baseTokenSymbol}:{' '}
               {balanceFormatter.format(
-                ((myLPBalance / +lp_token_supply) * +native_reserve) / 1000000
+                convertMicroDenomToDenom(
+                  myReserve[0],
+                  getBaseToken().decimals
+                ) *
+                  (removeLiquidityPercent / 100)
               )}
             </Text>
             <Text>
               {tokenInfo.symbol}:{' '}
               {balanceFormatter.format(
-                ((myLPBalance / +lp_token_supply) * +token_reserve) / 1000000
+                convertMicroDenomToDenom(myReserve[1], tokenInfo.decimals) *
+                  (removeLiquidityPercent / 100)
               )}
             </Text>
           </StyledDivForLiquiditySummary>
@@ -244,7 +293,7 @@ export const PoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           onClick={isLoading ? undefined : mutateAddLiquidity}
           disabled={isLoading}
         >
-          {isLoading ? <Spinner /> : submitButtonText}
+          {isLoading ? <Spinner instant /> : submitButtonText}
         </StyledButton>
       </DialogBody>
     </Dialog>

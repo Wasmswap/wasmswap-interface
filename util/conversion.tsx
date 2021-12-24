@@ -1,11 +1,23 @@
-export function convertMicroDenomToDenom(value: number | string) {
-  const amount = Number(value) / 1000000
-  return isNaN(amount) ? 0 : amount
+export const protectAgainstNaN = (value: number) => (isNaN(value) ? 0 : value)
+
+export function convertMicroDenomToDenom(
+  value: number | string,
+  decimals: number
+): number {
+  if (decimals === 0) return Number(value)
+
+  return protectAgainstNaN(Number(value) / Math.pow(10, decimals))
 }
 
-export function convertDenomToMicroDenom(value: number | string): string {
-  const amount = Number(value) * 1000000
-  return String(isNaN(amount) ? 0 : amount)
+export function convertDenomToMicroDenom(
+  value: number | string,
+  decimals: number
+): number {
+  if (decimals === 0) return Number(value)
+
+  return protectAgainstNaN(
+    parseInt(String(Number(value) * Math.pow(10, decimals)), 10)
+  )
 }
 
 export function convertFromMicroDenom(denom: string) {
@@ -33,3 +45,34 @@ export const formatTokenName = (name: string) => {
   }
   return ''
 }
+
+export const createBalanceFormatter = ({
+  maximumFractionDigits = 6,
+  ...options
+}: Parameters<typeof Intl.NumberFormat>[1] = {}) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits,
+    ...options,
+  })
+
+  return (value: number, asString?: boolean) => {
+    const formattedValue = formatter.format(value)
+    return asString ? formattedValue : Number(formattedValue.replace(/,/g, ''))
+  }
+}
+
+const balanceFormatter = createBalanceFormatter()
+
+export function formatTokenBalance(value: number | string, asString?: boolean) {
+  return balanceFormatter(Number(value), asString)
+}
+
+export const dollarValueFormatterWithDecimals = createBalanceFormatter({
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+})
+
+export const dollarValueFormatter = createBalanceFormatter({
+  maximumFractionDigits: 2,
+})

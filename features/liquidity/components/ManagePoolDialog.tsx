@@ -1,191 +1,67 @@
 import styled from 'styled-components'
-import { toast } from 'react-toastify'
-import { useRecoilValue } from 'recoil'
 import { PlusIcon } from '@heroicons/react/solid'
-import { useQuery, useMutation } from 'react-query'
-import { Dialog, DialogBody } from '../../../components/Dialog'
-import { Text } from '../../../components/Text'
-import { LiquidityInput } from '../../../components/LiquidityInput'
-import { Link } from '../../../components/Link'
-import { Button } from '../../../components/Button'
-import {
-  convertDenomToMicroDenom,
-  convertMicroDenomToDenom,
-  formatTokenName,
-} from 'util/conversion'
-import { walletState } from 'state/atoms/walletAtoms'
-import { useEffect, useState } from 'react'
-import { getSwapInfo } from 'services/swap'
-import { addLiquidity, removeLiquidity } from 'services/liquidity'
-import { Spinner } from '../../../components/Spinner'
-import { useTokenBalance } from '../../../hooks/useTokenBalance'
-import { usePoolLiquidity } from '../../../hooks/usePoolLiquidity'
-import { colorTokens } from '../../../util/constants'
-import { RemoveLiquidityInput } from '../../../components/RemoveLiquidityInput'
-import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
-import { getBaseToken } from 'hooks/useTokenInfo'
-import { useTokenToTokenPrice } from '../../swap/hooks/useTokenToTokenPrice'
+import { Dialog, DialogBody } from 'components/Dialog'
+import { Text } from 'components/Text'
+import { LiquidityInput } from 'components/LiquidityInput'
+import { Link } from 'components/Link'
+import { Button } from 'components/Button'
+import { formatTokenName } from 'util/conversion'
+import { Spinner } from 'components/Spinner'
+import { colorTokens } from 'util/constants'
+import { RemoveLiquidityInput } from 'components/RemoveLiquidityInput'
+import { usePoolDialogController } from '../hooks/usePoolDialogController'
+import { useState } from 'react'
+import { TokenInfo } from '../../../hooks/useTokenInfo'
+
+type ManagePoolDialogProps = {
+  isShowing: boolean
+  onRequestClose: () => void
+  tokenInfo: TokenInfo
+}
 
 const balanceFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0,
   maximumFractionDigits: 6,
 })
 
-export const ManagePoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
-  const { address, client } = useRecoilValue(walletState)
-
-  const baseTokenSymbol = getBaseToken().symbol
-
-  const { balance: junoBalance } = useTokenBalance(baseTokenSymbol)
-  const { balance: tokenBalance } = useTokenBalance(tokenInfo.symbol)
-
-  const [liquidity] = usePoolLiquidity({
-    poolIds: [tokenInfo.pool_id],
-  })
-
-  const { myLiquidity, myReserve } = liquidity?.[0] ?? {}
-
-  const { data: { token2_reserve, token1_reserve, lp_token_address } = {} } =
-    useQuery(
-      `swapInfo/${tokenInfo.swap_address}`,
-      async () => {
-        return await getSwapInfo(
-          tokenInfo.swap_address,
-          process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-        )
-      },
-      {
-        enabled: Boolean(tokenInfo.swap_address),
-      }
-    )
+export const ManagePoolDialog = ({
+  isShowing,
+  onRequestClose,
+  tokenInfo,
+}: ManagePoolDialogProps) => {
+  const [isAddingLiquidity, setAddingLiquidity] = useState(true)
+  const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
 
   const {
-    isLoading,
-    reset: resetAddLiquidityMutation,
-    mutate: mutateAddLiquidity,
-    isSuccess,
-  } = useMutation(
-    async () => {
-      if (isAddingLiquidity) {
-        return await addLiquidity({
-          nativeAmount: Math.floor(
-            convertDenomToMicroDenom(tokenAAmount, getBaseToken().decimals)
-          ),
-          nativeDenom: getBaseToken().denom,
-          maxToken: Math.floor(
-            convertDenomToMicroDenom(tokenBAmount, tokenInfo.decimals) + 5
-          ),
-          minLiquidity: 0,
-          swapAddress: tokenInfo.swap_address,
-          senderAddress: address,
-          tokenAddress: tokenInfo.token_address,
-          tokenDenom: tokenInfo.denom,
-          tokenNative: tokenInfo.native,
-          client,
-        })
-      } else {
-        return await removeLiquidity({
-          amount: Math.floor(
-            (removeLiquidityPercent / 100) * myLiquidity.coins
-          ),
-          minToken1: 0,
-          minToken2: 0,
-          swapAddress: tokenInfo.swap_address,
-          senderAddress: address,
-          lpTokenAddress: lp_token_address,
-          client,
-        })
-      }
+    state: {
+      tokenAReserve,
+      tokenBReserve,
+      tokenASymbol,
+      tokenABalance,
+      tokenAAmount,
+      tokenBAmount,
+      tokenBBalance,
+      isLoading,
     },
-    {
-      onSuccess() {
-        // show toast
-        toast.success(`🎉 ${isAddingLiquidity ? 'Add' : 'Remove'} Successful`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+    actions: {
+      mutateAddLiquidity,
+      handleTokenBAmountChange,
+      handleTokenAAmountChange,
+      handleApplyMaximumAmount,
+    },
+  } = usePoolDialogController({
+    actionState: isAddingLiquidity ? 'add' : 'remove',
+    removeLiquidityPercent,
+    tokenInfo,
+  })
 
+  const handleSubmit = () =>
+    mutateAddLiquidity(null, {
+      onSuccess() {
         // close modal
         requestAnimationFrame(onRequestClose)
       },
-      onError(error) {
-        console.error(error)
-        toast.error(
-          `Couldn't ${
-            isAddingLiquidity ? 'Add' : 'Remove'
-          } liquidity because of: ${error}`,
-          {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        )
-      },
-    }
-  )
-
-  const refetchQueries = useRefetchQueries()
-  useEffect(() => {
-    // refetch queries if the mutation succeeded & the dialog is closed
-    const shouldRefetchQueries = isSuccess && !isShowing
-    if (shouldRefetchQueries) {
-      refetchQueries()
-      setTimeout(resetAddLiquidityMutation, 350)
-    }
-  }, [isSuccess, refetchQueries, resetAddLiquidityMutation, isShowing])
-
-  const [tokenAAmount, setTokenAAmount] = useState(0)
-  const [tokenBAmount, setTokenBAmount] = useState(0)
-
-  const [tokenPrice] = useTokenToTokenPrice({
-    tokenASymbol: baseTokenSymbol,
-    tokenBSymbol: tokenInfo.symbol,
-    tokenAmount: 1,
-  })
-
-  const hasMoreBaseTokenValue = junoBalance * tokenPrice > tokenBalance
-
-  const maxApplicableBalanceForBaseToken = hasMoreBaseTokenValue
-    ? junoBalance - (junoBalance - tokenBalance / tokenPrice)
-    : junoBalance
-
-  const maxApplicableBalanceForToken = hasMoreBaseTokenValue
-    ? tokenBalance
-    : tokenBalance - (tokenBalance - junoBalance * tokenPrice)
-
-  const handleTokenAAmountChange = (input: number) => {
-    const value =
-      input > maxApplicableBalanceForBaseToken
-        ? maxApplicableBalanceForBaseToken
-        : input
-    setTokenAAmount(value)
-    setTokenBAmount((Number(token2_reserve) / Number(token1_reserve)) * value)
-  }
-
-  const handleTokenBAmountChange = (input: number) => {
-    const value =
-      input > maxApplicableBalanceForToken
-        ? maxApplicableBalanceForToken
-        : input
-    setTokenBAmount(value)
-    setTokenAAmount((Number(token1_reserve) / Number(token2_reserve)) * value)
-  }
-
-  const handleApplyMaximumAmount = () => {
-    handleTokenAAmountChange(maxApplicableBalanceForBaseToken)
-  }
-
-  const [isAddingLiquidity, setAddingLiquidity] = useState(true)
-  const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
+    })
 
   const submitButtonText = isAddingLiquidity
     ? 'Add Liquidity'
@@ -194,7 +70,7 @@ export const ManagePoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogBody>
-        {myReserve?.[0] > 0 && (
+        {tokenAReserve > 0 && (
           <StyledDivForButtons>
             <StyledSwitchButton
               onClick={() => setAddingLiquidity(true)}
@@ -217,7 +93,9 @@ export const ManagePoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
           variant="normal"
         >
           {isAddingLiquidity ? 'Add' : 'Remove'}{' '}
-          {`Juno / ${formatTokenName(tokenInfo.symbol)}`}
+          {`${formatTokenName(tokenASymbol)} / ${formatTokenName(
+            tokenInfo.symbol
+          )}`}
         </StyledTitle>
 
         {!isAddingLiquidity && (
@@ -229,15 +107,15 @@ export const ManagePoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {isAddingLiquidity && (
           <>
             <LiquidityInput
-              tokenName={formatTokenName(baseTokenSymbol)}
-              balance={junoBalance ? junoBalance : 0}
+              tokenName={formatTokenName(tokenASymbol)}
+              balance={tokenABalance ? tokenABalance : 0}
               amount={tokenAAmount}
               ratio={50}
               onAmountChange={handleTokenAAmountChange}
             />
             <LiquidityInput
               tokenName={formatTokenName(tokenInfo.symbol)}
-              balance={tokenBalance ? tokenBalance : 0}
+              balance={tokenBBalance ? tokenBBalance : 0}
               amount={tokenBAmount}
               ratio={50}
               onAmountChange={handleTokenBAmountChange}
@@ -269,20 +147,15 @@ export const ManagePoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
         {!isAddingLiquidity && (
           <StyledDivForLiquiditySummary>
             <Text>
-              {baseTokenSymbol}:{' '}
+              {tokenASymbol}:{' '}
               {balanceFormatter.format(
-                convertMicroDenomToDenom(
-                  myReserve[0],
-                  getBaseToken().decimals
-                ) *
-                  (removeLiquidityPercent / 100)
+                tokenAReserve * (removeLiquidityPercent / 100)
               )}
             </Text>
             <Text>
               {tokenInfo.symbol}:{' '}
               {balanceFormatter.format(
-                convertMicroDenomToDenom(myReserve[1], tokenInfo.decimals) *
-                  (removeLiquidityPercent / 100)
+                tokenBReserve * (removeLiquidityPercent / 100)
               )}
             </Text>
           </StyledDivForLiquiditySummary>
@@ -290,7 +163,7 @@ export const ManagePoolDialog = ({ isShowing, onRequestClose, tokenInfo }) => {
 
         <StyledButton
           size="humongous"
-          onClick={isLoading ? undefined : mutateAddLiquidity}
+          onClick={isLoading ? undefined : handleSubmit}
           disabled={isLoading}
         >
           {isLoading ? <Spinner instant /> : submitButtonText}

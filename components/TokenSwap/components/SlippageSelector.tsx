@@ -42,8 +42,7 @@ export const SlippageSelector = ({
       {isShowingSettings && (
         <StyledDivForPopover>
           <Text type="microscopic" variant="normal" color="tertiaryText">
-            Your transaction will revert if the price changes unfavorably by
-            more than this percentage.
+            Your transaction will not complete if price slips below target threshold. 
           </Text>
           <StyledDivForSlippageList>
             {SLIPPAGE_OPTIONS.map((tolerance) => (

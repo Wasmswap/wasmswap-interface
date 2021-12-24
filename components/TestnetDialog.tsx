@@ -14,16 +14,16 @@ export const TestnetDialog = () => {
       <Container>
         <StyledDivForHeader>
           <Text type="heading" variant="bold">
-            Testnet Alert
+            Testnet Warning
           </Text>
           <StyledCloseIcon onClick={requestClose} />
         </StyledDivForHeader>
         <Text paddingBottom="23px" type="caption" variant="light">
-          The app is in beta and operates on the uni testnet. You will
-          not be able to trade real assets. Let us know if you encounter any
+          This app is currently in beta and operating on the Uni testnet. You will
+          not be able to trade real assets. Please let the developers know if you encounter any
           issues.
         </Text>
-        <StyledButton onClick={requestClose}>Enter the app</StyledButton>
+        <StyledButton onClick={requestClose}>Enter the App</StyledButton>
       </Container>
     </Dialog>
   )

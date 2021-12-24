@@ -100,7 +100,7 @@ export function NavigationSidebar() {
           Testnet
         </Text>
         <Text type="caption" variant="light" color="tertiaryText">
-          This website is in beta. Let us know if you encounter
+          This website is currently in beta. Please let the developers know if you encounter
           any issues.
         </Text>
       </StyledDivForFooter>

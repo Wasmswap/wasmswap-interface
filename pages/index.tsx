@@ -7,9 +7,8 @@ export default function Home() {
   return (
     <AppLayout>
       <PageHeader
-        title="Pools"
-        subtitle="Provide liquidity to the market by adding assets to the pools and
-        receive swap fees from each trade."
+        title="Swap"
+        subtitle="Swap between your favorite assets on Juno."
       />
       <TokenSwap />
     </AppLayout>

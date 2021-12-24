@@ -48,8 +48,8 @@ export default function Pools() {
   return (
     <AppLayout>
       <PageHeader
-        title="Pools"
-        subtitle="Provide liquidity to the market by adding assets to the pools and
+        title="Liquidity"
+        subtitle="Provide liquidity to the market and
         receive swap fees from each trade."
       />
 
@@ -65,7 +65,7 @@ export default function Pools() {
         <>
           {Boolean(myPools?.length) && (
             <>
-              <SectionTitle>My pools</SectionTitle>
+              <SectionTitle>My Pools</SectionTitle>
               <StyledDivForPoolsGrid>
                 {myPools.map(({ liquidityInfo, tokenInfo }, key) => (
                   <PoolCard

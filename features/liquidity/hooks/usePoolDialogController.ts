@@ -11,19 +11,19 @@ import {
 } from 'util/conversion'
 import { toast } from 'react-toastify'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { useState } from 'react'
-import { useTokenToTokenPrice } from '../../swap/hooks/useTokenToTokenPrice'
-import { useSwapInfo } from 'hooks/useSwapInfo'
+import { usePriceForOneToken } from '../../swap/hooks/usePriceForOneToken'
+import { getSwapInfo } from '../../../services/swap'
 
 type UsePoolDialogControllerArgs = {
-  removeLiquidityPercent: number
+  /* value from 0 to 1 */
+  percentage: number
   actionState: 'add' | 'remove'
   tokenInfo: TokenInfo
 }
 
 export const usePoolDialogController = ({
-  removeLiquidityPercent,
   actionState,
+  percentage,
   tokenInfo: tokenB,
 }: UsePoolDialogControllerArgs) => {
   const { address, client } = useRecoilValue(walletState)
@@ -38,9 +38,27 @@ export const usePoolDialogController = ({
 
   const { myLiquidity, myReserve } = liquidity?.[0] ?? {}
 
-  const [{ token2_reserve, token1_reserve, lp_token_address }] = useSwapInfo({
-    tokenSymbol: tokenB.symbol,
+  const [oneTokenToTokenPrice] = usePriceForOneToken({
+    tokenASymbol: tokenB?.symbol,
+    tokenBSymbol: tokenA?.symbol,
   })
+
+  const maxApplicableBalanceForTokenA = Math.min(
+    tokenABalance * oneTokenToTokenPrice,
+    tokenABalance
+  )
+
+  const maxApplicableBalanceForTokenB = Math.min(
+    maxApplicableBalanceForTokenA / oneTokenToTokenPrice,
+    tokenBBalance
+  )
+
+  const tokenAReserve = myReserve?.[0]
+    ? convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
+    : 0
+  const tokenBReserve = myReserve?.[1]
+    ? convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
+    : 0
 
   const refetchQueries = useRefetchQueries()
 
@@ -50,6 +68,14 @@ export const usePoolDialogController = ({
     mutate: mutateAddLiquidity,
   } = useMutation(
     async () => {
+      const { lp_token_address } = await getSwapInfo(
+        tokenB.swap_address,
+        process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
+      )
+
+      const tokenAAmount = percentage * maxApplicableBalanceForTokenA
+      const tokenBAmount = percentage * maxApplicableBalanceForTokenB
+
       if (actionState === 'add') {
         return await addLiquidity({
           nativeAmount: Math.floor(
@@ -69,9 +95,7 @@ export const usePoolDialogController = ({
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor(
-            (removeLiquidityPercent / 100) * myLiquidity.coins
-          ),
+          amount: Math.floor(percentage * myLiquidity.coins),
           minToken1: 0,
           minToken2: 0,
           swapAddress: tokenB.swap_address,
@@ -120,54 +144,6 @@ export const usePoolDialogController = ({
     }
   )
 
-  const [tokenAAmount, setTokenAAmount] = useState(0)
-  const [tokenBAmount, setTokenBAmount] = useState(0)
-
-  const [tokenPrice] = useTokenToTokenPrice({
-    tokenASymbol: tokenA.symbol,
-    tokenBSymbol: tokenB.symbol,
-    tokenAmount: 1,
-  })
-
-  const hasMoreBaseTokenValue = tokenABalance * tokenPrice > tokenBBalance
-
-  const maxApplicableBalanceForBaseToken = hasMoreBaseTokenValue
-    ? tokenABalance - (tokenABalance - tokenBBalance / tokenPrice)
-    : tokenABalance
-
-  const maxApplicableBalanceForToken = hasMoreBaseTokenValue
-    ? tokenBBalance
-    : tokenBBalance - (tokenBBalance - tokenABalance * tokenPrice)
-
-  const handleTokenAAmountChange = (input: number) => {
-    const value =
-      input > maxApplicableBalanceForBaseToken
-        ? maxApplicableBalanceForBaseToken
-        : input
-    setTokenAAmount(value)
-    setTokenBAmount((Number(token2_reserve) / Number(token1_reserve)) * value)
-  }
-
-  const handleTokenBAmountChange = (input: number) => {
-    const value =
-      input > maxApplicableBalanceForToken
-        ? maxApplicableBalanceForToken
-        : input
-    setTokenBAmount(value)
-    setTokenAAmount((Number(token1_reserve) / Number(token2_reserve)) * value)
-  }
-
-  const handleApplyMaximumAmount = () => {
-    handleTokenAAmountChange(maxApplicableBalanceForBaseToken)
-  }
-
-  const tokenAReserve = myReserve?.[0]
-    ? convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
-    : 0
-  const tokenBReserve = myReserve?.[1]
-    ? convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
-    : 0
-
   return {
     state: {
       myLiquidity,
@@ -177,14 +153,12 @@ export const usePoolDialogController = ({
       isLoading,
       tokenASymbol: tokenA.symbol,
       tokenABalance: tokenABalance,
-      tokenAAmount,
-      tokenBAmount,
       tokenBBalance,
+      maxApplicableBalanceForTokenA,
+      maxApplicableBalanceForTokenB,
+      oneTokenToTokenPrice,
     },
     actions: {
-      handleTokenAAmountChange,
-      handleTokenBAmountChange,
-      handleApplyMaximumAmount,
       mutateAddLiquidity,
     },
   }

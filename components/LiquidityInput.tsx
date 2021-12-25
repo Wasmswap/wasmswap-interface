@@ -1,100 +1,106 @@
-import React, { FC } from 'react'
-import styled from 'styled-components'
+import React, { FC, useState } from 'react'
+import { styled } from '@stitches/react'
 import { Text } from './Text'
-import { colorTokens } from '../util/constants'
 import { formatTokenBalance } from '../util/conversion'
+import { useTokenInfo } from '../hooks/useTokenInfo'
+import { BasicNumberInput } from './BasicNumberInput'
 
 type LiquidityInputProps = {
-  tokenName: string
-  balance: number
+  tokenSymbol: string
+  availableAmount: number
+  maxApplicableAmount: number
   amount: number
-  ratio: number
   onAmountChange: (value: number) => void
 }
 
 export const LiquidityInput: FC<LiquidityInputProps> = ({
-  tokenName,
-  balance,
-  ratio,
+  tokenSymbol,
+  availableAmount,
+  maxApplicableAmount,
   amount,
   onAmountChange,
 }) => {
-  const handleAmountChange = ({ target: { value } }) =>
+  const [focusedOnInput, setFocusedOnInput] = useState(false)
+
+  const { name: tokenName, logoURI } = useTokenInfo(tokenSymbol)
+
+  const handleAmountChange = (value: number) => {
     onAmountChange(Number(formatTokenBalance(value)))
+  }
 
   return (
-    <StyledInputBox>
-      <StyledDivForInfo>
-        <StyledRow>
-          <StyledTokenWrapper>
-            <Text variant="light">
-              {tokenName} - {ratio}%
-            </Text>
-          </StyledTokenWrapper>
-        </StyledRow>
-        <StyledRow>
-          <Text type="caption" variant="light" color="gray">
-            Total available:{' '}
-            <StyledSpanForBalance>{balance}</StyledSpanForBalance>
+    <StyledDivForWrapper active={focusedOnInput}>
+      <StyledDivForColumn kind="info">
+        <StyledImageForToken src={logoURI} as={logoURI ? 'img' : 'div'} />
+        <div data-token-info="">
+          <Text type="subtitle" variant="bold" textTransform="uppercase">
+            {tokenName}
           </Text>
-        </StyledRow>
-      </StyledDivForInfo>
-
-      <Text>
-        <StyledInput
-          type="number"
-          placeholder="0.0"
+          <Text type="microscopic" color="tertiaryText">
+            {formatTokenBalance(availableAmount)} available
+          </Text>
+        </div>
+      </StyledDivForColumn>
+      <StyledDivForColumn kind="input">
+        <BasicNumberInput
+          value={Number(formatTokenBalance(amount))}
           min={0}
-          value={String(formatTokenBalance(amount))}
-          onChange={onAmountChange ? handleAmountChange : undefined}
-          autoComplete="off"
-          readOnly={!onAmountChange}
+          max={maxApplicableAmount}
+          onChange={handleAmountChange}
+          onFocus={() => {
+            setFocusedOnInput(true)
+          }}
+          onBlur={() => {
+            setFocusedOnInput(false)
+          }}
         />
-      </Text>
-    </StyledInputBox>
+      </StyledDivForColumn>
+    </StyledDivForWrapper>
   )
 }
 
-const StyledInputBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: ${colorTokens.white};
-  border-radius: 16px;
-  padding: 18px 24px;
-  margin-bottom: 12px;
-`
+const StyledDivForWrapper = styled('div', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  borderRadius: '6px',
+  padding: '12px 24px 10px 10px',
+  width: '100%',
+  transition: 'background 0.1s ease-out',
+  '&:hover': {
+    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+  },
+  '&:active': {
+    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+  },
+  variants: {
+    active: {
+      true: {
+        backgroundColor: 'rgba(25, 29, 32, 0.05) !important',
+      },
+    },
+  },
+})
 
-const StyledRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  &:not(&:first-child) {
-    padding-top: 8px;
-  }
-`
+const StyledDivForColumn = styled('div', {
+  variants: {
+    kind: {
+      info: {
+        display: 'flex',
+        alignItems: 'center',
+        columnGap: '12px',
+      },
+      input: {
+        textAlign: 'right',
+      },
+    },
+  },
+})
 
-const StyledDivForInfo = styled.div``
-
-const StyledTokenWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  text-transform: uppercase;
-`
-
-const StyledInput = styled.input`
-  border: none;
-  outline: none;
-  display: block;
-  width: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0;
-  background: transparent;
-  text-align: right;
-`
-
-const StyledSpanForBalance = styled.span`
-  color: ${colorTokens.black};
-`
+const StyledImageForToken = styled('img', {
+  width: 30,
+  height: 30,
+  borderRadius: '50%',
+  backgroundColor: '#ccc',
+})

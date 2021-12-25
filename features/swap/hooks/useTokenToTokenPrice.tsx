@@ -59,7 +59,12 @@ export const useTokenToTokenPrice = ({
       )
     },
     {
-      enabled: Boolean(tokenBSymbol && tokenASymbol && tokenAmount > 0),
+      enabled: Boolean(
+        tokenBSymbol &&
+          tokenASymbol &&
+          tokenAmount > 0 &&
+          tokenBSymbol !== tokenASymbol
+      ),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,

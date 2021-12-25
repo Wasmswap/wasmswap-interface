@@ -61,7 +61,7 @@ const buttonStyles = css`
   }
 `
 
-const StyledIcon = styled.div`
+const StyledIcon = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;

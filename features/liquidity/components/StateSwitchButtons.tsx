@@ -1,35 +1,30 @@
 import { styled } from '@stitches/react'
 import { SecondaryButton } from './SecondaryButton'
 
-type SwitchStates = 'stake' | 'unstake'
-
 type StateSwitchButtonsProps = {
-  value: SwitchStates
-  onStateChange: (state: SwitchStates) => void
+  activeValue: string
+  values: Array<string>
+  onStateChange: (state: string) => void
 }
 
 export const StateSwitchButtons = ({
-  value,
+  activeValue,
+  values,
   onStateChange,
 }: StateSwitchButtonsProps) => {
   return (
     <StyledDivForGrid>
-      <SecondaryButton
-        active={value === 'stake'}
-        onClick={() => {
-          onStateChange('stake')
-        }}
-      >
-        Staking
-      </SecondaryButton>
-      <SecondaryButton
-        active={value === 'unstake'}
-        onClick={() => {
-          onStateChange('unstake')
-        }}
-      >
-        Unstaking
-      </SecondaryButton>
+      {values.map((value) => (
+        <SecondaryButton
+          key={value}
+          active={value === activeValue}
+          onClick={() => {
+            onStateChange(value)
+          }}
+        >
+          {value}
+        </SecondaryButton>
+      ))}
     </StyledDivForGrid>
   )
 }
@@ -38,4 +33,7 @@ const StyledDivForGrid = styled('div', {
   display: 'flex',
   alignItems: 'center',
   columnGap: '4px',
+  '& *': {
+    textTransform: 'capitalize',
+  },
 })

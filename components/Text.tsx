@@ -77,7 +77,7 @@ const mixins = css`
   font-weight: ${fontWeightSelector};
   font-family: ${fontFamilySelector};
   ${paddingMixin};
-  ${textTransformMixin}
+  ${textTransformMixin};
   ${wrapMixin};
 `
 

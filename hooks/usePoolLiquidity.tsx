@@ -84,7 +84,7 @@ export const usePoolLiquidity = ({
     }
   )
 
-  const [[junoPrice]] = useTokenDollarValue([getBaseToken().symbol])
+  const [junoPrice] = useTokenDollarValue(getBaseToken().symbol)
 
   const liquidity = swaps?.map(
     (

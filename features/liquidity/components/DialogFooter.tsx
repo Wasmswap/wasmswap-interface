@@ -3,20 +3,25 @@ import { Text } from '../../../components/Text'
 import { ReactNode } from 'react'
 
 type DialogFooterProps = {
-  title: ReactNode | string
-  text: ReactNode | string
+  title?: ReactNode | string
+  text?: ReactNode | string
   buttons: ReactNode | string
 }
 
 export const DialogFooter = ({ title, text, buttons }: DialogFooterProps) => {
   return (
     <StyledDivForFooter>
-      <Text type="caption" paddingBottom="8px">
-        {title}
-      </Text>
-      <Text type="caption" variant="light" paddingBottom="24px">
-        {text}
-      </Text>
+      {title && (
+        <Text type="caption" paddingBottom="8px">
+          {title}
+        </Text>
+      )}
+
+      {text && (
+        <Text type="caption" variant="light" paddingBottom="24px">
+          {text}
+        </Text>
+      )}
       <StyledGridForButtons>{buttons}</StyledGridForButtons>
     </StyledDivForFooter>
   )

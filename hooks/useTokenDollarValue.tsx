@@ -1,9 +1,38 @@
 import { useQuery } from 'react-query'
-import { getTokenInfo } from './useTokenInfo'
+import { getBaseToken, getTokenInfo, useTokenInfo } from './useTokenInfo'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { usePriceForOneToken } from '../features/swap/hooks/usePriceForOneToken'
 
-export const useTokenDollarValue = (tokenSymbols?: Array<string>) => {
+export const useTokenDollarValue = (tokenSymbol?: string) => {
+  const { symbol: baseTokenSymbol } = getBaseToken()
+  const tokenInfo = useTokenInfo(tokenSymbol)
+
+  const [[tokenDollarPrice], fetchingTokenDollarPrice] =
+    useTokenDollarValueQuery([tokenInfo?.id ? tokenSymbol : baseTokenSymbol])
+
+  const [oneTokenToTokenPrice, fetchingTokenToTokenPrice] = usePriceForOneToken(
+    {
+      tokenASymbol: tokenSymbol,
+      tokenBSymbol: baseTokenSymbol,
+    }
+  )
+
+  /* if the token has an id or it's the baseToken then let's return pure price from the api */
+  const shouldRenderPureDollarPrice =
+    tokenSymbol === baseTokenSymbol || Boolean(tokenInfo?.id)
+  if (shouldRenderPureDollarPrice) {
+    return [tokenDollarPrice, fetchingTokenDollarPrice] as const
+  }
+
+  /* otherwise, let's query the chain and calculate the dollar price based on ratio to base token */
+  return [
+    tokenDollarPrice * oneTokenToTokenPrice,
+    fetchingTokenDollarPrice || fetchingTokenToTokenPrice,
+  ] as const
+}
+
+export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
   const { data, isLoading } = useQuery(
     `coinDollarValue/${tokenSymbols.join('/')}`,
     async (): Promise<Array<number>> => {

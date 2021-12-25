@@ -10,7 +10,10 @@ import {
 } from 'util/conversion'
 import { usePoolDialogController } from '../../hooks/usePoolDialogController'
 import { useState } from 'react'
-import { getBaseToken, TokenInfo } from '../../../../hooks/useTokenInfo'
+import {
+  getBaseToken,
+  useTokenInfoByPoolId,
+} from '../../../../hooks/useTokenInfo'
 import { TokenToTokenRates } from './TokenToTokenRates'
 import { SecondaryButton } from '../SecondaryButton'
 import { PrimaryButton } from '../PrimaryButton'
@@ -23,14 +26,16 @@ import { useTokenDollarValue } from '../../../../hooks/useTokenDollarValue'
 type ManagePoolDialogProps = {
   isShowing: boolean
   onRequestClose: () => void
-  tokenInfo: TokenInfo
+  poolId: string
 }
 
 export const ManagePoolDialog = ({
   isShowing,
   onRequestClose,
-  tokenInfo,
+  poolId,
 }: ManagePoolDialogProps) => {
+  const tokenInfo = useTokenInfoByPoolId(poolId)
+
   const [isAddingLiquidity, setAddingLiquidity] = useState(true)
 
   const [addLiquidityPercent, setAddLiquidityPercent] = useState(0)

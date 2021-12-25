@@ -1,5 +1,5 @@
 export { UnbondingLiquidityCard } from './components/UnbondingLiquidityCard'
 export { PoolBondedLiquidityCard } from './components/PoolBondedLiquidityCard'
-export { ManagePoolDialog } from './components/ManagePoolDialog/ManagePoolDialog'
+export { ManagePoolDialog } from './components/ManagePoolDialog'
 export { BondLiquidityDialog } from './components/BondLiquidityDialog'
 export { PoolAvailableLiquidityCard } from './components/PoolAvailableLiquidityCard'

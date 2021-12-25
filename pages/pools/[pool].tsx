@@ -49,16 +49,18 @@ export default function Pool() {
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
 
   if (!tokenInfo || !pool) {
-    return 'No token info was provided.'
+    return null
   }
 
   return (
     <>
-      <ManagePoolDialog
-        isShowing={isManageLiquidityDialogShowing}
-        onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
-        tokenInfo={tokenInfo || {}}
-      />
+      {pool && (
+        <ManagePoolDialog
+          isShowing={isManageLiquidityDialogShowing}
+          onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
+          poolId={pool as string}
+        />
+      )}
       {__POOL_REWARDS_ENABLED__ && (
         <BondLiquidityDialog
           isShowing={isBondingDialogShowing}

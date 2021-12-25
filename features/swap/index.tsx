@@ -4,7 +4,6 @@ import { tokenSwapAtom } from './swapAtoms'
 import { styled } from '@stitches/react'
 import { TransactionTips } from './components/TransactionTips'
 import { TransactionAction } from './components/TransactionAction'
-import { useTokenDollarValue } from '../../hooks/useTokenDollarValue'
 import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
 import { usePersistance } from '../../hooks/usePersistance'
 import {
@@ -17,10 +16,6 @@ export const TokenSwap = () => {
   const transactionStatus = useRecoilValue(transactionStatusState)
 
   const isUiDisabled = transactionStatus === TransactionStatus.EXECUTING
-
-  const [[tokenAPrice]] = useTokenDollarValue(
-    [tokenA?.tokenSymbol, tokenB?.tokenSymbol].filter(Boolean)
-  )
 
   const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.tokenSymbol,
@@ -57,7 +52,6 @@ export const TokenSwap = () => {
         <TransactionTips
           disabled={isUiDisabled}
           isPriceLoading={isPriceLoading}
-          tokenAPrice={tokenAPrice}
           tokenToTokenPrice={tokenPrice}
           onTokenSwaps={handleSwapTokenPositions}
         />

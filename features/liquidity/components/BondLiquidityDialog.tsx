@@ -1,17 +1,20 @@
-import { getBaseToken, useTokenInfoByPoolId } from '../../../hooks/useTokenInfo'
-import { Dialog, StyledCloseIcon } from '../../../components/Dialog'
-import { Text } from '../../../components/Text'
+import { getBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { Dialog, StyledCloseIcon } from 'components/Dialog'
+import { Text } from 'components/Text'
 import { styled } from '@stitches/react'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { useState } from 'react'
-import { dollarValueFormatter } from '../../../util/conversion'
+import {
+  dollarValueFormatter,
+  dollarValueFormatterWithDecimals,
+} from 'util/conversion'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
 import { Divider } from './Divider'
 import { DialogFooter } from './DialogFooter'
 import { SecondaryButton } from './SecondaryButton'
 import { PrimaryButton } from './PrimaryButton'
-import { usePoolLiquidity } from '../../../hooks/usePoolLiquidity'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
 import dayjs from 'dayjs'
 
@@ -61,8 +64,11 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <>
           <StyledDivForContent kind="stakingHeader">
             <StateSwitchButtons
-              value={dialogState}
-              onStateChange={setDialogState}
+              activeValue={dialogState === 'stake' ? 'staking' : 'unstaking'}
+              values={['staking', 'unstaking']}
+              onStateChange={(value) => {
+                setDialogState(value === 'staking' ? 'stake' : 'unstake')
+              }}
             />
           </StyledDivForContent>
           <Divider />
@@ -86,7 +92,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           paddingBottom="18px"
         >
           Max available for stacking is worth $
-          {dollarValueFormatter(maxDollarValueLiquidity)}
+          {dollarValueFormatterWithDecimals(maxDollarValueLiquidity)}
         </Text>
         <PercentageSelection
           maxLiquidity={maxDollarValueLiquidity}

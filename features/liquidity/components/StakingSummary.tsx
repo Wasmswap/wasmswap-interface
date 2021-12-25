@@ -25,9 +25,8 @@ export const StakingSummary = ({
   liquidityAmount,
   onChangeLiquidity,
 }: StakingSummaryProps) => {
-  const [[tokenAPrice, tokenBPrice]] = useTokenDollarValue(
-    [tokenA?.symbol, tokenB?.symbol].filter(Boolean)
-  )
+  const [tokenAPrice] = useTokenDollarValue(tokenA?.symbol)
+  const [tokenBPrice] = useTokenDollarValue(tokenB?.symbol)
 
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
     useState(false)

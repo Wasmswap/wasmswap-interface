@@ -1,6 +1,8 @@
 import { styled } from '@stitches/react'
 
-export const Divider = () => <StyledHR />
+export const Divider = ({ offsetY = 0 }) => (
+  <StyledHR style={offsetY ? { margin: `${offsetY}px 0` } : undefined} />
+)
 
 const StyledHR = styled('div', {
   backgroundColor: 'rgba(25, 29, 32, 0.1)',

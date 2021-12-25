@@ -39,7 +39,7 @@
       "denom":"ujunox"
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNOX-POOD",
       "chain_id": "lucina",
       "token_address": "juno1emevcqknn0jre5fcsv6grh8lvpfh6fxd67w8h9y57a3w9yx8umtsjzpkfc",
@@ -53,7 +53,7 @@
       "denom":"upood"
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNOX-CRAB",
       "chain_id": "lucina",
       "token_address": "juno1qu8vqtcvaw0t8y78p77ss0895xlhunyhj9wgzg5vf3e7ew5s24cqjrr3cr",
@@ -67,7 +67,7 @@
       "denom":"ucrab"
     },
     {
-      "id": "juno-network",
+      "id": "",
       "chain_id": "lucina",
       "pool_id": "JUNOX-DAO",
       "token_address": "juno10rn9y5n8hs4c7n0u3rryzstull00q6fzxtu9f5y5znq4xh53tv2sfr8qrk",

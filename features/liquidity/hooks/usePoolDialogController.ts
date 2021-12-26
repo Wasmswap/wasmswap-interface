@@ -26,8 +26,6 @@ export const usePoolDialogController = ({
   percentage,
   tokenInfo: tokenB,
 }: UsePoolDialogControllerArgs) => {
-  const { address, client } = useRecoilValue(walletState)
-
   const tokenA = getBaseToken()
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
@@ -60,13 +58,49 @@ export const usePoolDialogController = ({
     ? convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
     : 0
 
+  const { isLoading, mutate: mutateAddLiquidity } = useMutateLiquidity({
+    actionState,
+    percentage,
+    tokenA,
+    tokenB,
+    maxApplicableBalanceForTokenA,
+    maxApplicableBalanceForTokenB,
+    myLiquidity,
+  })
+
+  return {
+    state: {
+      myLiquidity,
+      myReserve,
+      tokenAReserve,
+      tokenBReserve,
+      isLoading,
+      tokenASymbol: tokenA.symbol,
+      tokenABalance: tokenABalance,
+      tokenBBalance,
+      maxApplicableBalanceForTokenA,
+      maxApplicableBalanceForTokenB,
+      oneTokenToTokenPrice,
+    },
+    actions: {
+      mutateAddLiquidity,
+    },
+  }
+}
+
+const useMutateLiquidity = ({
+  percentage,
+  maxApplicableBalanceForTokenA,
+  maxApplicableBalanceForTokenB,
+  tokenA,
+  tokenB,
+  actionState,
+  myLiquidity,
+}) => {
+  const { address, client } = useRecoilValue(walletState)
   const refetchQueries = useRefetchQueries()
 
-  const {
-    isLoading,
-    reset: resetAddLiquidityMutation,
-    mutate: mutateAddLiquidity,
-  } = useMutation(
+  const mutation = useMutation(
     async () => {
       const { lp_token_address } = await getSwapInfo(
         tokenB.swap_address,
@@ -79,9 +113,9 @@ export const usePoolDialogController = ({
       if (actionState === 'add') {
         return await addLiquidity({
           nativeAmount: Math.floor(
-            convertDenomToMicroDenom(tokenAAmount, getBaseToken().decimals)
+            convertDenomToMicroDenom(tokenAAmount, tokenA.decimals)
           ),
-          nativeDenom: getBaseToken().denom,
+          nativeDenom: tokenA.denom,
           maxToken: Math.floor(
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals) + 5
           ),
@@ -122,7 +156,7 @@ export const usePoolDialogController = ({
         )
 
         refetchQueries()
-        setTimeout(resetAddLiquidityMutation, 350)
+        setTimeout(mutation.reset, 350)
       },
       onError(error) {
         console.error(error)
@@ -144,22 +178,5 @@ export const usePoolDialogController = ({
     }
   )
 
-  return {
-    state: {
-      myLiquidity,
-      myReserve,
-      tokenAReserve,
-      tokenBReserve,
-      isLoading,
-      tokenASymbol: tokenA.symbol,
-      tokenABalance: tokenABalance,
-      tokenBBalance,
-      maxApplicableBalanceForTokenA,
-      maxApplicableBalanceForTokenB,
-      oneTokenToTokenPrice,
-    },
-    actions: {
-      mutateAddLiquidity,
-    },
-  }
+  return mutation
 }

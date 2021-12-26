@@ -8,8 +8,8 @@ import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { usePoolDialogController } from '../../hooks/usePoolDialogController'
-import { useState } from 'react'
+import { usePoolDialogController } from './usePoolDialogController'
+import { useEffect, useState } from 'react'
 import {
   getBaseToken,
   useTokenInfoByPoolId,
@@ -51,7 +51,6 @@ export const ManagePoolDialog = ({
       tokenBBalance,
       maxApplicableBalanceForTokenA,
       maxApplicableBalanceForTokenB,
-      oneTokenToTokenPrice,
       isLoading,
     },
     actions: { mutateAddLiquidity },
@@ -63,14 +62,24 @@ export const ManagePoolDialog = ({
       : removeLiquidityPercent,
   })
 
+  const canManageLiquidity = tokenAReserve > 0
+
   const handleSubmit = () =>
     mutateAddLiquidity(null, {
       onSuccess() {
         requestAnimationFrame(onRequestClose)
+        setRemoveLiquidityPercent(0)
+        setAddLiquidityPercent(0)
       },
     })
 
-  const canManageLiquidity = tokenAReserve > 0
+  useEffect(() => {
+    if (!canManageLiquidity) {
+      setAddingLiquidity((isAdding) => {
+        return !isAdding ? true : isAdding
+      })
+    }
+  }, [canManageLiquidity])
 
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose} kind="blank">
@@ -116,7 +125,6 @@ export const ManagePoolDialog = ({
           tokenBBalance={tokenBBalance}
           maxApplicableBalanceForTokenA={maxApplicableBalanceForTokenA}
           maxApplicableBalanceForTokenB={maxApplicableBalanceForTokenB}
-          oneTokenToTokenPrice={oneTokenToTokenPrice}
           liquidityPercentage={addLiquidityPercent}
           onChangeLiquidity={setAddLiquidityPercent}
         />
@@ -241,7 +249,6 @@ function AddLiquidityContent({
   tokenBBalance,
   maxApplicableBalanceForTokenA,
   maxApplicableBalanceForTokenB,
-  oneTokenToTokenPrice,
   isLoading,
   onChangeLiquidity,
 }) {
@@ -287,7 +294,6 @@ function AddLiquidityContent({
           tokenASymbol={tokenASymbol}
           tokenBSymbol={tokenBSymbol}
           tokenAAmount={tokenAAmount}
-          oneTokenToTokenPrice={oneTokenToTokenPrice}
           isLoading={isLoading}
         />
       </StyledDivForTxRates>

@@ -11,8 +11,7 @@ import {
 } from 'util/conversion'
 import { toast } from 'react-toastify'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { usePriceForOneToken } from '../../swap/hooks/usePriceForOneToken'
-import { getSwapInfo } from '../../../services/swap'
+import { getSwapInfo } from '../../../../services/swap'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -34,22 +33,35 @@ export const usePoolDialogController = ({
     poolIds: [tokenB.pool_id],
   })
 
-  const { myLiquidity, myReserve } = liquidity?.[0] ?? {}
+  const { myLiquidity, myReserve, reserve } = liquidity?.[0] ?? {}
 
-  const [oneTokenToTokenPrice] = usePriceForOneToken({
-    tokenASymbol: tokenB?.symbol,
-    tokenBSymbol: tokenA?.symbol,
-  })
+  function calculateMaxApplicableBalances() {
+    const tokenAToTokenBRatio = reserve?.[0] / reserve?.[1]
+    const tokenABalanceMinusGasFee = tokenABalance - 0.1
 
-  const maxApplicableBalanceForTokenA = Math.min(
-    tokenABalance * oneTokenToTokenPrice,
-    tokenABalance
-  )
+    const isTokenALimitingFactor =
+      tokenABalance < tokenBBalance * tokenAToTokenBRatio
 
-  const maxApplicableBalanceForTokenB = Math.min(
-    maxApplicableBalanceForTokenA / oneTokenToTokenPrice,
-    tokenBBalance
-  )
+    if (isTokenALimitingFactor) {
+      return {
+        tokenA: tokenABalanceMinusGasFee,
+        tokenB: Math.min(
+          tokenABalanceMinusGasFee / tokenAToTokenBRatio,
+          tokenBBalance
+        ),
+      }
+    }
+
+    return {
+      tokenA: Math.min(tokenBBalance * tokenAToTokenBRatio, tokenABalance),
+      tokenB: tokenBBalance,
+    }
+  }
+
+  const {
+    tokenA: maxApplicableBalanceForTokenA,
+    tokenB: maxApplicableBalanceForTokenB,
+  } = calculateMaxApplicableBalances()
 
   const tokenAReserve = myReserve?.[0]
     ? convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
@@ -80,7 +92,6 @@ export const usePoolDialogController = ({
       tokenBBalance,
       maxApplicableBalanceForTokenA,
       maxApplicableBalanceForTokenB,
-      oneTokenToTokenPrice,
     },
     actions: {
       mutateAddLiquidity,

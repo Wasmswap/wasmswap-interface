@@ -5,14 +5,19 @@ import {
   formatTokenBalance,
 } from 'util/conversion'
 import { Text } from 'components/Text'
+import { usePriceForOneToken } from '../../../swap/hooks/usePriceForOneToken'
 
 export const TokenToTokenRates = ({
   tokenASymbol,
   tokenBSymbol,
   tokenAAmount,
-  oneTokenToTokenPrice,
   isLoading,
 }) => {
+  const [oneTokenToTokenPrice] = usePriceForOneToken({
+    tokenASymbol,
+    tokenBSymbol,
+  })
+
   const { isShowing, conversionRate, conversionRateInDollar, dollarValue } =
     useTxRates({
       tokenASymbol,

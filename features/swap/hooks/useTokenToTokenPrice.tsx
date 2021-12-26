@@ -17,17 +17,24 @@ export const useTokenToTokenPrice = ({
   tokenAmount,
 }) => {
   const { data, isLoading } = useQuery(
-    `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-    async (): Promise<number | undefined> => {
-      const fromTokenInfo = getTokenInfo(tokenASymbol)
-      const toTokenInfo = getTokenInfo(tokenBSymbol)
+    [
+      `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
+      tokenASymbol,
+      tokenBSymbol,
+      tokenAmount,
+    ],
+    async ({
+      queryKey: [, symbolForTokenA, symbolForTokenB, amount],
+    }): Promise<number | undefined> => {
+      const fromTokenInfo = getTokenInfo(symbolForTokenA)
+      const toTokenInfo = getTokenInfo(symbolForTokenB)
 
       const baseToken = getBaseToken()
       const formatPrice = (price) =>
         convertMicroDenomToDenom(price, toTokenInfo.decimals)
 
       const convertedTokenAmount = convertDenomToMicroDenom(
-        tokenAmount,
+        amount,
         fromTokenInfo.decimals
       )
 

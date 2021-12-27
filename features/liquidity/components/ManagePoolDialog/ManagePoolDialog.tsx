@@ -7,6 +7,7 @@ import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
+  protectAgainstNaN,
 } from 'util/conversion'
 import { usePoolDialogController } from './usePoolDialogController'
 import { useEffect, useState } from 'react'
@@ -255,13 +256,13 @@ function AddLiquidityContent({
   const handleTokenAAmountChange = (input: number) => {
     const value = Math.min(input, maxApplicableBalanceForTokenA)
 
-    onChangeLiquidity(value / maxApplicableBalanceForTokenA)
+    onChangeLiquidity(protectAgainstNaN(value / maxApplicableBalanceForTokenA))
   }
 
   const handleTokenBAmountChange = (input: number) => {
     const value = Math.min(input, maxApplicableBalanceForTokenB)
 
-    onChangeLiquidity(value / maxApplicableBalanceForTokenB)
+    onChangeLiquidity(protectAgainstNaN(value / maxApplicableBalanceForTokenB))
   }
 
   const handleApplyMaximumAmount = () => {

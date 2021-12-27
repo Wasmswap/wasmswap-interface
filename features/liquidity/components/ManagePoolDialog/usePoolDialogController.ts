@@ -39,6 +39,13 @@ export const usePoolDialogController = ({
     const tokenAToTokenBRatio = reserve?.[0] / reserve?.[1]
     const tokenABalanceMinusGasFee = tokenABalance - 0.1
 
+    if (tokenABalanceMinusGasFee <= 0 || tokenBBalance <= 0) {
+      return {
+        tokenA: 0,
+        tokenB: 0
+      }
+    }
+
     const isTokenALimitingFactor =
       tokenABalance < tokenBBalance * tokenAToTokenBRatio
 

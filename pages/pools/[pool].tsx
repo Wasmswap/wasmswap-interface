@@ -39,12 +39,10 @@ export default function Pool() {
     tokenAmount: 1,
   })
 
-  const [liquidity, isLoading] = usePoolLiquidity({
-    poolIds: pool ? [pool] : undefined,
-  })
-
-  const { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } =
-    liquidity?.[0] ?? {}
+  const [
+    { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } = {} as any,
+    isLoading,
+  ] = usePoolLiquidity({ poolId: pool })
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
 

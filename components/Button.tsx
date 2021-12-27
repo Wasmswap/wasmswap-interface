@@ -43,7 +43,7 @@ export const StyledButton = styled.button<ButtonProps>`
   transition: opacity 0.1s ease-out, background-color 0.15s ease-out;
 
   &:hover {
-    opacity: 0.9;
+    opacity: ${(p) => (p.disabled || p.type === 'disabled' ? 1 : 0.9)};
   }
 
   &:active {

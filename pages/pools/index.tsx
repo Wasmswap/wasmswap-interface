@@ -4,7 +4,7 @@ import { AppLayout } from '../../components/Layout/AppLayout'
 import { getBaseToken, tokenList } from '../../hooks/useTokenInfo'
 import { PoolCard } from '../../features/liquidity/components/PoolCard'
 import { PageHeader } from '../../components/Layout/PageHeader'
-import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
+import { useMultiplePoolsLiquidity } from '../../hooks/usePoolLiquidity'
 import { Text } from '../../components/Text'
 import { Spinner } from '../../components/Spinner'
 
@@ -22,7 +22,7 @@ export default function Pools() {
     }
   })
 
-  const [liquidity, isLoading] = usePoolLiquidity({
+  const [liquidity, isLoading] = useMultiplePoolsLiquidity({
     poolIds,
   })
 

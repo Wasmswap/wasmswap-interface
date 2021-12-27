@@ -19,9 +19,8 @@ export const TestnetDialog = () => {
           <StyledCloseIcon onClick={requestClose} />
         </StyledDivForHeader>
         <Text paddingBottom="23px" type="caption" variant="light">
-          This app is currently in beta and operating on the Uni testnet. You will
-          not be able to trade real assets. Please let the developers know if you encounter any
-          issues.
+          This app is currently in beta and operating on the Uni testnet. You
+          will not be able to trade real assets.
         </Text>
         <StyledButton onClick={requestClose}>Enter the App</StyledButton>
       </Container>

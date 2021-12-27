@@ -93,15 +93,22 @@ export function NavigationSidebar() {
       <StyledDivForFooter data-footer="">
         <Text
           type="caption"
-          variant="light"
+          variant="bold"
           color="tertiaryText"
           paddingY="12px"
         >
           Testnet
         </Text>
         <Text type="caption" variant="light" color="tertiaryText">
-          This website is currently in beta. Please let the developers know if you encounter
-          any issues.
+            This website is currently in beta. Please{' '}
+          <a
+            href="https://discord.gg/bChdaTKynt"
+            target="blank"
+            style={{ textDecoration: 'underline' }}
+          >
+            provide feedback
+          </a>
+          .
         </Text>
       </StyledDivForFooter>
     </StyledWrapper>

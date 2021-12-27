@@ -10,6 +10,7 @@ import { useTokenSwap } from '../hooks/useTokenSwap'
 import { Spinner } from '../../../components/Spinner'
 import { SlippageSelector } from './SlippageSelector'
 import { NETWORK_FEE } from '../../../util/constants'
+import { useTokenBalance } from '../../../hooks/useTokenBalance'
 
 type TransactionTipsProps = {
   isPriceLoading?: boolean
@@ -22,11 +23,11 @@ export const TransactionAction = ({
 }: TransactionTipsProps) => {
   const [requestedSwap, setRequestedSwap] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
+  const { balance: tokenABalance } = useTokenBalance(tokenA?.tokenSymbol)
 
   /* wallet state */
   const { status } = useRecoilValue(walletState)
   const { mutate: connectWallet } = useConnectWallet()
-
   const [slippage, setSlippage] = useRecoilState(slippageAtom)
 
   const { mutate: handleSwap, isLoading: isExecutingTransaction } =
@@ -37,15 +38,8 @@ export const TransactionAction = ({
       tokenToTokenPrice: tokenToTokenPrice || 0,
     })
 
-  const handleSwapButtonClick = () => {
-    if (status === WalletStatusType.connected) {
-      return setRequestedSwap(true)
-    }
-
-    connectWallet(null)
-  }
-
   /* proceed with the swap only if the price is loaded */
+
   useEffect(() => {
     const shouldTriggerTransaction =
       !isPriceLoading && !isExecutingTransaction && requestedSwap
@@ -54,6 +48,21 @@ export const TransactionAction = ({
       setRequestedSwap(false)
     }
   }, [isPriceLoading, isExecutingTransaction, requestedSwap, handleSwap])
+
+  const handleSwapButtonClick = () => {
+    if (status === WalletStatusType.connected) {
+      return setRequestedSwap(true)
+    }
+
+    connectWallet(null)
+  }
+
+  const shouldDisableSubmissionButton =
+    isExecutingTransaction ||
+    !tokenB.tokenSymbol ||
+    !tokenA.tokenSymbol ||
+    (status === WalletStatusType.connected && tokenA.amount <= 0) ||
+    tokenA?.amount > tokenABalance
 
   return (
     <StyledDivForWrapper>
@@ -72,12 +81,7 @@ export const TransactionAction = ({
       </StyledDivForInfo>
       <Button
         type={status === WalletStatusType.connected ? 'primary' : 'disabled'}
-        disabled={
-          isExecutingTransaction ||
-          !tokenB.tokenSymbol ||
-          !tokenA.tokenSymbol ||
-          (status === WalletStatusType.connected && tokenA.amount <= 0)
-        }
+        disabled={shouldDisableSubmissionButton}
         onClick={
           !isExecutingTransaction && !isPriceLoading
             ? handleSwapButtonClick

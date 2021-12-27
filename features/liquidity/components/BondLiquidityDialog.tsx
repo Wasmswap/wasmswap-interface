@@ -22,16 +22,14 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const baseToken = getBaseToken()
   const tokenInfo = useTokenInfoByPoolId(poolId)
 
-  const [liquidity] = usePoolLiquidity({
-    poolIds: poolId ? [poolId] : undefined,
-  })
-
-  const {
-    // totalLiquidity,
-    myLiquidity,
-    // myReserve,
-    // tokenDollarValue,
-  } = liquidity?.[0] ?? {}
+  const [
+    {
+      // totalLiquidity,
+      myLiquidity,
+      // myReserve,
+      // tokenDollarValue,
+    } = {} as any,
+  ] = usePoolLiquidity({ poolId })
 
   const maxDollarValueLiquidity = myLiquidity?.dollarValue ?? 0
   const [liquidityDollarAmount, setLiquidityDollarAmount] = useState(0)

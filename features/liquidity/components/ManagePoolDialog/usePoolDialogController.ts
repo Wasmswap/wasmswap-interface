@@ -29,11 +29,9 @@ export const usePoolDialogController = ({
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
 
-  const [liquidity] = usePoolLiquidity({
-    poolIds: [tokenB.pool_id],
+  const [{ myLiquidity, myReserve, reserve } = {} as any] = usePoolLiquidity({
+    poolId: tokenB.pool_id,
   })
-
-  const { myLiquidity, myReserve, reserve } = liquidity?.[0] ?? {}
 
   function calculateMaxApplicableBalances() {
     const tokenAToTokenBRatio = reserve?.[0] / reserve?.[1]

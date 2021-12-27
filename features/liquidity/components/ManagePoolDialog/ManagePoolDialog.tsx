@@ -261,7 +261,7 @@ function AddLiquidityContent({
 
   const handleTokenBAmountChange = (input: number) => {
     const value = Math.min(input, maxApplicableBalanceForTokenB)
-    
+
     onChangeLiquidity(protectAgainstNaN(value / maxApplicableBalanceForTokenB))
   }
 

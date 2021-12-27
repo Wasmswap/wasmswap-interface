@@ -68,7 +68,7 @@ export const useTransferAssetMutation = ({
     useRecoilValue(ibcWalletState)
 
   return useMutation(async () => {
-    const timeout = dayjs().second() + 300
+    const timeout = Math.floor((new Date()).getTime()/ 1000) + 120
 
     if (transactionKind == 'deposit') {
       return await ibcClient.sendIbcTokens(

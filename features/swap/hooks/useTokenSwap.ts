@@ -118,15 +118,21 @@ export const useTokenSwap = ({
         queryClient.refetchQueries({ active: true })
       },
       onError(e) {
-        toast.error(`Error with swap ${e}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+        console.log(e)
+        toast.error(
+          `Error with swap ${String(e).substring(0, 150)} ... ${String(
+            e
+          ).substring(String(e).length - 150)}`,
+          {
+            position: 'top-center',
+            autoClose: 10000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        )
       },
       onSettled() {
         setTransactionState(TransactionStatus.IDLE)

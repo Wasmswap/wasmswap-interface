@@ -22,7 +22,15 @@ export type LiquidityInfoType = {
   tokenDollarValue: number
 }
 
-export const usePoolLiquidity = ({
+export const usePoolLiquidity = ({ poolId }) => {
+  const [liquidity, isLoading] = useMultiplePoolsLiquidity({
+    poolIds: poolId ? [poolId] : undefined,
+  })
+
+  return [liquidity?.[0], isLoading]
+}
+
+export const useMultiplePoolsLiquidity = ({
   poolIds,
 }): readonly [LiquidityInfoType[] | undefined, boolean] => {
   const { address } = useRecoilValue(walletState)

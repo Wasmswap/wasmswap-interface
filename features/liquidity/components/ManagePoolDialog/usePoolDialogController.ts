@@ -20,33 +20,6 @@ type UsePoolDialogControllerArgs = {
   tokenInfo: TokenInfo
 }
 
-function calculateMaxApplicableBalances({
-  availableReserve,
-  tokenABalance,
-  tokenBBalance,
-}) {
-  const tokenAToTokenBRatio = availableReserve?.[0] / availableReserve?.[1]
-  const tokenABalanceMinusGasFee = Math.max(tokenABalance - 0.1, 0)
-
-  const isTokenALimitingFactor =
-    tokenABalance < tokenBBalance * tokenAToTokenBRatio
-
-  if (isTokenALimitingFactor) {
-    return {
-      tokenA: tokenABalanceMinusGasFee,
-      tokenB: Math.min(
-        tokenABalanceMinusGasFee / tokenAToTokenBRatio,
-        tokenBBalance
-      ),
-    }
-  }
-
-  return {
-    tokenA: Math.min(tokenBBalance * tokenAToTokenBRatio, tokenABalance),
-    tokenB: tokenBBalance,
-  }
-}
-
 export const usePoolDialogController = ({
   actionState,
   percentage,
@@ -60,14 +33,33 @@ export const usePoolDialogController = ({
     poolId: tokenB.pool_id,
   })
 
+  function calculateMaxApplicableBalances() {
+    const tokenAToTokenBRatio = reserve?.[0] / reserve?.[1]
+    const tokenABalanceMinusGasFee = Math.max(tokenABalance - 0.1, 0)
+
+    const isTokenALimitingFactor =
+      tokenABalance < tokenBBalance * tokenAToTokenBRatio
+
+    if (isTokenALimitingFactor) {
+      return {
+        tokenA: tokenABalanceMinusGasFee,
+        tokenB: Math.min(
+          tokenABalanceMinusGasFee / tokenAToTokenBRatio,
+          tokenBBalance
+        ),
+      }
+    }
+
+    return {
+      tokenA: Math.min(tokenBBalance * tokenAToTokenBRatio, tokenABalance),
+      tokenB: tokenBBalance,
+    }
+  }
+
   const {
     tokenA: maxApplicableBalanceForTokenA,
     tokenB: maxApplicableBalanceForTokenB,
-  } = calculateMaxApplicableBalances({
-    availableReserve: reserve,
-    tokenABalance,
-    tokenBBalance,
-  })
+  } = calculateMaxApplicableBalances()
 
   const tokenAReserve = myReserve?.[0]
     ? convertMicroDenomToDenom(myReserve[0], tokenA.decimals)

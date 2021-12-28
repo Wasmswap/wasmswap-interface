@@ -9,7 +9,6 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import Long from 'long'
 import { MsgTransfer } from 'cosmjs-types/ibc/applications/transfer/v1/tx'
 import { useMutation } from 'react-query'
-import dayjs from 'dayjs'
 import { useRecoilValue } from 'recoil'
 import {
   ibcWalletState,
@@ -68,7 +67,7 @@ export const useTransferAssetMutation = ({
     useRecoilValue(ibcWalletState)
 
   return useMutation(async () => {
-    const timeout = dayjs().second() + 300
+    const timeout = Math.floor((new Date()).getTime()/ 1000) + 120
 
     if (transactionKind == 'deposit') {
       return await ibcClient.sendIbcTokens(

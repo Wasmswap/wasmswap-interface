@@ -119,20 +119,21 @@ export const useTokenSwap = ({
       },
       onError(e) {
         console.log(e)
-        toast.error(
-          `Error with swap ${String(e).substring(0, 150)} ... ${String(
-            e
-          ).substring(String(e).length - 150)}`,
-          {
-            position: 'top-center',
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        )
+        let msg =
+          String(e).length > 300
+            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
+                String(e).length - 150
+              )}`
+            : e
+        toast.error(`Swap error: ${msg}`, {
+          position: 'top-center',
+          autoClose: 10000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
       },
       onSettled() {
         setTransactionState(TransactionStatus.IDLE)

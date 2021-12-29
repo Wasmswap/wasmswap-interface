@@ -169,12 +169,16 @@ const useMutateLiquidity = ({
       },
       onError(e) {
         console.error(e)
+        let msg =
+          String(e).length > 300
+            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
+                String(e).length - 150
+              )}`
+            : e
         toast.error(
           `Couldn't ${
             actionState === 'add' ? 'Add' : 'Remove'
-          } liquidity: ${String(e).substring(0, 150)} ... ${String(e).substring(
-            String(e).length - 150
-          )}`,
+          } liquidity: ${msg}`,
           {
             position: 'top-center',
             autoClose: 10000,

@@ -167,15 +167,21 @@ const useMutateLiquidity = ({
         refetchQueries()
         setTimeout(mutation.reset, 350)
       },
-      onError(error) {
-        console.error(error)
+      onError(e) {
+        console.error(e)
+        let msg =
+          String(e).length > 300
+            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
+                String(e).length - 150
+              )}`
+            : e
         toast.error(
           `Couldn't ${
             actionState === 'add' ? 'Add' : 'Remove'
-          } liquidity because of: ${error}`,
+          } liquidity: ${msg}`,
           {
-            position: 'top-right',
-            autoClose: 5000,
+            position: 'top-center',
+            autoClose: 10000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,

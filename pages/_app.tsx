@@ -46,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 draggable
                 pauseOnHover
                 toastStyle={{ zIndex: 150 }}
+                style={{ width: 'auto' }}
               />
             </Portal>
           </ErrorBoundary>

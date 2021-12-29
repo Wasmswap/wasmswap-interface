@@ -41,8 +41,6 @@ export const TransferDialog = ({
   const { balance: ibcTokenMaxAvailableBalance } =
     useIBCTokenBalance(tokenSymbol)
 
-  const arbitrarySwapFee = 0.03
-
   const queryClient = useQueryClient()
 
   const { isLoading, mutate: mutateTransferAsset } = useTransferAssetMutation({
@@ -150,14 +148,6 @@ export const TransferDialog = ({
             </>
           )}
         </StyledDivForCards>
-        <StyledDivForFee>
-          <Text type="microscopic" variant="light">
-            Transaction fees
-          </Text>
-          <Text type="microscopic" variant="bold" paddingLeft="10">
-            ${arbitrarySwapFee.toFixed(2)}
-          </Text>
-        </StyledDivForFee>
         <Button
           size="humongous"
           disabled={isLoading}
@@ -177,10 +167,5 @@ const StyledContent = styled.div`
 const StyledDivForCards = styled.div`
   display: grid;
   row-gap: 16px;
-`
-
-const StyledDivForFee = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 18px 0;
+  padding-bottom: 24px;
 `

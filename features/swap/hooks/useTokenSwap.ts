@@ -118,9 +118,16 @@ export const useTokenSwap = ({
         queryClient.refetchQueries({ active: true })
       },
       onError(e) {
-        toast.error(`Error with swap ${e}`, {
-          position: 'top-right',
-          autoClose: 5000,
+        console.log(e)
+        let msg =
+          String(e).length > 300
+            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
+                String(e).length - 150
+              )}`
+            : e
+        toast.error(`Swap error: ${msg}`, {
+          position: 'top-center',
+          autoClose: 10000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

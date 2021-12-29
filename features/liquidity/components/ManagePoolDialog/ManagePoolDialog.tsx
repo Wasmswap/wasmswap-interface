@@ -147,7 +147,7 @@ export const ManagePoolDialog = ({
       </StyledDivForDivider>
       <StyledDivForContent>
         <StyledDivForFooter>
-          <SecondaryButton>Cancel</SecondaryButton>
+          <SecondaryButton onClick={onRequestClose}>Cancel</SecondaryButton>
           <PrimaryButton
             onClick={isLoading ? undefined : handleSubmit}
             loading={isLoading}

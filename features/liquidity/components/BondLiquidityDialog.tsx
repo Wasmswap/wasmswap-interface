@@ -129,7 +129,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           }
           buttons={
             <>
-              <SecondaryButton>Cancel</SecondaryButton>
+              <SecondaryButton onClick={onRequestClose}>Cancel</SecondaryButton>
               <PrimaryButton>
                 {dialogState === 'stake' ? 'Stake' : 'Unstake'}
               </PrimaryButton>

@@ -5,7 +5,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import {StdFee, coin, isDeliverTxFailure} from '@cosmjs/stargate'
+import { StdFee, coin, isDeliverTxFailure } from '@cosmjs/stargate'
 import { defaultExecuteFee } from 'util/fees'
 import { getBaseToken } from 'hooks/useTokenInfo'
 
@@ -88,7 +88,7 @@ export const swapToken2ForToken1 = async (
     }
     const fee: StdFee = {
       amount: defaultExecuteFee.amount,
-      gas: (Number(defaultExecuteFee.gas) * 2).toString(),
+      gas: (Number(defaultExecuteFee.gas) * 1.2).toString(),
     }
     let result = await input.client.signAndBroadcast(
       input.senderAddress,
@@ -96,7 +96,9 @@ export const swapToken2ForToken1 = async (
       fee
     )
     if (isDeliverTxFailure(result)) {
-      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
+      throw new Error(
+        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+      )
     }
     return result
   } else {
@@ -164,7 +166,7 @@ export const swapTokenForToken = async (
     }
     const fee: StdFee = {
       amount: defaultExecuteFee.amount,
-      gas: (+defaultExecuteFee.gas * 3).toString(),
+      gas: (+defaultExecuteFee.gas * 2).toString(),
     }
     let result = await input.client.signAndBroadcast(
       input.senderAddress,
@@ -172,7 +174,9 @@ export const swapTokenForToken = async (
       fee
     )
     if (isDeliverTxFailure(result)) {
-      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
+      throw new Error(
+        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+      )
     }
     return result
   }

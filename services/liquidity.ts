@@ -60,7 +60,7 @@ export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
 
     const fee: StdFee = {
       amount: defaultExecuteFee.amount,
-      gas: (Number(defaultExecuteFee.gas) * 2).toString(),
+      gas: (Number(defaultExecuteFee.gas) * 1.8).toString(),
     }
     let result = await input.client.signAndBroadcast(
       input.senderAddress,
@@ -68,13 +68,17 @@ export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
       fee
     )
     if (isDeliverTxFailure(result)) {
-      throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
+      throw new Error(
+        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+      )
     }
     return result
-
   } else {
-    let funds = [coin(input.nativeAmount, input.nativeDenom), coin(input.maxToken, input.tokenDenom)]
-    funds.sort((a,b)=>a.denom > b.denom ? 1 : -1)
+    let funds = [
+      coin(input.nativeAmount, input.nativeDenom),
+      coin(input.maxToken, input.tokenDenom),
+    ]
+    funds.sort((a, b) => (a.denom > b.denom ? 1 : -1))
     await input.client.execute(
       input.senderAddress,
       input.swapAddress,
@@ -138,7 +142,9 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
     fee
   )
   if (isDeliverTxFailure(result)) {
-    throw new Error(`Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`);
+    throw new Error(
+      `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+    )
   }
   return result
 }

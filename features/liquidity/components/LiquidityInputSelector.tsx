@@ -25,10 +25,9 @@ export const LiquidityInputSelector = ({
     onChangeLiquidity(formattedValue * maxLiquidity)
   }
 
-  const formattedPercentageValue = dollarValueFormatter(
-    percentage * 100,
-    true
-  ) as string
+  const formattedPercentageValue = dollarValueFormatter(percentage * 100, {
+    applyNumberConversion: false,
+  }) as string
 
   const refForInputWrapper = useRef<HTMLElement>()
   const { bind, isDragging } = useDrag({

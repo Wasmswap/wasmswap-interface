@@ -59,13 +59,18 @@ export const TransactionTips = ({
             1 {tokenA.tokenSymbol} ≈ {formatTokenBalance(conversionRate)}{' '}
             {tokenB.tokenSymbol}
             {' ≈ '}$
-            {dollarValueFormatterWithDecimals(conversionRateInDollar, true)}
+            {dollarValueFormatterWithDecimals(conversionRateInDollar, {
+              includeCommaSeparation: true,
+            })}
           </Text>
         )}
       </StyledDivForRateWrapper>
 
       <Text type="microscopic" variant="bold" color="secondaryText">
-        ${dollarValueFormatterWithDecimals(dollarValue, true)}
+        $
+        {dollarValueFormatterWithDecimals(dollarValue, {
+          includeCommaSeparation: true,
+        })}
       </Text>
     </StyledDivForWrapper>
   )

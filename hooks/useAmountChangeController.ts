@@ -86,8 +86,13 @@ export const useAmountChangeController = ({
 
     /* set the displayed value */
     setLocalValue(formattedValue)
+
     /* update the external value */
-    onAmountChange(Number(formatTokenBalance(formattedValue)))
+    onAmountChange(
+      formatter(formattedValue, {
+        applyNumberConversion: true,
+      }) as number
+    )
   }
 
   return {

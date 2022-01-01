@@ -33,19 +33,16 @@ export const useAmountChangeController = ({
       }) as string
   )
 
-  /* sync local value with the external state */
-  useEffect(() => {
-    onAmountChange(Number(formatTokenBalance(localValue)))
-  }, [localValue]) // eslint-disable-line
-
   /* sync external state (number) with the local value (string) */
   useEffect(() => {
     setLocalValue((localValueAmount) => {
       const shouldUpdateLocalValue =
-        formatTokenBalance(amount) !== formatTokenBalance(localValueAmount)
+        formatter(amount) !== formatter(localValueAmount)
 
       if (shouldUpdateLocalValue) {
-        return formatter(localValueAmount) as string
+        return formatter(amount, {
+          applyNumberConversion: false,
+        }) as string
       }
 
       return localValueAmount
@@ -87,7 +84,10 @@ export const useAmountChangeController = ({
       applyNumberConversion: false,
     }) as string
 
+    /* set the displayed value */
     setLocalValue(formattedValue)
+    /* update the external value */
+    onAmountChange(Number(formatTokenBalance(formattedValue)))
   }
 
   return {

@@ -49,24 +49,38 @@ export const formatTokenName = (name: string) => {
 export const createBalanceFormatter = ({
   maximumFractionDigits = 6,
   ...options
-}: Parameters<typeof Intl.NumberFormat>[1] = {}) => {
+}: Omit<
+  Parameters<typeof Intl.NumberFormat>[1],
+  'style' | 'currency'
+> = {}) => {
   const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits,
+    style: 'currency',
+    currency: 'USD',
     ...options,
   })
 
-  return (value: number, asString?: boolean) => {
-    const formattedValue = formatter.format(value)
-    return asString ? formattedValue : Number(formattedValue.replace(/,/g, ''))
+  return (
+    value: string | number,
+    { includeCommaSeparation = false, applyNumberConversion = true } = {}
+  ) => {
+    const formattedValue = formatter.format(value as number).replace(/\$/g, '')
+
+    if (includeCommaSeparation) {
+      return formattedValue
+    }
+
+    const rawValue = formattedValue.replace(/\,/g, '')
+    if (applyNumberConversion) {
+      return Number(rawValue)
+    }
+
+    return rawValue
   }
 }
 
-const balanceFormatter = createBalanceFormatter()
-
-export function formatTokenBalance(value: number | string, asString?: boolean) {
-  return balanceFormatter(Number(value), asString)
-}
+export const formatTokenBalance = createBalanceFormatter()
 
 export const dollarValueFormatterWithDecimals = createBalanceFormatter({
   maximumFractionDigits: 2,

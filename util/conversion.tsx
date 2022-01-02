@@ -56,9 +56,10 @@ export const createBalanceFormatter = ({
   const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits,
+    ...options,
+
     style: 'currency',
     currency: 'USD',
-    ...options,
   })
 
   return (

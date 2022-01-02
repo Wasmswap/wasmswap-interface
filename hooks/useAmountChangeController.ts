@@ -53,20 +53,13 @@ export const useAmountChangeController = ({
   const handleAmountChange = (value: string) => {
     /* get the decimals */
     const [, decimals = ''] = value.split('.')
+    const decimalsCount = Math.min(decimals.length, maximumFractionDigits)
 
-    /* count zeros before something meaningful */
-    const zerosBeforeValueCount = Math.min(
-      decimals
-        .split('')
-        .reduce((count, value) => (Number(value) === 0 ? count + 1 : count), 0),
-      maximumFractionDigits
-    )
-
-    /* update the balance formatter to include zeros before a number higher than 0 */
-    if (minimumFractionDigitsRef.current !== zerosBeforeValueCount) {
-      minimumFractionDigitsRef.current = zerosBeforeValueCount
+    /* update the balance formatter to include all the digits after the dot */
+    if (minimumFractionDigitsRef.current !== decimalsCount) {
+      minimumFractionDigitsRef.current = decimalsCount
       formatterRef.current = createBalanceFormatter({
-        minimumFractionDigits: zerosBeforeValueCount,
+        minimumFractionDigits: decimalsCount,
         maximumFractionDigits,
       })
     }

@@ -2,6 +2,8 @@ import { styled } from '@stitches/react'
 import { Text } from '../../../components/Text'
 import { dollarValueFormatter } from '../../../util/conversion'
 import { MouseEvent, useRef, useState } from 'react'
+import { useAmountChangeController } from 'hooks/useAmountChangeController'
+import { calculateCharactersLength } from 'components/BasicNumberInput'
 
 type LiquiditySelectorProps = {
   maxLiquidity: number
@@ -14,20 +16,15 @@ export const LiquidityInputSelector = ({
   liquidity,
   onChangeLiquidity,
 }: LiquiditySelectorProps) => {
-  const percentage = dollarValueFormatter(liquidity / maxLiquidity) as number
-
-  const handleChangePercentage = ({ target: { value } }) => {
-    const formattedValue = Math.min(
-      Number(dollarValueFormatter(value)) / 100,
-      100
-    )
-
-    onChangeLiquidity(formattedValue * maxLiquidity)
-  }
-
-  const formattedPercentageValue = dollarValueFormatter(percentage * 100, {
-    applyNumberConversion: false,
-  }) as string
+  const { value, setValue } = useAmountChangeController({
+    amount: (dollarValueFormatter(liquidity / maxLiquidity) as number) * 100,
+    minimumValue: 0,
+    maximumValue: 100,
+    maximumFractionDigits: 2,
+    onAmountChange(updateValue) {
+      onChangeLiquidity((updateValue / 100) * maxLiquidity)
+    },
+  })
 
   const refForInputWrapper = useRef<HTMLElement>()
   const { bind, isDragging } = useDrag({
@@ -35,7 +32,7 @@ export const LiquidityInputSelector = ({
       return refForInputWrapper.current.contains(e.target)
     },
     onProgressUpdate(progress) {
-      const value = progress * maxLiquidity
+      const value = Math.max(Math.min(progress * maxLiquidity, maxLiquidity), 0)
 
       onChangeLiquidity(value)
     },
@@ -48,17 +45,17 @@ export const LiquidityInputSelector = ({
           placeholder="0.0"
           max="100"
           type="number"
-          value={formattedPercentageValue}
+          value={value}
           style={{
-            width: `${formattedPercentageValue.length}ch`,
+            width: `${calculateCharactersLength(value)}ch`,
           }}
-          onChange={handleChangePercentage}
+          onChange={({ target: { value } }) => setValue(value)}
         />
         <span>%</span>
       </StyledTextForInputWithSymbol>
       <StyledDivForProgress
         enableTransition={!isDragging}
-        css={{ width: `${percentage * 100}%` }}
+        css={{ width: `${value}%` }}
       />
     </StyledDivForSelector>
   )

@@ -1,4 +1,5 @@
 import { HTMLProps } from 'react'
+import { useAmountChangeController } from '../hooks/useAmountChangeController'
 
 type Props = Omit<
   HTMLProps<HTMLInputElement>,
@@ -6,6 +7,7 @@ type Props = Omit<
 > & {
   min?: number
   max?: number
+  maximumFractionDigits?: number
   adjustedWidthToValue?: boolean
   value: number
   onChange: (value: number) => void
@@ -15,33 +17,35 @@ export const BasicNumberInput = ({
   min = -Infinity,
   max = Infinity,
   adjustedWidthToValue = true,
-  value,
+  maximumFractionDigits = 6,
+  value: amount,
   onChange,
   style,
   ...props
 }: Props) => {
-  const stringifiedValue = String(value)
+  const { value, setValue } = useAmountChangeController({
+    maximumFractionDigits,
+    maximumValue: max,
+    minimumValue: min,
 
-  function handleChange({ target }) {
-    const parsedValue = Math.min(Math.max(Number(target.value), min), max)
-    onChange(parsedValue)
-  }
+    amount,
+    onAmountChange: onChange,
+  })
 
   return (
     <input
       placeholder="0.0"
-      max="100"
       type="number"
-      value={stringifiedValue}
+      value={value}
       style={
         adjustedWidthToValue
           ? {
               ...(style ? style : {}),
-              width: `${stringifiedValue.length}ch`,
+              width: `${value.length}ch`,
             }
           : style
       }
-      onChange={handleChange}
+      onChange={({ target: { value } }) => setValue(value)}
       {...props}
     />
   )

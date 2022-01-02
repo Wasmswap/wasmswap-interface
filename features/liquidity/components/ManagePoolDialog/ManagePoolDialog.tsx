@@ -160,88 +160,6 @@ export const ManagePoolDialog = ({
   )
 }
 
-function RemoveLiquidityContent({
-  tokenA,
-  tokenB,
-  tokenAReserve,
-  tokenBReserve,
-  liquidityPercentage,
-  onChangeLiquidity,
-}) {
-  const [tokenAPrice] = useTokenDollarValue(tokenA.symbol)
-
-  const availableLiquidityDollarValue = dollarValueFormatter(
-    tokenAReserve * 2 * tokenAPrice
-  ) as number
-
-  const liquidityToRemove = availableLiquidityDollarValue * liquidityPercentage
-
-  const handleChangeLiquidity = (value) => {
-    onChangeLiquidity(value / availableLiquidityDollarValue)
-  }
-
-  return (
-    <>
-      <StyledDivForContent>
-        <LiquidityInputSelector
-          maxLiquidity={availableLiquidityDollarValue}
-          liquidity={liquidityToRemove}
-          onChangeLiquidity={handleChangeLiquidity}
-        />
-        <StyledGridForDollarValueTxInfo>
-          <Text
-            type="microscopic"
-            color="tertiaryText"
-            paddingTop="12px"
-            paddingBottom="18px"
-          >
-            Max available for stacking is worth $
-            {dollarValueFormatterWithDecimals(
-              availableLiquidityDollarValue,
-              true
-            )}
-          </Text>
-          <Text
-            type="microscopic"
-            color="tertiaryText"
-            paddingTop="12px"
-            paddingBottom="18px"
-          >
-            ≈ $ {dollarValueFormatterWithDecimals(liquidityToRemove, true)}
-          </Text>
-        </StyledGridForDollarValueTxInfo>
-        <PercentageSelection
-          maxLiquidity={availableLiquidityDollarValue}
-          liquidity={liquidityToRemove}
-          onChangeLiquidity={handleChangeLiquidity}
-        />
-      </StyledDivForContent>
-      <Divider offsetY={16} />
-      <StyledDivForContent>
-        <Text type="caption" paddingBottom="14px">
-          Removing
-        </Text>
-        <StyledDivForLiquiditySummary>
-          <StyledDivForToken>
-            <StyledImageForTokenLogo src={tokenA.logoURI} alt={tokenA.name} />
-            <Text type="microscopic" variant="light">
-              {formatTokenBalance(tokenAReserve * liquidityPercentage)}{' '}
-              {tokenA.symbol}
-            </Text>
-          </StyledDivForToken>
-          <StyledDivForToken>
-            <StyledImageForTokenLogo src={tokenB.logoURI} alt={tokenB.name} />
-            <Text type="microscopic" variant="light">
-              {formatTokenBalance(tokenBReserve * liquidityPercentage)}{' '}
-              {tokenB.symbol}
-            </Text>
-          </StyledDivForToken>
-        </StyledDivForLiquiditySummary>
-      </StyledDivForContent>
-    </>
-  )
-}
-
 function AddLiquidityContent({
   liquidityPercentage,
   tokenASymbol,
@@ -305,6 +223,90 @@ function AddLiquidityContent({
         Add maximum amount
       </SecondaryButton>
     </StyledDivForContent>
+  )
+}
+
+function RemoveLiquidityContent({
+  tokenA,
+  tokenB,
+  tokenAReserve,
+  tokenBReserve,
+  liquidityPercentage,
+  onChangeLiquidity,
+}) {
+  const [tokenAPrice] = useTokenDollarValue(tokenA.symbol)
+
+  const availableLiquidityDollarValue = dollarValueFormatter(
+    tokenAReserve * 2 * tokenAPrice
+  ) as number
+
+  const liquidityToRemove = availableLiquidityDollarValue * liquidityPercentage
+
+  const handleChangeLiquidity = (value) => {
+    onChangeLiquidity(value / availableLiquidityDollarValue)
+  }
+
+  return (
+    <>
+      <StyledDivForContent>
+        <LiquidityInputSelector
+          maxLiquidity={availableLiquidityDollarValue}
+          liquidity={liquidityToRemove}
+          onChangeLiquidity={handleChangeLiquidity}
+        />
+        <StyledGridForDollarValueTxInfo>
+          <Text
+            type="microscopic"
+            color="tertiaryText"
+            paddingTop="12px"
+            paddingBottom="18px"
+          >
+            Max available for stacking is worth $
+            {dollarValueFormatterWithDecimals(availableLiquidityDollarValue, {
+              includeCommaSeparation: true,
+            })}
+          </Text>
+          <Text
+            type="microscopic"
+            color="tertiaryText"
+            paddingTop="12px"
+            paddingBottom="18px"
+          >
+            ≈ ${' '}
+            {dollarValueFormatterWithDecimals(liquidityToRemove, {
+              includeCommaSeparation: true,
+            })}
+          </Text>
+        </StyledGridForDollarValueTxInfo>
+        <PercentageSelection
+          maxLiquidity={availableLiquidityDollarValue}
+          liquidity={liquidityToRemove}
+          onChangeLiquidity={handleChangeLiquidity}
+        />
+      </StyledDivForContent>
+      <Divider offsetY={16} />
+      <StyledDivForContent>
+        <Text type="caption" paddingBottom="14px">
+          Removing
+        </Text>
+        <StyledDivForLiquiditySummary>
+          <StyledDivForToken>
+            <StyledImageForTokenLogo src={tokenA.logoURI} alt={tokenA.name} />
+            <Text type="microscopic" variant="light">
+              {formatTokenBalance(tokenAReserve * liquidityPercentage)}{' '}
+              {tokenA.symbol}
+            </Text>
+          </StyledDivForToken>
+          <StyledDivForToken>
+            <StyledImageForTokenLogo src={tokenB.logoURI} alt={tokenB.name} />
+            <Text type="microscopic" variant="light">
+              {formatTokenBalance(tokenBReserve * liquidityPercentage)}{' '}
+              {tokenB.symbol}
+            </Text>
+          </StyledDivForToken>
+        </StyledDivForLiquiditySummary>
+      </StyledDivForContent>
+    </>
   )
 }
 

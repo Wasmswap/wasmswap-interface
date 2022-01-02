@@ -24,9 +24,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
 
   const { name: tokenName, logoURI } = useTokenInfo(tokenSymbol)
 
-  const handleAmountChange = (value: number) => {
-    onAmountChange(Number(formatTokenBalance(value)))
-  }
+  const handleAmountChange = (value: number) => onAmountChange(value)
 
   return (
     <StyledDivForWrapper active={focusedOnInput}>

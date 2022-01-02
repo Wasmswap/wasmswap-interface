@@ -90,7 +90,9 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           paddingBottom="18px"
         >
           Max available for stacking is worth $
-          {dollarValueFormatterWithDecimals(maxDollarValueLiquidity)}
+          {dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
+            includeCommaSeparation: true,
+          })}
         </Text>
         <PercentageSelection
           maxLiquidity={maxDollarValueLiquidity}
@@ -122,7 +124,9 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
               ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous stake."
               : `Because of the 14 days unstaking period, you will be able to redeem your $${dollarValueFormatter(
                   liquidityDollarAmount,
-                  true
+                  {
+                    includeCommaSeparation: true,
+                  }
                 )} worth of staked token on ${dayjs()
                   .add(14, 'day')
                   .format('MMM D')}.`

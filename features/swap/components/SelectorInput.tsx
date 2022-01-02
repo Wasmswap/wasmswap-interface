@@ -1,7 +1,7 @@
-import { Text } from '../../../components/Text'
 import React from 'react'
+import { Text } from 'components/Text'
 import { styled } from '@stitches/react'
-import { formatTokenBalance } from '../../../util/conversion'
+import { useAmountChangeController } from '../../../hooks/useAmountChangeController'
 
 type SelectorInputProps = {
   amount: number
@@ -14,26 +14,24 @@ export const SelectorInput = ({
   disabled,
   onAmountChange,
 }: SelectorInputProps) => {
-  const formattedAmount = formatTokenBalance(amount)
-
-  const handleAmountChange = ({ target: { value } }) => {
-    onAmountChange(Number(formatTokenBalance(value)))
-  }
+  const { value, setValue } = useAmountChangeController({
+    amount,
+    onAmountChange,
+  })
 
   return (
     <Text variant="bold">
       <StyledInput
         type="number"
-        // todo: sort out accessibility
-        // name="token-amount"
-        // id="token-amount"
         placeholder="0.0"
         min={0}
-        value={String(formattedAmount)}
-        onChange={!disabled ? handleAmountChange : undefined}
+        value={value}
+        onChange={
+          !disabled ? ({ target: { value } }) => setValue(value) : undefined
+        }
         autoComplete="off"
         readOnly={disabled}
-        style={{ width: `${String(formattedAmount).length + 1}ch` }}
+        style={{ width: `${value.length + 1}ch` }}
       />
     </Text>
   )

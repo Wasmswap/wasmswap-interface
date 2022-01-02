@@ -19,7 +19,10 @@ export const SelectorToggle = ({
   availableAmount,
   tokenSymbol,
 }: SelectorToggleProps) => {
-  const formattedAvailableAmount = formatTokenBalance(availableAmount, true)
+  const formattedAvailableAmount = formatTokenBalance(availableAmount, {
+    includeCommaSeparation: true,
+  })
+
   const { logoURI } = useTokenInfo(tokenSymbol) || {}
 
   const hasTokenSelected = Boolean(tokenSymbol)

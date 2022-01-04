@@ -76,6 +76,7 @@ export const StakingSummary = ({
               placeholder="0.0"
               min="0"
               type="number"
+              lang="en-US"
               value={formattedLiquidityAmount}
               style={{
                 width: `${formattedLiquidityAmount.length}ch`,

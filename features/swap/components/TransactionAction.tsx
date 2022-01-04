@@ -92,9 +92,7 @@ export const TransactionAction = ({
           <Spinner instant />
         ) : (
           <Text type="subtitle" color="white" variant="light" paddingY="3px">
-            {status === WalletStatusType.connected
-              ? 'Swap tokens'
-              : 'Connect wallet'}
+            Swap
           </Text>
         )}
       </Button>

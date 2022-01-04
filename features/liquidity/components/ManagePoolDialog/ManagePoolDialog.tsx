@@ -10,7 +10,7 @@ import {
   protectAgainstNaN,
 } from 'util/conversion'
 import { usePoolDialogController } from './usePoolDialogController'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   getBaseToken,
   useTokenInfoByPoolId,
@@ -235,6 +235,11 @@ function RemoveLiquidityContent({
   onChangeLiquidity,
 }) {
   const [tokenAPrice] = useTokenDollarValue(tokenA.symbol)
+  const percentageInputRef = useRef<HTMLInputElement>()
+
+  useEffect(() => {
+    percentageInputRef.current?.focus()
+  }, [])
 
   const availableLiquidityDollarValue = dollarValueFormatter(
     tokenAReserve * 2 * tokenAPrice
@@ -250,6 +255,7 @@ function RemoveLiquidityContent({
     <>
       <StyledDivForContent>
         <LiquidityInputSelector
+          inputRef={percentageInputRef}
           maxLiquidity={availableLiquidityDollarValue}
           liquidity={liquidityToRemove}
           onChangeLiquidity={handleChangeLiquidity}

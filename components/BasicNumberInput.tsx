@@ -36,6 +36,7 @@ export const BasicNumberInput = ({
     <input
       placeholder="0.0"
       type="number"
+      lang="en-US"
       value={value}
       style={
         adjustedWidthToValue

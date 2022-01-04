@@ -29,7 +29,7 @@ export const SlippageSelector = ({
           setShowingSettings(!isShowingSettings)
         }}
       >
-        <Text type="microscopic" variant="normal" color="disabled">
+        <Text type="microscopic" variant="bold" color="disabled">
           Slippage {slippage * 100}%
         </Text>
         <IconWrapper

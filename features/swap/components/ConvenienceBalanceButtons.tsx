@@ -2,14 +2,17 @@ import { Text } from '../../../components/Text'
 import React from 'react'
 import { styled } from '@stitches/react'
 import { StyledSecondaryButton } from '../../../components/Button'
+import { getBaseToken } from 'hooks/useTokenInfo'
 
 type ConvenienceBalanceButtonsProps = {
   disabled?: boolean
+  tokenSymbol: string
   availableAmount: number
   onChange: (amount: number) => void
 }
 
 export const ConvenienceBalanceButtons = ({
+  tokenSymbol,
   availableAmount,
   disabled,
   onChange,
@@ -17,7 +20,15 @@ export const ConvenienceBalanceButtons = ({
   return (
     !disabled && (
       <>
-        <StyledButton onClick={() => onChange(availableAmount)}>
+        <StyledButton
+          onClick={() => {
+            let amount =
+              tokenSymbol === getBaseToken().symbol
+                ? availableAmount - 0.025
+                : availableAmount
+            onChange(amount)
+          }}
+        >
           <Text type="subtitle" variant="light">
             Max
           </Text>

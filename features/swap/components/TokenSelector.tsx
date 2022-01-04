@@ -50,6 +50,7 @@ export const TokenSelector = ({
           />
           {!isTokenListShowing && tokenSymbol && !readOnly && (
             <ConvenienceBalanceButtons
+              tokenSymbol={tokenSymbol}
               availableAmount={availableAmount}
               onChange={!disabled ? handleAmountChange : () => {}}
             />

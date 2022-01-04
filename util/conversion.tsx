@@ -57,7 +57,6 @@ export const createBalanceFormatter = ({
     minimumFractionDigits: 0,
     maximumFractionDigits,
     ...options,
-
     style: 'currency',
     currency: 'USD',
   })

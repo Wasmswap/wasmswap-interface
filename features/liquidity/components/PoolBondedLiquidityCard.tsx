@@ -1,9 +1,20 @@
 import { styled } from '@stitches/react'
-import { Text } from '../../../components/Text'
-import { Button } from '../../../components/Button'
-import { __POOL_REWARDS_ENABLED__ } from '../../../util/constants'
+import { Text } from 'components/Text'
+import { Button } from 'components/Button'
+import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { Divider } from './Divider'
+import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
 
-export const PoolBondedLiquidityCard = ({ onButtonClick, token1, token2 }) => {
+export const PoolBondedLiquidityCard = ({
+  onButtonClick,
+  tokenASymbol,
+  tokenBSymbol,
+  myLiquidity,
+}) => {
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
+
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
@@ -18,39 +29,37 @@ export const PoolBondedLiquidityCard = ({ onButtonClick, token1, token2 }) => {
         <Text type="title2" variant="bold">
           $0.00
         </Text>
+        <Text type="microscopic" variant="light" paddingTop="8px">
+          $
+          {dollarValueFormatterWithDecimals(myLiquidity.dollarValue, {
+            includeCommaSeparation: true,
+            applyNumberConversion: false,
+          })}{' '}
+          unstacked tokens
+        </Text>
       </StyledElementForCardLayout>
+      <Divider />
       <StyledElementForCardLayout kind="content">
         <Text
-          paddingBottom="4px"
           type="caption"
           variant="light"
-          color="tertiaryText"
+          color="secondaryText"
+          paddingTop="14px"
+          paddingBottom="16px"
         >
-          Stake your liquidity
-        </Text>
-        <Text
-          paddingBottom="4px"
-          type="microscopic"
-          variant="light"
-          color="tertiaryText"
-        >
-          Claim rewards
+          Current reward incentive
         </Text>
 
         <StyledElementForTokens kind="wrapper">
-          <StyledElementForTokens kind="element">
-            <StyledImageForToken src={token1.logoURI} />
-            <Text color="bodyText" type="microscopic">
-              +0 {token1.symbol}/14d
-            </Text>
+          <StyledElementForTokens kind="column">
+            <StyledImageForToken src={tokenA.logoURI} />
+            <StyledImageForToken src={tokenB.logoURI} />
           </StyledElementForTokens>
-          <StyledElementForTokens kind="element">
-            <StyledImageForToken src={token2.logoURI} />
-            <Text color="bodyText" type="microscopic">
-              +0 {token2.symbol}/14d
-            </Text>
-          </StyledElementForTokens>
+          <Text color="bodyText" type="microscopic">
+            $0.00/14 days in 2 tokens
+          </Text>
         </StyledElementForTokens>
+
         <StyledButton
           disabled={!__POOL_REWARDS_ENABLED__}
           onClick={__POOL_REWARDS_ENABLED__ ? onButtonClick : undefined}
@@ -69,7 +78,7 @@ const StyledElementForCardLayout = styled('div', {
         position: 'relative',
         zIndex: 0,
         backgroundColor: 'rgba(25, 29, 32, 0.1)',
-        padding: '20px 0 22px',
+        padding: '18px 0 24px',
         borderRadius: '8px',
         '&:after': {
           content: '""',
@@ -93,29 +102,23 @@ const StyledElementForCardLayout = styled('div', {
     },
     name: {
       liquidity: {
-        padding: '0 20px 26px',
+        padding: '0px 20px 13px',
       },
     },
   },
 })
 
 const StyledElementForTokens = styled('div', {
-  display: 'grid',
+  display: 'flex',
+  alignItems: 'center',
 
   variants: {
     kind: {
-      element: {
-        gridTemplateColumns: '20px auto',
-        alignItems: 'center',
-        columnGap: '6px',
-      },
       wrapper: {
-        paddingTop: '16px',
-        paddingBottom: '24px',
-        gridAutoFlow: 'column',
-        alignItems: 'center',
-        columnGap: '15px',
+        paddingBottom: 22,
+        columnGap: 10,
       },
+      column: {},
     },
   },
 })
@@ -125,6 +128,10 @@ const StyledImageForToken = styled('img', {
   height: 20,
   borderRadius: '50%',
   backgroundColor: '#ccc',
+  boxShadow: '0 0 0 1px #e7d9e3',
+  '&:not(&:first-of-type)': {
+    marginLeft: -3,
+  },
 })
 
 const StyledButton = styled(Button, {

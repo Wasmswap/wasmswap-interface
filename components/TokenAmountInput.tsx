@@ -33,6 +33,7 @@ export const TokenAmountInput = ({
           value={formatTokenBalance(value)}
           onChange={handleChange}
           type="number"
+          lang="en-US"
           max={maxValue}
           min={0}
           placeholder="0.00"

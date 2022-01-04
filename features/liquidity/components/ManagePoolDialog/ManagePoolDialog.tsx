@@ -267,7 +267,7 @@ function RemoveLiquidityContent({
             paddingTop="12px"
             paddingBottom="18px"
           >
-            Max available for stacking is worth $
+            Available liquidity: $
             {dollarValueFormatterWithDecimals(availableLiquidityDollarValue, {
               includeCommaSeparation: true,
             })}

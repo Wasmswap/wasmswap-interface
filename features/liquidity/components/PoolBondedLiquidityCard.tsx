@@ -35,7 +35,7 @@ export const PoolBondedLiquidityCard = ({
             includeCommaSeparation: true,
             applyNumberConversion: false,
           })}{' '}
-          unstacked tokens
+          unstaked tokens
         </Text>
       </StyledElementForCardLayout>
       <Divider />

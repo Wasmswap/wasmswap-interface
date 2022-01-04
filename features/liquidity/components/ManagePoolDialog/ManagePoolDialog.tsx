@@ -220,7 +220,7 @@ function AddLiquidityContent({
         onClick={handleApplyMaximumAmount}
         iconBefore={<PlusIcon />}
       >
-        Add maximum amount
+        Provide max liquidity
       </SecondaryButton>
     </StyledDivForContent>
   )

@@ -183,8 +183,9 @@ export default function Pool() {
                 />
                 <PoolBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
-                  token1={baseToken}
-                  token2={tokenInfo}
+                  myLiquidity={myLiquidity}
+                  tokenASymbol={baseToken.symbol}
+                  tokenBSymbol={tokenInfo.symbol}
                 />
               </StyledDivForCards>
             </>

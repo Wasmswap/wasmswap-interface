@@ -56,6 +56,15 @@ export const PoolAvailableLiquidityCard = ({
         </StyledTextForAmount>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
+        <Text
+          type="caption"
+          variant="light"
+          color="secondaryText"
+          paddingTop="14px"
+          paddingBottom="18px"
+        >
+          Underlying assets
+        </Text>
         <StyledElementForTokens kind="wrapper">
           <StyledElementForTokens kind="element">
             <StyledImageForToken
@@ -63,7 +72,7 @@ export const PoolAvailableLiquidityCard = ({
               src={tokenA?.logoURI}
               alt={tokenASymbol}
             />
-            <Text color="bodyText" type="microscopic">
+            <Text color="bodyText" type="microscopic" wrap="pre">
               {formatTokenBalance(
                 convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
               )}{' '}
@@ -76,7 +85,7 @@ export const PoolAvailableLiquidityCard = ({
               src={tokenB?.logoURI}
               alt={tokenBSymbol}
             />
-            <Text color="bodyText" type="microscopic">
+            <Text color="bodyText" type="microscopic" wrap="pre">
               {formatTokenBalance(
                 convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
               )}{' '}
@@ -85,7 +94,7 @@ export const PoolAvailableLiquidityCard = ({
           </StyledElementForTokens>
         </StyledElementForTokens>
         <StyledButton onClick={onButtonClick}>
-          Add / Remove liquidity
+          {myReserve[1] > 0 ? 'Manage liquidity' : 'Add liquidity'}
         </StyledButton>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
@@ -97,7 +106,7 @@ const StyledElementForCardLayout = styled('div', {
     kind: {
       wrapper: {
         backgroundColor: 'rgba(25, 29, 32, 0.1)',
-        padding: '20px 0 22px',
+        padding: '18px 0 24px',
         borderRadius: '8px',
       },
       content: {
@@ -109,7 +118,7 @@ const StyledElementForCardLayout = styled('div', {
     },
     name: {
       liquidity: {
-        padding: '0 24px 26px',
+        padding: '0 24px',
       },
     },
   },
@@ -119,6 +128,7 @@ const StyledTextForAmount = styled('p', {
   fontSize: '30px',
   lineHeight: '24px',
   fontWeight: 600,
+  paddingBottom: '36px',
 })
 
 const StyledElementForTokens = styled('div', {
@@ -132,9 +142,9 @@ const StyledElementForTokens = styled('div', {
         columnGap: '6px',
       },
       wrapper: {
-        rowGap: '16px',
-        paddingTop: '22px',
-        paddingBottom: '24px',
+        gridTemplateColumns: '1fr 1fr',
+        columnGap: '16px',
+        paddingBottom: '20px',
       },
     },
   },

@@ -13,7 +13,6 @@ export const Exchange = (props: SVGProps<SVGSVGElement>) => {
       <path
         d="M8 4L8 14M8 4L4 8M8 4L12 8"
         stroke="currentColor"
-        strokeOpacity="0.5"
         strokeWidth="1.25"
         strokeLinecap="square"
         strokeLinejoin="bevel"
@@ -21,7 +20,6 @@ export const Exchange = (props: SVGProps<SVGSVGElement>) => {
       <path
         d="M16 20L16 10M16 20L12 16M16 20L20 16"
         stroke="currentColor"
-        strokeOpacity="0.5"
         strokeWidth="1.25"
         strokeLinecap="square"
         strokeLinejoin="bevel"

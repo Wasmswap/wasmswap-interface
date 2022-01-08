@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { HTMLProps } from 'react'
 import { Spinner } from '../../../components/Spinner'

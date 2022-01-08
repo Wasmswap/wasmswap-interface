@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { dollarValueFormatter } from '../../../util/conversion'
 import { MouseEvent, Ref, useRef, useState } from 'react'

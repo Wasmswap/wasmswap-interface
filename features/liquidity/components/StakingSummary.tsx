@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { TokenInfo } from '../../../hooks/useTokenInfo'
 import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'

@@ -2,11 +2,11 @@ export const chainInfo = {
   // Chain-id of the Cosmos SDK chain.
   chainId: 'uni',
   // The name of the chain to be displayed to the user.
-  chainName: 'Juno Uni Testnet',
+  chainName: 'Juno Local Testnet',
   // RPC endpoint of the chain.
-  rpc: 'https://rpc.uni.juno.deuslabs.fi:443/',
+  rpc: 'http://localhost:26657/',
   // REST endpoint of the chain.
-  rest: 'https://lcd.uni.juno.deuslabs.fi:443/',
+  rest: 'http://localhost:1317/',
   // Staking coin information
   stakeCurrency: {
     // Coin denomination to be displayed to the user.

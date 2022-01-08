@@ -3,7 +3,7 @@ import { IconWrapper } from '../../../components/IconWrapper'
 import { Chevron } from '../../../icons/Chevron'
 import React from 'react'
 import { formatTokenBalance } from '../../../util/conversion'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { useTokenInfo } from '../../../hooks/useTokenInfo'
 
 type SelectorToggleProps = {

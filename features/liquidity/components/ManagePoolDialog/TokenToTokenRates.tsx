@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { useTxRates } from 'features/swap/hooks/useTxRates'
 import {
   dollarValueFormatterWithDecimals,

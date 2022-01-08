@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from './Text'
 import { formatTokenBalance } from '../util/conversion'
 import { useTokenInfo } from '../hooks/useTokenInfo'

@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Wallet } from '../icons/Wallet'
 import { Union } from '../icons/Union'
 import { Text } from './Text'

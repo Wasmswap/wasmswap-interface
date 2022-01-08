@@ -1,7 +1,7 @@
 import { getBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { Dialog, StyledCloseIcon } from 'components/Dialog'
 import { Text } from 'components/Text'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { useState } from 'react'
 import {

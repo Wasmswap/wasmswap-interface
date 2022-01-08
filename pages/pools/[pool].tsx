@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { AppLayout } from '../../components/Layout/AppLayout'

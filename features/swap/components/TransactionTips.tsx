@@ -2,7 +2,7 @@ import { IconWrapper } from '../../../components/IconWrapper'
 import { Exchange } from '../../../icons/Exchange'
 import { Text } from '../../../components/Text'
 import React, { useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,

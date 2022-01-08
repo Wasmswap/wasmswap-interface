@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { PlusIcon } from '@heroicons/react/solid'
 import { Dialog, StyledCloseIcon } from 'components/Dialog'
 import { Text } from 'components/Text'

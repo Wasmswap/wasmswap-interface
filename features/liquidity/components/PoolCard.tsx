@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { colorTokens } from '../../../util/constants'
 import { Text } from '../../../components/Text'
 import { useTokenInfo } from '../../../hooks/useTokenInfo'

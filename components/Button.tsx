@@ -1,102 +1,242 @@
-import React, { HTMLProps, FC, ReactNode } from 'react'
-import styled from 'styled-components'
-import { styled as stitchesStyled } from '@stitches/react'
-import { Text } from './Text'
-import { colorTokens } from '../util/constants'
+import { ForwardedRef, ReactNode, forwardRef } from 'react'
+import Color from 'color'
+import type { VariantProps } from '@stitches/react'
+import { styled, theme, colors } from './theme'
+import { GetRenderAsProps, RenderAsType } from './types'
 
-type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
-  iconBefore?: ReactNode
-  variant?: 'primary' | 'rounded'
-  size?: 'humongous' | 'medium' | 'small'
-}
+console.log({ theme })
 
-export const StyledButton = styled.button<ButtonProps>`
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  border-radius: ${(p) => (p.variant === 'rounded' ? '18px' : '6px')};
-  padding: ${(props: ButtonProps) => {
-    switch (props.size) {
-      case 'humongous':
-        return '24px'
-      case 'medium':
-        return props.variant === 'rounded' ? '9px 14px' : '12px 14px'
-      case 'small':
-        return '8px 12px'
-      default:
-        return '5px 12px'
-    }
-  }};
-  width: ${(props: ButtonProps) =>
-    props.size === 'humongous' ? '100%' : 'auto'};
-  background-color: ${({ disabled, type, color }) => {
-    return disabled || type === 'disabled'
-      ? colorTokens.gray
-      : colorTokens[color] || color || colorTokens.black
-  }};
-  cursor: ${({ disabled }) => {
-    return disabled ? 'auto' : 'pointer'
-  }};
+const StyledButton = styled('button', {
+  fontFamily: '$primary',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  whiteSpace: 'pre',
 
-  transition: opacity 0.1s ease-out, background-color 0.15s ease-out;
+  fontSize: '$6',
+  lineHeight: '$3',
+  fontWeight: '$medium',
+  color: '$textColors$body',
+  borderRadius: '$1',
 
-  &:hover {
-    opacity: ${(p) => (p.disabled || p.type === 'disabled' ? 1 : 0.9)};
-  }
+  transition: 'background 0.15s ease-out',
 
-  &:active {
-    opacity: 0.85;
-  }
-`
-
-const mapTextSize = (size: ButtonProps['size']) => {
-  switch (size) {
-    case 'humongous':
-      return 'heading'
-    case 'small':
-      return 'subtitle'
-    default:
-      return 'body'
-  }
-}
-
-export const Button: FC<ButtonProps> = ({
-  variant,
-  size = 'medium',
-  children,
-  iconBefore,
-  ...props
-}) => (
-  <StyledButton variant={variant} size={size} {...props}>
-    {iconBefore && (
-      <StyledIconWrapper $position="left">{iconBefore}</StyledIconWrapper>
-    )}
-    {typeof children === 'string' ? (
-      <Text type={mapTextSize(size)} variant="light" color="white">
-        {children}
-      </Text>
-    ) : (
-      children
-    )}
-  </StyledButton>
-)
-
-const StyledIconWrapper = styled.span`
-  display: inline-block;
-  padding: ${(p) => (p.$position === 'left' ? '0 6px 0 0' : '0 0 0 6px')};
-`
-
-export const StyledSecondaryButton = stitchesStyled('button', {
-  padding: '8px 12px',
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
-  borderRadius: '6px',
-  transition: 'background-color .1s ease-out',
-  '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+  variants: {
+    icon: {
+      left: {
+        display: 'grid',
+        gridTemplateAreas: '"a b"',
+        columnGap: '2px',
+      },
+      right: {
+        display: 'grid',
+        columnGap: '2px',
+        gridTemplateAreas: '"a b"',
+      },
+      both: {
+        display: 'grid',
+        columnGap: '2px',
+        gridTemplateAreas: '"a b c"',
+      },
+      only: {},
+    },
+    size: {
+      large: {
+        padding: '11px 16px',
+      },
+      medium: {
+        padding: '7px 16px',
+      },
+    },
+    variant: {
+      primary: {
+        backgroundColor: Color(colors.dark).alpha(0.95).rgb().string(),
+        color: '$white',
+        '&:hover': {
+          backgroundColor: '$colors$black',
+        },
+        '&:active': {
+          backgroundColor: Color(colors.dark).alpha(0.85).rgb().string(),
+        },
+        '&:focus.focus-visible': {
+          boxShadow: `0 0 0 2px ${Color(colors.dark)
+            .alpha(0.3)
+            .rgb()
+            .string()}`,
+        },
+      },
+      secondary: {
+        backgroundColor: '#e8e9e9',
+        color: '$textColors$primary',
+        '&:hover': {
+          backgroundColor: 'rgba(25, 29, 32, 0.2)',
+        },
+        '&:active': {
+          backgroundColor: 'rgba(25, 29, 32, 0.05)',
+        },
+        '&:focus.focus-visible': {
+          boxShadow: '0 0 0 2px rgba(25, 29, 32, 0.3)',
+        },
+      },
+      ghost: {
+        backgroundColor: 'transparent',
+        color: '#535658',
+        '&:hover': {
+          backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        },
+        '&:active': {
+          backgroundColor: 'rgba(25, 29, 32, 0.05)',
+        },
+        '&:focus.focus-visible': {
+          boxShadow: '0 0 0 2px rgba(25, 29, 32, 0.3)',
+        },
+      },
+    },
+    disabled: {
+      true: {
+        pointerEvents: 'none',
+        cursor: 'not-allowed',
+      },
+      false: {},
+    },
   },
-  '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+
+  compoundVariants: [
+    {
+      variant: 'primary',
+      disabled: true,
+      css: {
+        backgroundColor: Color(colors.dark),
+        color: 'rgba(243, 246, 248, 0.7)',
+      },
+    },
+    {
+      variant: 'secondary',
+      disabled: true,
+      css: {
+        backgroundColor: 'rgba(25, 29, 32, 0.05)',
+        color: 'rgba(25, 29, 32, 0.3)',
+      },
+    },
+    {
+      variant: 'ghost',
+      disabled: true,
+      css: {
+        color: 'rgba(25, 29, 32, 0.3)',
+      },
+    },
+    {
+      size: 'medium',
+      icon: 'left',
+      css: {
+        paddingLeft: 6,
+        paddingTop: 4,
+        paddingBottom: 4,
+      },
+    },
+    {
+      size: 'medium',
+      icon: 'right',
+      css: {
+        paddingRight: 6,
+        paddingTop: 4,
+        paddingBottom: 4,
+      },
+    },
+    {
+      size: 'medium',
+      icon: 'both',
+      css: {
+        padding: '4px 6px',
+      },
+    },
+    {
+      size: 'large',
+      icon: 'left',
+      css: {
+        paddingLeft: 6,
+        paddingTop: 8,
+        paddingBottom: 8,
+      },
+    },
+    {
+      size: 'large',
+      icon: 'right',
+      css: {
+        paddingRight: 6,
+        paddingTop: 8,
+        paddingBottom: 8,
+      },
+    },
+    {
+      size: 'large',
+      icon: 'both',
+      css: {
+        padding: '8px 6px',
+      },
+    },
+  ],
+
+  defaultVariants: {
+    variant: 'primary',
+    size: 'medium',
   },
 })
+
+type ButtonProps<T extends RenderAsType = 'button'> = Omit<
+  Omit<VariantProps<typeof StyledButton>, 'icon'> & GetRenderAsProps<T>,
+  'iconLeft' | 'iconRight' | 'icon'
+> &
+  (
+    | {
+        children?: ReactNode
+        iconLeft?: ReactNode
+        iconRight?: ReactNode
+        icon?: never
+      }
+    | {
+        children?: never
+        iconLeft?: never
+        iconRight?: never
+        icon?: ReactNode
+      }
+  )
+
+function ButtonComponent<T extends RenderAsType = 'button'>(
+  { children, as, icon, iconLeft, iconRight, ...props }: ButtonProps<T>,
+  ref?: ForwardedRef<any>
+) {
+  return (
+    <StyledButton
+      icon={getIconVariant({ iconLeft, icon, iconRight })}
+      ref={ref}
+      {...props}
+      as={as as any}
+    >
+      {icon ? (
+        icon
+      ) : (
+        <>
+          {iconLeft}
+          {children}
+          {iconRight}
+        </>
+      )}
+    </StyledButton>
+  )
+}
+
+const getIconVariant = ({
+  iconRight,
+  iconLeft,
+  icon,
+}): VariantProps<typeof StyledButton>['icon'] => {
+  if (iconLeft && iconRight) return 'both'
+  if (iconLeft) return 'left'
+  if (iconRight) return 'right'
+  if (icon) return 'only'
+  return undefined
+}
+
+export const Button = forwardRef(ButtonComponent) as typeof ButtonComponent

@@ -1,7 +1,7 @@
 import { Dialog, StyledCloseIcon } from './Dialog'
 import { Text } from './Text'
 import { useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Button } from './Button'
 
 export const TestnetDialog = () => {

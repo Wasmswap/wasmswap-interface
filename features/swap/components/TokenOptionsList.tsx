@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import nativeTokenList from '../../../public/token_list.json'
 import { TokenInfo } from '../../../hooks/useTokenInfo'
 import { Text } from '../../../components/Text'

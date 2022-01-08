@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { Button } from '../../../components/Button'
 import React, { useEffect, useState } from 'react'
@@ -80,7 +80,7 @@ export const TransactionAction = ({
         </StyledDivColumnForInfo>
       </StyledDivForInfo>
       <Button
-        type={status === WalletStatusType.connected ? 'primary' : 'disabled'}
+        variant={status === WalletStatusType.connected ? 'primary' : 'disabled'}
         disabled={shouldDisableSubmissionButton}
         onClick={
           !isExecutingTransaction && !isPriceLoading

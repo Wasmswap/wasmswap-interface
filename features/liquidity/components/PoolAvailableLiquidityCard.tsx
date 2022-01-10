@@ -58,7 +58,7 @@ export const PoolAvailableLiquidityCard = ({
               src={tokenA?.logoURI}
               alt={tokenASymbol}
             />
-            <Text color="body" variant="caption" wrap="pre">
+            <Text color="body" variant="caption" wrap={false}>
               {formatTokenBalance(
                 convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
               )}{' '}
@@ -71,7 +71,7 @@ export const PoolAvailableLiquidityCard = ({
               src={tokenB?.logoURI}
               alt={tokenBSymbol}
             />
-            <Text color="body" variant="caption" wrap="pre">
+            <Text color="body" variant="caption" wrap={false}>
               {formatTokenBalance(
                 convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
               )}{' '}

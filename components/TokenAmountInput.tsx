@@ -22,7 +22,7 @@ export const TokenAmountInput = ({
       <Button size="small" onClick={() => onAmountChange(maxAmount)}>
         Max
       </Button>
-      <Text as={StyledDivForInputWrapper} type="hero">
+      <Text as={StyledDivForInputWrapper} variant="hero">
         <BasicNumberInput
           value={amount}
           min={0}

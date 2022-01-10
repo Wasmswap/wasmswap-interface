@@ -64,7 +64,7 @@ export const AssetCard = ({
           <Text variant="title">
             {balance} {name}{' '}
             {!__TRANSFERS_ENABLED__ && (
-              <Text css={{ paddingLeft: '$8' }} as="span" type="title">
+              <Text css={{ paddingLeft: '$8' }} as="span" variant="title">
                 Coming soon
               </Text>
             )}

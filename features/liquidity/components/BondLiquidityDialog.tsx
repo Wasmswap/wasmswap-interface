@@ -83,7 +83,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           liquidity={liquidityDollarAmount}
           onChangeLiquidity={(value) => setLiquidityDollarAmount(value)}
         />
-        <Text type="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
+        <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
           Max available for stacking is worth $
           {dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
             includeCommaSeparation: true,

@@ -96,7 +96,7 @@ export const StakingSummary = ({
 const StyledNodeForToken = ({ logoURI, name, amount }) => (
   <StyledDivForToken>
     <StyledImgForTokenLogo as={logoURI ? 'img' : 'div'} src={logoURI} />
-    <Text transform="uppercase" variant="caption" wrap="pre">
+    <Text transform="uppercase" variant="caption" wrap={false}>
       {formatTokenBalance(amount)} {name}
     </Text>
   </StyledDivForToken>

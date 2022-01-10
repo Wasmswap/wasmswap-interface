@@ -183,12 +183,7 @@ export default function Pool() {
             </>
 
             <>
-              <Text
-                variant="bold"
-                paddingTop="24px"
-                paddingBottom="18px"
-                color="bodyText"
-              >
+              <Text css={{ padding: '$12 0 $9' }} color="body">
                 Rewards
               </Text>
               {__POOL_REWARDS_ENABLED__ && (
@@ -196,7 +191,7 @@ export default function Pool() {
                   <StyledDivForSeparator />
                   <StyledElementForRewards kind="wrapper">
                     <StyledElementForRewards kind="column">
-                      <Text type="hero">$289.00</Text>
+                      <Text variant="hero">$289.00</Text>
                     </StyledElementForRewards>
 
                     <StyledElementForRewards kind="tokens">

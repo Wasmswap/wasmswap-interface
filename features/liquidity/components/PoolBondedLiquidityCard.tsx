@@ -22,7 +22,7 @@ export const PoolBondedLiquidityCard = ({
           Staked liquidity
         </Text>
         <Text variant="hero">$0.00</Text>
-        <Text variant="caption" paddingTop="8px">
+        <Text variant="caption" css={{ paddingTop: '$4' }}>
           $
           {dollarValueFormatterWithDecimals(myLiquidity.dollarValue, {
             includeCommaSeparation: true,
@@ -42,7 +42,7 @@ export const PoolBondedLiquidityCard = ({
             <StyledImageForToken src={tokenA.logoURI} />
             <StyledImageForToken src={tokenB.logoURI} />
           </StyledElementForTokens>
-          <Text color="body" type="caption">
+          <Text color="body" variant="caption">
             $0.00/14 days in 2 tokens
           </Text>
         </StyledElementForTokens>

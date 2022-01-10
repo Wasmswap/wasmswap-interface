@@ -36,7 +36,7 @@ export const ConnectedWalletButton = ({
             <Text variant="caption" color="secondary">
               Demo account
             </Text>
-            <Text variant="title" color="inherit">
+            <Text variant="primary" color="inherit">
               {walletName}
             </Text>
           </div>

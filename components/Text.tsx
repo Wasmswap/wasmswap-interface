@@ -94,6 +94,13 @@ const StyledText = styled('p', {
         textTransform: 'capitalize',
       },
     },
+
+    wrap: {
+      true: {},
+      false: {
+        whiteSpace: 'pre',
+      },
+    },
   },
 
   defaultVariants: {

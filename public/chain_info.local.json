@@ -1,5 +1,5 @@
 {
-  "chainId": "local-wasmswap",
+  "chainId": "testing",
   "chainName": "Juno Local",
   "rpc": "http://localhost:26657/",
   "rest": "http://localhost:1317/",

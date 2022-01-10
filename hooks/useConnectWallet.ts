@@ -1,4 +1,4 @@
-import { chainInfo } from '../public/chain_info'
+import chainInfo from '../public/chain_info.json'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'

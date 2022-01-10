@@ -1,15 +1,22 @@
 import { useQuery } from 'react-query'
-import { getBaseToken, getTokenInfo, useTokenInfo } from './useTokenInfo'
+import { getTokenInfo, useBaseTokenInfo, useTokenInfo } from './useTokenInfo'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { usePriceForOneToken } from '../features/swap/hooks/usePriceForOneToken'
 
 export const useTokenDollarValue = (tokenSymbol?: string) => {
-  const { symbol: baseTokenSymbol } = getBaseToken()
+  const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
   const tokenInfo = useTokenInfo(tokenSymbol)
 
+  const tokenSymbolToLookupDollarValueFor = tokenInfo?.id
+    ? tokenSymbol
+    : baseTokenSymbol
   const [[tokenDollarPrice], fetchingTokenDollarPrice] =
-    useTokenDollarValueQuery([tokenInfo?.id ? tokenSymbol : baseTokenSymbol])
+    useTokenDollarValueQuery(
+      tokenSymbolToLookupDollarValueFor
+        ? [tokenSymbolToLookupDollarValueFor]
+        : null
+    )
 
   const [oneTokenToTokenPrice, fetchingTokenToTokenPrice] = usePriceForOneToken(
     {
@@ -34,7 +41,7 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
 
 export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
   const { data, isLoading } = useQuery(
-    `coinDollarValue/${tokenSymbols.join('/')}`,
+    `coinDollarValue/${tokenSymbols?.join('/')}`,
     async (): Promise<Array<number>> => {
       const tokenIds = tokenSymbols.map(
         (tokenSymbol) =>

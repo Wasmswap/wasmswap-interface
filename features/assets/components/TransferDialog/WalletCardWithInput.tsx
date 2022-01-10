@@ -29,20 +29,19 @@ export const WalletCardWithInput = ({
     <CardWithSeparator
       contents={[
         <>
-          <Text type="microscopic" variant="light">
+          <Text variant="caption">
             {transactionType === 'incoming' ? 'TO' : 'FROM'}
           </Text>
           <StyledHeader>
             <WalletIcon transactionOrigin={transactionOrigin} />
             <div>
-              <Text type="body" variant="light">
+              <Text variant="body">
                 {transactionOrigin === 'platform' ? 'Junoswap' : 'Keplr wallet'}
               </Text>
               <Text
-                type="microscopic"
-                variant="normal"
-                color="gray"
-                paddingTop="2"
+                variant="caption"
+                color="tertiary"
+                css={{ paddingTop: '$1' }}
               >
                 {walletAddress}
               </Text>
@@ -51,22 +50,15 @@ export const WalletCardWithInput = ({
         </>,
         <>
           <StyledDivForBalance>
-            <Text type="microscopic" variant="light">
-              Max available:{' '}
-            </Text>
-            <Text
-              type="microscopic"
-              variant="normal"
-              color="lightBlue"
-              paddingLeft="2"
-            >
+            <Text variant="caption">Max available: </Text>
+            <Text variant="caption" color="brand" css={{ paddingLeft: '$1' }}>
               {maxValue} {tokenInfo.name}
             </Text>
           </StyledDivForBalance>
           <TokenAmountInput
-            value={value}
+            amount={value}
             onAmountChange={onChange}
-            maxValue={maxValue}
+            maxAmount={maxValue}
             tokenSymbol={tokenInfo.symbol}
           />
         </>,

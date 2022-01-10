@@ -1,6 +1,6 @@
 import mergeRefs from 'react-merge-refs'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { IconWrapper } from 'components/IconWrapper'
 import React, { useRef, useState } from 'react'
 import { TokenOptionsList } from './TokenOptionsList'
@@ -56,6 +56,7 @@ export const TokenSelector = ({
           />
           {!isTokenListShowing && tokenSymbol && !readOnly && (
             <ConvenienceBalanceButtons
+              disabled={availableAmount <= 0}
               tokenSymbol={tokenSymbol}
               availableAmount={availableAmount}
               onChange={!disabled ? handleAmountChange : () => {}}

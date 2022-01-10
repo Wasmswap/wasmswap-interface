@@ -1,5 +1,6 @@
-import { styled } from '@stitches/react'
+import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
+import { styled } from 'components/theme'
 import { Dialog, StyledCloseIcon } from 'components/Dialog'
 import { Text } from 'components/Text'
 import { LiquidityInput } from 'components/LiquidityInput'
@@ -9,12 +10,9 @@ import {
   formatTokenBalance,
   protectAgainstNaN,
 } from 'util/conversion'
+import { getBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { usePoolDialogController } from './usePoolDialogController'
-import { useEffect, useRef, useState } from 'react'
-import {
-  getBaseToken,
-  useTokenInfoByPoolId,
-} from '../../../../hooks/useTokenInfo'
 import { TokenToTokenRates } from './TokenToTokenRates'
 import { SecondaryButton } from '../SecondaryButton'
 import { PrimaryButton } from '../PrimaryButton'
@@ -22,7 +20,6 @@ import { Divider } from '../Divider'
 import { StateSwitchButtons } from '../StateSwitchButtons'
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
-import { useTokenDollarValue } from '../../../../hooks/useTokenDollarValue'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -88,9 +85,8 @@ export const ManagePoolDialog = ({
 
       <StyledDivForContent>
         <Text
-          type="heading"
-          variant="bold"
-          paddingBottom={canManageLiquidity ? '16px' : '24px'}
+          variant="header"
+          css={{ paddingBottom: canManageLiquidity ? '$8' : '$12' }}
         >
           Manage liquidity
         </Text>
@@ -112,7 +108,7 @@ export const ManagePoolDialog = ({
       )}
 
       <StyledDivForContent>
-        <Text type="caption" paddingBottom="12px">
+        <Text variant="body" css={{ paddingBottom: '$6' }}>
           Choose how much to {isAddingLiquidity ? 'add' : 'remove'}
         </Text>
       </StyledDivForContent>
@@ -261,23 +257,13 @@ function RemoveLiquidityContent({
           onChangeLiquidity={handleChangeLiquidity}
         />
         <StyledGridForDollarValueTxInfo>
-          <Text
-            type="microscopic"
-            color="tertiaryText"
-            paddingTop="12px"
-            paddingBottom="18px"
-          >
+          <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
             Available liquidity: $
             {dollarValueFormatterWithDecimals(availableLiquidityDollarValue, {
               includeCommaSeparation: true,
             })}
           </Text>
-          <Text
-            type="microscopic"
-            color="tertiaryText"
-            paddingTop="12px"
-            paddingBottom="18px"
-          >
+          <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
             ≈ ${' '}
             {dollarValueFormatterWithDecimals(liquidityToRemove, {
               includeCommaSeparation: true,
@@ -292,20 +278,20 @@ function RemoveLiquidityContent({
       </StyledDivForContent>
       <Divider offsetY={16} />
       <StyledDivForContent>
-        <Text type="caption" paddingBottom="14px">
+        <Text variant="body" css={{ paddingBottom: '$7' }}>
           Removing
         </Text>
         <StyledDivForLiquiditySummary>
           <StyledDivForToken>
             <StyledImageForTokenLogo src={tokenA.logoURI} alt={tokenA.name} />
-            <Text type="microscopic" variant="light">
+            <Text variant="caption">
               {formatTokenBalance(tokenAReserve * liquidityPercentage)}{' '}
               {tokenA.symbol}
             </Text>
           </StyledDivForToken>
           <StyledDivForToken>
             <StyledImageForTokenLogo src={tokenB.logoURI} alt={tokenB.name} />
-            <Text type="microscopic" variant="light">
+            <Text variant="caption">
               {formatTokenBalance(tokenBReserve * liquidityPercentage)}{' '}
               {tokenB.symbol}
             </Text>
@@ -317,12 +303,12 @@ function RemoveLiquidityContent({
 }
 
 const StyledDivForContent = styled('div', {
-  padding: '0px 28px',
+  padding: '0px $14',
   variants: {},
 })
 
 const StyledDivForTxRates = styled('div', {
-  padding: '14px 0 24px',
+  padding: '$7 0 $12',
 })
 
 const StyledDivForLiquidityInputs = styled('div', {
@@ -334,12 +320,12 @@ const StyledDivForLiquidityInputs = styled('div', {
 const StyledDivForFooter = styled('div', {
   display: 'flex',
   justifyContent: 'flex-end',
-  columnGap: 12,
-  padding: '16px 0',
+  columnGap: '$space$6',
+  padding: '$8 0',
 })
 
 const StyledDivForDivider = styled('div', {
-  paddingTop: 16,
+  paddingTop: '$8',
 })
 
 const StyledGridForDollarValueTxInfo = styled('div', {
@@ -350,13 +336,13 @@ const StyledGridForDollarValueTxInfo = styled('div', {
 const StyledDivForLiquiditySummary = styled('div', {
   display: 'flex',
   alignItems: 'center',
-  columnGap: 24,
+  columnGap: '$space$12',
 })
 
 const StyledDivForToken = styled('div', {
   display: 'flex',
   alignItems: 'center',
-  columnGap: 8,
+  columnGap: '$space$4',
 })
 
 const StyledImageForTokenLogo = styled('img', {

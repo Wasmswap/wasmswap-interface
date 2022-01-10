@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import { Text } from '../Text'
 import { colorTokens } from '../../util/constants'
 
+// @todo refactor me
+
 export const FooterBar = () => (
   <StyledRow $fullWidth>
     <GithubIcon />

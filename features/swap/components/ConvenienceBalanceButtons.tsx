@@ -1,7 +1,6 @@
-import { Text } from '../../../components/Text'
 import React from 'react'
-import { styled } from '@stitches/react'
-import { StyledSecondaryButton } from '../../../components/Button'
+import { styled } from 'components/theme'
+import { Button } from '../../../components/Button'
 import { getBaseToken } from 'hooks/useTokenInfo'
 
 type ConvenienceBalanceButtonsProps = {
@@ -21,6 +20,7 @@ export const ConvenienceBalanceButtons = ({
     !disabled && (
       <>
         <StyledButton
+          variant="secondary"
           onClick={() => {
             let amount =
               tokenSymbol === getBaseToken().symbol
@@ -29,22 +29,20 @@ export const ConvenienceBalanceButtons = ({
             onChange(amount)
           }}
         >
-          <Text type="subtitle" variant="light">
-            Max
-          </Text>
+          Max
         </StyledButton>
-        <StyledButton onClick={() => onChange(availableAmount / 2)}>
-          <Text type="subtitle" variant="light">
-            1/2
-          </Text>
+        <StyledButton
+          variant="secondary"
+          onClick={() => onChange(availableAmount / 2)}
+        >
+          1/2
         </StyledButton>
       </>
     )
   )
 }
 
-const StyledButton = styled(StyledSecondaryButton, {
-  borderRadius: '38px',
+const StyledButton = styled(Button, {
   marginRight: 6,
   '&:first-of-type': {
     marginLeft: 8,

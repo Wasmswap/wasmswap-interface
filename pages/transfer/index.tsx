@@ -90,7 +90,7 @@ export default function Transfer() {
             subtitle="Easily and quickly initiate payments across IBC."
           />
           <AssetsList onActionClick={handleAssetCardActionClick} />
-          <Text variant="light" paddingTop="24px" color="tertiaryText">
+          <Text variant="body" color="tertiary" css={{ paddingTop: '$12' }}>
             More tokens available soon
           </Text>
         </StyledWrapper>

@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Wallet } from '../icons/Wallet'
 import { Union } from '../icons/Union'
 import { Text } from './Text'
@@ -33,17 +33,17 @@ export const ConnectedWalletButton = ({
         <>
           <Wallet />
           <div>
-            <Text type="microscopic" variant="light" color="secondaryText">
+            <Text variant="caption" color="secondary">
               Demo account
             </Text>
-            <Text type="subtitle" variant="light" color="inherit">
+            <Text variant="primary" color="inherit">
               {walletName}
             </Text>
           </div>
           <IconWrapper icon={<Union />} onClick={onDisconnect} type="button" />
         </>
       ) : (
-        <Text type="subtitle" variant="normal" color="inherit">
+        <Text variant="title" color="inherit">
           Connect Keplr
         </Text>
       )}

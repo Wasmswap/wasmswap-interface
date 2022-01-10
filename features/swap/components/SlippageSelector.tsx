@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { IconWrapper } from '../../../components/IconWrapper'
 import { Chevron } from '../../../icons/Chevron'
@@ -29,7 +29,7 @@ export const SlippageSelector = ({
           setShowingSettings(!isShowingSettings)
         }}
       >
-        <Text type="microscopic" variant="bold" color="disabled">
+        <Text variant="caption" css={{ fontWeight: '$bold' }} color="disabled">
           Slippage {slippage * 100}%
         </Text>
         <IconWrapper
@@ -41,7 +41,7 @@ export const SlippageSelector = ({
       </StyledDivForSelector>
       {isShowingSettings && (
         <StyledDivForPopover>
-          <Text type="microscopic" variant="normal" color="tertiaryText">
+          <Text variant="caption" color="tertiary">
             Your transaction will not complete if price slips below target
             threshold.
           </Text>
@@ -55,7 +55,7 @@ export const SlippageSelector = ({
                   setShowingSettings(false)
                 }}
               >
-                <Text type="caption">{tolerance * 100}%</Text>
+                <Text variant="body">{tolerance * 100}%</Text>
               </StyledButton>
             ))}
           </StyledDivForSlippageList>
@@ -72,25 +72,25 @@ const StyledDivForWrapper = styled('div', {
 const StyledDivForSelector = styled('button', {
   textTransform: 'uppercase',
   display: 'flex',
-  columnGap: '8px',
-  padding: '16px 26px',
+  columnGap: '$space$4',
+  padding: '$8 $13',
   userSelect: 'none',
-  borderRadius: '8px 0 0 8px',
+  borderRadius: '$2 0 0 $2',
   transition: 'background-color .1s ease-out',
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+    backgroundColor: '$colors$dark15',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: '$colors$dark5',
   },
 
   variants: {
     active: {
       true: {
-        backgroundColor: 'rgba(25, 29, 32, 0.15)',
+        backgroundColor: '$colors$dark15',
       },
       false: {
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        backgroundColor: '$colors$dark10',
       },
     },
   },
@@ -99,12 +99,12 @@ const StyledDivForSelector = styled('button', {
 const StyledDivForPopover = styled('div', {
   textTransform: 'none',
   backgroundColor: '#DADBDB',
-  padding: '14px',
+  padding: '$7',
   position: 'absolute',
   width: '284px',
   bottom: 'calc(100% + 4px)',
   left: 0,
-  borderRadius: '6px',
+  borderRadius: '$1',
   display: 'flex',
   flexDirection: 'column',
   rowGap: '13px',
@@ -119,24 +119,24 @@ const StyledDivForSlippageList = styled('div', {
 })
 
 const StyledButton = styled('button', {
-  borderRadius: '6px',
-  padding: '8px 15px',
+  borderRadius: '$1',
+  padding: '$4 $8',
   color: colorTokens.secondaryText,
   transition: 'background-color .1s ease-out',
   variants: {
     active: {
       true: {
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        backgroundColor: '$dark10',
       },
       false: {
-        backgroundColor: 'rgba(25, 29, 32, 0)',
+        backgroundColor: '$dark0',
       },
     },
   },
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+    backgroundColor: '$dark15',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: '$dark5',
   },
 })

@@ -1,13 +1,10 @@
-import { styled } from '@stitches/react'
-import { Text } from '../../../components/Text'
-import { Button } from '../../../components/Button'
-import {
-  convertMicroDenomToDenom,
-  formatTokenBalance,
-} from '../../../util/conversion'
+import { styled } from 'components/theme'
+import { Text } from 'components/Text'
+import { Button } from 'components/Button'
+import { convertMicroDenomToDenom, formatTokenBalance } from 'util/conversion'
 import { parseCurrency } from './PoolCard'
-import { LiquidityInfoType } from '../../../hooks/usePoolLiquidity'
-import { useTokenInfo } from '../../../hooks/useTokenInfo'
+import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 
 type PoolAvailableLiquidityCardProps = Pick<
   LiquidityInfoType,
@@ -33,12 +30,7 @@ export const PoolAvailableLiquidityCard = ({
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
-        <Text
-          type="caption"
-          color="secondaryText"
-          variant="light"
-          paddingBottom="9px"
-        >
+        <Text variant="body" color="secondary" css={{ paddingBottom: '$4' }}>
           {typeof myLiquidity === 'number'
             ? `You own ${formatTokenBalance(
                 ((myLiquidity as LiquidityInfoType['myLiquidity']).coins /
@@ -56,13 +48,7 @@ export const PoolAvailableLiquidityCard = ({
         </StyledTextForAmount>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
-        <Text
-          type="caption"
-          variant="light"
-          color="secondaryText"
-          paddingTop="14px"
-          paddingBottom="18px"
-        >
+        <Text variant="body" color="secondary" css={{ padding: '$7 0 $9' }}>
           Underlying assets
         </Text>
         <StyledElementForTokens kind="wrapper">
@@ -72,7 +58,7 @@ export const PoolAvailableLiquidityCard = ({
               src={tokenA?.logoURI}
               alt={tokenASymbol}
             />
-            <Text color="bodyText" type="microscopic" wrap="pre">
+            <Text color="body" variant="caption" wrap={false}>
               {formatTokenBalance(
                 convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
               )}{' '}
@@ -85,7 +71,7 @@ export const PoolAvailableLiquidityCard = ({
               src={tokenB?.logoURI}
               alt={tokenBSymbol}
             />
-            <Text color="bodyText" type="microscopic" wrap="pre">
+            <Text color="body" variant="caption" wrap={false}>
               {formatTokenBalance(
                 convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
               )}{' '}
@@ -93,9 +79,9 @@ export const PoolAvailableLiquidityCard = ({
             </Text>
           </StyledElementForTokens>
         </StyledElementForTokens>
-        <StyledButton onClick={onButtonClick}>
+        <Button css={{ width: '100%' }} onClick={onButtonClick} size="large">
           {myReserve[1] > 0 ? 'Manage liquidity' : 'Add liquidity'}
-        </StyledButton>
+        </Button>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
   )
@@ -106,11 +92,11 @@ const StyledElementForCardLayout = styled('div', {
     kind: {
       wrapper: {
         backgroundColor: 'rgba(25, 29, 32, 0.1)',
-        padding: '18px 0 24px',
+        padding: '$9 0 $12',
         borderRadius: '8px',
       },
       content: {
-        padding: '0 24px',
+        padding: '0 $12',
         '&:not(&:last-child)': {
           borderBottom: '1px solid rgba(25, 29, 32, 0.1)',
         },
@@ -118,7 +104,7 @@ const StyledElementForCardLayout = styled('div', {
     },
     name: {
       liquidity: {
-        padding: '0 24px',
+        padding: '0 $12',
       },
     },
   },
@@ -126,9 +112,9 @@ const StyledElementForCardLayout = styled('div', {
 
 const StyledTextForAmount = styled('p', {
   fontSize: '30px',
-  lineHeight: '24px',
+  lineHeight: '$2',
   fontWeight: 600,
-  paddingBottom: '36px',
+  paddingBottom: '$18',
 })
 
 const StyledElementForTokens = styled('div', {
@@ -139,12 +125,12 @@ const StyledElementForTokens = styled('div', {
       element: {
         gridTemplateColumns: '20px auto',
         alignItems: 'center',
-        columnGap: '6px',
+        columnGap: '$spaces$3',
       },
       wrapper: {
         gridTemplateColumns: '1fr 1fr',
-        columnGap: '16px',
-        paddingBottom: '20px',
+        columnGap: '$spaces$8',
+        paddingBottom: '$10',
       },
     },
   },
@@ -155,8 +141,4 @@ const StyledImageForToken = styled('img', {
   height: 20,
   borderRadius: '50%',
   backgroundColor: '#ccc',
-})
-
-const StyledButton = styled(Button, {
-  width: '100% !important',
 })

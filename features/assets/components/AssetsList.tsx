@@ -22,7 +22,7 @@ export const AssetsList = ({ onActionClick }) => {
     <>
       {__TRANSFERS_ENABLED__ && (
         <StyledGrid>
-          <Text variant="light" paddingBottom="19px">
+          <Text variant="primary" css={{ paddingBottom: '$9' }}>
             My tokens
           </Text>
           {isLoading ? (
@@ -40,24 +40,14 @@ export const AssetsList = ({ onActionClick }) => {
                   />
                 ))}
               {isConnected && !hasTransferredAssets && (
-                <Text
-                  type="body"
-                  variant="light"
-                  color="secondaryText"
-                  as="span"
-                >
+                <Text variant="body" color="secondary" as="span">
                   You don’t have any tokens. Might be time to deposit some in?
                 </Text>
               )}
               {!isConnected && !isLoading && (
-                <Text type="body" variant="light">
+                <Text variant="body">
                   Connect your wallet{' '}
-                  <Text
-                    type="body"
-                    variant="light"
-                    color="secondaryText"
-                    as="span"
-                  >
+                  <Text variant="body" color="secondary" as="span">
                     to see your tokens.
                   </Text>
                 </Text>
@@ -68,9 +58,11 @@ export const AssetsList = ({ onActionClick }) => {
       )}
 
       <Text
-        variant="light"
-        paddingTop={!__TRANSFERS_ENABLED__ ? '0px' : '39px'}
-        paddingBottom={!__TRANSFERS_ENABLED__ ? '12px' : '20px'}
+        variant="primary"
+        css={{
+          paddingTop: !__TRANSFERS_ENABLED__ ? '0' : '$19',
+          paddingBottom: !__TRANSFERS_ENABLED__ ? '$6' : '$10',
+        }}
       >
         All tokens
       </Text>

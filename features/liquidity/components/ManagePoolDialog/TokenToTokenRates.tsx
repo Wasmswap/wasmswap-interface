@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { useTxRates } from 'features/swap/hooks/useTxRates'
 import {
   dollarValueFormatterWithDecimals,
@@ -29,14 +29,14 @@ export const TokenToTokenRates = ({
 
   return (
     <StyledDivForGrid active={isShowing}>
-      <Text type="microscopic" variant="bold" color="disabled" wrap="pre">
+      <Text variant="caption" color="disabled" wrap={false}>
         1 {tokenASymbol} ≈ {formatTokenBalance(conversionRate)} {tokenBSymbol}
         {' ≈ '}$
         {dollarValueFormatterWithDecimals(conversionRateInDollar, {
           includeCommaSeparation: true,
         })}
       </Text>
-      <Text type="microscopic" variant="bold" color="disabled">
+      <Text variant="caption" color="disabled">
         $
         {dollarValueFormatterWithDecimals(dollarValue * 2, {
           includeCommaSeparation: true,

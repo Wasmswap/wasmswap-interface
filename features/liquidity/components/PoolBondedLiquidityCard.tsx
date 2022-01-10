@@ -18,18 +18,11 @@ export const PoolBondedLiquidityCard = ({
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
-        <Text
-          type="caption"
-          color="secondaryText"
-          variant="light"
-          paddingBottom="9px"
-        >
+        <Text variant="body" color="secondary" css={{ paddingBottom: '$4' }}>
           Staked liquidity
         </Text>
-        <Text type="title2" variant="bold">
-          $0.00
-        </Text>
-        <Text type="microscopic" variant="light" paddingTop="8px">
+        <Text variant="hero">$0.00</Text>
+        <Text variant="caption" paddingTop="8px">
           $
           {dollarValueFormatterWithDecimals(myLiquidity.dollarValue, {
             includeCommaSeparation: true,
@@ -40,13 +33,7 @@ export const PoolBondedLiquidityCard = ({
       </StyledElementForCardLayout>
       <Divider />
       <StyledElementForCardLayout kind="content">
-        <Text
-          type="caption"
-          variant="light"
-          color="secondaryText"
-          paddingTop="14px"
-          paddingBottom="16px"
-        >
+        <Text variant="body" color="secondary" css={{ padding: '$7 0 $8' }}>
           Current reward incentive
         </Text>
 
@@ -55,17 +42,19 @@ export const PoolBondedLiquidityCard = ({
             <StyledImageForToken src={tokenA.logoURI} />
             <StyledImageForToken src={tokenB.logoURI} />
           </StyledElementForTokens>
-          <Text color="bodyText" type="microscopic">
+          <Text color="body" type="caption">
             $0.00/14 days in 2 tokens
           </Text>
         </StyledElementForTokens>
 
-        <StyledButton
+        <Button
+          css={{ width: '100%' }}
+          size="large"
           disabled={!__POOL_REWARDS_ENABLED__}
           onClick={__POOL_REWARDS_ENABLED__ ? onButtonClick : undefined}
         >
           {__POOL_REWARDS_ENABLED__ ? 'Bond / Unbond tokens' : 'Coming soon'}
-        </StyledButton>
+        </Button>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
   )
@@ -77,9 +66,9 @@ const StyledElementForCardLayout = styled('div', {
       wrapper: {
         position: 'relative',
         zIndex: 0,
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
-        padding: '18px 0 24px',
-        borderRadius: '8px',
+        backgroundColor: '$backgroundColors$primary',
+        padding: '$9 0 $12',
+        borderRadius: '$2',
         '&:after': {
           content: '""',
           display: 'block',
@@ -97,12 +86,12 @@ const StyledElementForCardLayout = styled('div', {
       content: {
         position: 'relative',
         zIndex: 1,
-        padding: '0 24px',
+        padding: '0 $12',
       },
     },
     name: {
       liquidity: {
-        padding: '0px 20px 13px',
+        padding: '0 $10 $6',
       },
     },
   },
@@ -115,8 +104,8 @@ const StyledElementForTokens = styled('div', {
   variants: {
     kind: {
       wrapper: {
-        paddingBottom: 22,
-        columnGap: 10,
+        paddingBottom: '$11',
+        columnGap: '$space$5',
       },
       column: {},
     },
@@ -132,8 +121,4 @@ const StyledImageForToken = styled('img', {
   '&:not(&:first-of-type)': {
     marginLeft: -3,
   },
-})
-
-const StyledButton = styled(Button, {
-  width: '100% !important',
 })

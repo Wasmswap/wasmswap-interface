@@ -31,10 +31,10 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
       <StyledDivForColumn kind="info">
         <StyledImageForToken src={logoURI} as={logoURI ? 'img' : 'div'} />
         <div data-token-info="">
-          <Text type="subtitle" variant="bold" textTransform="uppercase">
+          <Text variant="title" transform="uppercase">
             {tokenName}
           </Text>
-          <Text type="microscopic" color="tertiaryText">
+          <Text variant="caption" color="tertiary">
             {formatTokenBalance(availableAmount)} available
           </Text>
         </div>

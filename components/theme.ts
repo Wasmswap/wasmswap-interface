@@ -17,65 +17,74 @@ export const { theme, styled, css } = createStitches({
     colors,
 
     textColors: {
-      primary: '$black',
-      body: '$dark$95',
-      secondary: '$dark$80',
-      tertiary: '$dark$60',
-      disabled: '$dark$40',
-      brand: '$brand$90',
-      error: '$error$90',
-      valid: '$valid$90',
+      white: '$colors$white',
+      primary: '$colors$black',
+      body: '$colors$dark95',
+      secondary: '$colors$dark80',
+      tertiary: '$colors$dark60',
+      disabled: '$colors$dark40',
+      brand: '$colors$brand90',
+      error: '$colors$error90',
+      valid: '$colors$valid90',
     },
 
     iconColors: {
-      primary: Color(colors.dark).alpha(0.9).rgb().string(),
-      secondary: Color(colors.dark).alpha(0.7).rgb().string(),
-      tertiary: Color(colors.dark).alpha(0.5).rgb().string(),
-      disabled: Color(colors.dark).alpha(0.3).rgb().string(),
-      brand: Color(colors.brand).alpha(0.85).rgb().string(),
-      error: Color(colors.error).alpha(0.85).rgb().string(),
-      valid: Color(colors.valid).alpha(0.85).rgb().string(),
+      primary: '$colors$dark90',
+      secondary: '$colors$dark70',
+      tertiary: '$colors$dark50',
+      disabled: '$colors$dark30',
+      brand: '$colors$brand85',
+      error: '$colors$error85',
+      valid: '$colors$valid85',
     },
 
     backgroundColors: {
-      base: Color(colors.dark).alpha(0).rgb().string(),
-      primary: Color(colors.dark).alpha(0.1).rgb().string(),
-      secondary: Color(colors.dark).alpha(0.2).rgb().string(),
-      tertiary: Color(colors.dark).alpha(0.3).rgb().string(),
-      toast: Color(colors.dark).alpha(0.85).rgb().string(),
-      tooltip: Color(colors.dark).alpha(0.95).rgb().string(),
-      tint: Color(colors.secondary).alpha(0.2).rgb().string(),
-      error: Color(colors.error).alpha(0.15).rgb().string(),
-      confirm: Color(colors.valid).alpha(0.2).rgb().string(),
+      base: '$colors$dark0',
+      primary: '$colors$dark10',
+      secondary: '$colors$dark20',
+      tertiary: '$colors$dark30',
+      toast: '$colors$dark85',
+      tooltip: '$colors$dark95',
+      tint: '$colors$secondary20',
+      error: '$colors$error15',
+      confirm: '$colors$valid20',
     },
 
     borderColors: {
-      inactive: Color(colors.dark).alpha(0.1).rgb().string(),
-      default: Color(colors.dark).alpha(0.2).rgb().string(),
-      focus: Color(colors.dark).alpha(0.6).rgb().string(),
-      selected: Color(colors.dark).alpha(0.3).rgb().string(),
-      error: Color(colors.error).alpha(0.6).rgb().string(),
+      inactive: '$colors$dark10',
+      default: '$colors$dark20',
+      focus: '$colors$dark60',
+      selected: '$colors$dark30',
+      error: '$colors$error60',
     },
 
-    spaces: {
+    space: {
       1: '2px',
       2: '4px',
-      3: '8px',
-      4: '12px',
-      5: '14px',
-      6: '16px',
-      7: '18px',
-      8: '20px',
-      9: '22px',
-      10: '24px',
-      11: '28px',
-      12: '32px',
+      3: '6px',
+      4: '8px',
+      5: '10px',
+      6: '12px',
+      7: '14px',
+      8: '16px',
+      9: '18px',
+      10: '20px',
+      11: '22px',
+      12: '24px',
+      13: '26px',
+      14: '28px',
+      15: '30px',
+      16: '32px',
+      17: '34px',
+      18: '36px',
+      19: '38px',
+      20: '40px',
     },
 
     fonts: {
       primary:
         '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-      mono: '"JetBrains Mono", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+      mono: '"JetBrains Mono", monospace, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     },
     fontSizes: {
       1: '26px',
@@ -104,6 +113,7 @@ export const { theme, styled, css } = createStitches({
     borderStyles: {},
     radii: {
       1: '6px',
+      2: '8px',
     },
     shadows: {},
     zIndices: {
@@ -125,13 +135,13 @@ function createColorPalette(
 ): Record<string, string> {
   const colorPalette = { ...colors }
   const alphaValues = [
-    0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7,
-    0.75, 0.8, 0.85, 0.9, 0.95,
+    0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65,
+    0.7, 0.75, 0.8, 0.85, 0.9, 0.95,
   ]
 
   Object.keys(colorPalette).forEach((colorName) => {
     alphaValues.forEach((alphaValue) => {
-      colorPalette[`${colorName}$${parseInt(String(alphaValue * 100), 10)}`] =
+      colorPalette[`${colorName}${parseInt(String(alphaValue * 100), 10)}`] =
         Color(colorPalette[colorName]).alpha(alphaValue).rgb().string()
     })
   })

@@ -47,10 +47,8 @@ export const PoolCard = ({
                 as={tokenB.logoURI ? 'img' : 'div'}
               />
             </StyledDivForTokenLogos>
-            <Text type="caption" variant="light">
-              Pool #{poolId}
-            </Text>
-            <StyledTextForTokenNames type="body" variant="normal">
+            <Text variant="body">Pool #{poolId}</Text>
+            <StyledTextForTokenNames variant="primary">
               {tokenA.symbol} <span /> {tokenB.symbol}
             </StyledTextForTokenNames>
           </StyledDivForRowWrapper>
@@ -62,20 +60,12 @@ export const PoolCard = ({
           <>
             <StyledDivForRowWrapper>
               <StyledDivForRow>
-                <StyledTextForSubtitle
-                  color="secondaryText"
-                  type="caption"
-                  variant="normal"
-                >
+                <Text color="secondary" variant="body">
                   Total liquidity
-                </StyledTextForSubtitle>
-                <StyledTextForSubtitle
-                  color="secondaryText"
-                  type="caption"
-                  variant="normal"
-                >
+                </Text>
+                <Text color="secondary" variant="body">
                   APR
-                </StyledTextForSubtitle>
+                </Text>
               </StyledDivForRow>
               <StyledDivForRow>
                 <Text>{parseCurrency(totalLiquidity.dollarValue)}</Text>
@@ -89,20 +79,12 @@ export const PoolCard = ({
               <StyledDivForSeparator />
               <StyledDivForRowWrapper>
                 <StyledDivForRow>
-                  <StyledTextForSubtitle
-                    color="secondaryText"
-                    type="caption"
-                    variant="normal"
-                  >
+                  <Text color="secondary" variant="body">
                     My liquidity
-                  </StyledTextForSubtitle>
-                  <StyledTextForSubtitle
-                    color="secondaryText"
-                    type="caption"
-                    variant="normal"
-                  >
+                  </Text>
+                  <Text color="secondary" variant="body">
                     Staked
-                  </StyledTextForSubtitle>
+                  </Text>
                 </StyledDivForRow>
                 <StyledDivForRow>
                   <Text>{parseCurrency(myLiquidity.dollarValue)}</Text>
@@ -142,14 +124,14 @@ export const PoolCardFetching = ({ hasLiquidityProvided = true }) => {
 const StyledLinkForCard = styled('a', {
   cursor: 'pointer',
   borderRadius: 8,
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  backgroundColor: '$backgroundColors$primary',
   position: 'relative',
   transition: 'background-color 0.1s ease-out',
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+    backgroundColor: '$colors$dark15',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: '$colors$dark5',
   },
   variants: {
     variant: {
@@ -180,20 +162,20 @@ const StyledImageForTokenLogo = styled('img', {
   position: 'relative',
   zIndex: 0,
   '&:first-child': {
-    boxShadow: '0 0 0 2px #E8E8E9',
+    boxShadow: '0 0 0 $space$1 #E8E8E9',
     zIndex: 1,
   },
 })
 
 const StyledTextForTokenNames: typeof Text = styled(Text, {
-  paddingTop: 5,
-  paddingBottom: 4,
+  paddingTop: '$3',
+  paddingBottom: '$2',
   display: 'flex',
   alignItems: 'center',
   '& span': {
     width: 4,
     height: 4,
-    margin: '0 6px',
+    margin: '0 $3',
     borderRadius: '50%',
     backgroundColor: colorTokens.black,
   },
@@ -217,10 +199,6 @@ const StyledDivForRowWrapper = styled('div', {
 const StyledDivForRow = styled('div', {
   display: 'flex',
   justifyContent: 'space-between',
-})
-
-const StyledTextForSubtitle: typeof Text = styled(Text, {
-  paddingBottom: 4,
 })
 
 const StyledDivForLiquidityRows = styled('div', {

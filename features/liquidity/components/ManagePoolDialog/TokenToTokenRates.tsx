@@ -29,14 +29,14 @@ export const TokenToTokenRates = ({
 
   return (
     <StyledDivForGrid active={isShowing}>
-      <Text type="microscopic" variant="bold" color="disabled" wrap="pre">
+      <Text variant="caption" color="disabled" wrap="pre">
         1 {tokenASymbol} ≈ {formatTokenBalance(conversionRate)} {tokenBSymbol}
         {' ≈ '}$
         {dollarValueFormatterWithDecimals(conversionRateInDollar, {
           includeCommaSeparation: true,
         })}
       </Text>
-      <Text type="microscopic" variant="bold" color="disabled">
+      <Text variant="caption" color="disabled">
         $
         {dollarValueFormatterWithDecimals(dollarValue * 2, {
           includeCommaSeparation: true,

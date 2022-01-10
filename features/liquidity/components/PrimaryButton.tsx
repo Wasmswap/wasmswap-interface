@@ -22,7 +22,7 @@ export const PrimaryButton = ({
   return (
     <StyledButton loading={loading} size={size} {...(props as any)}>
       <Text
-        type={size === ButtonSize.medium ? 'caption' : 'microscopic'}
+        variant={size === ButtonSize.medium ? 'body' : 'caption'}
         color="white"
       >
         {loading ? <Spinner instant /> : children}

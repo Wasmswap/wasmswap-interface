@@ -1,10 +1,7 @@
 import { ForwardedRef, ReactNode, forwardRef } from 'react'
-import Color from 'color'
-import type { VariantProps } from '@stitches/react'
-import { styled, theme, colors } from './theme'
+import type { VariantProps, CSS } from '@stitches/react'
+import { styled } from './theme'
 import { GetRenderAsProps, RenderAsType } from './types'
-
-console.log({ theme })
 
 const StyledButton = styled('button', {
   fontFamily: '$primary',
@@ -14,10 +11,10 @@ const StyledButton = styled('button', {
   justifyContent: 'center',
   whiteSpace: 'pre',
 
+  color: '$textColors$body',
   fontSize: '$6',
   lineHeight: '$3',
-  fontWeight: '$medium',
-  color: '$textColors$body',
+  fontWeight: '$normal',
   borderRadius: '$1',
 
   transition: 'background 0.15s ease-out',
@@ -43,53 +40,53 @@ const StyledButton = styled('button', {
     },
     size: {
       large: {
-        padding: '11px 16px',
+        padding: '$6 $8',
       },
       medium: {
-        padding: '7px 16px',
+        padding: '$4 $8',
+      },
+      small: {
+        padding: '$2 $4',
       },
     },
     variant: {
       primary: {
-        backgroundColor: Color(colors.dark).alpha(0.95).rgb().string(),
+        backgroundColor: '$colors$dark95',
         color: '$white',
         '&:hover': {
           backgroundColor: '$colors$black',
         },
         '&:active': {
-          backgroundColor: Color(colors.dark).alpha(0.85).rgb().string(),
+          backgroundColor: '$colors$dark85',
         },
         '&:focus.focus-visible': {
-          boxShadow: `0 0 0 2px ${Color(colors.dark)
-            .alpha(0.3)
-            .rgb()
-            .string()}`,
+          boxShadow: '0 0 0 2px $borderColors$selected',
         },
       },
       secondary: {
-        backgroundColor: '#e8e9e9',
+        backgroundColor: '$colors$dark10',
         color: '$textColors$primary',
         '&:hover': {
-          backgroundColor: 'rgba(25, 29, 32, 0.2)',
+          backgroundColor: '$colors$dark20',
         },
         '&:active': {
-          backgroundColor: 'rgba(25, 29, 32, 0.05)',
+          backgroundColor: '$colors$dark5',
         },
         '&:focus.focus-visible': {
-          boxShadow: '0 0 0 2px rgba(25, 29, 32, 0.3)',
+          boxShadow: '0 0 0 2px $borderColors$selected',
         },
       },
       ghost: {
-        backgroundColor: 'transparent',
-        color: '#535658',
+        backgroundColor: '$colors$dark0',
+        color: '$textColors$secondary',
         '&:hover': {
-          backgroundColor: 'rgba(25, 29, 32, 0.1)',
+          backgroundColor: '$colors$dark10',
         },
         '&:active': {
-          backgroundColor: 'rgba(25, 29, 32, 0.05)',
+          backgroundColor: '$colors$dark5',
         },
         '&:focus.focus-visible': {
-          boxShadow: '0 0 0 2px rgba(25, 29, 32, 0.3)',
+          boxShadow: '0 0 0 2px $borderColors$selected',
         },
       },
     },
@@ -100,6 +97,12 @@ const StyledButton = styled('button', {
       },
       false: {},
     },
+    allowInteractivity: {
+      true: {
+        pointerEvents: 'unset',
+        cursor: 'pointer',
+      },
+    },
   },
 
   compoundVariants: [
@@ -107,23 +110,23 @@ const StyledButton = styled('button', {
       variant: 'primary',
       disabled: true,
       css: {
-        backgroundColor: Color(colors.dark),
-        color: 'rgba(243, 246, 248, 0.7)',
+        backgroundColor: '$colors$dark30',
+        color: '$colors$light95',
       },
     },
     {
       variant: 'secondary',
       disabled: true,
       css: {
-        backgroundColor: 'rgba(25, 29, 32, 0.05)',
-        color: 'rgba(25, 29, 32, 0.3)',
+        backgroundColor: '$colors$dark5',
+        color: '$textColors$disabled',
       },
     },
     {
       variant: 'ghost',
       disabled: true,
       css: {
-        color: 'rgba(25, 29, 32, 0.3)',
+        color: '$textColors$disabled',
       },
     },
     {
@@ -187,8 +190,7 @@ const StyledButton = styled('button', {
 type ButtonProps<T extends RenderAsType = 'button'> = Omit<
   Omit<VariantProps<typeof StyledButton>, 'icon'> & GetRenderAsProps<T>,
   'iconLeft' | 'iconRight' | 'icon'
-> &
-  (
+> & { css?: CSS } & (
     | {
         children?: ReactNode
         iconLeft?: ReactNode

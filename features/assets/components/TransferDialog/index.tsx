@@ -1,20 +1,20 @@
 import styled from 'styled-components'
-import { Dialog } from '../../../../components/Dialog'
-import { Text } from '../../../../components/Text'
-import { WalletCardWithInput } from './WalletCardWithInput'
-import { WalletCardWithBalance } from './WalletCardWithBalance'
-import { Button } from '../../../../components/Button'
-import React, { useState } from 'react'
-import { TransactionKind } from './types'
-import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useRecoilValue } from 'recoil'
-import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
-import { useTokenBalance } from 'hooks/useTokenBalance'
-import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { useTransferAssetMutation } from './useTransferAssetMutation'
-import { Spinner } from '../../../../components/Spinner'
 import { toast } from 'react-toastify'
 import { useQueryClient } from 'react-query'
+import { Dialog } from 'components/Dialog'
+import { Text } from 'components/Text'
+import { Button } from 'components/Button'
+import { Spinner } from 'components/Spinner'
+import { useRecoilValue } from 'recoil'
+import React, { useState } from 'react'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
+import { WalletCardWithBalance } from './WalletCardWithBalance'
+import { WalletCardWithInput } from './WalletCardWithInput'
+import { useTransferAssetMutation } from './useTransferAssetMutation'
+import { TransactionKind } from './types'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -102,8 +102,8 @@ export const TransferDialog = ({
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <StyledContent>
-        <Text type="title">{capitalizedTransactionType}</Text>
-        <Text paddingTop="24" paddingBottom="18" variant="light">
+        <Text variant="header">{capitalizedTransactionType}</Text>
+        <Text css={{ paddingTop: '$12', paddingBottom: '$9' }} variant="body">
           How many {tokenInfo.name} would you like to {transactionKind}?
         </Text>
         <StyledDivForCards>
@@ -149,9 +149,10 @@ export const TransferDialog = ({
           )}
         </StyledDivForCards>
         <Button
-          size="humongous"
+          size="large"
           disabled={isLoading}
           onClick={isLoading ? undefined : (mutateTransferAsset as () => void)}
+          css={{ width: '100%' }}
         >
           {isLoading ? <Spinner instant /> : capitalizedTransactionType}
         </Button>

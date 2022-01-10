@@ -42,7 +42,7 @@ export const LiquidityInputSelector = ({
 
   return (
     <StyledDivForSelector {...(bind as any)}>
-      <StyledTextForInputWithSymbol ref={refForInputWrapper} variant="light">
+      <StyledTextForInputWithSymbol ref={refForInputWrapper} variant="body">
         <input
           ref={inputRef}
           placeholder="0.0"

@@ -22,7 +22,7 @@ export const SelectorInput = ({
   })
 
   return (
-    <Text variant="bold">
+    <Text css={{ fontWeight: '$bold' }}>
       <StyledInput
         ref={inputRef}
         type="number"

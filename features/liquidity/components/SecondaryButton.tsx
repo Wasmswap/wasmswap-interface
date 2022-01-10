@@ -23,8 +23,8 @@ export const SecondaryButton = ({
         <IconWrapper size="16px" icon={iconBefore} color="secondaryText" />
       )}
       <Text
-        type={size === ButtonSize.medium ? 'caption' : 'microscopic'}
-        color="secondaryText"
+        variant={size === ButtonSize.medium ? 'body' : 'caption'}
+        color="secondary"
       >
         {children}
       </Text>

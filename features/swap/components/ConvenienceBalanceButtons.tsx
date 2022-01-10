@@ -1,4 +1,3 @@
-import { Text } from '../../../components/Text'
 import React from 'react'
 import { styled } from 'components/theme'
 import { Button } from '../../../components/Button'
@@ -30,17 +29,13 @@ export const ConvenienceBalanceButtons = ({
             onChange(amount)
           }}
         >
-          <Text type="subtitle" variant="light">
-            Max
-          </Text>
+          Max
         </StyledButton>
         <StyledButton
           variant="secondary"
           onClick={() => onChange(availableAmount / 2)}
         >
-          <Text type="subtitle" variant="light">
-            1/2
-          </Text>
+          1/2
         </StyledButton>
       </>
     )

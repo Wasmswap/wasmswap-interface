@@ -12,13 +12,13 @@ export const DialogFooter = ({ title, text, buttons }: DialogFooterProps) => {
   return (
     <StyledDivForFooter>
       {title && (
-        <Text type="caption" paddingBottom="8px">
+        <Text variant="body" css={{ paddingBottom: '$4' }}>
           {title}
         </Text>
       )}
 
       {text && (
-        <Text type="caption" variant="light" paddingBottom="24px">
+        <Text variant="body" css={{ paddingBottom: '$12' }}>
           {text}
         </Text>
       )}
@@ -28,12 +28,12 @@ export const DialogFooter = ({ title, text, buttons }: DialogFooterProps) => {
 }
 
 const StyledDivForFooter = styled('div', {
-  padding: '16px 0 24px',
+  padding: '$8 0 $12',
 })
 
 const StyledGridForButtons = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  columnGap: 8,
+  columnGap: '$space$4',
 })

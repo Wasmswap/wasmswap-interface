@@ -124,10 +124,11 @@ const StyledDivForPoolsGrid = styled.div`
 const SectionTitle = ({ variant = 'my', children }) => {
   return (
     <Text
-      type="body"
-      variant="light"
-      paddingBottom="21px"
-      paddingTop={variant === 'all' ? '39px' : '0px'}
+      variant="primary"
+      css={{
+        paddingBottom: '$11',
+        paddingTop: variant === 'all' ? '$19' : '0px',
+      }}
     >
       {children}
     </Text>

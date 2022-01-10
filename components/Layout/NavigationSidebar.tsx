@@ -100,9 +100,9 @@ export function NavigationSidebar() {
           Testnet
         </Text>
         <Text type="caption" variant="light" color="tertiaryText">
-            This website is currently in beta. Please{' '}
+          This website is currently in beta. Please{' '}
           <a
-            href="https://discord.gg/bChdaTKynt"
+            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
             target="blank"
             style={{ textDecoration: 'underline' }}
           >

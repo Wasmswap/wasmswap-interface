@@ -5,19 +5,12 @@ import 'focus-visible'
 
 import type { AppProps } from 'next/app'
 import { RecoilRoot } from 'recoil'
-import { ErrorBoundary } from '../components/ErrorBoundary'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { ErrorBoundary } from 'components/ErrorBoundary'
+import { QueryClientProvider } from 'react-query'
 import { Portal } from '@reach/portal'
 import { ToastContainer } from 'react-toastify'
-import { TestnetDialog } from '../components/TestnetDialog'
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: true,
-    },
-  },
-})
+import { TestnetDialog } from 'components/TestnetDialog'
+import { queryClient } from 'services/queryClient'
 
 function SafeHydrate({ children }) {
   return (

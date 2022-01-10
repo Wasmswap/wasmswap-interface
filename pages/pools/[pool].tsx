@@ -2,24 +2,24 @@ import React, { useState } from 'react'
 import { styled } from 'components/theme'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { AppLayout } from '../../components/Layout/AppLayout'
-import { Text } from '../../components/Text'
-import { Chevron } from '../../icons/Chevron'
-import { IconWrapper } from '../../components/IconWrapper'
+import { AppLayout } from 'components/Layout/AppLayout'
+import { Text } from 'components/Text'
+import { Chevron } from 'icons/Chevron'
+import { IconWrapper } from 'components/IconWrapper'
 import {
   PoolBondedLiquidityCard,
   UnbondingLiquidityCard,
   ManagePoolDialog,
   PoolAvailableLiquidityCard,
-} from '../../features/liquidity'
-import { Button } from '../../components/Button'
-import { getBaseToken, useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
-import { useTokenToTokenPrice } from '../../features/swap/hooks/useTokenToTokenPrice'
-import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
-import { parseCurrency } from '../../features/liquidity/components/PoolCard'
-import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
-import { BondLiquidityDialog } from '../../features/liquidity'
-import { Spinner } from '../../components/Spinner'
+} from 'features/liquidity'
+import { Button } from 'components/Button'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useTokenToTokenPrice } from 'features/swap/hooks/useTokenToTokenPrice'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { parseCurrency } from 'features/liquidity/components/PoolCard'
+import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+import { BondLiquidityDialog } from 'features/liquidity'
+import { Spinner } from 'components/Spinner'
 
 export default function Pool() {
   const {
@@ -31,10 +31,10 @@ export default function Pool() {
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
-  const baseToken = getBaseToken()
+  const baseToken = useBaseTokenInfo()
 
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
-    tokenASymbol: baseToken.symbol,
+    tokenASymbol: baseToken?.symbol,
     tokenBSymbol: tokenInfo?.symbol,
     tokenAmount: 1,
   })

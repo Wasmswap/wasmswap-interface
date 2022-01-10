@@ -15,7 +15,7 @@ import {
   walletState,
 } from '../../../../state/atoms/walletAtoms'
 import { TransactionKind } from './types'
-import { IBCAssetInfo } from '../../../../hooks/useIBCAssetInfo'
+import { IBCAssetInfo } from 'hooks/useIbcAssetList'
 import { defaultExecuteFee } from 'util/fees'
 import { convertDenomToMicroDenom } from 'util/conversion'
 
@@ -67,7 +67,7 @@ export const useTransferAssetMutation = ({
     useRecoilValue(ibcWalletState)
 
   return useMutation(async () => {
-    const timeout = Math.floor((new Date()).getTime()/ 1000) + 120
+    const timeout = Math.floor(new Date().getTime() / 1000) + 120
 
     if (transactionKind == 'deposit') {
       return await ibcClient.sendIbcTokens(

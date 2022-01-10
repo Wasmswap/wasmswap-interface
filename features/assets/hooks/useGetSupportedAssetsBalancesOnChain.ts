@@ -1,9 +1,14 @@
-import { useMemo, useState } from 'react'
-import { ibcAssetList } from '../../../hooks/useIBCAssetInfo'
+import { useMemo } from 'react'
 import { useMultipleTokenBalance } from '../../../hooks/useTokenBalance'
+import { useIBCAssetList } from '../../../hooks/useIbcAssetList'
 
 export const useGetSupportedAssetsBalancesOnChain = () => {
-  const [tokensList] = useState(() => ibcAssetList.map(({ symbol }) => symbol))
+  const [ibcAssetList] = useIBCAssetList()
+  const tokensList = useMemo(
+    () => ibcAssetList?.tokens.map(({ symbol }) => symbol),
+    [ibcAssetList]
+  )
+
   const [tokenBalances, loadingBalances] = useMultipleTokenBalance(tokensList)
 
   const categorizedBalances = useMemo((): [
@@ -11,10 +16,11 @@ export const useGetSupportedAssetsBalancesOnChain = () => {
     typeof tokenBalances
   ] => {
     if (!tokenBalances?.length) {
-      const fallbackTokensList = tokensList.map((tokenSymbol) => ({
-        balance: 0,
-        tokenSymbol,
-      }))
+      const fallbackTokensList =
+        tokensList?.map((tokenSymbol) => ({
+          balance: 0,
+          tokenSymbol,
+        })) ?? []
       return [[], fallbackTokensList]
     }
 

@@ -1,16 +1,16 @@
-import chainInfo from '../public/chain_info.json'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useMutation } from 'react-query'
 import { useEffect } from 'react'
-
-const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
+import { useChainInfo } from './useChainInfo'
 
 export const useConnectWallet = (
   mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
   const [{ status }, setWalletState] = useRecoilState(walletState)
+  const [chainInfo] = useChainInfo()
+
   const mutation = useMutation(async () => {
     if (window && !window?.keplr) {
       alert('Please install Keplr extension and refresh the page.')
@@ -26,17 +26,17 @@ export const useConnectWallet = (
 
     try {
       await window.keplr.experimentalSuggestChain(chainInfo)
-      await window.keplr.enable(chainId)
+      await window.keplr.enable(chainInfo.chainId)
 
-      const offlineSigner = await window.getOfflineSignerAuto(chainId)
+      const offlineSigner = await window.getOfflineSignerAuto(chainInfo.chainId)
 
       const wasmChainClient = await SigningCosmWasmClient.connectWithSigner(
-        process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
+        chainInfo.rpc,
         offlineSigner
       )
 
       const [{ address }] = await offlineSigner.getAccounts()
-      const key = await window.keplr.getKey(chainId)
+      const key = await window.keplr.getKey(chainInfo.chainId)
 
       /* successfully update the wallet state */
       setWalletState({
@@ -61,10 +61,10 @@ export const useConnectWallet = (
 
   useEffect(() => {
     /* restore wallet connection if the state has been set with the */
-    if (status === WalletStatusType.restored) {
+    if (chainInfo?.rpc && status === WalletStatusType.restored) {
       mutation.mutate(null)
     }
-  }, [status]) // eslint-disable-line
+  }, [status, chainInfo?.rpc]) // eslint-disable-line
 
   useEffect(() => {
     function reconnectWallet() {

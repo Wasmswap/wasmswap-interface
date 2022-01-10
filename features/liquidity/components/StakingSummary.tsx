@@ -1,9 +1,9 @@
-import { styled } from 'components/theme'
-import { Text } from '../../../components/Text'
-import { TokenInfo } from '../../../hooks/useTokenInfo'
-import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
-import { dollarValueFormatter, formatTokenBalance } from 'util/conversion'
 import { useRef, useState } from 'react'
+import { styled } from 'components/theme'
+import { Text } from 'components/Text'
+import { TokenInfo } from 'hooks/useTokenList'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { dollarValueFormatter, formatTokenBalance } from 'util/conversion'
 
 type StakingSummaryProps = {
   label: string

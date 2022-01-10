@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query'
 import { getSwapInfo, InfoResponse } from '../services/swap'
 import { useTokenInfo } from './useTokenInfo'
+import { useChainInfo } from './useChainInfo'
 
 type SwapInfo = Pick<
   InfoResponse,
@@ -13,14 +14,12 @@ type SwapInfo = Pick<
 
 export const useSwapInfo = ({ tokenSymbol }) => {
   const tokenInfo = useTokenInfo(tokenSymbol)
+  const [chainInfo] = useChainInfo()
   const { data = {} as Record<string, undefined>, isLoading } =
     useQuery<SwapInfo>(
       `swapInfo/${tokenInfo.swap_address}`,
       async () => {
-        const swap = await getSwapInfo(
-          tokenInfo.swap_address,
-          process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-        )
+        const swap = await getSwapInfo(tokenInfo.swap_address, chainInfo.rpc)
 
         return {
           ...swap,
@@ -30,7 +29,7 @@ export const useSwapInfo = ({ tokenSymbol }) => {
         }
       },
       {
-        enabled: Boolean(tokenInfo.swap_address),
+        enabled: Boolean(tokenInfo?.swap_address && chainInfo?.rpc),
       }
     )
 

@@ -1,10 +1,16 @@
-import { useQuery } from "react-query"
-import { useRecoilValue } from "recoil"
-import { walletState, WalletStatusType } from "state/atoms/walletAtoms"
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from "util/constants"
-import { getClaims, getStakedBalance, getTotalStakedBalance, getUnstakingDuration } from 'services/staking'
-import { convertMicroDenomToDenom } from "util/conversion"
-import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate"
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
+import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
+import {
+  getClaims,
+  getStakedBalance,
+  getTotalStakedBalance,
+  getUnstakingDuration,
+} from 'services/staking'
+import { convertMicroDenomToDenom } from 'util/conversion'
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { useChainInfo } from './useChainInfo'
 
 export const useStakedTokenBalance = (tokenAddress: string) => {
   const { address, status, client } = useRecoilValue(walletState)
@@ -12,7 +18,10 @@ export const useStakedTokenBalance = (tokenAddress: string) => {
   const { data: balance = 0, isLoading } = useQuery(
     [`stakedTokenBalance/${tokenAddress}`, address],
     async () => {
-      return convertMicroDenomToDenom(await getStakedBalance(address, tokenAddress, client),6)
+      return convertMicroDenomToDenom(
+        await getStakedBalance(address, tokenAddress, client),
+        6
+      )
     },
     {
       enabled: Boolean(tokenAddress && status === WalletStatusType.connected),
@@ -26,14 +35,18 @@ export const useStakedTokenBalance = (tokenAddress: string) => {
 }
 
 export const useTotalStaked = (tokenAddress: string) => {
+  const [chainInfo] = useChainInfo()
   const { data: total = 0, isLoading } = useQuery(
     [`totalStaked/${tokenAddress}`],
     async () => {
-        const client = await CosmWasmClient.connect(process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT)
-        return convertMicroDenomToDenom(await getTotalStakedBalance(tokenAddress, client),6)
+      const client = await CosmWasmClient.connect(chainInfo.rpc)
+      return convertMicroDenomToDenom(
+        await getTotalStakedBalance(tokenAddress, client),
+        6
+      )
     },
     {
-      enabled: Boolean(tokenAddress),
+      enabled: Boolean(tokenAddress && chainInfo?.rpc),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,
@@ -49,7 +62,7 @@ export const useClaims = (tokenAddress: string) => {
   const { data: claims = [], isLoading } = useQuery(
     [`claims/${tokenAddress}`, address],
     async () => {
-      return getClaims(address,tokenAddress,client)
+      return getClaims(address, tokenAddress, client)
     },
     {
       enabled: Boolean(tokenAddress && status === WalletStatusType.connected),
@@ -62,14 +75,16 @@ export const useClaims = (tokenAddress: string) => {
 }
 
 export const useUnstakingDuration = (tokenAddress: string) => {
+  const [chainInfo] = useChainInfo()
+
   const { data: duration = 0, isLoading } = useQuery(
     [`unstakingDuration/${tokenAddress}`],
     async () => {
-        const client = await CosmWasmClient.connect(process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT)
-        return getUnstakingDuration(tokenAddress,client)
+      const client = await CosmWasmClient.connect(chainInfo.rpc)
+      return getUnstakingDuration(tokenAddress, client)
     },
     {
-      enabled: Boolean(tokenAddress),
+      enabled: Boolean(tokenAddress && chainInfo?.rpc),
       refetchOnMount: false,
       refetchIntervalInBackground: false,
     }

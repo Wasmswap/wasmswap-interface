@@ -1,18 +1,21 @@
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { useRecoilState } from 'recoil'
 import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { useIBCAssetInfo } from './useIBCAssetInfo'
 import { useMutation } from 'react-query'
 import { useEffect } from 'react'
 
 /* shares very similar logic with `useConnectWallet` and is a subject to refactor */
 export const useConnectIBCWallet = (
+  tokenSymbol: string,
   mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
   const [{ status, tokenSymbol: storedTokenSymbol }, setWalletState] =
     useRecoilState(ibcWalletState)
 
-  const mutation = useMutation(async (tokenSymbol: string) => {
+  const assetInfo = useIBCAssetInfo(tokenSymbol || storedTokenSymbol)
+
+  const mutation = useMutation(async () => {
     if (window && !window?.keplr) {
       alert('Please install Keplr extension and refresh the page.')
       return
@@ -21,6 +24,12 @@ export const useConnectIBCWallet = (
     if (!tokenSymbol) {
       throw new Error(
         'You must provide `tokenSymbol` before connecting to the wallet.'
+      )
+    }
+
+    if (!assetInfo) {
+      throw new Error(
+        'Asset info for the provided `tokenSymbol` was not found. Check your internet connection.'
       )
     }
 
@@ -33,13 +42,13 @@ export const useConnectIBCWallet = (
     }))
 
     try {
-      const { chain_id } = getIBCAssetInfo(tokenSymbol)
+      const { chain_id, rpc } = assetInfo
 
       await window.keplr.enable(chain_id)
       const offlineSigner = await window.getOfflineSigner(chain_id)
 
       const wasmChainClient = await SigningStargateClient.connectWithSigner(
-        'https://cosmoshub.validator.network:443',
+        rpc,
         offlineSigner
       )
 
@@ -67,8 +76,9 @@ export const useConnectIBCWallet = (
 
   useEffect(() => {
     /* restore wallet connection */
-    if (status === WalletStatusType.restored && storedTokenSymbol) {
-      mutation.mutate(storedTokenSymbol)
+    const hasCachedWalletArgs = storedTokenSymbol && assetInfo
+    if (status === WalletStatusType.restored && hasCachedWalletArgs) {
+      mutation.mutate(null)
     }
   }, [status, mutation.mutate, storedTokenSymbol]) // eslint-disable-line
 

@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { Button } from '../../../components/Button'
 import React, { useEffect, useState } from 'react'
@@ -74,14 +74,21 @@ export const TransactionAction = ({
           />
         </StyledDivColumnForInfo>
         <StyledDivColumnForInfo kind="fees">
-          <Text type="microscopic" variant="bold" color="disabled">
+          <Text
+            variant="caption"
+            css={{ fontWeight: '$bold' }}
+            color="disabled"
+          >
             Swap fee ({NETWORK_FEE * 100}%)
           </Text>
         </StyledDivColumnForInfo>
       </StyledDivForInfo>
       <Button
-        type={status === WalletStatusType.connected ? 'primary' : 'disabled'}
+        variant="primary"
         disabled={shouldDisableSubmissionButton}
+        allowInteractivity={
+          shouldDisableSubmissionButton && status !== WalletStatusType.connected
+        }
         onClick={
           !isExecutingTransaction && !isPriceLoading
             ? handleSwapButtonClick
@@ -91,7 +98,7 @@ export const TransactionAction = ({
         {isExecutingTransaction ? (
           <Spinner instant />
         ) : (
-          <Text type="subtitle" color="white" variant="light" paddingY="3px">
+          <Text variant="title" color="white" css={{ padding: '$2 0' }}>
             Swap
           </Text>
         )}

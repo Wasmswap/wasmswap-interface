@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import nativeTokenList from '../../../public/token_list.json'
 import { TokenInfo } from '../../../hooks/useTokenInfo'
 import { Text } from '../../../components/Text'
@@ -27,21 +27,21 @@ export const TokenOptionsList = ({ activeTokenSymbol, onSelect }) => {
                 alt={tokenInfo.symbol}
               />
               <div data-token-info="">
-                <Text type="caption" variant="bold">
+                <Text variant="body" css={{ fontWeight: '$bold' }}>
                   {tokenInfo.symbol}
                 </Text>
-                <Text type="microscopic" variant="normal" color="disabled">
+                <Text variant="caption" color="disabled">
                   {tokenInfo.name}
                 </Text>
               </div>
             </StyledDivForColumn>
             <StyledDivForColumn kind="balance">
-              <Text type="caption" variant="bold">
+              <Text variant="body" css={{ fontWeight: '$bold' }}>
                 <FetchBalanceTextForTokenSymbol
                   tokenSymbol={tokenInfo.symbol}
                 />
               </Text>
-              <Text type="microscopic" variant="normal" color="disabled">
+              <Text variant="caption" color="disabled">
                 available
               </Text>
             </StyledDivForColumn>

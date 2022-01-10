@@ -1,24 +1,15 @@
 import React from 'react'
 import { Text } from '../Text'
-import styled from 'styled-components'
 
 export const PageHeader = ({ title, subtitle }) => {
   return (
     <>
-      <StyledTitle type="title" variant="bold">
+      <Text variant="hero" css={{ padding: '$16 0 $9' }}>
         {title}
-      </StyledTitle>
-      <StyledSubtitle type="body" variant="light">
+      </Text>
+      <Text variant="header" css={{ paddingBottom: '$14' }}>
         {subtitle}
-      </StyledSubtitle>
+      </Text>
     </>
   )
 }
-
-const StyledTitle = styled(Text)`
-  padding: 32px 0 18px;
-`
-
-const StyledSubtitle = styled(Text)`
-  padding-bottom: 29px;
-`

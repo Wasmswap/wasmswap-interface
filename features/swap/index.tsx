@@ -1,7 +1,7 @@
 import { TokenSelector } from './components/TokenSelector'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { tokenSwapAtom } from './swapAtoms'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { TransactionTips } from './components/TransactionTips'
 import { TransactionAction } from './components/TransactionAction'
 import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'

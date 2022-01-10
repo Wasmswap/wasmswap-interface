@@ -36,10 +36,8 @@ export function NavigationSidebar() {
             <Logo data-logo="" width="37px" height="47px" />
             <div data-logo-label="">
               <StyledTextForLogoAnnotation
-                color="#ED5276"
-                paddingBottom="2px"
-                paddingLeft="6px"
-                variant="bold"
+                color="error"
+                css={{ padding: '0 0 $1 $3' }}
               >
                 Testnet
               </StyledTextForLogoAnnotation>
@@ -56,34 +54,19 @@ export function NavigationSidebar() {
         />
 
         <Link href="/" passHref>
-          <StyledLink
-            as="a"
-            type="body"
-            variant="light"
-            $active={getIsActive('/')}
-          >
+          <StyledLink variant="primary" $active={getIsActive('/')}>
             <IconWrapper size="16px" icon={<Address />} />
             <span>Swap</span>
           </StyledLink>
         </Link>
         <Link href="/transfer" passHref>
-          <StyledLink
-            as="a"
-            type="body"
-            variant="light"
-            $active={getIsActive('/transfer')}
-          >
+          <StyledLink variant="primary" $active={getIsActive('/transfer')}>
             <IconWrapper size="16px" icon={<Arrow />} />
             <span>Transfer</span>
           </StyledLink>
         </Link>
         <Link href="/pools" passHref>
-          <StyledLink
-            as="a"
-            type="body"
-            variant="light"
-            $active={getIsActive('/pools')}
-          >
+          <StyledLink variant="primary" $active={getIsActive('/pools')}>
             <IconWrapper size="16px" icon={<Open />} />
             <span>Liquidity</span>
           </StyledLink>
@@ -91,15 +74,10 @@ export function NavigationSidebar() {
       </StyledMenuContainer>
 
       <StyledDivForFooter data-footer="">
-        <Text
-          type="caption"
-          variant="bold"
-          color="tertiaryText"
-          paddingY="12px"
-        >
+        <Text variant="body" color="tertiary" css={{ padding: '$6 0' }}>
           Testnet
         </Text>
-        <Text type="caption" variant="light" color="tertiaryText">
+        <Text variant="body" color="tertiary">
           This website is currently in beta. Please{' '}
           <a
             href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
@@ -153,7 +131,7 @@ const StyledLink = styled(TextAsLink)`
   background-color: ${(p) =>
     p.$active ? 'rgba(25, 29, 32, 0.05)' : 'rgba(25, 29, 32, 0)'};
   backdrop-filter: ${(p) => (p.$active ? 'blur(4px)' : 'unset')};
-  transition: background-color 0.15s ease-out;
+  transition: background-color 0.1s ease-out;
   display: flex;
   align-items: center;
   &:not(&:last-child) {

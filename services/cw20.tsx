@@ -1,6 +1,6 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { Coin } from '@cosmjs/launchpad'
-import { defaultExecuteFee } from 'util/fees'
+import { unsafelyGetDefaultExecuteFee } from 'util/fees'
 
 export type Expiration =
   | { readonly at_height: number }
@@ -108,6 +108,9 @@ export interface CW20Contract {
 
 export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
   const use = (contractAddress: string): CW20Instance => {
+    /* hack: read chain info from query cache */
+    const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+
     const balance = async (address: string): Promise<string> => {
       const result = await client.queryContractSmart(contractAddress, {
         balance: { address },

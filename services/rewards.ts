@@ -2,7 +2,7 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { defaultExecuteFee } from 'util/fees'
+import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const claimRewards = async (
   senderAddress: string,
@@ -14,7 +14,7 @@ export const claimRewards = async (
     senderAddress,
     rewardsAddress,
     msg,
-    defaultExecuteFee,
+    unsafelyGetDefaultExecuteFee(),
     undefined,
     []
   )

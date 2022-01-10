@@ -3,14 +3,14 @@ import {
   swapToken1ForToken2,
   swapToken2ForToken1,
   swapTokenForToken,
-} from '../../../services/swap'
-import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
+} from 'services/swap'
+import { unsafelyGetTokenInfo, useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   TransactionStatus,
   transactionStatusState,
-} from '../../../state/atoms/transactionAtoms'
-import { walletState, WalletStatusType } from '../../../state/atoms/walletAtoms'
+} from 'state/atoms/transactionAtoms'
+import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { useMutation, useQueryClient } from 'react-query'
@@ -33,14 +33,15 @@ export const useTokenSwap = ({
   const slippage = useRecoilValue(slippageAtom)
   const setTokenSwap = useSetRecoilState(tokenSwapAtom)
 
+  const baseToken = useBaseTokenInfo()
+
   const queryClient = useQueryClient()
 
   return useMutation(
     'swapTokens',
     async () => {
-      const tokenA = getTokenInfo(tokenASymbol)
-      const tokenB = getTokenInfo(tokenBSymbol)
-      const baseToken = getBaseToken()
+      const tokenA = unsafelyGetTokenInfo(tokenASymbol)
+      const tokenB = unsafelyGetTokenInfo(tokenBSymbol)
 
       if (status !== WalletStatusType.connected) {
         throw new Error('Please connect your wallet.')

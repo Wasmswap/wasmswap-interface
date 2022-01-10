@@ -2,7 +2,7 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { defaultExecuteFee } from 'util/fees'
+import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const stakeTokens = async (
   senderAddress: string,
@@ -15,7 +15,7 @@ export const stakeTokens = async (
     senderAddress,
     tokenAddress,
     msg,
-    defaultExecuteFee,
+    unsafelyGetDefaultExecuteFee(),
     undefined,
     []
   )
@@ -32,7 +32,7 @@ export const unstakeTokens = async (
     senderAddress,
     tokenAddress,
     msg,
-    defaultExecuteFee,
+    unsafelyGetDefaultExecuteFee(),
     undefined,
     []
   )
@@ -48,7 +48,7 @@ export const claimTokens = async (
     senderAddress,
     tokenAddress,
     msg,
-    defaultExecuteFee,
+    unsafelyGetDefaultExecuteFee(),
     undefined,
     []
   )

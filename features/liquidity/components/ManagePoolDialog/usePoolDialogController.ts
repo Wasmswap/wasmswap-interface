@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
-import { getBaseToken } from 'hooks/useTokenInfo'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMutation } from 'react-query'
@@ -27,7 +27,7 @@ export const usePoolDialogController = ({
   percentage,
   tokenInfo: tokenB,
 }: UsePoolDialogControllerArgs) => {
-  const tokenA = getBaseToken()
+  const tokenA = useBaseTokenInfo()
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
 

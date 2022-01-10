@@ -1,5 +1,9 @@
 import { useQuery } from 'react-query'
-import { getTokenInfo, useBaseTokenInfo, useTokenInfo } from './useTokenInfo'
+import {
+  unsafelyGetTokenInfo,
+  useBaseTokenInfo,
+  useTokenInfo,
+} from './useTokenInfo'
 import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { usePriceForOneToken } from '../features/swap/hooks/usePriceForOneToken'
@@ -45,7 +49,7 @@ export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
     async (): Promise<Array<number>> => {
       const tokenIds = tokenSymbols.map(
         (tokenSymbol) =>
-          (getTokenInfo(tokenSymbol) || getIBCAssetInfo(tokenSymbol)).id
+          (unsafelyGetTokenInfo(tokenSymbol) || getIBCAssetInfo(tokenSymbol)).id
       )
 
       const response = await fetch(getApiUrl(tokenIds), {

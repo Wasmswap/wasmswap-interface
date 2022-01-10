@@ -1,4 +1,4 @@
-import { getBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { unsafelyGetBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { Dialog, StyledCloseIcon } from 'components/Dialog'
 import { Text } from 'components/Text'
 import { styled } from 'components/theme'
@@ -19,7 +19,7 @@ import { StateSwitchButtons } from './StateSwitchButtons'
 import dayjs from 'dayjs'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
-  const baseToken = getBaseToken()
+  const baseToken = unsafelyGetBaseToken()
   const tokenInfo = useTokenInfoByPoolId(poolId)
 
   const [

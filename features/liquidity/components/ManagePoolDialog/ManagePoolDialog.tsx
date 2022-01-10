@@ -10,7 +10,7 @@ import {
   formatTokenBalance,
   protectAgainstNaN,
 } from 'util/conversion'
-import { getBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { usePoolDialogController } from './usePoolDialogController'
 import { TokenToTokenRates } from './TokenToTokenRates'
@@ -39,7 +39,7 @@ export const ManagePoolDialog = ({
   const [addLiquidityPercent, setAddLiquidityPercent] = useState(0)
   const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
 
-  const tokenA = getBaseToken()
+  const tokenA = useBaseTokenInfo()
 
   const {
     state: {

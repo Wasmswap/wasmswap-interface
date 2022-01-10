@@ -4,7 +4,10 @@ import {
   getToken2ForToken1Price,
   getTokenForTokenPrice,
 } from '../../../services/swap'
-import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
+import {
+  unsafelyGetTokenInfo,
+  useBaseTokenInfo,
+} from '../../../hooks/useTokenInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
 import {
   convertDenomToMicroDenom,
@@ -18,6 +21,8 @@ export const useTokenToTokenPrice = ({
   tokenAmount,
 }) => {
   const [chainInfo] = useChainInfo()
+  const baseToken = useBaseTokenInfo()
+
   const { data, isLoading } = useQuery(
     [
       `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
@@ -28,10 +33,9 @@ export const useTokenToTokenPrice = ({
     async ({
       queryKey: [, symbolForTokenA, symbolForTokenB, amount],
     }): Promise<number | undefined> => {
-      const fromTokenInfo = getTokenInfo(symbolForTokenA)
-      const toTokenInfo = getTokenInfo(symbolForTokenB)
+      const fromTokenInfo = unsafelyGetTokenInfo(symbolForTokenA)
+      const toTokenInfo = unsafelyGetTokenInfo(symbolForTokenB)
 
-      const baseToken = getBaseToken()
       const formatPrice = (price) =>
         convertMicroDenomToDenom(price, toTokenInfo.decimals)
 
@@ -70,6 +74,7 @@ export const useTokenToTokenPrice = ({
     {
       enabled: Boolean(
         chainInfo?.rpc &&
+          baseToken &&
           tokenBSymbol &&
           tokenASymbol &&
           tokenAmount > 0 &&

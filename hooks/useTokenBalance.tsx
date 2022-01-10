@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { CW20 } from '../services/cw20'
-import { getTokenInfo } from './useTokenInfo'
+import { unsafelyGetTokenInfo } from './useTokenInfo'
 import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
@@ -72,7 +72,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
           client,
           address,
           token:
-            getTokenInfo(symbol) ||
+            unsafelyGetTokenInfo(symbol) ||
             mapIbcTokenToNative(getIBCAssetInfo(symbol)) ||
             {},
         })
@@ -106,7 +106,7 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
             client,
             address,
             token:
-              getTokenInfo(tokenSymbol) ||
+              unsafelyGetTokenInfo(tokenSymbol) ||
               mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
               {},
           })

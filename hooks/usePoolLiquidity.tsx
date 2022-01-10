@@ -3,11 +3,7 @@ import { getSwapInfo, InfoResponse } from '../services/swap'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
-import {
-  getBaseToken,
-  getTokenInfoByPoolId,
-  useBaseTokenInfo,
-} from './useTokenInfo'
+import { unsafelyGetTokenInfoByPoolId, useBaseTokenInfo } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
@@ -46,7 +42,7 @@ export const useMultiplePoolsLiquidity = ({
     async () => {
       const swaps: Array<InfoResponse> = await Promise.all(
         poolIds
-          .map((poolId) => getTokenInfoByPoolId(poolId).swap_address)
+          .map((poolId) => unsafelyGetTokenInfoByPoolId(poolId).swap_address)
           .map((swap_address) => getSwapInfo(swap_address, chainInfo.rpc))
       )
 
@@ -114,7 +110,7 @@ export const useMultiplePoolsLiquidity = ({
         protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
       ]
 
-      const baseTokenDecimals = getBaseToken().decimals
+      const baseTokenDecimals = baseToken.decimals
 
       const totalLiquidity = {
         coins: lp_token_supply,

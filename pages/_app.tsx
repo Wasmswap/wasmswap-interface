@@ -1,6 +1,7 @@
 import 'normalize.css'
 import 'react-toastify/dist/ReactToastify.css'
 import 'styles/globals.scss'
+import 'focus-visible'
 
 import type { AppProps } from 'next/app'
 import { RecoilRoot } from 'recoil'

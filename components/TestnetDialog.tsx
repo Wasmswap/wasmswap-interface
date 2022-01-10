@@ -1,7 +1,7 @@
 import { Dialog, StyledCloseIcon } from './Dialog'
 import { Text } from './Text'
 import { useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Button } from './Button'
 
 export const TestnetDialog = () => {
@@ -13,16 +13,16 @@ export const TestnetDialog = () => {
     <Dialog isShowing={isShowing} onRequestClose={requestClose} kind="blank">
       <Container>
         <StyledDivForHeader>
-          <Text type="heading" variant="bold">
-            Testnet Warning
-          </Text>
+          <Text variant="header">Testnet Warning</Text>
           <StyledCloseIcon onClick={requestClose} />
         </StyledDivForHeader>
-        <Text paddingBottom="23px" type="caption" variant="light">
+        <Text css={{ paddingBottom: '$12' }} variant="body">
           This app is currently in beta and operating on the Uni testnet. You
           will not be able to trade real assets.
         </Text>
-        <StyledButton onClick={requestClose}>Enter the App</StyledButton>
+        <Button css={{ width: '100%' }} size="large" onClick={requestClose}>
+          Enter the App
+        </Button>
       </Container>
     </Dialog>
   )
@@ -32,14 +32,10 @@ const StyledDivForHeader = styled('div', {
   display: 'grid',
   textAlign: 'center',
   alignItems: 'center',
-  gridTemplateColumns: '1fr 18px',
-  padding: '20px 0 14px',
+  gridTemplateColumns: '1fr $space$9',
+  padding: '$10 0 $7',
 })
 
 const Container = styled('div', {
-  padding: '0 32px 24px',
-})
-
-const StyledButton = styled(Button, {
-  width: '100% !important',
+  padding: '0 $16 $12',
 })

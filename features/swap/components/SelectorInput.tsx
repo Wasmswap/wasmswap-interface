@@ -1,6 +1,6 @@
 import React, { Ref } from 'react'
 import { Text } from 'components/Text'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { useAmountChangeController } from 'hooks/useAmountChangeController'
 
 type SelectorInputProps = {
@@ -22,7 +22,7 @@ export const SelectorInput = ({
   })
 
   return (
-    <Text variant="bold">
+    <Text css={{ fontWeight: '$bold' }}>
       <StyledInput
         ref={inputRef}
         type="number"

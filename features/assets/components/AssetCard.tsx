@@ -61,10 +61,10 @@ export const AssetCard = ({
       <StyledElementForCard kind="content">
         <StyledElementForToken>
           <StyledTokenImage src={logoURI} />
-          <Text type="subtitle" variant="bold">
+          <Text variant="title">
             {balance} {name}{' '}
             {!__TRANSFERS_ENABLED__ && (
-              <Text paddingLeft="16px" as="span" type="subtitle" variant="bold">
+              <Text css={{ paddingLeft: '$8' }} as="span" variant="title">
                 Coming soon
               </Text>
             )}

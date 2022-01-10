@@ -1,5 +1,5 @@
-import { styled } from '@stitches/react'
-import { StyledSecondaryButton } from '../../../components/Button'
+import { styled } from 'components/theme'
+import { Button } from '../../../components/Button'
 import { Text } from '../../../components/Text'
 import type { ButtonProps } from './PrimaryButton'
 import { ButtonSize } from './PrimaryButton'
@@ -18,13 +18,13 @@ export const SecondaryButton = ({
   iconAfter?: ReactNode
 }) => {
   return (
-    <StyledButton size={size} {...(props as any)}>
+    <StyledButton variant="secondary" size={size} {...(props as any)}>
       {iconBefore && (
         <IconWrapper size="16px" icon={iconBefore} color="secondaryText" />
       )}
       <Text
-        type={size === ButtonSize.medium ? 'caption' : 'microscopic'}
-        color="secondaryText"
+        variant={size === ButtonSize.medium ? 'body' : 'caption'}
+        color="secondary"
       >
         {children}
       </Text>
@@ -35,7 +35,7 @@ export const SecondaryButton = ({
   )
 }
 
-const StyledButton = styled(StyledSecondaryButton, {
+const StyledButton = styled(Button, {
   padding: '8px 16px',
   columnGap: 8,
   display: 'flex',

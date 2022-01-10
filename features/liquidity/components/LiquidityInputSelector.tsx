@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { dollarValueFormatter } from '../../../util/conversion'
 import { MouseEvent, Ref, useRef, useState } from 'react'
@@ -42,7 +42,7 @@ export const LiquidityInputSelector = ({
 
   return (
     <StyledDivForSelector {...(bind as any)}>
-      <StyledTextForInputWithSymbol ref={refForInputWrapper} variant="light">
+      <StyledTextForInputWithSymbol ref={refForInputWrapper} variant="body">
         <input
           ref={inputRef}
           placeholder="0.0"

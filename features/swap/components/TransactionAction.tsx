@@ -85,23 +85,15 @@ export const TransactionAction = ({
       </StyledDivForInfo>
       <Button
         variant="primary"
+        size="large"
         disabled={shouldDisableSubmissionButton}
-        allowInteractivity={
-          shouldDisableSubmissionButton && status !== WalletStatusType.connected
-        }
         onClick={
           !isExecutingTransaction && !isPriceLoading
             ? handleSwapButtonClick
             : undefined
         }
       >
-        {isExecutingTransaction ? (
-          <Spinner instant />
-        ) : (
-          <Text variant="title" color="white" css={{ padding: '$2 0' }}>
-            Swap
-          </Text>
-        )}
+        {isExecutingTransaction ? <Spinner instant /> : 'Swap'}
       </Button>
     </StyledDivForWrapper>
   )

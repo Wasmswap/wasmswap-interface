@@ -1,3 +1,3 @@
 export { Address } from './Address'
-export { Arrow } from './Arrow'
+export { ArrowUp } from './ArrowUp'
 export { Open } from './Open'

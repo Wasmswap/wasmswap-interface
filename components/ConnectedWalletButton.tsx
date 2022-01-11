@@ -39,7 +39,7 @@ export const ConnectedWalletButton = ({
   }
 
   return (
-    <StyledWalletButton {...props}>
+    <StyledWalletButton {...props} role="button">
       <IconWrapper size="16px" color="#FE8D9E" icon={<Wallet />} />
       <div data-content="">
         <Text variant="link" color="body">
@@ -102,7 +102,7 @@ const StyledDivForInlineActions = styled('div', {
   columnGap: '$space$2',
 })
 
-const StyledWalletButton = styled('button', {
+const StyledWalletButton = styled('div', {
   position: 'relative',
   transition: 'background-color .1s ease-out, border .1s ease-out',
   display: 'flex',

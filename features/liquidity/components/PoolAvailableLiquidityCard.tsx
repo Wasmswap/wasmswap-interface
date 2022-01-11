@@ -125,11 +125,11 @@ const StyledElementForTokens = styled('div', {
       element: {
         gridTemplateColumns: '20px auto',
         alignItems: 'center',
-        columnGap: '$spaces$3',
+        columnGap: '$space$3',
       },
       wrapper: {
         gridTemplateColumns: '1fr 1fr',
-        columnGap: '$spaces$8',
+        columnGap: '$space$8',
         paddingBottom: '$10',
       },
     },

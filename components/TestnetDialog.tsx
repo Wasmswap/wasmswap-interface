@@ -13,12 +13,13 @@ export const TestnetDialog = () => {
     <Dialog isShowing={isShowing} onRequestClose={requestClose} kind="blank">
       <Container>
         <StyledDivForHeader>
-          <Text variant="header">Testnet Warning</Text>
+          <Text variant="header">Demo mode warning</Text>
           <StyledCloseIcon onClick={requestClose} />
         </StyledDivForHeader>
         <Text css={{ paddingBottom: '$12' }} variant="body">
-          This app is currently in beta and operating on the Uni testnet. You
-          will not be able to trade real assets.
+          This app is currently in beta and operating in demo mode. The app
+          serves only the presentation and testing purposes. You will not be
+          able to trade real assets.
         </Text>
         <Button css={{ width: '100%' }} size="large" onClick={requestClose}>
           Enter the App

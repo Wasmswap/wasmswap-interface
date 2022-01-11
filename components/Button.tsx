@@ -1,9 +1,25 @@
-import { ForwardedRef, ReactNode, forwardRef } from 'react'
+import {
+  ForwardedRef,
+  ReactNode,
+  forwardRef,
+  cloneElement,
+  Children,
+  ReactElement,
+} from 'react'
 import type { VariantProps, CSS } from '@stitches/react'
 import { styled } from './theme'
 import { GetRenderAsProps, RenderAsType } from './types'
 
 const StyledButton = styled('button', {
+  $$textColor: '$textColors$primary',
+  $$iconColor: '$iconColors$primary',
+
+  $$backgroundColor: '$colors$dark10',
+  $$backgroundColorOnHover: '$colors$dark20',
+  $$backgroundColorOnActive: '$colors$dark5',
+
+  $$borderColorOnFocus: '$borderColors$selected',
+
   fontFamily: '$primary',
   display: 'flex',
   flexDirection: 'column',
@@ -11,30 +27,82 @@ const StyledButton = styled('button', {
   justifyContent: 'center',
   whiteSpace: 'pre',
 
-  color: '$textColors$body',
+  color: '$$textColor',
   fontSize: '$6',
   lineHeight: '$3',
   fontWeight: '$normal',
   borderRadius: '$1',
 
+  backgroundColor: '$$backgroundColor',
+
   transition: 'background 0.15s ease-out',
 
+  '&:hover': {
+    backgroundColor: '$$backgroundColorOnHover',
+  },
+  '&:active': {
+    backgroundColor: '$$backgroundColorOnActive',
+  },
+  '&:focus.focus-visible': {
+    boxShadow: '0 0 0 2px $$borderColorOnFocus',
+  },
+
+  '& svg': {
+    color: '$$iconColor',
+  },
+
   variants: {
+    variant: {
+      primary: {
+        $$textColor: '$colors$white',
+        $$iconColor: '$colors$white',
+
+        $$backgroundColor: '$colors$dark95',
+        $$backgroundColorOnHover: '$colors$black',
+        $$backgroundColorOnActive: '$colors$dark85',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+      secondary: {
+        $$textColor: '$textColors$primary',
+        $$iconColor: '$iconColors$primary',
+
+        $$backgroundColor: '$colors$dark10',
+        $$backgroundColorOnHover: '$colors$dark20',
+        $$backgroundColorOnActive: '$colors$dark5',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+      ghost: {
+        $$textColor: '$textColors$secondary',
+        $$iconColor: '$iconColors$primary',
+
+        $$backgroundColor: '$colors$dark0',
+        $$backgroundColorOnHover: '$colors$dark10',
+        $$backgroundColorOnActive: '$colors$dark5',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+    },
+
     icon: {
       left: {
         display: 'grid',
         gridTemplateAreas: '"a b"',
         columnGap: '2px',
+        justifyContent: 'start',
       },
       right: {
         display: 'grid',
         columnGap: '2px',
         gridTemplateAreas: '"a b"',
+        justifyContent: 'space-between',
       },
       both: {
         display: 'grid',
         columnGap: '2px',
         gridTemplateAreas: '"a b c"',
+        justifyContent: 'space-between',
       },
       only: {},
     },
@@ -49,47 +117,7 @@ const StyledButton = styled('button', {
         padding: '$2 $4',
       },
     },
-    variant: {
-      primary: {
-        backgroundColor: '$colors$dark95',
-        color: '$white',
-        '&:hover': {
-          backgroundColor: '$colors$black',
-        },
-        '&:active': {
-          backgroundColor: '$colors$dark85',
-        },
-        '&:focus.focus-visible': {
-          boxShadow: '0 0 0 2px $borderColors$selected',
-        },
-      },
-      secondary: {
-        backgroundColor: '$colors$dark10',
-        color: '$textColors$primary',
-        '&:hover': {
-          backgroundColor: '$colors$dark20',
-        },
-        '&:active': {
-          backgroundColor: '$colors$dark5',
-        },
-        '&:focus.focus-visible': {
-          boxShadow: '0 0 0 2px $borderColors$selected',
-        },
-      },
-      ghost: {
-        backgroundColor: '$colors$dark0',
-        color: '$textColors$secondary',
-        '&:hover': {
-          backgroundColor: '$colors$dark10',
-        },
-        '&:active': {
-          backgroundColor: '$colors$dark5',
-        },
-        '&:focus.focus-visible': {
-          boxShadow: '0 0 0 2px $borderColors$selected',
-        },
-      },
-    },
+
     disabled: {
       true: {
         pointerEvents: 'none',
@@ -110,23 +138,23 @@ const StyledButton = styled('button', {
       variant: 'primary',
       disabled: true,
       css: {
-        backgroundColor: '$colors$dark30',
-        color: '$colors$light95',
+        $$backgroundColor: '$colors$dark30',
+        $$textColor: '$colors$light95',
       },
     },
     {
       variant: 'secondary',
       disabled: true,
       css: {
-        backgroundColor: '$colors$dark5',
-        color: '$textColors$disabled',
+        $$backgroundColor: '$colors$dark5',
+        $$textColor: '$textColors$disabled',
       },
     },
     {
       variant: 'ghost',
       disabled: true,
       css: {
-        color: '$textColors$disabled',
+        $$textColor: '$textColors$disabled',
       },
     },
     {
@@ -179,6 +207,21 @@ const StyledButton = styled('button', {
         padding: '8px 6px',
       },
     },
+
+    {
+      size: 'medium',
+      icon: 'only',
+      css: {
+        padding: '$2 $3',
+      },
+    },
+    {
+      size: 'small',
+      icon: 'only',
+      css: {
+        padding: '0',
+      },
+    },
   ],
 
   defaultVariants: {
@@ -190,18 +233,18 @@ const StyledButton = styled('button', {
 type ButtonProps<T extends RenderAsType = 'button'> = Omit<
   Omit<VariantProps<typeof StyledButton>, 'icon'> & GetRenderAsProps<T>,
   'iconLeft' | 'iconRight' | 'icon'
-> & { css?: CSS } & (
+> & { as?: T; css?: CSS } & (
     | {
         children?: ReactNode
-        iconLeft?: ReactNode
-        iconRight?: ReactNode
+        iconLeft?: ReactElement
+        iconRight?: ReactElement
         icon?: never
       }
     | {
         children?: never
         iconLeft?: never
         iconRight?: never
-        icon?: ReactNode
+        icon?: ReactElement
       }
   )
 
@@ -211,25 +254,36 @@ function ButtonComponent<T extends RenderAsType = 'button'>(
 ) {
   return (
     <StyledButton
-      icon={getIconVariant({ iconLeft, icon, iconRight })}
+      icon={mapIconVariant({ iconLeft, icon, iconRight })}
       ref={ref}
       {...props}
       as={as as any}
     >
       {icon ? (
-        icon
+        cloneElement(Children.only(icon), {
+          color: 'inherit',
+          size: '24px',
+        })
       ) : (
         <>
-          {iconLeft}
+          {iconLeft &&
+            cloneElement(Children.only(iconLeft), {
+              color: 'inherit',
+              size: '24px',
+            })}
           {children}
-          {iconRight}
+          {iconRight &&
+            cloneElement(Children.only(iconRight), {
+              color: 'inherit',
+              size: '24px',
+            })}
         </>
       )}
     </StyledButton>
   )
 }
 
-const getIconVariant = ({
+const mapIconVariant = ({
   iconRight,
   iconLeft,
   icon,

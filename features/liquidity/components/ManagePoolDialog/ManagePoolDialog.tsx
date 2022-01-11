@@ -20,6 +20,8 @@ import { Divider } from '../Divider'
 import { StateSwitchButtons } from '../StateSwitchButtons'
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
+import { Button } from 'components/Button'
+import { IconWrapper } from '../../../../components/IconWrapper'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -212,12 +214,13 @@ function AddLiquidityContent({
           isLoading={isLoading}
         />
       </StyledDivForTxRates>
-      <SecondaryButton
+      <Button
+        variant="secondary"
         onClick={handleApplyMaximumAmount}
-        iconBefore={<PlusIcon />}
+        iconLeft={<IconWrapper icon={<PlusIcon />} />}
       >
         Provide max liquidity
-      </SecondaryButton>
+      </Button>
     </StyledDivForContent>
   )
 }

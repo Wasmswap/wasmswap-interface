@@ -22,7 +22,7 @@ export const AssetsList = ({ onActionClick }) => {
     <>
       {__TRANSFERS_ENABLED__ && (
         <StyledGrid>
-          <Text variant="primary" css={{ paddingBottom: '$9' }}>
+          <Text variant="primary" css={{ paddingBottom: '$4' }}>
             My tokens
           </Text>
           {isLoading ? (

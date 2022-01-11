@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from 'components/theme'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { AppLayout } from 'components/Layout/AppLayout'
@@ -17,7 +18,7 @@ import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useTokenToTokenPrice } from 'features/swap/hooks/useTokenToTokenPrice'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { parseCurrency } from 'features/liquidity/components/PoolCard'
-import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
 import { BondLiquidityDialog } from 'features/liquidity'
 import { Spinner } from 'components/Spinner'
 
@@ -66,6 +67,15 @@ export default function Pool() {
           poolId={pool}
         />
       )}
+
+      {pool && (
+        <Head>
+          <title>
+            {APP_NAME} — Pool {tokenInfo.pool_id}
+          </title>
+        </Head>
+      )}
+
       <AppLayout>
         <StyledWrapperForNavigation>
           <StyledNavElement position="left">
@@ -157,10 +167,7 @@ export default function Pool() {
             <StyledDivForSeparator />
 
             <>
-              <Text
-                css={{ fontWeight: '$bold', padding: '$12 0 $9' }}
-                color="body"
-              >
+              <Text css={{ padding: '$12 0 $9' }} variant="primary">
                 Personal shares
               </Text>
               <StyledDivForCards>
@@ -183,7 +190,7 @@ export default function Pool() {
             </>
 
             <>
-              <Text css={{ padding: '$12 0 $9' }} color="body">
+              <Text variant="primary" css={{ padding: '$12 0 $9' }}>
                 Rewards
               </Text>
               {__POOL_REWARDS_ENABLED__ && (

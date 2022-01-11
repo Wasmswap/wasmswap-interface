@@ -33,7 +33,7 @@ export default function Transfer() {
     updateState({ isTransferDialogShowing: false })
   }
 
-  const { mutate: connectExternalWallet } = useConnectIBCWallet({
+  const { mutate: connectExternalWallet } = useConnectIBCWallet(selectedToken, {
     onError(error) {
       toast.error(
         `Couldn't connect to your wallet to retrieve the address for ${selectedToken}: ${error}`,
@@ -72,7 +72,7 @@ export default function Transfer() {
         await connectInternalWallet(null)
       }
 
-      connectExternalWallet(selectedToken)
+      connectExternalWallet(null)
     }
 
     // connect wallet as soon as a token is selected

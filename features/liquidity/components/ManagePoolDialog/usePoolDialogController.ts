@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
-import { getBaseToken, TokenInfo } from 'hooks/useTokenInfo'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMutation } from 'react-query'
@@ -11,7 +11,9 @@ import {
 } from 'util/conversion'
 import { toast } from 'react-toastify'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { getSwapInfo } from '../../../../services/swap'
+import { getSwapInfo } from 'services/swap'
+import { useChainInfo } from 'hooks/useChainInfo'
+import { TokenInfo } from 'hooks/useTokenList'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -25,7 +27,7 @@ export const usePoolDialogController = ({
   percentage,
   tokenInfo: tokenB,
 }: UsePoolDialogControllerArgs) => {
-  const tokenA = getBaseToken()
+  const tokenA = useBaseTokenInfo()
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
 
@@ -108,12 +110,13 @@ const useMutateLiquidity = ({
 }) => {
   const { address, client } = useRecoilValue(walletState)
   const refetchQueries = useRefetchQueries()
+  const [chainInfo] = useChainInfo()
 
   const mutation = useMutation(
     async () => {
       const { lp_token_address } = await getSwapInfo(
         tokenB.swap_address,
-        process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
+        chainInfo.rpc
       )
 
       const tokenAAmount = percentage * maxApplicableBalanceForTokenA

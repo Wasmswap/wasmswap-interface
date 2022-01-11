@@ -80,7 +80,7 @@ export function NavigationSidebar() {
         <Text variant="body" color="tertiary">
           This website is currently in beta. Please{' '}
           <a
-            href="https://discord.gg/bChdaTKynt"
+            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
             target="blank"
             style={{ textDecoration: 'underline' }}
           >

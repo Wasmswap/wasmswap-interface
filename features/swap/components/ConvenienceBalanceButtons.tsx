@@ -1,7 +1,7 @@
 import React from 'react'
 import { styled } from 'components/theme'
-import { Button } from '../../../components/Button'
-import { getBaseToken } from 'hooks/useTokenInfo'
+import { Button } from 'components/Button'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 
 type ConvenienceBalanceButtonsProps = {
   disabled?: boolean
@@ -16,6 +16,7 @@ export const ConvenienceBalanceButtons = ({
   disabled,
   onChange,
 }: ConvenienceBalanceButtonsProps) => {
+  const baseToken = useBaseTokenInfo()
   return (
     !disabled && (
       <>
@@ -23,7 +24,7 @@ export const ConvenienceBalanceButtons = ({
           variant="secondary"
           onClick={() => {
             let amount =
-              tokenSymbol === getBaseToken().symbol
+              tokenSymbol === baseToken?.symbol
                 ? availableAmount - 0.025
                 : availableAmount
             onChange(amount)

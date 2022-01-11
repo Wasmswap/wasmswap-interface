@@ -1,4 +1,3 @@
-import { getBaseToken } from 'hooks/useTokenInfo'
 import { atom } from 'recoil'
 
 export type TokenItemState = {
@@ -10,7 +9,7 @@ export const tokenSwapAtom = atom<[TokenItemState, TokenItemState]>({
   key: 'tokenSwap',
   default: [
     {
-      tokenSymbol: getBaseToken().symbol,
+      tokenSymbol: null,
       amount: 0,
     },
     {

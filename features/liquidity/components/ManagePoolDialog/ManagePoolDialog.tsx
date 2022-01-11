@@ -1,5 +1,6 @@
-import { styled } from 'components/theme'
+import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
+import { styled } from 'components/theme'
 import { Dialog, StyledCloseIcon } from 'components/Dialog'
 import { Text } from 'components/Text'
 import { LiquidityInput } from 'components/LiquidityInput'
@@ -9,12 +10,9 @@ import {
   formatTokenBalance,
   protectAgainstNaN,
 } from 'util/conversion'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { usePoolDialogController } from './usePoolDialogController'
-import { useEffect, useRef, useState } from 'react'
-import {
-  getBaseToken,
-  useTokenInfoByPoolId,
-} from '../../../../hooks/useTokenInfo'
 import { TokenToTokenRates } from './TokenToTokenRates'
 import { SecondaryButton } from '../SecondaryButton'
 import { PrimaryButton } from '../PrimaryButton'
@@ -22,7 +20,6 @@ import { Divider } from '../Divider'
 import { StateSwitchButtons } from '../StateSwitchButtons'
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
-import { useTokenDollarValue } from '../../../../hooks/useTokenDollarValue'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -42,7 +39,7 @@ export const ManagePoolDialog = ({
   const [addLiquidityPercent, setAddLiquidityPercent] = useState(0)
   const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
 
-  const tokenA = getBaseToken()
+  const tokenA = useBaseTokenInfo()
 
   const {
     state: {

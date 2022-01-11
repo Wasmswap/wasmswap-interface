@@ -8,13 +8,13 @@ export const FooterBar = () => (
   <StyledRow $fullWidth>
     <GithubIcon />
     <StyledLink
-      href="https://github.com/Wasmswap/wasmswap-interface"
+      href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
       target="__blank"
     >
       Interface
     </StyledLink>
     <StyledLink
-      href="https://github.com/ben2x4/crustacean-swap"
+      href={process.env.NEXT_PUBLIC_CONTRACTS_GITHUB_LINK}
       target="__blank"
     >
       Smart Contract

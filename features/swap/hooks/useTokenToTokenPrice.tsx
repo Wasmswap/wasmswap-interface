@@ -4,18 +4,25 @@ import {
   getToken2ForToken1Price,
   getTokenForTokenPrice,
 } from '../../../services/swap'
-import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
+import {
+  unsafelyGetTokenInfo,
+  useBaseTokenInfo,
+} from '../../../hooks/useTokenInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
 import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from 'util/conversion'
+import { useChainInfo } from '../../../hooks/useChainInfo'
 
 export const useTokenToTokenPrice = ({
   tokenASymbol,
   tokenBSymbol,
   tokenAmount,
 }) => {
+  const [chainInfo] = useChainInfo()
+  const baseToken = useBaseTokenInfo()
+
   const { data, isLoading } = useQuery(
     [
       `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
@@ -26,10 +33,9 @@ export const useTokenToTokenPrice = ({
     async ({
       queryKey: [, symbolForTokenA, symbolForTokenB, amount],
     }): Promise<number | undefined> => {
-      const fromTokenInfo = getTokenInfo(symbolForTokenA)
-      const toTokenInfo = getTokenInfo(symbolForTokenB)
+      const fromTokenInfo = unsafelyGetTokenInfo(symbolForTokenA)
+      const toTokenInfo = unsafelyGetTokenInfo(symbolForTokenB)
 
-      const baseToken = getBaseToken()
       const formatPrice = (price) =>
         convertMicroDenomToDenom(price, toTokenInfo.decimals)
 
@@ -43,7 +49,7 @@ export const useTokenToTokenPrice = ({
           await getToken1ForToken2Price({
             nativeAmount: convertedTokenAmount,
             swapAddress: toTokenInfo.swap_address,
-            rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+            rpcEndpoint: chainInfo.rpc,
           })
         )
       } else if (toTokenInfo.symbol === baseToken.symbol) {
@@ -51,7 +57,7 @@ export const useTokenToTokenPrice = ({
           await getToken2ForToken1Price({
             tokenAmount: convertedTokenAmount,
             swapAddress: fromTokenInfo.swap_address,
-            rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+            rpcEndpoint: chainInfo.rpc,
           })
         )
       }
@@ -61,13 +67,15 @@ export const useTokenToTokenPrice = ({
           tokenAmount: convertedTokenAmount,
           swapAddress: fromTokenInfo.swap_address,
           outputSwapAddress: toTokenInfo.swap_address,
-          rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT as string,
+          rpcEndpoint: chainInfo.rpc,
         })
       )
     },
     {
       enabled: Boolean(
-        tokenBSymbol &&
+        chainInfo?.rpc &&
+          baseToken &&
+          tokenBSymbol &&
           tokenASymbol &&
           tokenAmount > 0 &&
           tokenBSymbol !== tokenASymbol

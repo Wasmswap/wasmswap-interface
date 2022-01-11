@@ -1,0 +1,51 @@
+{
+  "chainId": "testing",
+  "chainName": "Juno Local",
+  "rpc": "http://localhost:26657/",
+  "rest": "http://localhost:1317/",
+  "stakeCurrency": {
+    "coinDenom": "JUNO",
+    "coinMinimalDenom": "ujuno",
+    "coinDecimals": 6,
+    "coinGeckoId": "juno-network"
+  },
+  "bip44": {
+    "coinType": 118
+  },
+  "bech32Config": {
+    "bech32PrefixAccAddr": "juno",
+    "bech32PrefixAccPub": "junopub",
+    "bech32PrefixValAddr": "junovaloper",
+    "bech32PrefixValPub": "junovaloperpub",
+    "bech32PrefixConsAddr": "junovalcons",
+    "bech32PrefixConsPub": "junovalconspub"
+  },
+  "currencies": [
+    {
+      "coinDenom": "JUNO",
+      "coinMinimalDenom": "ujuno",
+      "coinDecimals": 6,
+      "coinGeckoId": "juno-network"
+    },
+    {
+      "coinDenom": "COSM",
+      "coinMinimalDenom": "ucosm",
+      "coinDecimals": 6
+    }
+  ],
+  "feeCurrencies": [
+    {
+      "coinDenom": "JUNO",
+      "coinMinimalDenom": "ujuno",
+      "coinDecimals": 6,
+      "coinGeckoId": "juno-network"
+    }
+  ],
+  "coinType": 118,
+  "gasPriceStep": {
+    "low": 0.025,
+    "average": 0.05,
+    "high": 0.1
+  },
+  "features": ["cosmwasm"]
+}

@@ -10,14 +10,12 @@ import Long from 'long'
 import { MsgTransfer } from 'cosmjs-types/ibc/applications/transfer/v1/tx'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import {
-  ibcWalletState,
-  walletState,
-} from '../../../../state/atoms/walletAtoms'
+import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { TransactionKind } from './types'
-import { IBCAssetInfo } from '../../../../hooks/useIBCAssetInfo'
-import { defaultExecuteFee } from 'util/fees'
+import { IBCAssetInfo } from 'hooks/useIbcAssetList'
+import { getDefaultExecuteFee } from 'util/fees'
 import { convertDenomToMicroDenom } from 'util/conversion'
+import { useChainInfo } from 'hooks/useChainInfo'
 
 type UseTransferAssetMutationArgs = {
   transactionKind: TransactionKind
@@ -66,8 +64,12 @@ export const useTransferAssetMutation = ({
   const { address: ibcAddress, client: ibcClient } =
     useRecoilValue(ibcWalletState)
 
+  const [chainInfo] = useChainInfo()
+
   return useMutation(async () => {
-    const timeout = Math.floor((new Date()).getTime()/ 1000) + 120
+    const timeout = Math.floor(new Date().getTime() / 1000) + 120
+
+    const defaultExecuteFee = getDefaultExecuteFee(chainInfo.feeCurrencies)
 
     if (transactionKind == 'deposit') {
       return await ibcClient.sendIbcTokens(

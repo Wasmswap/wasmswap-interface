@@ -11,6 +11,7 @@ import { Portal } from '@reach/portal'
 import { ToastContainer } from 'react-toastify'
 import { TestnetDialog } from 'components/TestnetDialog'
 import { queryClient } from 'services/queryClient'
+import { __TEST_MODE__ } from '../util/constants'
 
 function SafeHydrate({ children }) {
   return (
@@ -27,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <SafeHydrate>
           <ErrorBoundary>
             <Component {...pageProps} />
-            <TestnetDialog />
+            {__TEST_MODE__ && <TestnetDialog />}
             <Portal>
               <ToastContainer
                 position="top-right"

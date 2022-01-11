@@ -1,16 +1,22 @@
-import React, { ForwardedRef, forwardRef } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import Link from 'next/link'
+import { Button } from '../Button'
 import { Text } from '../Text'
 import { useConnectWallet } from '../../hooks/useConnectWallet'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from '../../state/atoms/walletAtoms'
 import { useRouter } from 'next/router'
-import { Address, Arrow, Open } from '../../icons'
+import { Address, ArrowUp, Open } from '../../icons'
 import { IconWrapper } from '../IconWrapper'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
 import { Logo } from '../../icons/Logo'
 import { LogoText } from '../../icons/LogoText'
+import { Github } from '../../icons/Github'
+import { Discord } from '../../icons/Discord'
+import { Telegram } from '../../icons/Telegram'
+import { Twitter } from '../../icons/Twitter'
+import { styled, theme } from '../theme'
+import { __TEST_MODE__ } from '../../util/constants'
 
 export function NavigationSidebar() {
   const { mutate: connectWallet } = useConnectWallet()
@@ -26,7 +32,14 @@ export function NavigationSidebar() {
   }
 
   const { pathname } = useRouter()
-  const getIsActive = (path) => pathname === path
+  const getActiveStylesIfActive = (path) =>
+    pathname === path ? { backgroundColor: '$dark5' } : undefined
+
+  const buttonIconCss = {
+    '& svg': {
+      color: '$iconColors$tertiary',
+    },
+  }
 
   return (
     <StyledWrapper>
@@ -35,141 +48,160 @@ export function NavigationSidebar() {
           <StyledDivForLogo as="a">
             <Logo data-logo="" width="37px" height="47px" />
             <div data-logo-label="">
-              <StyledTextForLogoAnnotation
+              <Text
+                variant="caption"
                 color="error"
-                css={{ padding: '0 0 $1 $3' }}
+                css={{ padding: '0 0 $1 0' }}
               >
-                Testnet
-              </StyledTextForLogoAnnotation>
+                {__TEST_MODE__ ? 'Testnet' : 'Beta'}
+              </Text>
               <LogoText />
             </div>
           </StyledDivForLogo>
         </Link>
 
-        <StyledConnectedWalletButton
+        <ConnectedWalletButton
           connected={Boolean(key?.name)}
           walletName={key?.name}
           onConnect={() => connectWallet(null)}
           onDisconnect={resetWalletConnection}
+          css={{ marginBottom: '$6' }}
         />
 
-        <Link href="/" passHref>
-          <StyledLink variant="primary" $active={getIsActive('/')}>
-            <IconWrapper size="16px" icon={<Address />} />
-            <span>Swap</span>
-          </StyledLink>
-        </Link>
-        <Link href="/transfer" passHref>
-          <StyledLink variant="primary" $active={getIsActive('/transfer')}>
-            <IconWrapper size="16px" icon={<Arrow />} />
-            <span>Transfer</span>
-          </StyledLink>
-        </Link>
-        <Link href="/pools" passHref>
-          <StyledLink variant="primary" $active={getIsActive('/pools')}>
-            <IconWrapper size="16px" icon={<Open />} />
-            <span>Liquidity</span>
-          </StyledLink>
-        </Link>
+        <StyledListForLinks>
+          <Link href="/" passHref>
+            <Button
+              as="a"
+              variant="ghost"
+              iconLeft={<IconWrapper icon={<Address />} />}
+              css={getActiveStylesIfActive('/')}
+            >
+              Swap
+            </Button>
+          </Link>
+          <Link href="/transfer" passHref>
+            <Button
+              as="a"
+              variant="ghost"
+              iconLeft={<IconWrapper icon={<ArrowUp />} />}
+              css={getActiveStylesIfActive('/transfer')}
+            >
+              Transfer
+            </Button>
+          </Link>
+          <Link href="/pools" passHref>
+            <Button
+              as="a"
+              variant="ghost"
+              iconLeft={<IconWrapper icon={<Open />} />}
+              css={getActiveStylesIfActive('/pools')}
+            >
+              Liquidity
+            </Button>
+          </Link>
+        </StyledListForLinks>
       </StyledMenuContainer>
-
       <StyledDivForFooter data-footer="">
-        <Text variant="body" color="tertiary" css={{ padding: '$6 0' }}>
-          Testnet
-        </Text>
-        <Text variant="body" color="tertiary">
-          This website is currently in beta. Please{' '}
-          <a
-            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
-            target="blank"
-            style={{ textDecoration: 'underline' }}
-          >
-            provide feedback
-          </a>
-          .
-        </Text>
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_DISCORD_LINK}
+          target="__blank"
+          icon={
+            <IconWrapper
+              icon={<Discord />}
+              color={theme.iconColors.tertiary.value}
+            />
+          }
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
+          target="__blank"
+          icon={<IconWrapper icon={<Telegram />} />}
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_TWITTER_LINK}
+          target="__blank"
+          icon={
+            <IconWrapper
+              icon={<Twitter />}
+              color={theme.iconColors.tertiary.value}
+            />
+          }
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
+          target="__blank"
+          icon={
+            <IconWrapper
+              icon={<Github />}
+              color={theme.iconColors.tertiary.value}
+            />
+          }
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
       </StyledDivForFooter>
     </StyledWrapper>
   )
 }
 
-const TextAsLink = forwardRef(function TextAsLinkComponent(
-  props,
-  ref: ForwardedRef<any>
-) {
-  return <Text as="a" {...props} ref={ref} />
+const StyledWrapper = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  padding: '0 $16',
+  backgroundColor: '$white',
+  overflow: 'auto',
+  borderRight: '1px solid $borderColors$inactive',
+
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  maxHeight: '100vh',
 })
 
-const StyledWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0 32px;
-  background-color: #ffffff;
-  overflow: auto;
-  border-right: 1px solid #eaeaea;
+const StyledMenuContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+  zIndex: '$2',
+  padding: '$10 0',
+})
 
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
-`
+const StyledListForLinks = styled('div', {
+  display: 'flex',
+  rowGap: '$space$2',
+  flexDirection: 'column',
+})
 
-const StyledMenuContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
-  padding: 21px 0;
-`
+const StyledDivForFooter = styled('div', {
+  display: 'flex',
+  columnGap: '$space$2',
+  padding: '$13 0',
+})
 
-const StyledLink = styled(TextAsLink)`
-  padding: 10px 10px;
-  border-radius: 6px;
-  background-color: ${(p) =>
-    p.$active ? 'rgba(25, 29, 32, 0.05)' : 'rgba(25, 29, 32, 0)'};
-  backdrop-filter: ${(p) => (p.$active ? 'blur(4px)' : 'unset')};
-  transition: background-color 0.1s ease-out;
-  display: flex;
-  align-items: center;
-  &:not(&:last-child) {
-    margin-bottom: 2px;
-  }
-  &:hover {
-    background-color: rgba(25, 29, 32, 0.1);
-  }
-  &:active {
-    background-color: rgba(25, 29, 32, 0.05);
-  }
-  & span {
-    margin-left: 10px;
-  }
-`
-
-const StyledTextForLogoAnnotation = styled(Text)`
-  font-size: 11px;
-  line-height: 13px;
-`
-
-const StyledDivForFooter = styled.div`
-  padding-bottom: 29px;
-  position: relative;
-  z-index: 1;
-`
-
-const StyledConnectedWalletButton = styled(ConnectedWalletButton)`
-  margin-bottom: 8px;
-`
-
-const StyledDivForLogo = styled.div`
-  display: grid;
-  grid-template-columns: 37px 1fr;
-  column-gap: 9px;
-  align-items: center;
-  padding-bottom: 16px;
-  & [data-logo] {
-    margin-bottom: 4px;
-  }
-`
+const StyledDivForLogo = styled('div', {
+  display: 'grid',
+  gridTemplateColumns: '37px 1fr',
+  columnGap: '$space$4',
+  alignItems: 'center',
+  paddingBottom: '$8',
+  '& [data-logo]': {
+    marginBottom: '$2',
+  },
+})

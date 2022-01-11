@@ -8,62 +8,66 @@ const StyledText = styled('p', {
   margin: 0,
   padding: 0,
 
+  $$color: '$textColors$primary',
+  color: '$$color',
+
   variants: {
     variant: {
       hero: {
+        $$color: '$textColors$primary',
         fontSize: '$1',
         lineHeight: '$1',
         fontWeight: '$bold',
-        color: '$textColors$primary',
       },
       header: {
+        $$color: '$textColors$primary',
         fontSize: '$2',
         lineHeight: '$2',
         fontWeight: '$semiBold',
-        color: '$textColors$primary',
       },
       title: {
+        $$color: '$textColors$primary',
         fontSize: '$3',
         lineHeight: '$3',
         fontWeight: '$semiBold',
-        color: '$textColors$primary',
       },
       primary: {
+        $$color: '$textColors$body',
         fontSize: '$4',
         lineHeight: '$3',
         fontWeight: '$normal',
-        color: '$textColors$body',
       },
       body: {
+        $$color: '$textColors$body',
         fontSize: '$5',
         lineHeight: '$3',
         fontWeight: '$light',
-        color: '$textColors$body',
       },
       link: {
+        $$color: '$textColors$body',
         fontSize: '$6',
         lineHeight: '$3',
         fontWeight: '$normal',
-        color: '$textColors$body',
       },
       secondary: {
+        $$color: '$textColors$secondary',
         fontSize: '$6',
         lineHeight: '$4',
         fontWeight: '$light',
         color: '$textColors$secondary',
       },
       legend: {
+        $$color: '$textColors$secondary',
         fontSize: '$7',
         lineHeight: '$4',
         fontWeight: '$light',
-        color: '$textColors$secondary',
         fontFamily: '$mono',
       },
       caption: {
+        $$color: '$textColors$tertiary',
         fontSize: '$7',
         lineHeight: '$4',
         fontWeight: '$light',
-        color: '$textColors$tertiary',
       },
     },
     color: Object.assign(
@@ -76,7 +80,7 @@ const StyledText = styled('p', {
         (colorVariants, textColorName) => ({
           ...colorVariants,
           [textColorName]: {
-            color: theme.textColors[textColorName].value,
+            $$color: theme.textColors[textColorName].value,
           },
         }),
         {} as Record<keyof typeof theme['textColors'], { color: string }>

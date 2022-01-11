@@ -21,7 +21,7 @@ export const useConnectIBCWallet = (
       return
     }
 
-    if (!tokenSymbol) {
+    if (!tokenSymbol && !storedTokenSymbol) {
       throw new Error(
         'You must provide `tokenSymbol` before connecting to the wallet.'
       )
@@ -74,18 +74,19 @@ export const useConnectIBCWallet = (
     }
   }, mutationOptions)
 
+  const connectWallet = mutation.mutate
+
   useEffect(() => {
     /* restore wallet connection */
-    const hasCachedWalletArgs = storedTokenSymbol && assetInfo
-    if (status === WalletStatusType.restored && hasCachedWalletArgs) {
-      mutation.mutate(null)
+    if (status === WalletStatusType.restored && assetInfo) {
+      connectWallet(null)
     }
-  }, [status, mutation.mutate, storedTokenSymbol]) // eslint-disable-line
+  }, [status, connectWallet, assetInfo])
 
   useEffect(() => {
     function reconnectWallet() {
-      if (storedTokenSymbol && status === WalletStatusType.connected) {
-        mutation.mutate(storedTokenSymbol)
+      if (assetInfo && status === WalletStatusType.connected) {
+        connectWallet(null)
       }
     }
 
@@ -93,7 +94,7 @@ export const useConnectIBCWallet = (
     return () => {
       window.removeEventListener('keplr_keystorechange', reconnectWallet)
     }
-  }, [storedTokenSymbol, status]) // eslint-disable-line
+  }, [connectWallet, status, assetInfo])
 
   return mutation
 }

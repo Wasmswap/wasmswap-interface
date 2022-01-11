@@ -15,7 +15,7 @@ import { Github } from '../../icons/Github'
 import { Discord } from '../../icons/Discord'
 import { Telegram } from '../../icons/Telegram'
 import { Twitter } from '../../icons/Twitter'
-import { styled, theme } from '../theme'
+import { styled } from '../theme'
 import { __TEST_MODE__ } from '../../util/constants'
 
 export function NavigationSidebar() {

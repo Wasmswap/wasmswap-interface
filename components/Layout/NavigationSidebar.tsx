@@ -106,12 +106,7 @@ export function NavigationSidebar() {
           as="a"
           href={process.env.NEXT_PUBLIC_DISCORD_LINK}
           target="__blank"
-          icon={
-            <IconWrapper
-              icon={<Discord />}
-              color={theme.iconColors.tertiary.value}
-            />
-          }
+          icon={<IconWrapper icon={<Discord />} />}
           variant="ghost"
           size="medium"
           css={buttonIconCss}
@@ -129,12 +124,7 @@ export function NavigationSidebar() {
           as="a"
           href={process.env.NEXT_PUBLIC_TWITTER_LINK}
           target="__blank"
-          icon={
-            <IconWrapper
-              icon={<Twitter />}
-              color={theme.iconColors.tertiary.value}
-            />
-          }
+          icon={<IconWrapper icon={<Twitter />} />}
           variant="ghost"
           size="medium"
           css={buttonIconCss}
@@ -143,12 +133,7 @@ export function NavigationSidebar() {
           as="a"
           href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
           target="__blank"
-          icon={
-            <IconWrapper
-              icon={<Github />}
-              color={theme.iconColors.tertiary.value}
-            />
-          }
+          icon={<IconWrapper icon={<Github />} />}
           variant="ghost"
           size="medium"
           css={buttonIconCss}

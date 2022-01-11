@@ -6,7 +6,7 @@ import {
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
 import { coin, StdFee, isDeliverTxFailure } from '@cosmjs/stargate'
-import { defaultExecuteFee } from 'util/fees'
+import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export type AddLiquidityInput = {
   nativeAmount: number
@@ -29,6 +29,8 @@ export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
       min_liquidity: `${input.minLiquidity}`,
     },
   }
+
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
 
   if (!input.tokenNative) {
     const msg1 = {
@@ -132,6 +134,7 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
       funds: [],
     }),
   }
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
   const fee: StdFee = {
     amount: defaultExecuteFee.amount,
     gas: (Number(defaultExecuteFee.gas) * 2).toString(),

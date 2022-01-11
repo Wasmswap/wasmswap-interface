@@ -6,8 +6,8 @@ import {
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
 import { StdFee, coin, isDeliverTxFailure } from '@cosmjs/stargate'
-import { defaultExecuteFee } from 'util/fees'
-import { getBaseToken } from 'hooks/useTokenInfo'
+import { unsafelyGetBaseToken } from 'hooks/useTokenInfo'
+import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export interface swapToken1ForToken2Input {
   nativeAmount: number
@@ -31,9 +31,9 @@ export const swapToken1ForToken2 = async (input: swapToken1ForToken2Input) => {
     input.senderAddress,
     input.swapAddress,
     msg,
-    defaultExecuteFee,
+    unsafelyGetDefaultExecuteFee(),
     undefined,
-    [coin(input.nativeAmount, getBaseToken().denom)]
+    [coin(input.nativeAmount, unsafelyGetBaseToken().denom)]
   )
 }
 
@@ -53,6 +53,8 @@ export const swapToken2ForToken1 = async (
   input: swapToken2ForToken1Input
 ): Promise<any> => {
   const minNative = Math.floor(input.price * (1 - input.slippage))
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+
   let swap_msg = {
     swap: {
       input_token: 'Token2',
@@ -60,6 +62,7 @@ export const swapToken2ForToken1 = async (
       min_output: `${minNative}`,
     },
   }
+
   if (!input.token2_native) {
     let msg1 = {
       increase_allowance: {
@@ -130,6 +133,8 @@ export const swapTokenForToken = async (
   input: swapTokenForTokenInput
 ): Promise<any> => {
   const minOutputToken = Math.floor(input.price * (1 - input.slippage))
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+
   const swapMsg = {
     pass_through_swap: {
       output_min_token: `${minOutputToken}`,

@@ -3,10 +3,11 @@ import { getSwapInfo, InfoResponse } from '../services/swap'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
-import { getBaseToken, getTokenInfoByPoolId } from './useTokenInfo'
+import { unsafelyGetTokenInfoByPoolId, useBaseTokenInfo } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { useChainInfo } from './useChainInfo'
 
 export type LiquidityType = {
   coins: number
@@ -34,19 +35,15 @@ export const useMultiplePoolsLiquidity = ({
   poolIds,
 }): readonly [LiquidityInfoType[] | undefined, boolean] => {
   const { address } = useRecoilValue(walletState)
+  const [chainInfo] = useChainInfo()
 
   const { data: swaps = [], isLoading: fetchingSwaps } = useQuery(
     `swapInfo/${poolIds?.join('+')}`,
     async () => {
       const swaps: Array<InfoResponse> = await Promise.all(
         poolIds
-          .map((poolId) => getTokenInfoByPoolId(poolId).swap_address)
-          .map((swap_address) =>
-            getSwapInfo(
-              swap_address,
-              process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT
-            )
-          )
+          .map((poolId) => unsafelyGetTokenInfoByPoolId(poolId).swap_address)
+          .map((swap_address) => getSwapInfo(swap_address, chainInfo.rpc))
       )
 
       return swaps.map((swap) => ({
@@ -57,7 +54,7 @@ export const useMultiplePoolsLiquidity = ({
       }))
     },
     {
-      enabled: Boolean(poolIds?.length),
+      enabled: Boolean(poolIds?.length && chainInfo?.rpc),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,
@@ -77,7 +74,7 @@ export const useMultiplePoolsLiquidity = ({
           getLiquidityBalance({
             address: address,
             tokenAddress: lp_token_address,
-            rpcEndpoint: process.env.NEXT_PUBLIC_CHAIN_RPC_ENDPOINT,
+            rpcEndpoint: chainInfo.rpc,
           })
         )
       )
@@ -85,14 +82,15 @@ export const useMultiplePoolsLiquidity = ({
       return balances.map((balance) => Number(balance))
     },
     {
-      enabled: Boolean(swaps?.length && address),
+      enabled: Boolean(swaps?.length && address && chainInfo.rpc),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,
     }
   )
 
-  const [junoPrice] = useTokenDollarValue(getBaseToken().symbol)
+  const baseToken = useBaseTokenInfo()
+  const [junoPrice] = useTokenDollarValue(baseToken?.symbol)
 
   const liquidity = swaps?.map(
     (
@@ -112,7 +110,7 @@ export const useMultiplePoolsLiquidity = ({
         protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
       ]
 
-      const baseTokenDecimals = getBaseToken().decimals
+      const baseTokenDecimals = baseToken.decimals
 
       const totalLiquidity = {
         coins: lp_token_supply,

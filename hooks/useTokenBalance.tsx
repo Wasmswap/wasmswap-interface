@@ -1,12 +1,13 @@
 import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { CW20 } from '../services/cw20'
-import { getTokenInfo } from './useTokenInfo'
+import { unsafelyGetTokenInfo } from './useTokenInfo'
 import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { getIBCAssetInfo, IBCAssetInfo } from './useIBCAssetInfo'
+import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { IBCAssetInfo } from './useIbcAssetList'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 async function fetchTokenBalance({
@@ -71,7 +72,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
           client,
           address,
           token:
-            getTokenInfo(symbol) ||
+            unsafelyGetTokenInfo(symbol) ||
             mapIbcTokenToNative(getIBCAssetInfo(symbol)) ||
             {},
         })
@@ -88,11 +89,11 @@ export const useTokenBalance = (tokenSymbol: string) => {
   return { balance, isLoading }
 }
 
-export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
+export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
   const { address, status, client } = useRecoilValue(walletState)
 
   const queryKey = useMemo(
-    () => `multipleTokenBalances/${tokenSymbols.join('+')}`,
+    () => `multipleTokenBalances/${tokenSymbols?.join('+')}`,
     [tokenSymbols]
   )
 
@@ -105,7 +106,7 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
             client,
             address,
             token:
-              getTokenInfo(tokenSymbol) ||
+              unsafelyGetTokenInfo(tokenSymbol) ||
               mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
               {},
           })
@@ -127,7 +128,7 @@ export const useMultipleTokenBalance = (tokenSymbols: Array<string>) => {
       refetchIntervalInBackground: true,
 
       onError(error) {
-        console.error(error)
+        console.error('Cannot fetch token balance bc:', error)
       },
     }
   )

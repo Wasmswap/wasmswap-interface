@@ -2,16 +2,14 @@ import { Text } from '../Text'
 import { styled } from '../theme'
 import { Button } from '../Button'
 import { UpRightArrow } from '../../icons/UpRightArrow'
-import { useAppVersion } from '../../hooks/useAppVersion'
 import { IconWrapper } from '../IconWrapper'
 import { APP_NAME } from '../../util/constants'
 
 export const FooterBar = () => {
-  const appVersion = useAppVersion()
   return (
     <StyledFooter>
       <Text variant="legend" css={{ paddingRight: '$20' }}>
-        {APP_NAME} v{appVersion}
+        {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
       </Text>
       <StyledDivForGrid>
         <Button

@@ -1,10 +1,6 @@
 ## Wasmswap interface
 
-An open-sourced platform/library for developing interfaces of CosmosSDK based tokens decentralized exchanges.
-
-* **Declarative configuration:** Easily swap the example blockchain configuration with your protocol parameters and provide your token list and ibc assets list to allow for trading real assets.
-* **Design system based:** Uses our internal UI framework for smooth UI tweaking based on your project needs. Configure branding, color palette, typography style, spacing, etc., based on how your designer feels it should look.
-* **Built for best UX:** Use our framework to build the next-level DEXes. The app is optimized to achieve the next level of fluidity in the web 3.0 apps space.
+An open-source interface for a CosmWasm decentralized exchange.
 
 Run the app in dev mode locally.
 
@@ -20,20 +16,23 @@ Access the app on `http://localhost:3000/`.
 
 The app configuration, feature flags, etc., is located in the .env config file.
 
-To configure the app and enable actual assets trading, you will need to swap the demo example configuration set with your chain information and add your token and ibc assets listing if you want to allow for inter blockchain asset transfers.
+To configure the app, you will need to swap the demo example configuration set with your chain information and add your tokens and ibc assets information.
 
 ### Suggest chain feature / Chain info
-Swap our test chain info example with your configuration to suggest your chain for Keprl and allow the wallet to be used in the app. It expects to receive data in the `ChainInfo` format. Refer to [Keplr documentation](https://docs.keplr.app/api/suggest-chain.html) for more information.
-> Keplr's 'suggest chain' feature allows front-ends to request adding new Cosmos-SDK based blockchains that isn't natively integrated to Keplr extension.
 
-Use this `env` variable to update the chain info path. The app will dynamically load the configuration so that the path can point to anything, either locally served in the public folder or something deployed onto a CDN. Make sure there are no CORS issues.
+Swap our test chain info example with your configuration to suggest your chain for Keplr and allow the wallet to be used in the app. It expects to receive data in the `ChainInfo` format. Refer to [Keplr documentation](https://docs.keplr.app/api/suggest-chain.html) for more information.
+
+> Keplr's 'suggest chain' feature allows front-ends to add new Cosmos-SDK based blockchains that are not natively supported.
+
+Use this `env` variable to update the chain info path. The app will dynamically load the configuration so that the path can point to anything, either locally served in the public folder or something deployed onto a CDN.
 
 ```
 NEXT_PUBLIC_CHAIN_INFO_URL=/chain_info.testnet.json
 ```
 
-### Provide token listing
-You will need to provide a token listing with real endpoints to allow for trading real assets. By default, the platform has only the example token listing that only serves testing purposes, i.e., does not allow for real assets to be traded. Refer to the token list [example](https://github.com/Wasmswap/wasmswap-interface/blob/develop/public/token_list.testnet.json) for more information.
+### Provide token configuration
+
+You will need to provide a token list json file for the available assets. By default, the platform has example tokens based on the Juno Uni-1 testnet. Refer to the token list [example](https://github.com/Wasmswap/wasmswap-interface/blob/develop/public/token_list.testnet.json) for more information.
 
 Similarly to `NEXT_PUBLIC_CHAIN_INFO_URL` variable, the config will be loaded dynamically.
 
@@ -41,9 +40,9 @@ Similarly to `NEXT_PUBLIC_CHAIN_INFO_URL` variable, the config will be loaded dy
 NEXT_PUBLIC_TOKEN_LIST_URL=/token_list.testnet.json
 ```
 
-### Provide IBC assets list
+### Provide IBC assets configuration
 
-By default, the platform only renders the example IBC assets lists. To allow for real interchain asset transfers you will need to provide your ibc tokens lists. Refer to the token list [example](https://github.com/Wasmswap/wasmswap-interface/blob/develop/public/ibc_assets.json) for more information.
+By default, the platform only renders the example IBC assets. To allow for interchain asset transfers you will need to provide your ibc tokens lists. Refer to the ibc asset configuration [example](https://github.com/Wasmswap/wasmswap-interface/blob/develop/public/ibc_assets.json) for more information.
 
 Similarly to `NEXT_PUBLIC_CHAIN_INFO_URL` & `NEXT_PUBLIC_TOKEN_LIST_URL` variables, the config will be loaded dynamically.
 
@@ -55,17 +54,17 @@ NEXT_PUBLIC_IBC_ASSETS_URL=/ibc_assets.json
 
 ### App name
 
-By default, the app uses the project name. We don't necessarily mind if you use our project name but prefer to be unique and creative. To update the app name, go to the `.env` file and change the following variable:
+By default, the app uses the `Wasmswap` name. To update the app name, go to the `.env` file and change the following variable:
 
 ```
-NEXT_PUBLIC_SITE_TITLE=CoolSwap
+NEXT_PUBLIC_SITE_TITLE=Wasmswap
 ```
 
-That will change the site title and update what it renders in the footer.
+That will change the site title and update the footer.
 
 ### Demo mode
 
-By default, the app renders demo mode warning to warn the users that the app runs in a demo/simulation mode and does not allow for trading real assets. If you'd like to disable the demo mode, update this env variable:
+By default, the app renders demo mode warning to warn the users that the app runs in a demo/simulation mode. If you'd like to disable the demo mode, update this env variable:
 
 ```
 NEXT_PUBLIC_TEST_MODE_DISABLED=false
@@ -73,7 +72,7 @@ NEXT_PUBLIC_TEST_MODE_DISABLED=false
 
 ### App version
 
-Very simple, if the app you've built using our open-source platform differs in the versioning, go ahead and update this variable.
+Update this variable if you choose to run a different version.
 
 ```
 NEXT_PUBLIC_APP_VERSION=1.0.0
@@ -81,7 +80,7 @@ NEXT_PUBLIC_APP_VERSION=1.0.0
 
 ### Branding
 
-We want to encourage you to use vector graphics for your project's logo and name. Go to `/icons/Logo.tsx` and swap our branded logo symbol with yours to update the app logo.
+We rcommend vector graphics for your project's logo and name. Go to `/icons/Logo.tsx` and swap our branded logo symbol with yours to update the app logo.
 
 Go to `/icons/LogoText.tsx` and update the file accordingly to update the logo text.
 
@@ -111,12 +110,10 @@ To update the typography component configuration, go to `components/Text.tsx` an
 
 This is a nextjs app; thus everything that a nextjs app supports for deployment technically is supported by `wasmswap-interface`. We would recommend looking into Vercel.
 
-@todo
-
 ## Contributing
 
-Raise the bar for Web 3.0 with us! Like any other open-source code, project would love you to contribute. Submit your PR contributions and issues directly on this repo.
+Raise the bar for Web 3.0 with us! We would love you to contribute. Submit your PR contributions and issues directly on this repo.
 
 ## License
 
-Wasmswap interface is MIT licensed. Use this software however you want at your own risk. Note that you must include a link to this repo.
+Wasmswap interface is licensed under Apache 2.0.

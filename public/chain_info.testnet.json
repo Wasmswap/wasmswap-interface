@@ -1,0 +1,45 @@
+{
+  "chainId": "uni",
+  "chainName": "Juno Uni Testnet",
+  "rpc": "https://rpc.uni.juno.deuslabs.fi:443/",
+  "rest": "https://lcd.uni.juno.deuslabs.fi:443/",
+  "stakeCurrency": {
+    "coinDenom": "JUNOX",
+    "coinMinimalDenom": "ujunox",
+    "coinDecimals": 6
+  },
+  "bip44": {
+    "coinType": 118
+  },
+  "bech32Config": {
+    "bech32PrefixAccAddr": "juno",
+    "bech32PrefixAccPub": "junopub",
+    "bech32PrefixValAddr": "junovaloper",
+    "bech32PrefixValPub": "junovaloperpub",
+    "bech32PrefixConsAddr": "junovalcons",
+    "bech32PrefixConsPub": "junovalconspub"
+  },
+  "currencies": [
+    {
+      "coinDenom": "JUNOX",
+      "coinMinimalDenom": "ujunox",
+      "coinDecimals": 6,
+      "coinGeckoId": "juno-network"
+    }
+  ],
+  "feeCurrencies": [
+    {
+      "coinDenom": "JUNOX",
+      "coinMinimalDenom": "ujunox",
+      "coinDecimals": 6,
+      "coinGeckoId": "juno-network"
+    }
+  ],
+  "coinType": 118,
+  "gasPriceStep": {
+    "low": 0.025,
+    "average": 0.05,
+    "high": 0.1
+  },
+  "features": ["cosmwasm"]
+}

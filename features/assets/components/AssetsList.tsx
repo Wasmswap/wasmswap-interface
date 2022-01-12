@@ -41,7 +41,7 @@ export const AssetsList = ({ onActionClick }) => {
                 ))}
               {isConnected && !hasTransferredAssets && (
                 <Text variant="body" color="secondary" as="span">
-                  You don’t have any tokens. Might be time to deposit some in?
+                  No IBC assets... yet!
                 </Text>
               )}
               {!isConnected && !isLoading && (

@@ -12,22 +12,30 @@ yarn dev
 
 Access the app on `http://localhost:3000/`.
 
-## Blockchain configuration
+## Configuration
 
 The app configuration, feature flags, etc., is located in the .env config file.
 
 To configure the app, you will need to swap the demo example configuration set with your chain information and add your tokens and ibc assets information.
 
-### Suggest chain feature / Chain info
+### Chain configuration
 
 Swap our test chain info example with your configuration to suggest your chain for Keplr and allow the wallet to be used in the app. It expects to receive data in the `ChainInfo` format. Refer to [Keplr documentation](https://docs.keplr.app/api/suggest-chain.html) for more information.
 
 > Keplr's 'suggest chain' feature allows front-ends to add new Cosmos-SDK based blockchains that are not natively supported.
 
-Use this `env` variable to update the chain info path. The app will dynamically load the configuration so that the path can point to anything, either locally served in the public folder or something deployed onto a CDN.
+Use this `env` variable to update the chain info path. The app will dynamically load the configuration so that the path can point to a local file in `/public` or a url.
 
 ```
+Local
+
 NEXT_PUBLIC_CHAIN_INFO_URL=/chain_info.testnet.json
+```
+
+```
+Url
+
+NEXT_PUBLIC_CHAIN_INFO_URL=https://raw.githubusercontent.com/Wasmswap/asset-list-example/main/chain_info.json
 ```
 
 ### Provide token configuration
@@ -37,7 +45,15 @@ You will need to provide a token list json file for the available assets. By def
 Similarly to `NEXT_PUBLIC_CHAIN_INFO_URL` variable, the config will be loaded dynamically.
 
 ```
+Local
+
 NEXT_PUBLIC_TOKEN_LIST_URL=/token_list.testnet.json
+```
+
+```
+Url
+
+NEXT_PUBLIC_TOKEN_LIST_URL=https://raw.githubusercontent.com/Wasmswap/asset-list-example/main/token_list.json
 ```
 
 ### Provide IBC assets configuration
@@ -47,7 +63,15 @@ By default, the platform only renders the example IBC assets. To allow for inter
 Similarly to `NEXT_PUBLIC_CHAIN_INFO_URL` & `NEXT_PUBLIC_TOKEN_LIST_URL` variables, the config will be loaded dynamically.
 
 ```
+Local
+
 NEXT_PUBLIC_IBC_ASSETS_URL=/ibc_assets.json
+```
+
+```
+Url
+
+NEXT_PUBLIC_IBC_ASSETS_URL=https://raw.githubusercontent.com/Wasmswap/asset-list-example/main/ibc_assets.json
 ```
 
 ## Branding configuration

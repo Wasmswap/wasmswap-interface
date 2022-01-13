@@ -3,6 +3,7 @@ import { Wallet } from '../icons/Wallet'
 import { Text } from './Text'
 import { IconWrapper } from './IconWrapper'
 import { Button } from './Button'
+import { CopyTextTooltip, Tooltip } from './Tooltip'
 import { useBaseTokenInfo } from '../hooks/useTokenInfo'
 import { useTokenBalance } from '../hooks/useTokenBalance'
 import { formatTokenBalance } from '../util/conversion'
@@ -11,6 +12,8 @@ import { Copy } from '../icons/Copy'
 import { CSS } from '@stitches/react'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
+import { Valid } from '../icons/Valid'
+import React from 'react'
 
 type ConnectedWalletButtonProps = { css?: CSS } & {
   walletName?: string
@@ -60,20 +63,32 @@ export const ConnectedWalletButton = ({
       </div>
       <StyledDivForActions>
         <StyledDivForInlineActions>
-          <Button
-            variant="ghost"
-            size="small"
-            onClick={() => {
-              navigator.clipboard.writeText(address)
-            }}
-            icon={<IconWrapper icon={<Copy />} />}
-          />
-          <Button
-            variant="ghost"
-            size="small"
-            onClick={onDisconnect}
-            icon={<IconWrapper icon={<Logout />} />}
-          />
+          <CopyTextTooltip
+            label="Copy wallet address"
+            successLabel="Wallet address copied!"
+            ariaLabel="Copy wallet address"
+            value={address}
+          >
+            {({ copied, ...bind }) => (
+              <Button
+                variant="ghost"
+                size="small"
+                icon={<IconWrapper icon={copied ? <Valid /> : <Copy />} />}
+                {...bind}
+              />
+            )}
+          </CopyTextTooltip>
+          <Tooltip
+            label="Disconnect your wallet"
+            aria-label="Disconnect your wallet"
+          >
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={onDisconnect}
+              icon={<IconWrapper icon={<Logout />} />}
+            />
+          </Tooltip>
         </StyledDivForInlineActions>
       </StyledDivForActions>
     </StyledWalletButton>

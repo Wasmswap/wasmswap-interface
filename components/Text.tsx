@@ -57,14 +57,14 @@ const StyledText = styled('p', {
         color: '$textColors$secondary',
       },
       legend: {
-        $$color: '$textColors$secondary',
+        $$color: '$textColors$tertiary',
         fontSize: '$7',
         lineHeight: '$4',
         fontWeight: '$light',
         fontFamily: '$mono',
       },
       caption: {
-        $$color: '$textColors$tertiary',
+        $$color: '$textColors$secondary',
         fontSize: '$7',
         lineHeight: '$4',
         fontWeight: '$normal',

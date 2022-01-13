@@ -72,6 +72,7 @@ export function NavigationSidebar() {
             <Button
               as="a"
               variant="menu"
+              size="large"
               iconLeft={<IconWrapper icon={<Address />} />}
               selected={getIsLinkActive('/')}
             >
@@ -82,6 +83,7 @@ export function NavigationSidebar() {
             <Button
               as="a"
               variant="menu"
+              size="large"
               iconLeft={<IconWrapper icon={<ArrowUp />} />}
               selected={getIsLinkActive('/transfer')}
             >
@@ -92,6 +94,7 @@ export function NavigationSidebar() {
             <Button
               as="a"
               variant="menu"
+              size="large"
               iconLeft={<IconWrapper icon={<Open />} />}
               selected={getIsLinkActive('/pools')}
             >

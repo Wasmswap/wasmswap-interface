@@ -44,7 +44,7 @@ const StyledButton = styled('button', {
     backgroundColor: '$$backgroundColorOnActive',
   },
   '&:focus.focus-visible': {
-    boxShadow: '0 0 0 2px $$borderColorOnFocus',
+    boxShadow: '0 0 0 $space$1 $$borderColorOnFocus',
   },
 
   '& svg': {
@@ -83,24 +83,34 @@ const StyledButton = styled('button', {
 
         $$borderColorOnFocus: '$borderColors$selected',
       },
+      menu: {
+        $$textColor: '$textColors$body',
+        $$iconColor: '$iconColors$primary',
+
+        $$backgroundColor: '$colors$brand0',
+        $$backgroundColorOnHover: '$colors$brand10',
+        $$backgroundColorOnActive: '$colors$brand15',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
     },
 
     icon: {
       left: {
         display: 'grid',
         gridTemplateAreas: '"a b"',
-        columnGap: '2px',
+        columnGap: '$space$1',
         justifyContent: 'start',
       },
       right: {
         display: 'grid',
-        columnGap: '2px',
+        columnGap: '$space$1',
         gridTemplateAreas: '"a b"',
         justifyContent: 'space-between',
       },
       both: {
         display: 'grid',
-        columnGap: '2px',
+        columnGap: '$space$1',
         gridTemplateAreas: '"a b c"',
         justifyContent: 'space-between',
       },
@@ -130,6 +140,10 @@ const StyledButton = styled('button', {
         pointerEvents: 'unset',
         cursor: 'pointer',
       },
+    },
+    selected: {
+      true: {},
+      false: {},
     },
   },
 
@@ -161,50 +175,50 @@ const StyledButton = styled('button', {
       size: 'medium',
       icon: 'left',
       css: {
-        paddingLeft: 6,
-        paddingTop: 4,
-        paddingBottom: 4,
+        paddingLeft: '$3',
+        paddingTop: '$2',
+        paddingBottom: '$2',
       },
     },
     {
       size: 'medium',
       icon: 'right',
       css: {
-        paddingRight: 6,
-        paddingTop: 4,
-        paddingBottom: 4,
+        paddingRight: '$3',
+        paddingTop: '$2',
+        paddingBottom: '$2',
       },
     },
     {
       size: 'medium',
       icon: 'both',
       css: {
-        padding: '4px 6px',
+        padding: '$2 $3',
       },
     },
     {
       size: 'large',
       icon: 'left',
       css: {
-        paddingLeft: 6,
-        paddingTop: 8,
-        paddingBottom: 8,
+        paddingLeft: '$3',
+        paddingTop: '$4',
+        paddingBottom: '$4',
       },
     },
     {
       size: 'large',
       icon: 'right',
       css: {
-        paddingRight: 6,
-        paddingTop: 8,
-        paddingBottom: 8,
+        paddingRight: '$3',
+        paddingTop: '$4',
+        paddingBottom: '$4',
       },
     },
     {
       size: 'large',
       icon: 'both',
       css: {
-        padding: '8px 6px',
+        padding: '$4 $3',
       },
     },
 
@@ -222,6 +236,14 @@ const StyledButton = styled('button', {
         padding: '0',
       },
     },
+
+    {
+      variant: 'menu',
+      selected: true,
+      css: {
+        $$backgroundColor: '$colors$brand10',
+      },
+    },
   ],
 
   defaultVariants: {
@@ -230,7 +252,7 @@ const StyledButton = styled('button', {
   },
 })
 
-type ButtonProps<T extends RenderAsType = 'button'> = Omit<
+export type ButtonProps<T extends RenderAsType = 'button'> = Omit<
   Omit<VariantProps<typeof StyledButton>, 'icon'> & GetRenderAsProps<T>,
   'iconLeft' | 'iconRight' | 'icon'
 > & { as?: T; css?: CSS } & (

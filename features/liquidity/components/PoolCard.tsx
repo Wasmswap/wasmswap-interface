@@ -191,7 +191,7 @@ const StyledDivForSeparator = styled('hr', {
 })
 
 const StyledDivForRowWrapper = styled('div', {
-  padding: '20px 24px 24px',
+  padding: '$10 $12 $12',
   position: 'relative',
   zIndex: 1,
 })
@@ -229,7 +229,7 @@ const StyledDivForLiquidityRows = styled('div', {
           background:
             'radial-gradient(71.15% 71.14% at 29.4% 81.87%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
           opacity: 0.4,
-          borderRadius: '0 0 8px 8px',
+          borderRadius: '0 0 $2 $2',
         },
       },
     },

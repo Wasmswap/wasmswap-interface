@@ -55,12 +55,7 @@ export const TransactionTips = ({
           }
         />
         {isShowing && (
-          <Text
-            variant="caption"
-            css={{ fontWeight: '$bold' }}
-            color="disabled"
-            wrap={false}
-          >
+          <Text variant="legend" wrap={false}>
             1 {tokenA.tokenSymbol} ≈ {formatTokenBalance(conversionRate)}{' '}
             {tokenB.tokenSymbol}
             {' ≈ '}$
@@ -71,7 +66,7 @@ export const TransactionTips = ({
         )}
       </StyledDivForRateWrapper>
 
-      <Text variant="caption" css={{ fontWeight: '$bold' }} color="secondary">
+      <Text variant="legend">
         $
         {dollarValueFormatterWithDecimals(dollarValue, {
           includeCommaSeparation: true,

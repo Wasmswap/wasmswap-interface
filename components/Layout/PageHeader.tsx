@@ -11,7 +11,7 @@ export const PageHeader = ({ title, subtitle }) => {
           {APP_NAME} — {title}
         </title>
       </Head>
-      <Text variant="header" css={{ padding: '$16 0 $9' }}>
+      <Text variant="header" css={{ padding: '$10 0' }}>
         {title}
       </Text>
       <Text variant="body" css={{ paddingBottom: '$14' }}>

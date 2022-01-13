@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import { colorTokens } from '../util/constants'
 import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
+import { theme } from './theme'
 
 type IconWrapperProps = Omit<
   HTMLProps<HTMLDivElement>,
@@ -65,7 +66,8 @@ const StyledIcon = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${(p) => colorTokens[p.$color] || p.$color};
+  color: ${(p) =>
+    colorTokens[p.$color] || theme.iconColors[p.$color]?.value || p.$color};
   width: ${(p) => p.$width || p.$size};
   height: ${(p) => p.$height || p.$size};
   min-width: ${(p) => p.$width || p.$size};

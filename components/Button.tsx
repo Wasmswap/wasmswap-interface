@@ -1,102 +1,320 @@
-import React, { HTMLProps, FC, ReactNode } from 'react'
-import styled from 'styled-components'
-import { styled as stitchesStyled } from '@stitches/react'
-import { Text } from './Text'
-import { colorTokens } from '../util/constants'
+import {
+  ForwardedRef,
+  ReactNode,
+  forwardRef,
+  cloneElement,
+  Children,
+  ReactElement,
+} from 'react'
+import type { VariantProps, CSS } from '@stitches/react'
+import { styled } from './theme'
+import { GetRenderAsProps, RenderAsType } from './types'
 
-type ButtonProps = Omit<HTMLProps<HTMLButtonElement>, 'size'> & {
-  iconBefore?: ReactNode
-  variant?: 'primary' | 'rounded'
-  size?: 'humongous' | 'medium' | 'small'
-}
+const StyledButton = styled('button', {
+  $$textColor: '$textColors$primary',
+  $$iconColor: '$iconColors$primary',
 
-export const StyledButton = styled.button<ButtonProps>`
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  align-items: center;
-  border-radius: ${(p) => (p.variant === 'rounded' ? '18px' : '6px')};
-  padding: ${(props: ButtonProps) => {
-    switch (props.size) {
-      case 'humongous':
-        return '24px'
-      case 'medium':
-        return props.variant === 'rounded' ? '9px 14px' : '12px 14px'
-      case 'small':
-        return '8px 12px'
-      default:
-        return '5px 12px'
-    }
-  }};
-  width: ${(props: ButtonProps) =>
-    props.size === 'humongous' ? '100%' : 'auto'};
-  background-color: ${({ disabled, type, color }) => {
-    return disabled || type === 'disabled'
-      ? colorTokens.gray
-      : colorTokens[color] || color || colorTokens.black
-  }};
-  cursor: ${({ disabled }) => {
-    return disabled ? 'auto' : 'pointer'
-  }};
+  $$backgroundColor: '$colors$dark10',
+  $$backgroundColorOnHover: '$colors$dark20',
+  $$backgroundColorOnActive: '$colors$dark5',
 
-  transition: opacity 0.1s ease-out, background-color 0.15s ease-out;
+  $$borderColorOnFocus: '$borderColors$selected',
 
-  &:hover {
-    opacity: ${(p) => (p.disabled || p.type === 'disabled' ? 1 : 0.9)};
-  }
+  fontFamily: '$primary',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  whiteSpace: 'pre',
 
-  &:active {
-    opacity: 0.85;
-  }
-`
+  color: '$$textColor',
+  fontSize: '$6',
+  lineHeight: '$3',
+  fontWeight: '$normal',
+  borderRadius: '$1',
 
-const mapTextSize = (size: ButtonProps['size']) => {
-  switch (size) {
-    case 'humongous':
-      return 'heading'
-    case 'small':
-      return 'subtitle'
-    default:
-      return 'body'
-  }
-}
+  backgroundColor: '$$backgroundColor',
 
-export const Button: FC<ButtonProps> = ({
-  variant,
-  size = 'medium',
-  children,
-  iconBefore,
-  ...props
-}) => (
-  <StyledButton variant={variant} size={size} {...props}>
-    {iconBefore && (
-      <StyledIconWrapper $position="left">{iconBefore}</StyledIconWrapper>
-    )}
-    {typeof children === 'string' ? (
-      <Text type={mapTextSize(size)} variant="light" color="white">
-        {children}
-      </Text>
-    ) : (
-      children
-    )}
-  </StyledButton>
-)
+  transition: 'background 0.15s ease-out',
 
-const StyledIconWrapper = styled.span`
-  display: inline-block;
-  padding: ${(p) => (p.$position === 'left' ? '0 6px 0 0' : '0 0 0 6px')};
-`
-
-export const StyledSecondaryButton = stitchesStyled('button', {
-  padding: '8px 12px',
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
-  borderRadius: '6px',
-  transition: 'background-color .1s ease-out',
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+    backgroundColor: '$$backgroundColorOnHover',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: '$$backgroundColorOnActive',
+  },
+  '&:focus.focus-visible': {
+    boxShadow: '0 0 0 $space$1 $$borderColorOnFocus',
+  },
+
+  '& svg': {
+    color: '$$iconColor',
+  },
+
+  variants: {
+    variant: {
+      primary: {
+        $$textColor: '$colors$white',
+        $$iconColor: '$colors$white',
+
+        $$backgroundColor: '$colors$dark95',
+        $$backgroundColorOnHover: '$colors$black',
+        $$backgroundColorOnActive: '$colors$dark85',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+      secondary: {
+        $$textColor: '$textColors$primary',
+        $$iconColor: '$iconColors$primary',
+
+        $$backgroundColor: '$colors$dark10',
+        $$backgroundColorOnHover: '$colors$dark20',
+        $$backgroundColorOnActive: '$colors$dark5',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+      ghost: {
+        $$textColor: '$textColors$secondary',
+        $$iconColor: '$iconColors$primary',
+
+        $$backgroundColor: '$colors$dark0',
+        $$backgroundColorOnHover: '$colors$dark10',
+        $$backgroundColorOnActive: '$colors$dark5',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+      menu: {
+        $$textColor: '$textColors$body',
+        $$iconColor: '$iconColors$primary',
+
+        $$backgroundColor: '$colors$brand0',
+        $$backgroundColorOnHover: '$colors$brand10',
+        $$backgroundColorOnActive: '$colors$brand15',
+
+        $$borderColorOnFocus: '$borderColors$selected',
+      },
+    },
+
+    icon: {
+      left: {
+        display: 'grid',
+        gridTemplateAreas: '"a b"',
+        columnGap: '$space$1',
+        justifyContent: 'start',
+      },
+      right: {
+        display: 'grid',
+        columnGap: '$space$1',
+        gridTemplateAreas: '"a b"',
+        justifyContent: 'space-between',
+      },
+      both: {
+        display: 'grid',
+        columnGap: '$space$1',
+        gridTemplateAreas: '"a b c"',
+        justifyContent: 'space-between',
+      },
+      only: {},
+    },
+    size: {
+      large: {
+        padding: '$6 $8',
+      },
+      medium: {
+        padding: '$4 $8',
+      },
+      small: {
+        padding: '$2 $4',
+      },
+    },
+
+    disabled: {
+      true: {
+        pointerEvents: 'none',
+        cursor: 'not-allowed',
+      },
+      false: {},
+    },
+    allowInteractivity: {
+      true: {
+        pointerEvents: 'unset',
+        cursor: 'pointer',
+      },
+    },
+    selected: {
+      true: {},
+      false: {},
+    },
+  },
+
+  compoundVariants: [
+    {
+      variant: 'primary',
+      disabled: true,
+      css: {
+        $$backgroundColor: '$colors$dark30',
+        $$textColor: '$colors$light95',
+      },
+    },
+    {
+      variant: 'secondary',
+      disabled: true,
+      css: {
+        $$backgroundColor: '$colors$dark5',
+        $$textColor: '$textColors$disabled',
+      },
+    },
+    {
+      variant: 'ghost',
+      disabled: true,
+      css: {
+        $$textColor: '$textColors$disabled',
+      },
+    },
+    {
+      size: 'medium',
+      icon: 'left',
+      css: {
+        paddingLeft: '$3',
+        paddingTop: '$2',
+        paddingBottom: '$2',
+      },
+    },
+    {
+      size: 'medium',
+      icon: 'right',
+      css: {
+        paddingRight: '$3',
+        paddingTop: '$2',
+        paddingBottom: '$2',
+      },
+    },
+    {
+      size: 'medium',
+      icon: 'both',
+      css: {
+        padding: '$2 $3',
+      },
+    },
+    {
+      size: 'large',
+      icon: 'left',
+      css: {
+        paddingLeft: '$3',
+        paddingTop: '$4',
+        paddingBottom: '$4',
+      },
+    },
+    {
+      size: 'large',
+      icon: 'right',
+      css: {
+        paddingRight: '$3',
+        paddingTop: '$4',
+        paddingBottom: '$4',
+      },
+    },
+    {
+      size: 'large',
+      icon: 'both',
+      css: {
+        padding: '$4 $3',
+      },
+    },
+
+    {
+      size: 'medium',
+      icon: 'only',
+      css: {
+        padding: '$2 $3',
+      },
+    },
+    {
+      size: 'small',
+      icon: 'only',
+      css: {
+        padding: '0',
+      },
+    },
+
+    {
+      variant: 'menu',
+      selected: true,
+      css: {
+        $$backgroundColor: '$colors$brand10',
+      },
+    },
+  ],
+
+  defaultVariants: {
+    variant: 'primary',
+    size: 'medium',
   },
 })
+
+export type ButtonProps<T extends RenderAsType = 'button'> = Omit<
+  Omit<VariantProps<typeof StyledButton>, 'icon'> & GetRenderAsProps<T>,
+  'iconLeft' | 'iconRight' | 'icon'
+> & { as?: T; css?: CSS } & (
+    | {
+        children?: ReactNode
+        iconLeft?: ReactElement
+        iconRight?: ReactElement
+        icon?: never
+      }
+    | {
+        children?: never
+        iconLeft?: never
+        iconRight?: never
+        icon?: ReactElement
+      }
+  )
+
+function ButtonComponent<T extends RenderAsType = 'button'>(
+  { children, as, icon, iconLeft, iconRight, ...props }: ButtonProps<T>,
+  ref?: ForwardedRef<any>
+) {
+  return (
+    <StyledButton
+      icon={mapIconVariant({ iconLeft, icon, iconRight })}
+      ref={ref}
+      {...props}
+      as={as as any}
+    >
+      {icon ? (
+        cloneElement(Children.only(icon), {
+          color: 'inherit',
+          size: '24px',
+        })
+      ) : (
+        <>
+          {iconLeft &&
+            cloneElement(Children.only(iconLeft), {
+              color: 'inherit',
+              size: '24px',
+            })}
+          {children}
+          {iconRight &&
+            cloneElement(Children.only(iconRight), {
+              color: 'inherit',
+              size: '24px',
+            })}
+        </>
+      )}
+    </StyledButton>
+  )
+}
+
+const mapIconVariant = ({
+  iconRight,
+  iconLeft,
+  icon,
+}): VariantProps<typeof StyledButton>['icon'] => {
+  if (iconLeft && iconRight) return 'both'
+  if (iconLeft) return 'left'
+  if (iconRight) return 'right'
+  if (icon) return 'only'
+  return undefined
+}
+
+export const Button = forwardRef(ButtonComponent) as typeof ButtonComponent

@@ -1,24 +1,22 @@
 import React from 'react'
 import { Text } from '../Text'
-import styled from 'styled-components'
+import Head from 'next/head'
+import { APP_NAME } from '../../util/constants'
 
 export const PageHeader = ({ title, subtitle }) => {
   return (
     <>
-      <StyledTitle type="title" variant="bold">
+      <Head>
+        <title>
+          {APP_NAME} — {title}
+        </title>
+      </Head>
+      <Text variant="header" css={{ padding: '$10 0' }}>
         {title}
-      </StyledTitle>
-      <StyledSubtitle type="body" variant="light">
+      </Text>
+      <Text variant="body" css={{ paddingBottom: '$14' }}>
         {subtitle}
-      </StyledSubtitle>
+      </Text>
     </>
   )
 }
-
-const StyledTitle = styled(Text)`
-  padding: 32px 0 18px;
-`
-
-const StyledSubtitle = styled(Text)`
-  padding-bottom: 29px;
-`

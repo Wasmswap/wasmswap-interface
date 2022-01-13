@@ -1,155 +1,132 @@
-import React, { ForwardedRef, forwardRef, HTMLProps } from 'react'
-import styled, { css } from 'styled-components'
-import { colorTokens, fonts, spaces } from '../util/constants'
+import React, { ForwardedRef, forwardRef, ReactNode } from 'react'
+import { styled, theme } from './theme'
+import type { GetRenderAsProps, RenderAsType } from './types'
+import { CSS, VariantProps } from '@stitches/react'
 
-const fontWeightTokens = {
-  bold: 600,
-  normal: 500,
-  light: 400,
-}
+const StyledText = styled('p', {
+  fontFamily: '$primary',
+  margin: 0,
+  padding: 0,
 
-type TextProps = {
-  type?:
-    | 'heading'
-    | 'title'
-    | 'title2'
-    | 'title3'
-    | 'body'
-    | 'subtitle'
-    | 'caption'
-    | 'microscopic'
-  textTransform?: 'uppercase' | 'lowercase' | 'capitalize'
-  font?: keyof typeof fonts
-  color?: keyof typeof colorTokens | string
-  variant?: keyof typeof fontWeightTokens
-  paddingTop?: string
-  paddingBottom?: string
-  paddingLeft?: string
-  paddingRight?: string
-  paddingY?: string
-  paddingX?: string
-}
+  $$color: '$textColors$primary',
+  color: '$$color',
 
-const colorTokenSelector = (props: TextProps) => {
-  return colorTokens[props.color] || props.color || colorTokens.black
-}
+  variants: {
+    variant: {
+      hero: {
+        $$color: '$textColors$primary',
+        fontSize: '$1',
+        lineHeight: '$1',
+        fontWeight: '$bold',
+      },
+      header: {
+        $$color: '$textColors$primary',
+        fontSize: '$2',
+        lineHeight: '$2',
+        fontWeight: '$medium',
+      },
+      title: {
+        $$color: '$textColors$primary',
+        fontSize: '$3',
+        lineHeight: '$3',
+        fontWeight: '$medium',
+      },
+      primary: {
+        $$color: '$textColors$body',
+        fontSize: '$4',
+        lineHeight: '$3',
+        fontWeight: '$normal',
+      },
+      body: {
+        $$color: '$textColors$body',
+        fontSize: '$5',
+        lineHeight: '$3',
+        fontWeight: '$normal',
+      },
+      link: {
+        $$color: '$textColors$body',
+        fontSize: '$6',
+        lineHeight: '$3',
+        fontWeight: '$normal',
+      },
+      secondary: {
+        $$color: '$textColors$secondary',
+        fontSize: '$6',
+        lineHeight: '$4',
+        fontWeight: '$light',
+        color: '$textColors$secondary',
+      },
+      legend: {
+        $$color: '$textColors$secondary',
+        fontSize: '$7',
+        lineHeight: '$4',
+        fontWeight: '$light',
+        fontFamily: '$mono',
+      },
+      caption: {
+        $$color: '$textColors$tertiary',
+        fontSize: '$7',
+        lineHeight: '$4',
+        fontWeight: '$normal',
+      },
+    },
+    color: Object.assign(
+      {
+        inherit: {
+          $$color: 'inherit',
+        },
+      },
+      Object.keys(theme.textColors).reduce(
+        (colorVariants, textColorName) => ({
+          ...colorVariants,
+          [textColorName]: {
+            color: `${theme.textColors[textColorName].value} !important`,
+          },
+        }),
+        {} as Record<keyof typeof theme['textColors'], { color: string }>
+      )
+    ),
 
-const fontWeightSelector = (props: TextProps) => {
-  return fontWeightTokens[props.variant] || fontWeightTokens.normal
-}
+    transform: {
+      uppercase: {
+        textTransform: 'uppercase',
+      },
+      lowercase: {
+        textTransform: 'lowercase',
+      },
+      capitalize: {
+        textTransform: 'capitalize',
+      },
+    },
 
-const fontFamilySelector = (props: TextProps) => {
-  return fonts[props.font] || fonts.primary
-}
+    wrap: {
+      true: {},
+      false: {
+        whiteSpace: 'pre',
+      },
+    },
+  },
 
-const paddingMixin = css`
-  ${(p) =>
-    p.paddingTop ? `padding-top: ${spaces[p.paddingTop] || p.paddingTop}` : ''};
-  ${(p) =>
-    p.paddingBottom
-      ? `padding-bottom: ${spaces[p.paddingBottom] || p.paddingBottom}`
-      : ''};
-  ${(p) =>
-    p.paddingLeft
-      ? `padding-left: ${spaces[p.paddingLeft] || p.paddingLeft}`
-      : ''};
-  ${(p) =>
-    p.paddingRight
-      ? `padding-right: ${spaces[p.paddingRight] || p.paddingRight}`
-      : ''};
-  ${(p) =>
-    p.paddingY || p.paddingX
-      ? `padding: ${p.paddingY || 0} ${p.paddingX || 0}`
-      : ''};
-`
+  defaultVariants: {
+    variant: 'body',
+  },
+})
 
-const textTransformMixin = css`
-  ${(p) =>
-    p.textTransform ? `text-transform: ${p.textTransform};` : undefined}
-`
+type TextProps<T extends RenderAsType = 'p'> = VariantProps<typeof StyledText> &
+  GetRenderAsProps<T> & { css?: CSS } & {
+    as?: T
+    children?: ReactNode
+  }
 
-const wrapMixin = css`
-  ${(p) => (p.wrap ? `white-space: ${p.wrap};` : undefined)}
-`
-
-const mixins = css`
-  color: ${colorTokenSelector};
-  font-weight: ${fontWeightSelector};
-  font-family: ${fontFamilySelector};
-  ${paddingMixin};
-  ${textTransformMixin};
-  ${wrapMixin};
-`
-
-const Title = styled.p<TextProps>`
-  font-size: 32px;
-  line-height: 44px;
-  ${mixins};
-`
-
-const Title2 = styled.p<TextProps>`
-  font-size: 30px;
-  line-height: 24px;
-  ${mixins};
-`
-
-const Title3 = styled.p<TextProps>`
-  font-size: 22px;
-  line-height: 24px;
-  ${mixins};
-`
-
-const Heading = styled.p<TextProps>`
-  font-size: 20px;
-  line-height: 27px;
-  ${mixins};
-`
-
-const Paragraph = styled.p<TextProps>`
-  font-size: 18px;
-  line-height: 24px;
-  ${mixins};
-`
-
-const Subtitle = styled.p<TextProps>`
-  font-size: 16px;
-  line-height: 18px;
-  ${mixins};
-`
-
-const Caption = styled.p<TextProps>`
-  font-size: 14px;
-  line-height: 18px;
-  ${mixins};
-`
-
-const Microscopic = styled.p<TextProps>`
-  font-size: 12px;
-  line-height: 16px;
-  ${mixins};
-`
-
-const map = {
-  body: Paragraph,
-  caption: Caption,
-  heading: Heading,
-  title: Title,
-  title2: Title2,
-  title3: Title3,
-  subtitle: Subtitle,
-  microscopic: Microscopic,
-}
-
-const TextComponent = (
-  {
-    type = 'body',
-    variant = 'normal',
-    ...props
-  }: TextProps & HTMLProps<HTMLParagraphElement>,
-  ref: ForwardedRef<any>
-) => {
-  const TextComponent = map[type] || Paragraph
-  return <TextComponent ref={ref} variant={variant} {...props} />
+function TextComponent<T extends RenderAsType = 'p'>(
+  { children, as, ...props }: TextProps<T>,
+  ref?: ForwardedRef<any>
+) {
+  return (
+    <StyledText ref={ref} as={as} {...props}>
+      {children}
+    </StyledText>
+  )
 }
 
 export const Text = forwardRef(TextComponent) as typeof TextComponent

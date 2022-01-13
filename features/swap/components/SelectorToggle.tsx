@@ -3,7 +3,7 @@ import { IconWrapper } from '../../../components/IconWrapper'
 import { Chevron } from '../../../icons/Chevron'
 import React from 'react'
 import { formatTokenBalance } from '../../../util/conversion'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { useTokenInfo } from '../../../hooks/useTokenInfo'
 
 type SelectorToggleProps = {
@@ -35,9 +35,7 @@ export const SelectorToggle = ({
     >
       {(isSelecting || !hasTokenSelected) && (
         <>
-          <Text type="caption" variant="bold">
-            Select a token
-          </Text>
+          <Text variant="body">Select a token</Text>
           <IconWrapper
             size="16px"
             rotation={tokenSymbol ? '90deg' : '-90deg'}
@@ -53,10 +51,8 @@ export const SelectorToggle = ({
             alt={tokenSymbol}
           />
           <div>
-            <Text type="caption" variant="bold">
-              {tokenSymbol}
-            </Text>
-            <Text type="microscopic" variant="normal" color="disabled">
+            <Text variant="body">{tokenSymbol}</Text>
+            <Text variant="caption" color="disabled">
               {formattedAvailableAmount} available
             </Text>
           </div>
@@ -76,29 +72,29 @@ const StyledDivForSelector = styled('div', {
   cursor: 'pointer',
   display: 'grid',
   alignItems: 'center',
-  backgroundColor: 'rgba(25, 29, 32, 0)',
-  borderRadius: '6px',
+  backgroundColor: '$colors$dark0',
+  borderRadius: '$1',
   transition: 'background-color .1s ease-out',
   userSelect: 'none',
   whiteSpace: 'pre',
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.1)',
+    backgroundColor: '$colors$dark10',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: '$colors$dark5',
   },
   variants: {
     state: {
       selected: {
-        padding: '8px 12px',
-        columnGap: '12px',
-        gridTemplateColumns: '30px 1fr 16px',
+        padding: '$4 $6',
+        columnGap: '$space$6',
+        gridTemplateColumns: '$space$15 1fr $space$8',
         minWidth: 231,
       },
       selecting: {
-        padding: '12px 16px',
-        columnGap: '8px',
-        gridTemplateColumns: '1fr 16px',
+        padding: '$6 $8',
+        columnGap: '$space$4',
+        gridTemplateColumns: '1fr $space$8',
       },
     },
   },

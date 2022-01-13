@@ -23,20 +23,19 @@ export const WalletCardWithBalance = ({
       paddingBottom={0}
       contents={[
         <>
-          <Text type="microscopic" variant="light">
+          <Text variant="caption">
             {transactionType === 'incoming' ? 'TO' : 'FROM'}
           </Text>
           <StyledHeader>
             <WalletIcon transactionOrigin={transactionOrigin} />
             <div>
-              <Text type="body" variant="light">
+              <Text variant="body">
                 {transactionOrigin === 'platform' ? 'Junoswap' : 'Keplr wallet'}
               </Text>
               <Text
-                type="microscopic"
-                variant="normal"
-                color="gray"
-                paddingTop="2"
+                variant="caption"
+                color="tertiary"
+                css={{ paddingTop: '$1' }}
               >
                 {walletAddress}
               </Text>
@@ -45,15 +44,8 @@ export const WalletCardWithBalance = ({
         </>,
         <>
           <StyledDivForBalance $paddingY={18}>
-            <Text type="microscopic" variant="light">
-              Current balance:{' '}
-            </Text>
-            <Text
-              type="microscopic"
-              variant="normal"
-              color="black"
-              paddingLeft="2"
-            >
+            <Text variant="caption">Current balance: </Text>
+            <Text variant="caption" color="primary" css={{ paddingLeft: '$1' }}>
               {balance} {tokenName}
             </Text>
           </StyledDivForBalance>

@@ -1,25 +1,26 @@
 import React, { useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { AppLayout } from '../../components/Layout/AppLayout'
-import { Text } from '../../components/Text'
-import { Chevron } from '../../icons/Chevron'
-import { IconWrapper } from '../../components/IconWrapper'
+import { AppLayout } from 'components/Layout/AppLayout'
+import { Text } from 'components/Text'
+import { Chevron } from 'icons/Chevron'
+import { IconWrapper } from 'components/IconWrapper'
 import {
   PoolBondedLiquidityCard,
   UnbondingLiquidityCard,
   ManagePoolDialog,
   PoolAvailableLiquidityCard,
-} from '../../features/liquidity'
-import { Button } from '../../components/Button'
-import { getBaseToken, useTokenInfoByPoolId } from '../../hooks/useTokenInfo'
-import { useTokenToTokenPrice } from '../../features/swap/hooks/useTokenToTokenPrice'
-import { usePoolLiquidity } from '../../hooks/usePoolLiquidity'
-import { parseCurrency } from '../../features/liquidity/components/PoolCard'
-import { __POOL_REWARDS_ENABLED__ } from '../../util/constants'
-import { BondLiquidityDialog } from '../../features/liquidity'
-import { Spinner } from '../../components/Spinner'
+} from 'features/liquidity'
+import { Button } from 'components/Button'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useTokenToTokenPrice } from 'features/swap/hooks/useTokenToTokenPrice'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { parseCurrency } from 'features/liquidity/components/PoolCard'
+import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
+import { BondLiquidityDialog } from 'features/liquidity'
+import { Spinner } from 'components/Spinner'
 
 export default function Pool() {
   const {
@@ -31,10 +32,10 @@ export default function Pool() {
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
-  const baseToken = getBaseToken()
+  const baseToken = useBaseTokenInfo()
 
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
-    tokenASymbol: baseToken.symbol,
+    tokenASymbol: baseToken?.symbol,
     tokenBSymbol: tokenInfo?.symbol,
     tokenAmount: 1,
   })
@@ -66,6 +67,15 @@ export default function Pool() {
           poolId={pool}
         />
       )}
+
+      {pool && (
+        <Head>
+          <title>
+            {APP_NAME} — Pool {tokenInfo.pool_id}
+          </title>
+        </Head>
+      )}
+
       <AppLayout>
         <StyledWrapperForNavigation>
           <StyledNavElement position="left">
@@ -79,7 +89,7 @@ export default function Pool() {
             </Link>
           </StyledNavElement>
           <StyledNavElement position="center">
-            <Text type="heading" textTransform="capitalize">
+            <Text variant="header" transform="capitalize">
               Pool {baseToken.name} + {tokenInfo.name}
             </Text>
           </StyledNavElement>
@@ -97,11 +107,13 @@ export default function Pool() {
           <>
             <StyledRowForTokensInfo kind="wrapper">
               <StyledRowForTokensInfo kind="column">
-                <Text paddingRight="26px">Pool #{tokenInfo.pool_id}</Text>
+                <Text css={{ paddingRight: '$13' }}>
+                  Pool #{tokenInfo.pool_id}
+                </Text>
                 <StyledTextForTokens kind="wrapper">
                   <StyledTextForTokens kind="element">
                     <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
-                    <Text color="bodyText" type="microscopic">
+                    <Text color="body" variant="caption">
                       {baseToken.symbol}
                     </Text>
                   </StyledTextForTokens>
@@ -110,18 +122,14 @@ export default function Pool() {
                       as={tokenInfo.logoURI ? 'img' : 'div'}
                       src={tokenInfo.logoURI}
                     />
-                    <Text color="bodyText" type="microscopic">
+                    <Text color="body" variant="caption">
                       {tokenInfo.symbol}
                     </Text>
                   </StyledTextForTokens>
                 </StyledTextForTokens>
               </StyledRowForTokensInfo>
               <StyledRowForTokensInfo kind="column">
-                <Text
-                  type="microscopic"
-                  color="tertiaryText"
-                  textTransform="lowercase"
-                >
+                <Text variant="caption" color="tertiary" transform="lowercase">
                   {isPriceLoading
                     ? ''
                     : `1 ${baseToken.symbol} = ${tokenPrice} ${tokenInfo.symbol}`}
@@ -134,41 +142,32 @@ export default function Pool() {
             <StyledElementForLiquidity kind="wrapper">
               <StyledElementForLiquidity kind="row">
                 <Text
-                  type="caption"
-                  variant="light"
-                  color="secondaryText"
-                  paddingBottom="6px"
+                  variant="body"
+                  color="secondary"
+                  css={{ paddingBottom: '$3' }}
                 >
                   Total Liquidity
                 </Text>
                 <Text
-                  type="caption"
-                  variant="light"
-                  color="secondaryText"
-                  paddingBottom="6px"
+                  variant="body"
+                  color="secondary"
+                  css={{ paddingBottom: '$3' }}
                 >
                   APR reward
                 </Text>
               </StyledElementForLiquidity>
               <StyledElementForLiquidity kind="row">
-                <Text type="title3" variant="bold">
+                <Text variant="header">
                   {parseCurrency(totalLiquidity?.dollarValue)}
                 </Text>
-                <Text type="title3" variant="bold">
-                  0%
-                </Text>
+                <Text variant="header">0%</Text>
               </StyledElementForLiquidity>
             </StyledElementForLiquidity>
 
             <StyledDivForSeparator />
 
             <>
-              <Text
-                variant="bold"
-                paddingTop="24px"
-                paddingBottom="18px"
-                color="bodyText"
-              >
+              <Text css={{ padding: '$12 0 $9' }} variant="primary">
                 Personal shares
               </Text>
               <StyledDivForCards>
@@ -183,19 +182,15 @@ export default function Pool() {
                 />
                 <PoolBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
-                  token1={baseToken}
-                  token2={tokenInfo}
+                  myLiquidity={myLiquidity}
+                  tokenASymbol={baseToken.symbol}
+                  tokenBSymbol={tokenInfo.symbol}
                 />
               </StyledDivForCards>
             </>
 
             <>
-              <Text
-                variant="bold"
-                paddingTop="24px"
-                paddingBottom="18px"
-                color="bodyText"
-              >
+              <Text variant="primary" css={{ padding: '$12 0 $9' }}>
                 Rewards
               </Text>
               {__POOL_REWARDS_ENABLED__ && (
@@ -203,19 +198,19 @@ export default function Pool() {
                   <StyledDivForSeparator />
                   <StyledElementForRewards kind="wrapper">
                     <StyledElementForRewards kind="column">
-                      <Text type="title2">$289.00</Text>
+                      <Text variant="hero">$289.00</Text>
                     </StyledElementForRewards>
 
                     <StyledElementForRewards kind="tokens">
                       <StyledTextForTokens kind="element">
                         <StyledImageForToken src="/crab.png" />
-                        <Text color="bodyText" type="microscopic">
+                        <Text color="body" variant="caption">
                           11 juno
                         </Text>
                       </StyledTextForTokens>
                       <StyledTextForTokens kind="element">
                         <StyledImageForToken src="/crab.png" />
-                        <Text color="bodyText" type="microscopic">
+                        <Text color="body" variant="caption">
                           31 atom
                         </Text>
                       </StyledTextForTokens>
@@ -230,7 +225,7 @@ export default function Pool() {
               )}
               {!__POOL_REWARDS_ENABLED__ && (
                 <StyledDivForRewardsPlaceholder>
-                  <Text color="secondaryText" type="caption" variant="light">
+                  <Text color="secondary" variant="body">
                     Work in progress. Stay tuned!
                   </Text>
                 </StyledDivForRewardsPlaceholder>
@@ -240,10 +235,8 @@ export default function Pool() {
             {__POOL_REWARDS_ENABLED__ && (
               <>
                 <Text
-                  variant="bold"
-                  paddingTop="24px"
-                  paddingBottom="18px"
-                  color="bodyText"
+                  css={{ padding: '$12 0 $9', fontWeight: '$bold' }}
+                  color="body"
                 >
                   Unbonding Liquidity
                 </Text>

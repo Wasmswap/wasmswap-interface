@@ -1,22 +1,43 @@
-import { TokenSelector } from './components/TokenSelector'
+import { styled } from 'components/theme'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { tokenSwapAtom } from './swapAtoms'
-import { styled } from '@stitches/react'
-import { TransactionTips } from './components/TransactionTips'
-import { TransactionAction } from './components/TransactionAction'
-import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
-import { usePersistance } from '../../hooks/usePersistance'
 import {
   TransactionStatus,
   transactionStatusState,
-} from '../../state/atoms/transactionAtoms'
+} from 'state/atoms/transactionAtoms'
+import { usePersistance } from 'hooks/usePersistance'
+import { TokenSelector } from './components/TokenSelector'
+import { TransactionTips } from './components/TransactionTips'
+import { TransactionAction } from './components/TransactionAction'
+import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
+import { tokenSwapAtom } from './swapAtoms'
+import { useTokenList } from '../../hooks/useTokenList'
+import { useEffect } from 'react'
 
 export const TokenSwap = () => {
+  /* connect to recoil */
   const [[tokenA, tokenB], setTokenSwapState] = useRecoilState(tokenSwapAtom)
   const transactionStatus = useRecoilValue(transactionStatusState)
 
-  const isUiDisabled = transactionStatus === TransactionStatus.EXECUTING
+  /* fetch token list and set initial state */
+  const [tokenList, isTokenListLoading] = useTokenList()
+  useEffect(() => {
+    const shouldSetDefaultTokenAState =
+      !tokenA.tokenSymbol && !tokenB.tokenSymbol && tokenList
+    if (shouldSetDefaultTokenAState) {
+      setTokenSwapState([
+        {
+          tokenSymbol: tokenList.base_token.symbol,
+          amount: tokenA.amount || 0,
+        },
+        tokenB,
+      ])
+    }
+  }, [tokenList, tokenA, tokenB, setTokenSwapState])
 
+  const isUiDisabled =
+    transactionStatus === TransactionStatus.EXECUTING || isTokenListLoading
+
+  /* fetch token to token price */
   const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
@@ -28,6 +49,7 @@ export const TokenSwap = () => {
     isPriceLoading ? undefined : currentTokenPrice
   )
 
+  /* select token price */
   const tokenPrice =
     (isPriceLoading ? persistTokenPrice : currentTokenPrice) || 0
 

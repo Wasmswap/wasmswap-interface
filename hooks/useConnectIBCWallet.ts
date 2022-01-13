@@ -1,26 +1,35 @@
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { useRecoilState } from 'recoil'
 import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { useIBCAssetInfo } from './useIBCAssetInfo'
 import { useMutation } from 'react-query'
 import { useEffect } from 'react'
 
 /* shares very similar logic with `useConnectWallet` and is a subject to refactor */
 export const useConnectIBCWallet = (
+  tokenSymbol: string,
   mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
   const [{ status, tokenSymbol: storedTokenSymbol }, setWalletState] =
     useRecoilState(ibcWalletState)
 
-  const mutation = useMutation(async (tokenSymbol: string) => {
+  const assetInfo = useIBCAssetInfo(tokenSymbol || storedTokenSymbol)
+
+  const mutation = useMutation(async () => {
     if (window && !window?.keplr) {
       alert('Please install Keplr extension and refresh the page.')
       return
     }
 
-    if (!tokenSymbol) {
+    if (!tokenSymbol && !storedTokenSymbol) {
       throw new Error(
         'You must provide `tokenSymbol` before connecting to the wallet.'
+      )
+    }
+
+    if (!assetInfo) {
+      throw new Error(
+        'Asset info for the provided `tokenSymbol` was not found. Check your internet connection.'
       )
     }
 
@@ -33,13 +42,13 @@ export const useConnectIBCWallet = (
     }))
 
     try {
-      const { chain_id } = getIBCAssetInfo(tokenSymbol)
+      const { chain_id, rpc } = assetInfo
 
       await window.keplr.enable(chain_id)
       const offlineSigner = await window.getOfflineSigner(chain_id)
 
       const wasmChainClient = await SigningStargateClient.connectWithSigner(
-        'https://cosmoshub.validator.network:443',
+        rpc,
         offlineSigner
       )
 
@@ -65,17 +74,19 @@ export const useConnectIBCWallet = (
     }
   }, mutationOptions)
 
+  const connectWallet = mutation.mutate
+
   useEffect(() => {
     /* restore wallet connection */
-    if (status === WalletStatusType.restored && storedTokenSymbol) {
-      mutation.mutate(storedTokenSymbol)
+    if (status === WalletStatusType.restored && assetInfo) {
+      connectWallet(null)
     }
-  }, [status, mutation.mutate, storedTokenSymbol]) // eslint-disable-line
+  }, [status, connectWallet, assetInfo])
 
   useEffect(() => {
     function reconnectWallet() {
-      if (storedTokenSymbol && status === WalletStatusType.connected) {
-        mutation.mutate(storedTokenSymbol)
+      if (assetInfo && status === WalletStatusType.connected) {
+        connectWallet(null)
       }
     }
 
@@ -83,7 +94,7 @@ export const useConnectIBCWallet = (
     return () => {
       window.removeEventListener('keplr_keystorechange', reconnectWallet)
     }
-  }, [storedTokenSymbol, status]) // eslint-disable-line
+  }, [connectWallet, status, assetInfo])
 
   return mutation
 }

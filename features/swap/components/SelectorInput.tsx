@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { Ref } from 'react'
 import { Text } from 'components/Text'
-import { styled } from '@stitches/react'
-import { useAmountChangeController } from '../../../hooks/useAmountChangeController'
+import { styled } from 'components/theme'
+import { useAmountChangeController } from 'hooks/useAmountChangeController'
 
 type SelectorInputProps = {
   amount: number
   disabled: boolean
   onAmountChange: (amount: number) => void
+  inputRef?: Ref<HTMLInputElement>
 }
 
 export const SelectorInput = ({
   amount,
   disabled,
   onAmountChange,
+  inputRef,
 }: SelectorInputProps) => {
   const { value, setValue } = useAmountChangeController({
     amount,
@@ -20,9 +22,11 @@ export const SelectorInput = ({
   })
 
   return (
-    <Text variant="bold">
+    <Text variant="primary">
       <StyledInput
+        ref={inputRef}
         type="number"
+        lang="en-US"
         placeholder="0.0"
         min={0}
         value={value}

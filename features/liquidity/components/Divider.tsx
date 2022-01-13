@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 
 export const Divider = ({ offsetY = 0 }) => (
   <StyledHR style={offsetY ? { margin: `${offsetY}px 0` } : undefined} />

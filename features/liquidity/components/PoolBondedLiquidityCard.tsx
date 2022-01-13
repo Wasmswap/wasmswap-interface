@@ -1,62 +1,60 @@
-import { styled } from '@stitches/react'
-import { Text } from '../../../components/Text'
-import { Button } from '../../../components/Button'
-import { __POOL_REWARDS_ENABLED__ } from '../../../util/constants'
+import { styled } from 'components/theme'
+import { Text } from 'components/Text'
+import { Button } from 'components/Button'
+import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { Divider } from './Divider'
+import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
 
-export const PoolBondedLiquidityCard = ({ onButtonClick, token1, token2 }) => {
+export const PoolBondedLiquidityCard = ({
+  onButtonClick,
+  tokenASymbol,
+  tokenBSymbol,
+  myLiquidity,
+}) => {
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
+
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
-        <Text
-          type="caption"
-          color="secondaryText"
-          variant="light"
-          paddingBottom="9px"
-        >
+        <Text variant="body" color="secondary" css={{ paddingBottom: '$4' }}>
           Staked liquidity
         </Text>
-        <Text type="title2" variant="bold">
-          $0.00
+        <Text variant="hero">$0.00</Text>
+        <Text variant="caption" css={{ paddingTop: '$4' }}>
+          $
+          {dollarValueFormatterWithDecimals(myLiquidity.dollarValue, {
+            includeCommaSeparation: true,
+            applyNumberConversion: false,
+          })}{' '}
+          unstaked tokens
         </Text>
       </StyledElementForCardLayout>
+      <Divider />
       <StyledElementForCardLayout kind="content">
-        <Text
-          paddingBottom="4px"
-          type="caption"
-          variant="light"
-          color="tertiaryText"
-        >
-          Stake your liquidity
-        </Text>
-        <Text
-          paddingBottom="4px"
-          type="microscopic"
-          variant="light"
-          color="tertiaryText"
-        >
-          Claim rewards
+        <Text variant="body" color="secondary" css={{ padding: '$7 0 $8' }}>
+          Current reward incentive
         </Text>
 
         <StyledElementForTokens kind="wrapper">
-          <StyledElementForTokens kind="element">
-            <StyledImageForToken src={token1.logoURI} />
-            <Text color="bodyText" type="microscopic">
-              +0 {token1.symbol}/14d
-            </Text>
+          <StyledElementForTokens kind="column">
+            <StyledImageForToken src={tokenA.logoURI} />
+            <StyledImageForToken src={tokenB.logoURI} />
           </StyledElementForTokens>
-          <StyledElementForTokens kind="element">
-            <StyledImageForToken src={token2.logoURI} />
-            <Text color="bodyText" type="microscopic">
-              +0 {token2.symbol}/14d
-            </Text>
-          </StyledElementForTokens>
+          <Text color="body" variant="caption">
+            $0.00/14 days in 2 tokens
+          </Text>
         </StyledElementForTokens>
-        <StyledButton
+
+        <Button
+          css={{ width: '100%' }}
+          size="large"
           disabled={!__POOL_REWARDS_ENABLED__}
           onClick={__POOL_REWARDS_ENABLED__ ? onButtonClick : undefined}
         >
           {__POOL_REWARDS_ENABLED__ ? 'Bond / Unbond tokens' : 'Coming soon'}
-        </StyledButton>
+        </Button>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>
   )
@@ -68,9 +66,9 @@ const StyledElementForCardLayout = styled('div', {
       wrapper: {
         position: 'relative',
         zIndex: 0,
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
-        padding: '20px 0 22px',
-        borderRadius: '8px',
+        backgroundColor: '$backgroundColors$primary',
+        padding: '$9 0 $12',
+        borderRadius: '$2',
         '&:after': {
           content: '""',
           display: 'block',
@@ -88,34 +86,28 @@ const StyledElementForCardLayout = styled('div', {
       content: {
         position: 'relative',
         zIndex: 1,
-        padding: '0 24px',
+        padding: '0 $12',
       },
     },
     name: {
       liquidity: {
-        padding: '0 20px 26px',
+        padding: '0 $10 $6',
       },
     },
   },
 })
 
 const StyledElementForTokens = styled('div', {
-  display: 'grid',
+  display: 'flex',
+  alignItems: 'center',
 
   variants: {
     kind: {
-      element: {
-        gridTemplateColumns: '20px auto',
-        alignItems: 'center',
-        columnGap: '6px',
-      },
       wrapper: {
-        paddingTop: '16px',
-        paddingBottom: '24px',
-        gridAutoFlow: 'column',
-        alignItems: 'center',
-        columnGap: '15px',
+        paddingBottom: '$11',
+        columnGap: '$space$5',
       },
+      column: {},
     },
   },
 })
@@ -125,8 +117,8 @@ const StyledImageForToken = styled('img', {
   height: 20,
   borderRadius: '50%',
   backgroundColor: '#ccc',
-})
-
-const StyledButton = styled(Button, {
-  width: '100% !important',
+  boxShadow: '0 0 0 1px #e7d9e3',
+  '&:not(&:first-of-type)': {
+    marginLeft: -3,
+  },
 })

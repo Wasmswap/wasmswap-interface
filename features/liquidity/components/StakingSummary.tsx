@@ -1,12 +1,9 @@
-import { styled } from '@stitches/react'
-import { Text } from '../../../components/Text'
-import { TokenInfo } from '../../../hooks/useTokenInfo'
-import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
-import {
-  dollarValueFormatter,
-  formatTokenBalance,
-} from '../../../util/conversion'
 import { useRef, useState } from 'react'
+import { styled } from 'components/theme'
+import { Text } from 'components/Text'
+import { TokenInfo } from 'hooks/useTokenList'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { dollarValueFormatter, formatTokenBalance } from 'util/conversion'
 
 type StakingSummaryProps = {
   label: string
@@ -45,7 +42,7 @@ export const StakingSummary = ({
 
   return (
     <>
-      <Text type="caption" paddingTop="16px" paddingBottom="12px">
+      <Text variant="body" css={{ padding: '$8 0 $6' }}>
         {label}
       </Text>
       <StyledDivForGrid>
@@ -69,13 +66,14 @@ export const StakingSummary = ({
           onClick={() => refForInput.current?.focus()}
           role="button"
         >
-          <StyledTextForInputWithSymbol variant="light" type="microscopic">
+          <StyledTextForInputWithSymbol variant="caption">
             $
             <input
               ref={refForInput}
               placeholder="0.0"
               min="0"
               type="number"
+              lang="en-US"
               value={formattedLiquidityAmount}
               style={{
                 width: `${formattedLiquidityAmount.length}ch`,
@@ -98,12 +96,7 @@ export const StakingSummary = ({
 const StyledNodeForToken = ({ logoURI, name, amount }) => (
   <StyledDivForToken>
     <StyledImgForTokenLogo as={logoURI ? 'img' : 'div'} src={logoURI} />
-    <Text
-      textTransform="uppercase"
-      type="microscopic"
-      variant="light"
-      wrap="pre"
-    >
+    <Text transform="uppercase" variant="caption" wrap={false}>
       {formatTokenBalance(amount)} {name}
     </Text>
   </StyledDivForToken>
@@ -114,21 +107,21 @@ const StyledDivForColumn = styled('div', {
     kind: {
       content: {},
       value: {
-        borderRadius: '6px',
+        borderRadius: '$1',
         transition: 'background-color .1s ease-out',
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        backgroundColor: '$colors$dark10',
         '&:hover': {
-          backgroundColor: 'rgba(25, 29, 32, 0.15)',
+          backgroundColor: '$colors$dark15',
         },
         '&:active': {
-          backgroundColor: 'rgba(25, 29, 32, 0.05)',
+          backgroundColor: '$colors$dark5',
         },
       },
     },
     active: {
       false: {},
       true: {
-        backgroundColor: 'rgba(25, 29, 32, 0.05) !important',
+        backgroundColor: '$colors$dark5 !important',
       },
     },
   },
@@ -138,20 +131,20 @@ const StyledDivForGrid = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  paddingBottom: '16px',
+  paddingBottom: '$8',
 })
 
 const StyledDivForTokensGrid = styled('div', {
   display: 'flex',
   alignItems: 'center',
-  rowGap: '8px',
+  rowGap: '$space$4',
   flexWrap: 'wrap',
 })
 
 const StyledDivForToken = styled('div', {
   display: 'flex',
   alignItems: 'center',
-  columnGap: '9px',
+  columnGap: '$space$4',
   width: '100%',
 })
 
@@ -166,7 +159,7 @@ const StyledTextForInputWithSymbol: any = styled(Text, {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  padding: '8px 14px',
-  columnGap: '4px',
+  padding: '$4 $7',
+  columnGap: '$space$2',
   minWidth: '107px',
 })

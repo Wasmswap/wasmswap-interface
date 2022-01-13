@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react'
 import styled from 'styled-components'
 import { TransferDialog } from '../../features/assets/components/TransferDialog'
 import { useConnectIBCWallet } from '../../hooks/useConnectIBCWallet'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { AppLayout } from '../../components/Layout/AppLayout'
 import { PageHeader } from '../../components/Layout/PageHeader'
 import { AssetsList } from '../../features/assets/components/AssetsList'
@@ -10,6 +10,11 @@ import { Text } from '../../components/Text'
 import { useConnectWallet } from '../../hooks/useConnectWallet'
 import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from '../../state/atoms/walletAtoms'
+import { Toast } from '../../components/Toast'
+import { IconWrapper } from '../../components/IconWrapper'
+import { Error } from '../../icons/Error'
+import { Button } from '../../components/Button'
+import { UpRightArrow } from '../../icons/UpRightArrow'
 
 export default function Transfer() {
   const [
@@ -33,34 +38,51 @@ export default function Transfer() {
     updateState({ isTransferDialogShowing: false })
   }
 
-  const { mutate: connectExternalWallet } = useConnectIBCWallet({
+  const { mutate: connectExternalWallet } = useConnectIBCWallet(selectedToken, {
     onError(error) {
-      toast.error(
-        `Couldn't connect to your wallet to retrieve the address for ${selectedToken}: ${error}`,
-        {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      )
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Error />} color="error" />}
+          title={`Cannot get wallet address for ${selectedToken}`}
+          body={error?.toString()}
+          buttons={
+            <Button
+              as="a"
+              variant="ghost"
+              href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+              target="__blank"
+              iconRight={<UpRightArrow />}
+            >
+              Provide feedback
+            </Button>
+          }
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
     },
   })
 
   const { mutate: connectInternalWallet } = useConnectWallet({
     onError(error) {
-      toast.error(`Couldn't connect to your wallet: ${error}`, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Error />} color="error" />}
+          title={`Cannot connect to your wallet`}
+          body={error?.toString()}
+          buttons={
+            <Button
+              as="a"
+              variant="ghost"
+              href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+              target="__blank"
+              iconRight={<UpRightArrow />}
+            >
+              Provide feedback
+            </Button>
+          }
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
     },
   })
 
@@ -72,7 +94,7 @@ export default function Transfer() {
         await connectInternalWallet(null)
       }
 
-      connectExternalWallet(selectedToken)
+      connectExternalWallet(null)
     }
 
     // connect wallet as soon as a token is selected
@@ -90,7 +112,7 @@ export default function Transfer() {
             subtitle="Easily and quickly initiate payments across IBC."
           />
           <AssetsList onActionClick={handleAssetCardActionClick} />
-          <Text variant="light" paddingTop="24px" color="tertiaryText">
+          <Text variant="body" color="tertiary" css={{ paddingTop: '$12' }}>
             More tokens available soon
           </Text>
         </StyledWrapper>

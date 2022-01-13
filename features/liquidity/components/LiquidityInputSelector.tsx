@@ -1,17 +1,19 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { dollarValueFormatter } from '../../../util/conversion'
-import { MouseEvent, useRef, useState } from 'react'
+import { MouseEvent, Ref, useRef, useState } from 'react'
 import { useAmountChangeController } from 'hooks/useAmountChangeController'
 import { calculateCharactersLength } from 'components/BasicNumberInput'
 
 type LiquiditySelectorProps = {
+  inputRef?: Ref<HTMLInputElement>
   maxLiquidity: number
   liquidity: number
   onChangeLiquidity: (liquidity: number) => void
 }
 
 export const LiquidityInputSelector = ({
+  inputRef,
   maxLiquidity,
   liquidity,
   onChangeLiquidity,
@@ -40,11 +42,13 @@ export const LiquidityInputSelector = ({
 
   return (
     <StyledDivForSelector {...(bind as any)}>
-      <StyledTextForInputWithSymbol ref={refForInputWrapper} variant="light">
+      <StyledTextForInputWithSymbol ref={refForInputWrapper} variant="body">
         <input
+          ref={inputRef}
           placeholder="0.0"
           max="100"
           type="number"
+          lang="en-US"
           value={value}
           style={{
             width: `${calculateCharactersLength(value)}ch`,
@@ -108,6 +112,7 @@ const useDrag = ({ getIsException, onProgressUpdate }) => {
 }
 
 const StyledDivForSelector = styled('div', {
+  cursor: 'col-resize',
   background: 'rgba(25, 29, 32, 0.1)',
   borderRadius: '6px',
   overflow: 'hidden',

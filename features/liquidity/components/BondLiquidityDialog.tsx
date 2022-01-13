@@ -1,7 +1,7 @@
-import { getBaseToken, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { Dialog, StyledCloseIcon } from 'components/Dialog'
 import { Text } from 'components/Text'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { useState } from 'react'
 import {
@@ -19,7 +19,7 @@ import { StateSwitchButtons } from './StateSwitchButtons'
 import dayjs from 'dayjs'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
-  const baseToken = getBaseToken()
+  const baseToken = useBaseTokenInfo()
   const tokenInfo = useTokenInfoByPoolId(poolId)
 
   const [
@@ -43,15 +43,15 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
       <StyledDivForContent>
         {canManageStaking ? (
-          <Text type="heading" variant="bold" paddingBottom="16px">
+          <Text variant="header" css={{ paddingBottom: '$8' }}>
             Manage staking
           </Text>
         ) : (
           <>
-            <Text type="heading" variant="bold" paddingBottom="4px">
+            <Text variant="header" css={{ paddingBottom: '$2' }}>
               Staking tokens
             </Text>
-            <Text variant="light" paddingBottom="20px">
+            <Text variant="body" css={{ paddingBottom: '$10' }}>
               Choose how many tokens to stake
             </Text>
           </>
@@ -71,7 +71,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           </StyledDivForContent>
           <Divider />
           <StyledDivForContent>
-            <Text type="caption" paddingTop="16px" paddingBottom="12px">
+            <Text variant="body" css={{ padding: '$8 0 $6' }}>
               Choose your token amount
             </Text>
           </StyledDivForContent>
@@ -83,12 +83,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           liquidity={liquidityDollarAmount}
           onChangeLiquidity={(value) => setLiquidityDollarAmount(value)}
         />
-        <Text
-          type="microscopic"
-          color="tertiaryText"
-          paddingTop="12px"
-          paddingBottom="18px"
-        >
+        <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
           Max available for stacking is worth $
           {dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
             includeCommaSeparation: true,

@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
 import { Button } from '../../../components/Button'
 import React, { useEffect, useState } from 'react'
@@ -74,13 +74,12 @@ export const TransactionAction = ({
           />
         </StyledDivColumnForInfo>
         <StyledDivColumnForInfo kind="fees">
-          <Text type="microscopic" variant="bold" color="disabled">
-            Swap fee ({NETWORK_FEE * 100}%)
-          </Text>
+          <Text variant="legend">Swap fee ({NETWORK_FEE * 100}%)</Text>
         </StyledDivColumnForInfo>
       </StyledDivForInfo>
       <Button
-        type={status === WalletStatusType.connected ? 'primary' : 'disabled'}
+        variant="primary"
+        size="large"
         disabled={shouldDisableSubmissionButton}
         onClick={
           !isExecutingTransaction && !isPriceLoading
@@ -88,15 +87,7 @@ export const TransactionAction = ({
             : undefined
         }
       >
-        {isExecutingTransaction ? (
-          <Spinner instant />
-        ) : (
-          <Text type="subtitle" color="white" variant="light" paddingY="3px">
-            {status === WalletStatusType.connected
-              ? 'Swap tokens'
-              : 'Connect wallet'}
-          </Text>
-        )}
+        {isExecutingTransaction ? <Spinner instant /> : 'Swap'}
       </Button>
     </StyledDivForWrapper>
   )
@@ -124,14 +115,14 @@ const StyledDivColumnForInfo = styled('div', {
       slippage: {
         backgroundColor: 'transparent',
         minWidth: '140px',
-        borderRadius: '8px 0 0 8px',
+        borderRadius: '$4 0 0 $4',
         borderRight: '1px solid rgba(25, 29, 32, 0.2)',
       },
       fees: {
         backgroundColor: 'rgba(25, 29, 32, 0.1)',
         flex: 1,
-        padding: '16px 25px',
-        borderRadius: '0 8px 8px 0',
+        padding: 'calc($space$8 - $space$1 / 1.5) $space$12',
+        borderRadius: '0 $2 $2 0',
       },
     },
   },

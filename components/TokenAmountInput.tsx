@@ -1,46 +1,38 @@
 import styled from 'styled-components'
 import { colorTokens } from '../util/constants'
-import { formatTokenBalance } from '../util/conversion'
 import { Text } from './Text'
 import { Button } from './Button'
+import { BasicNumberInput } from './BasicNumberInput'
 
 type TokenAmountInputProps = {
-  value: number
+  amount: number
   onAmountChange: (amount: number) => void
-  maxValue: number
+  maxAmount: number
   tokenSymbol: string
 }
 
 export const TokenAmountInput = ({
-  value,
+  amount,
   onAmountChange,
-  maxValue,
+  maxAmount,
   tokenSymbol,
 }: TokenAmountInputProps) => {
-  function handleChange({ target: { value: rawInput } }) {
-    const formattedValue = formatTokenBalance(rawInput)
-    const validatedValue = formattedValue > maxValue ? maxValue : formattedValue
-    onAmountChange(Number(validatedValue))
-  }
-
   return (
     <StyledWrapper>
-      <StyledButton size="small" onClick={() => onAmountChange(maxValue)}>
+      <Button size="small" onClick={() => onAmountChange(maxAmount)}>
         Max
-      </StyledButton>
-      <Text as={StyledDivForInputWrapper} type="title" variant="bold">
-        <StyledInput
-          value={formatTokenBalance(value)}
-          onChange={handleChange}
-          type="number"
-          max={maxValue}
+      </Button>
+      <Text as={StyledDivForInputWrapper} variant="hero">
+        <BasicNumberInput
+          value={amount}
           min={0}
+          max={maxAmount}
+          onChange={onAmountChange}
+          lang="en-US"
           placeholder="0.00"
         />
         <StyledDivForTokenName>
-          <Text type="microscopic" variant="bold">
-            {tokenSymbol}
-          </Text>
+          <Text variant="caption">{tokenSymbol}</Text>
         </StyledDivForTokenName>
       </Text>
     </StyledWrapper>
@@ -56,22 +48,6 @@ const StyledWrapper = styled.div`
   padding: 12px 22px 12px 20px;
 `
 
-const StyledInput = styled.input`
-  border: none;
-  outline: none;
-  display: block;
-  width: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  background: transparent;
-  text-align: right;
-  line-height: 44px;
-  flex: 1;
-  padding: 0;
-  border-radius: 0;
-  margin: 0;
-`
-
 const StyledDivForInputWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -83,9 +59,4 @@ const StyledDivForTokenName = styled.div`
   display: flex;
   padding: 8px 0 0 8px;
   line-height: 44px;
-`
-
-const StyledButton = styled(Button)`
-  border-radius: 136px;
-  padding: 6px 11px;
 `

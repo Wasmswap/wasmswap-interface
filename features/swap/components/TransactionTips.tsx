@@ -2,7 +2,7 @@ import { IconWrapper } from '../../../components/IconWrapper'
 import { Exchange } from '../../../icons/Exchange'
 import { Text } from '../../../components/Text'
 import React, { useState } from 'react'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
@@ -55,7 +55,7 @@ export const TransactionTips = ({
           }
         />
         {isShowing && (
-          <Text type="microscopic" variant="bold" color="disabled" wrap="pre">
+          <Text variant="legend" wrap={false}>
             1 {tokenA.tokenSymbol} ≈ {formatTokenBalance(conversionRate)}{' '}
             {tokenB.tokenSymbol}
             {' ≈ '}$
@@ -66,7 +66,7 @@ export const TransactionTips = ({
         )}
       </StyledDivForRateWrapper>
 
-      <Text type="microscopic" variant="bold" color="secondaryText">
+      <Text variant="legend">
         $
         {dollarValueFormatterWithDecimals(dollarValue, {
           includeCommaSeparation: true,

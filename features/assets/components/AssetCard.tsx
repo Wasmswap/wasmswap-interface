@@ -1,11 +1,11 @@
 import { styled } from '@stitches/react'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
+import { Button } from 'components/Button'
 import { Text } from '../../../components/Text'
 import { IconWrapper } from '../../../components/IconWrapper'
-import { DoubleArrow } from '../../../icons/DoubleArrow'
-import { colorTokens } from '../../../util/constants'
 import { HTMLProps } from 'react'
 import { __TRANSFERS_ENABLED__ } from '../../../util/constants'
+import { ArrowUp } from '../../../icons'
 
 export enum AssetCardState {
   fetching = 'FETCHING',
@@ -61,10 +61,10 @@ export const AssetCard = ({
       <StyledElementForCard kind="content">
         <StyledElementForToken>
           <StyledTokenImage src={logoURI} />
-          <Text type="subtitle" variant="bold">
+          <Text variant="title">
             {balance} {name}{' '}
             {!__TRANSFERS_ENABLED__ && (
-              <Text paddingLeft="16px" as="span" type="subtitle" variant="bold">
+              <Text css={{ paddingLeft: '$8' }} as="span" variant="title">
                 Coming soon
               </Text>
             )}
@@ -73,20 +73,22 @@ export const AssetCard = ({
       </StyledElementForCard>
 
       <StyledElementForCard kind="actions">
-        <StyledActionButton
+        <Button
           disabled={!__TRANSFERS_ENABLED__}
           onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
+          iconLeft={<IconWrapper icon={<ArrowUp />} rotation="180deg" />}
+          variant="ghost"
         >
-          <IconWrapper size="16px" icon={<DoubleArrow />} />
           Deposit
-        </StyledActionButton>
-        <StyledActionButton
+        </Button>
+        <Button
           disabled={!__TRANSFERS_ENABLED__}
           onClick={__TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined}
+          iconLeft={<IconWrapper icon={<ArrowUp />} />}
+          variant="ghost"
         >
-          <IconWrapper size="16px" icon={<DoubleArrow />} />
           Withdraw
-        </StyledActionButton>
+        </Button>
       </StyledElementForCard>
 
       {state === AssetCardState.active && (
@@ -100,9 +102,9 @@ const StyledElementForCard = styled('div', {
   variants: {
     kind: {
       wrapper: {
-        background: 'rgba(25, 29, 32, 0.1)',
-        borderRadius: '8px',
-        padding: '18px 24px',
+        background: '$colors$dark10',
+        borderRadius: '$2',
+        padding: '$9 $12',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -112,14 +114,14 @@ const StyledElementForCard = styled('div', {
       content: {
         display: 'grid',
         gridAutoFlow: 'column',
-        columnGap: '21px',
+        columnGap: '$space$10',
         position: 'relative',
         zIndex: 1,
       },
       actions: {
         display: 'grid',
         gridAutoFlow: 'column',
-        columnGap: '12px',
+        columnGap: '$space$6',
         position: 'relative',
         zIndex: 1,
       },
@@ -150,27 +152,4 @@ const StyledTokenImage = styled('img', {
   height: 26,
   borderRadius: '50%',
   backgroundColor: '#ccc',
-})
-
-const StyledActionButton = styled('button', {
-  display: 'grid',
-  gridAutoFlow: 'column',
-  columnGap: '5px',
-  alignItems: 'center',
-  transition: 'color .15s ease-out',
-  fontSize: '17px',
-  lineHeight: '20px',
-  fontWeight: 500,
-  '&:hover': {
-    color: colorTokens.gray,
-  },
-
-  variants: {
-    disabled: {
-      true: {
-        color: colorTokens.gray,
-        cursor: 'not-allowed',
-      },
-    },
-  },
 })

@@ -1,19 +1,25 @@
-import { toast } from 'react-toastify'
 import {
   swapToken1ForToken2,
   swapToken2ForToken1,
   swapTokenForToken,
-} from '../../../services/swap'
-import { getBaseToken, getTokenInfo } from '../../../hooks/useTokenInfo'
+} from 'services/swap'
+import { unsafelyGetTokenInfo, useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { toast } from 'react-hot-toast'
 import {
   TransactionStatus,
   transactionStatusState,
-} from '../../../state/atoms/transactionAtoms'
-import { walletState, WalletStatusType } from '../../../state/atoms/walletAtoms'
+} from 'state/atoms/transactionAtoms'
+import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { useMutation, useQueryClient } from 'react-query'
+import { Toast } from 'components/Toast'
+import { IconWrapper } from 'components/IconWrapper'
+import { Error } from 'icons/Error'
+import { Button } from 'components/Button'
+import { UpRightArrow } from 'icons/UpRightArrow'
+import { Valid } from 'icons/Valid'
 
 type UseTokenSwapArgs = {
   tokenASymbol: string
@@ -33,17 +39,18 @@ export const useTokenSwap = ({
   const slippage = useRecoilValue(slippageAtom)
   const setTokenSwap = useSetRecoilState(tokenSwapAtom)
 
+  const baseToken = useBaseTokenInfo()
+
   const queryClient = useQueryClient()
 
   return useMutation(
     'swapTokens',
     async () => {
-      const tokenA = getTokenInfo(tokenASymbol)
-      const tokenB = getTokenInfo(tokenBSymbol)
-      const baseToken = getBaseToken()
+      const tokenA = unsafelyGetTokenInfo(tokenASymbol)
+      const tokenB = unsafelyGetTokenInfo(tokenBSymbol)
 
       if (status !== WalletStatusType.connected) {
-        throw new Error('Please connect your wallet.')
+        throw 'Please connect your wallet.'
       }
 
       setTransactionState(TransactionStatus.EXECUTING)
@@ -97,15 +104,13 @@ export const useTokenSwap = ({
     },
     {
       onSuccess() {
-        toast.success('🎉 Swap Successful', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Valid />} color="valid" />}
+            title="Swap successfull!"
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
 
         setTokenSwap(([tokenA, tokenB]) => [
           {
@@ -119,21 +124,32 @@ export const useTokenSwap = ({
       },
       onError(e) {
         console.log(e)
-        let msg =
+        const errorMessage =
           String(e).length > 300
             ? `${String(e).substring(0, 150)} ... ${String(e).substring(
                 String(e).length - 150
               )}`
             : e
-        toast.error(`Swap error: ${msg}`, {
-          position: 'top-center',
-          autoClose: 10000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Error />} color="error" />}
+            title="Oops swap error!"
+            body={errorMessage}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
       },
       onSettled() {
         setTransactionState(TransactionStatus.IDLE)

@@ -1,26 +1,27 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { AppLayout } from '../../components/Layout/AppLayout'
-import { getBaseToken, tokenList } from '../../hooks/useTokenInfo'
-import { PoolCard } from '../../features/liquidity/components/PoolCard'
-import { PageHeader } from '../../components/Layout/PageHeader'
-import { useMultiplePoolsLiquidity } from '../../hooks/usePoolLiquidity'
-import { Text } from '../../components/Text'
-import { Spinner } from '../../components/Spinner'
+import { AppLayout } from 'components/Layout/AppLayout'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { PoolCard } from 'features/liquidity/components/PoolCard'
+import { PageHeader } from 'components/Layout/PageHeader'
+import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
+import { Text } from 'components/Text'
+import { Spinner } from 'components/Spinner'
+import { useTokenList } from 'hooks/useTokenList'
 
 export default function Pools() {
-  const [{ supportedTokens, poolIds }] = useState(() => {
-    const supportedTokens = tokenList.filter(({ swap_address }) =>
-      Boolean(swap_address)
-    )
-    const poolIds = supportedTokens
+  const [tokenList] = useTokenList()
+  const [supportedTokens, poolIds] = useMemo(() => {
+    const tokensCollection =
+      tokenList?.tokens.filter(({ swap_address }) => Boolean(swap_address)) ??
+      []
+
+    const poolIdsCollection = tokensCollection
       .map(({ pool_id }) => pool_id)
       .filter(Boolean)
-    return {
-      supportedTokens,
-      poolIds,
-    }
-  })
+
+    return [tokensCollection, poolIdsCollection]
+  }, [tokenList])
 
   const [liquidity, isLoading] = useMultiplePoolsLiquidity({
     poolIds,
@@ -40,7 +41,7 @@ export default function Pools() {
     return pools
   }, [liquidity, supportedTokens])
 
-  const { symbol: baseTokenSymbol } = getBaseToken()
+  const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
 
   const shouldShowFetchingState = isLoading || !liquidity?.length
   const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
@@ -124,10 +125,11 @@ const StyledDivForPoolsGrid = styled.div`
 const SectionTitle = ({ variant = 'my', children }) => {
   return (
     <Text
-      type="body"
-      variant="light"
-      paddingBottom="21px"
-      paddingTop={variant === 'all' ? '39px' : '0px'}
+      variant="primary"
+      css={{
+        paddingBottom: '$11',
+        paddingTop: variant === 'all' ? '$19' : '0px',
+      }}
     >
       {children}
     </Text>

@@ -45,7 +45,7 @@ export const useConnectIBCWallet = (
       const { chain_id, rpc } = assetInfo
 
       await window.keplr.enable(chain_id)
-      const offlineSigner = await window.getOfflineSigner(chain_id)
+      const offlineSigner = await window.getOfflineSignerAuto(chain_id)
 
       const wasmChainClient = await SigningStargateClient.connectWithSigner(
         rpc,

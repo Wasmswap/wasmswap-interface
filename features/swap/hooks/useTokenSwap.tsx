@@ -14,12 +14,12 @@ import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { useMutation, useQueryClient } from 'react-query'
-import { Toast } from '../../../components/Toast'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Error } from '../../../icons/Error'
-import { Button } from '../../../components/Button'
-import { UpRightArrow } from '../../../icons/UpRightArrow'
-import { Valid } from '../../../icons/Valid'
+import { Toast } from 'components/Toast'
+import { IconWrapper } from 'components/IconWrapper'
+import { Error } from 'icons/Error'
+import { Button } from 'components/Button'
+import { UpRightArrow } from 'icons/UpRightArrow'
+import { Valid } from 'icons/Valid'
 
 type UseTokenSwapArgs = {
   tokenASymbol: string

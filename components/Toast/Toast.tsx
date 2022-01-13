@@ -1,9 +1,10 @@
 import { Children, cloneElement, ReactElement, ReactNode } from 'react'
-import { styled } from './theme'
-import { Text } from './Text'
-import { Button } from './Button'
-import { IconWrapper } from './IconWrapper'
-import { Union } from '../icons/Union'
+import { styled } from '../theme'
+import { Text } from '../Text'
+import { Button } from '../Button'
+import { IconWrapper } from '../IconWrapper'
+import { Union } from '../../icons/Union'
+import { animated, useSpring } from '@react-spring/web'
 
 type ToastProps = {
   icon: ReactElement
@@ -14,8 +15,12 @@ type ToastProps = {
 }
 
 export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
+  const styles = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  })
   return (
-    <StyledToast>
+    <StyledToast style={styles}>
       {icon &&
         cloneElement(Children.only(icon), {
           size: '24px',
@@ -40,7 +45,7 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
   )
 }
 
-const StyledToast = styled('div', {
+const StyledToast = styled(animated.div, {
   display: 'flex',
   position: 'relative',
   backgroundColor: '$dark',

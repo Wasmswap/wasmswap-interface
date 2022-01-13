@@ -39,7 +39,6 @@
     "react-merge-refs": "^1.1.0",
     "react-query": "3.34.5",
     "react-spring": "^9.2.4",
-    "react-toastify": "^7.0.4",
     "recoil": "^0.4.0",
     "sass": "^1.45.0",
     "styled-components": "^5.3.1",

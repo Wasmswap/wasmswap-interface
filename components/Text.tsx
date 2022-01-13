@@ -73,14 +73,14 @@ const StyledText = styled('p', {
     color: Object.assign(
       {
         inherit: {
-          color: 'inherit',
+          $$color: 'inherit',
         },
       },
       Object.keys(theme.textColors).reduce(
         (colorVariants, textColorName) => ({
           ...colorVariants,
           [textColorName]: {
-            $$color: theme.textColors[textColorName].value,
+            color: `${theme.textColors[textColorName].value} !important`,
           },
         }),
         {} as Record<keyof typeof theme['textColors'], { color: string }>

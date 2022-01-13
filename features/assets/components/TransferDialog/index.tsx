@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import { Dialog } from 'components/Dialog'
 import { Text } from 'components/Text'
@@ -15,6 +15,11 @@ import { WalletCardWithBalance } from './WalletCardWithBalance'
 import { WalletCardWithInput } from './WalletCardWithInput'
 import { useTransferAssetMutation } from './useTransferAssetMutation'
 import { TransactionKind } from './types'
+import { Toast } from '../../../../components/Toast'
+import { IconWrapper } from '../../../../components/IconWrapper'
+import { Valid } from '../../../../icons/Valid'
+import { Error } from '../../../../icons/Error'
+import { UpRightArrow } from '../../../../icons/UpRightArrow'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -56,40 +61,41 @@ export const TransferDialog = ({
           console.log('Refetched queries', ...args)
         })
 
-      // show toast
-      toast.success(
-        `🎉 ${transactionKind === 'deposit' ? 'Deposited' : 'Withdrawn'} ${
-          tokenInfo.name
-        } Successfully`,
-        {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      )
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Valid />} color="valid" />}
+          title={`${
+            transactionKind === 'deposit' ? 'Deposited' : 'Withdrawn'
+          } ${tokenInfo.name} Successfully`}
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
 
       // close modal
       requestAnimationFrame(onRequestClose)
     },
     onError(error) {
-      toast.error(
-        `Couldn't ${
-          transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
-        } the asset: ${error}`,
-        {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      )
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Error />} color="error" />}
+          title={`Couldn't ${
+            transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
+          } the asset`}
+          body={error?.toString()}
+          buttons={
+            <Button
+              as="a"
+              variant="ghost"
+              href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+              target="__blank"
+              iconRight={<UpRightArrow />}
+            >
+              Provide feedback
+            </Button>
+          }
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
     },
   })
 

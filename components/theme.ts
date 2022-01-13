@@ -58,28 +58,11 @@ export const { theme, styled, css } = createStitches({
       error: '$colors$error60',
     },
 
-    space: {
-      1: '2px',
-      2: '4px',
-      3: '6px',
-      4: '8px',
-      5: '10px',
-      6: '12px',
-      7: '14px',
-      8: '16px',
-      9: '18px',
-      10: '20px',
-      11: '22px',
-      12: '24px',
-      13: '26px',
-      14: '28px',
-      15: '30px',
-      16: '32px',
-      17: '34px',
-      18: '36px',
-      19: '38px',
-      20: '40px',
-    },
+    space: createSpacing({
+      steps: 20,
+      multiplier: 2,
+      baseSize: 16,
+    }),
 
     fonts: {
       primary:
@@ -87,25 +70,25 @@ export const { theme, styled, css } = createStitches({
       mono: '"JetBrains Mono", monospace, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     },
     fontSizes: {
-      1: '26px',
-      2: '20px',
-      3: '16px',
-      4: '15px',
-      5: '14px',
-      6: '13px',
-      7: '12px',
+      1: '1.625rem',
+      2: '1.25rem',
+      3: '1rem',
+      4: '0.9375rem',
+      5: '0.875rem',
+      6: '0.8125rem',
+      7: '0.75rem',
     },
     fontWeights: {
       bold: 700,
-      semiBold: 600,
+      medium: 600,
       normal: 500,
       light: 400,
     },
     lineHeights: {
-      1: '28px',
-      2: '24px',
-      3: '20px',
-      4: '16px',
+      1: '1.75rem',
+      2: '1.5rem',
+      3: '1.25rem',
+      4: '1rem',
     },
     letterSpacings: {},
     sizes: {},
@@ -147,4 +130,18 @@ function createColorPalette(
   })
 
   return colorPalette
+}
+
+function createSpacing({
+  steps,
+  multiplier = 2,
+  baseSize = 16,
+}): Record<number, string> {
+  return new Array(steps).fill(null).reduce(
+    (spacing, _, index) =>
+      Object.assign(spacing, {
+        [index + 1]: `${((index + 1) * multiplier) / baseSize}rem`,
+      }),
+    {}
+  )
 }

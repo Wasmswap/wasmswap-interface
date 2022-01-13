@@ -1,8 +1,8 @@
-$JetBrainsMonoPath: "./font" !default;
+$JetBrainsMonoPath: "/fonts" !default;
 $JetBrainsMonoVersion: "1.101" !default;
 
 @mixin fontdef($FontType: "Regular") {
-  src: url("#{$JetBrainsMonoPath}/JetBrainsMono-#{$FontType}.woff2?v=#{$JetBrainsMonoVersion}") format("woff2");
+  src: url("#{$JetBrainsMonoPath}/JetBrainsMono/JetBrainsMono-#{$FontType}.woff2?v=#{$JetBrainsMonoVersion}") format("woff2");
 }
 
 //@font-face {

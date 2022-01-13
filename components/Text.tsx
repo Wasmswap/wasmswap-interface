@@ -23,13 +23,13 @@ const StyledText = styled('p', {
         $$color: '$textColors$primary',
         fontSize: '$2',
         lineHeight: '$2',
-        fontWeight: '$semiBold',
+        fontWeight: '$medium',
       },
       title: {
         $$color: '$textColors$primary',
         fontSize: '$3',
         lineHeight: '$3',
-        fontWeight: '$semiBold',
+        fontWeight: '$medium',
       },
       primary: {
         $$color: '$textColors$body',
@@ -41,7 +41,7 @@ const StyledText = styled('p', {
         $$color: '$textColors$body',
         fontSize: '$5',
         lineHeight: '$3',
-        fontWeight: '$light',
+        fontWeight: '$normal',
       },
       link: {
         $$color: '$textColors$body',
@@ -67,20 +67,20 @@ const StyledText = styled('p', {
         $$color: '$textColors$tertiary',
         fontSize: '$7',
         lineHeight: '$4',
-        fontWeight: '$light',
+        fontWeight: '$normal',
       },
     },
     color: Object.assign(
       {
         inherit: {
-          color: 'inherit',
+          $$color: 'inherit',
         },
       },
       Object.keys(theme.textColors).reduce(
         (colorVariants, textColorName) => ({
           ...colorVariants,
           [textColorName]: {
-            $$color: theme.textColors[textColorName].value,
+            color: `${theme.textColors[textColorName].value} !important`,
           },
         }),
         {} as Record<keyof typeof theme['textColors'], { color: string }>

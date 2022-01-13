@@ -79,7 +79,7 @@ export const useTxRates = ({
   )
 
   return {
-    isShowing: shouldShowRates,
+    isShowing: Boolean(shouldShowRates),
     conversionRate,
     conversionRateInDollar,
     dollarValue,

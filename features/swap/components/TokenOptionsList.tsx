@@ -25,16 +25,14 @@ export const TokenOptionsList = ({ activeTokenSymbol, onSelect }) => {
                 alt={tokenInfo.symbol}
               />
               <div data-token-info="">
-                <Text variant="body" css={{ fontWeight: '$bold' }}>
-                  {tokenInfo.symbol}
-                </Text>
+                <Text variant="body">{tokenInfo.symbol}</Text>
                 <Text variant="caption" color="disabled">
                   {tokenInfo.name}
                 </Text>
               </div>
             </StyledDivForColumn>
             <StyledDivForColumn kind="balance">
-              <Text variant="body" css={{ fontWeight: '$bold' }}>
+              <Text variant="body">
                 <FetchBalanceTextForTokenSymbol
                   tokenSymbol={tokenInfo.symbol}
                 />

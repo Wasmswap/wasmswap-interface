@@ -32,8 +32,7 @@ export function NavigationSidebar() {
   }
 
   const { pathname } = useRouter()
-  const getActiveStylesIfActive = (path) =>
-    pathname === path ? { backgroundColor: '$dark5' } : undefined
+  const getIsLinkActive = (path) => pathname === path
 
   const buttonIconCss = {
     '& svg': {
@@ -72,9 +71,9 @@ export function NavigationSidebar() {
           <Link href="/" passHref>
             <Button
               as="a"
-              variant="ghost"
+              variant="menu"
               iconLeft={<IconWrapper icon={<Address />} />}
-              css={getActiveStylesIfActive('/')}
+              selected={getIsLinkActive('/')}
             >
               Swap
             </Button>
@@ -82,9 +81,9 @@ export function NavigationSidebar() {
           <Link href="/transfer" passHref>
             <Button
               as="a"
-              variant="ghost"
+              variant="menu"
               iconLeft={<IconWrapper icon={<ArrowUp />} />}
-              css={getActiveStylesIfActive('/transfer')}
+              selected={getIsLinkActive('/transfer')}
             >
               Transfer
             </Button>
@@ -92,9 +91,9 @@ export function NavigationSidebar() {
           <Link href="/pools" passHref>
             <Button
               as="a"
-              variant="ghost"
+              variant="menu"
               iconLeft={<IconWrapper icon={<Open />} />}
-              css={getActiveStylesIfActive('/pools')}
+              selected={getIsLinkActive('/pools')}
             >
               Liquidity
             </Button>
@@ -147,7 +146,7 @@ const StyledWrapper = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  padding: '0 $16',
+  padding: '0 $8',
   backgroundColor: '$white',
   overflow: 'auto',
   borderRight: '1px solid $borderColors$inactive',

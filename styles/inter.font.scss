@@ -1,9 +1,16 @@
-$InterPath: "./font" !default;
+$InterPath: "/fonts" !default;
 $InterVersion: "3.19" !default;
 
 @mixin fontdef($FontType: "Regular") {
-  src: url("#{$InterPath}/Inter-#{$FontType}.woff2?v=#{$InterVersion}") format("woff2"),
-  url("#{$InterPath}/Inter-#{$FontType}.woff?v=#{$InterVersion}") format("woff");
+  src: url("#{$InterPath}/Inter/Inter-#{$FontType}.woff2?v=#{$InterVersion}") format("woff2"),
+  url("#{$InterPath}/Inter/Inter-#{$FontType}.woff?v=#{$InterVersion}") format("woff");
+}
+
+@font-face {
+  font-family: "Inter";
+  @include fontdef("Bold");
+  font-weight: 700;
+  font-style: normal;
 }
 
 @font-face {

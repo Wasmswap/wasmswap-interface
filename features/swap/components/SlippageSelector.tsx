@@ -29,11 +29,9 @@ export const SlippageSelector = ({
           setShowingSettings(!isShowingSettings)
         }}
       >
-        <Text variant="caption" css={{ fontWeight: '$bold' }} color="disabled">
-          Slippage {slippage * 100}%
-        </Text>
+        <Text variant="legend">Slippage {slippage * 100}%</Text>
         <IconWrapper
-          size="16px"
+          size="24px"
           color="tertiaryIcon"
           icon={<Chevron />}
           rotation={isShowingSettings ? '90deg' : '-90deg'}
@@ -72,8 +70,9 @@ const StyledDivForWrapper = styled('div', {
 const StyledDivForSelector = styled('button', {
   textTransform: 'uppercase',
   display: 'flex',
+  alignItems: 'center',
   columnGap: '$space$4',
-  padding: '$8 $13',
+  padding: '$6 $13',
   userSelect: 'none',
   borderRadius: '$2 0 0 $2',
   transition: 'background-color .1s ease-out',

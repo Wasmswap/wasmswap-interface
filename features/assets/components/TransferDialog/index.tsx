@@ -81,7 +81,7 @@ export const TransferDialog = ({
           title={`Couldn't ${
             transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
           } the asset`}
-          body={error?.toString()}
+          body={(error as any)?.message ?? error?.toString()}
           buttons={
             <Button
               as="a"

@@ -178,7 +178,7 @@ const useMutateLiquidity = ({
             ? `${String(e).substring(0, 150)} ... ${String(e).substring(
                 String(e).length - 150
               )}`
-            : e
+            : String(e)
 
         toast.custom((t) => (
           <Toast

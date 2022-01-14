@@ -116,10 +116,10 @@ const StyledDivColumnForInfo = styled('div', {
         backgroundColor: 'transparent',
         minWidth: '140px',
         borderRadius: '$4 0 0 $4',
-        borderRight: '1px solid rgba(25, 29, 32, 0.2)',
+        borderRight: '1px solid $borderColors$default',
       },
       fees: {
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        backgroundColor: '$colors$dark10',
         flex: 1,
         padding: 'calc($space$8 - $space$1 / 1.5) $space$12',
         borderRadius: '0 $2 $2 0',

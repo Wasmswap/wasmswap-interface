@@ -30,7 +30,7 @@ export const PoolAvailableLiquidityCard = ({
   return (
     <StyledElementForCardLayout kind="wrapper">
       <StyledElementForCardLayout kind="content" name="liquidity">
-        <Text variant="body" color="secondary" css={{ paddingBottom: '$4' }}>
+        <Text variant="body" css={{ paddingBottom: '$4' }}>
           {typeof myLiquidity === 'number'
             ? `You own ${formatTokenBalance(
                 ((myLiquidity as LiquidityInfoType['myLiquidity']).coins /
@@ -39,13 +39,13 @@ export const PoolAvailableLiquidityCard = ({
               )}% of the pool`
             : 'Your liquidity'}
         </Text>
-        <StyledTextForAmount>
+        <Text variant="hero" css={{ paddingBottom: '$18' }}>
           {parseCurrency(
             convertMicroDenomToDenom(myReserve[0], tokenA.decimals) *
               tokenDollarValue *
               2 || '0.00'
           )}
-        </StyledTextForAmount>
+        </Text>
       </StyledElementForCardLayout>
       <StyledElementForCardLayout kind="content">
         <Text variant="body" color="secondary" css={{ padding: '$7 0 $9' }}>
@@ -91,14 +91,14 @@ const StyledElementForCardLayout = styled('div', {
   variants: {
     kind: {
       wrapper: {
-        backgroundColor: 'rgba(25, 29, 32, 0.1)',
+        backgroundColor: '$backgroundColors$primary',
         padding: '$9 0 $12',
         borderRadius: '8px',
       },
       content: {
         padding: '0 $12',
         '&:not(&:last-child)': {
-          borderBottom: '1px solid rgba(25, 29, 32, 0.1)',
+          borderBottom: '1px solid $borderColors$inactive',
         },
       },
     },
@@ -108,13 +108,6 @@ const StyledElementForCardLayout = styled('div', {
       },
     },
   },
-})
-
-const StyledTextForAmount = styled('p', {
-  fontSize: '30px',
-  lineHeight: '$2',
-  fontWeight: 600,
-  paddingBottom: '$18',
 })
 
 const StyledElementForTokens = styled('div', {

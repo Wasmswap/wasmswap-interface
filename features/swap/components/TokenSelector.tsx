@@ -10,6 +10,7 @@ import { SelectorToggle } from './SelectorToggle'
 import { SelectorInput } from './SelectorInput'
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
 import { useIsInteracted } from 'hooks/useIsInteracted'
+import { Button } from 'components/Button'
 
 type TokenSelectorProps = {
   readOnly?: boolean
@@ -65,10 +66,15 @@ export const TokenSelector = ({
         </StyledDivForSelector>
         <StyledDivForAmountWrapper>
           {isTokenListShowing && (
-            <IconWrapper
-              type="button"
+            <Button
+              icon={<IconWrapper icon={<Union />} />}
+              variant="ghost"
               onClick={() => setTokenListShowing(false)}
-              icon={<Union />}
+              css={{
+                '& svg': {
+                  color: '$colors$tertiary',
+                },
+              }}
             />
           )}
           {!isTokenListShowing && (
@@ -109,7 +115,7 @@ export const TokenSelector = ({
 }
 
 const StyledDivForWrapper = styled('div', {
-  padding: '10px 30px 10px 14px',
+  padding: '$5 $15 $5 $7',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
@@ -133,7 +139,7 @@ const StyledDivForAmountWrapper = styled('div', {
 })
 
 const StyledDivForTokensListWrapper = styled('div', {
-  padding: '2px 12px 24px',
+  padding: '$1 $6 $12',
 })
 
 const StyledDivForOverlay = styled('div', {
@@ -143,14 +149,14 @@ const StyledDivForOverlay = styled('div', {
   width: '100%',
   height: '100%',
   zIndex: 0,
-  backgroundColor: 'rgba(25, 29, 32, 0)',
+  backgroundColor: '$colors$dark0',
   transition: 'background-color .1s ease-out',
   variants: {
     interactive: {
       true: {
         cursor: 'pointer',
         '&:hover': {
-          backgroundColor: 'rgba(25, 29, 32, 0.05)',
+          backgroundColor: '$colors$dark5',
         },
       },
     },
@@ -159,11 +165,11 @@ const StyledDivForOverlay = styled('div', {
 
 const StyledDivForContainer = styled('div', {
   [`&:first-of-type ${StyledDivForOverlay}`]: {
-    borderTopLeftRadius: '8px',
-    borderTopRightRadius: '8px',
+    borderTopLeftRadius: '$2',
+    borderTopRightRadius: '$2',
   },
   [`&:last-of-type ${StyledDivForOverlay}`]: {
-    borderBottomLeftRadius: '8px',
-    borderBottomRightRadius: '8px',
+    borderBottomLeftRadius: '$2',
+    borderBottomRightRadius: '$2',
   },
 })

@@ -26,11 +26,9 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
           size: '24px',
         })}
       <StyledBodyContent>
-        <Text variant="primary" color="white">
-          {title}
-        </Text>
+        <Text variant="primary">{title}</Text>
         {body && (
-          <Text variant="secondary" color="white" css={{ paddingTop: '$2' }}>
+          <Text variant="secondary" css={{ paddingTop: '$2' }}>
             {body}
           </Text>
         )}
@@ -48,7 +46,7 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
 const StyledToast = styled(animated.div, {
   display: 'flex',
   position: 'relative',
-  backgroundColor: '$dark',
+  backgroundColor: '$backgroundColors$toast',
   boxShadow: '0px 4px 10px 0px $colors$dark15, 0 0 0 1px $colors$dark20',
   padding: '$8 $7',
   columnGap: '$space$2',

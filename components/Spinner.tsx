@@ -1,6 +1,7 @@
 import React, { FC, SVGProps, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { colorTokens } from '../util/constants'
+import { useColors } from './theme'
 
 type SpinnerProps = SVGProps<SVGSVGElement> & {
   isLoading?: boolean
@@ -17,10 +18,11 @@ export const Spinner: FC<SpinnerProps> = ({
   ...rest
 }) => {
   const isVisible = useIsLoadingDelayed(isLoading)
+  const colors = useColors()
   return (
     <StyledSvg
       {...rest}
-      $color={color}
+      $color={colors[color]}
       $visible={instant || isVisible}
       src="/spinner.svg"
       alt="loading"
@@ -60,7 +62,7 @@ const StyledSvg = styled.svg`
   background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
   display: block;
   shape-rendering: auto;
-  color: ${(p) => colorTokens[p.$color] || p.$color};
+  color: ${(p) => p.$color};
   opacity: ${(p) => (p.$visible ? 1 : 0)};
   @keyframes spin {
     0% {

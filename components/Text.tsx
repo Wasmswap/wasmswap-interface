@@ -1,7 +1,8 @@
 import React, { ForwardedRef, forwardRef, ReactNode } from 'react'
-import { styled, theme } from './theme'
+import { styled } from './theme'
 import type { GetRenderAsProps, RenderAsType } from './types'
 import { CSS, VariantProps } from '@stitches/react'
+import { themeColorTokens } from './theme/colors'
 
 const StyledText = styled('p', {
   fontFamily: '$primary',
@@ -70,21 +71,18 @@ const StyledText = styled('p', {
         fontWeight: '$normal',
       },
     },
-    color: Object.assign(
-      {
-        inherit: {
-          $$color: 'inherit',
+
+    color: Object.keys(themeColorTokens.textColors).reduce(
+      (colorVariants, colorToken) => ({
+        ...colorVariants,
+        [colorToken]: {
+          $$color: `$textColors$${colorToken}`,
         },
-      },
-      Object.keys(theme.textColors).reduce(
-        (colorVariants, textColorName) => ({
-          ...colorVariants,
-          [textColorName]: {
-            color: `${theme.textColors[textColorName].value} !important`,
-          },
-        }),
-        {} as Record<keyof typeof theme['textColors'], { color: string }>
-      )
+      }),
+      {} as Record<
+        keyof typeof themeColorTokens.textColors,
+        { $$color: string }
+      >
     ),
 
     transform: {

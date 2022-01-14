@@ -39,6 +39,7 @@ export const SelectorToggle = ({
           <IconWrapper
             size="24px"
             rotation={tokenSymbol ? '90deg' : '-90deg'}
+            color="tertiary"
             icon={<Chevron />}
           />
         </>
@@ -59,7 +60,7 @@ export const SelectorToggle = ({
           <IconWrapper
             size="16px"
             rotation="-90deg"
-            color="tertiaryIcon"
+            color="tertiary"
             icon={<Chevron />}
           />
         </>

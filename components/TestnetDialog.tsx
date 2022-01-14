@@ -1,4 +1,4 @@
-import { Dialog, StyledCloseIcon } from './Dialog'
+import { Dialog, DialogCloseButton } from './Dialog'
 import { Text } from './Text'
 import { useState } from 'react'
 import { styled } from 'components/theme'
@@ -14,7 +14,7 @@ export const TestnetDialog = () => {
       <Container>
         <StyledDivForHeader>
           <Text variant="header">Demo mode warning</Text>
-          <StyledCloseIcon onClick={requestClose} />
+          <DialogCloseButton onClick={requestClose} />
         </StyledDivForHeader>
         <Text css={{ paddingBottom: '$12' }} variant="body">
           This app is currently in beta and operating in demo mode. The app

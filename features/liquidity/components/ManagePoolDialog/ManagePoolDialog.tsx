@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
 import { styled } from 'components/theme'
-import { Dialog, StyledCloseIcon } from 'components/Dialog'
+import { Dialog, DialogCloseButton } from 'components/Dialog'
 import { Text } from 'components/Text'
 import { LiquidityInput } from 'components/LiquidityInput'
+import { IconWrapper } from 'components/IconWrapper'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
@@ -21,7 +22,6 @@ import { StateSwitchButtons } from '../StateSwitchButtons'
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
 import { Button } from 'components/Button'
-import { IconWrapper } from '../../../../components/IconWrapper'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -83,7 +83,7 @@ export const ManagePoolDialog = ({
 
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose} kind="blank">
-      <StyledCloseIcon onClick={onRequestClose} offset={19} size="16px" />
+      <DialogCloseButton onClick={onRequestClose} offset={19} size="16px" />
 
       <StyledDivForContent>
         <Text

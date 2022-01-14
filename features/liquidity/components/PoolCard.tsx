@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { styled } from 'components/theme'
-import { colorTokens } from '../../../util/constants'
-import { Text } from '../../../components/Text'
-import { useTokenInfo } from '../../../hooks/useTokenInfo'
-import { LiquidityType } from '../../../hooks/usePoolLiquidity'
+import { Text } from 'components/Text'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { LiquidityType } from 'hooks/usePoolLiquidity'
 
 type PoolCardProps = {
   poolId: string
@@ -177,7 +176,7 @@ const StyledTextForTokenNames: typeof Text = styled(Text, {
     height: 4,
     margin: '0 $3',
     borderRadius: '50%',
-    backgroundColor: colorTokens.black,
+    backgroundColor: '$textColors$primary',
   },
 })
 

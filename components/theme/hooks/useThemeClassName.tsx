@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil'
-import { darkTheme } from '../theme'
+import { darkTheme, lightTheme } from '../theme'
 import { AppTheme, themeAtom } from '../themeAtom'
 
 export const useThemeClassName = () => {
@@ -9,5 +9,5 @@ export const useThemeClassName = () => {
     return darkTheme.className
   }
 
-  return ''
+  return lightTheme.className
 }

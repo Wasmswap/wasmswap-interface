@@ -81,6 +81,8 @@ const StyledElementForCardLayout = styled('div', {
           background:
             'radial-gradient(71.15% 71.14% at 29.4% 81.87%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
           opacity: 0.4,
+          borderBottomRightRadius: '$2',
+          borderBottomLeftRadius: '$2',
         },
       },
       content: {

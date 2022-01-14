@@ -68,7 +68,7 @@ export default function Transfer() {
         <Toast
           icon={<IconWrapper icon={<Error />} color="error" />}
           title={`Cannot connect to your wallet`}
-          body={error?.toString()}
+          body={(error as any)?.message ?? error?.toString()}
           buttons={
             <Button
               as="a"

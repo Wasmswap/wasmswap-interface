@@ -123,13 +123,12 @@ export const useTokenSwap = ({
         queryClient.refetchQueries({ active: true })
       },
       onError(e) {
-        console.log(e)
         const errorMessage =
           String(e).length > 300
             ? `${String(e).substring(0, 150)} ... ${String(e).substring(
                 String(e).length - 150
               )}`
-            : e
+            : String(e)
 
         toast.custom((t) => (
           <Toast

@@ -36,7 +36,9 @@ export const usePoolDialogController = ({
   })
 
   function calculateMaxApplicableBalances() {
-    const tokenAToTokenBRatio = reserve?.[0] / reserve?.[1]
+    // TODO: Make slippage configurable
+    const slippage = 0.99
+    const tokenAToTokenBRatio = (reserve?.[0] * slippage) / reserve?.[1]
     const tokenABalanceMinusGasFee = Math.max(tokenABalance - 0.1, 0)
 
     const isTokenALimitingFactor =

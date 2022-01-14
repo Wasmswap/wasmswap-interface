@@ -25,6 +25,8 @@ export const WalletCardWithInput = ({
   walletAddress = 'No address found',
 }: WalletCardWithInputProps) => {
   const tokenInfo = useIBCAssetInfo(tokenSymbol)
+  // TODO: Configure max fee per chain
+  const maxFee = 0.05
   return (
     <CardWithSeparator
       contents={[
@@ -58,7 +60,7 @@ export const WalletCardWithInput = ({
           <TokenAmountInput
             amount={value}
             onAmountChange={onChange}
-            maxAmount={maxValue}
+            maxAmount={Math.max(maxValue - maxFee, 0)}
             tokenSymbol={tokenInfo.symbol}
           />
         </>,

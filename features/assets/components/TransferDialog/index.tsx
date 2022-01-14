@@ -104,7 +104,7 @@ export const TransferDialog = ({
       <StyledContent>
         <Text variant="header">{capitalizedTransactionType}</Text>
         <Text css={{ paddingTop: '$12', paddingBottom: '$9' }} variant="body">
-          How many {tokenInfo.name} would you like to {transactionKind}?
+          How much {tokenInfo.name} would you like to {transactionKind}?
         </Text>
         <StyledDivForCards>
           {transactionKind === 'deposit' && (

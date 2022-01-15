@@ -238,6 +238,13 @@ const StyledButton = styled('button', {
     },
 
     {
+      variant: 'ghost',
+      selected: true,
+      css: {
+        $$backgroundColor: '$colors$dark20',
+      },
+    },
+    {
       variant: 'menu',
       selected: true,
       css: {

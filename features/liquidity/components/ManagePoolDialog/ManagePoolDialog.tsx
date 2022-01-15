@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
 import { styled } from 'components/theme'
-import { Dialog, DialogCloseButton } from 'components/Dialog'
 import { Text } from 'components/Text'
 import { LiquidityInput } from 'components/LiquidityInput'
 import { IconWrapper } from 'components/IconWrapper'
@@ -15,13 +14,18 @@ import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { usePoolDialogController } from './usePoolDialogController'
 import { TokenToTokenRates } from './TokenToTokenRates'
-import { SecondaryButton } from '../SecondaryButton'
-import { PrimaryButton } from '../PrimaryButton'
-import { Divider } from '../Divider'
 import { StateSwitchButtons } from '../StateSwitchButtons'
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
 import { Button } from 'components/Button'
+import {
+  DialogHeader,
+  DialogContent,
+  DialogV2,
+  DialogDivider,
+  DialogButtons,
+} from 'components/DialogV2'
+import { Spinner } from 'components/Spinner'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -82,21 +86,14 @@ export const ManagePoolDialog = ({
   }, [canManageLiquidity])
 
   return (
-    <Dialog isShowing={isShowing} onRequestClose={onRequestClose} kind="blank">
-      <DialogCloseButton onClick={onRequestClose} offset={19} size="16px" />
-
-      <StyledDivForContent>
-        <Text
-          variant="header"
-          css={{ paddingBottom: canManageLiquidity ? '$8' : '$12' }}
-        >
-          Manage liquidity
-        </Text>
-      </StyledDivForContent>
+    <DialogV2 isShowing={isShowing} onRequestClose={onRequestClose}>
+      <DialogHeader paddingBottom={canManageLiquidity ? '$8' : '$12'}>
+        <Text variant="header">Manage liquidity</Text>
+      </DialogHeader>
 
       {canManageLiquidity && (
         <>
-          <StyledDivForContent>
+          <DialogContent>
             <StateSwitchButtons
               activeValue={isAddingLiquidity ? 'add' : 'remove'}
               values={['add', 'remove']}
@@ -104,16 +101,16 @@ export const ManagePoolDialog = ({
                 setAddingLiquidity(value === 'add')
               }}
             />
-          </StyledDivForContent>
-          <Divider offsetY={16} />
+          </DialogContent>
+          <DialogDivider offsetY="$8" />
         </>
       )}
 
-      <StyledDivForContent>
+      <DialogContent>
         <Text variant="body" css={{ paddingBottom: '$6' }}>
           Choose how much to {isAddingLiquidity ? 'add' : 'remove'}
         </Text>
-      </StyledDivForContent>
+      </DialogContent>
 
       {isAddingLiquidity && (
         <AddLiquidityContent
@@ -140,21 +137,24 @@ export const ManagePoolDialog = ({
         />
       )}
 
-      <StyledDivForDivider>
-        <Divider />
-      </StyledDivForDivider>
-      <StyledDivForContent>
-        <StyledDivForFooter>
-          <SecondaryButton onClick={onRequestClose}>Cancel</SecondaryButton>
-          <PrimaryButton
-            onClick={isLoading ? undefined : handleSubmit}
-            loading={isLoading}
-          >
-            {isAddingLiquidity ? 'Add' : 'Remove'} liquidity
-          </PrimaryButton>
-        </StyledDivForFooter>
-      </StyledDivForContent>
-    </Dialog>
+      <DialogDivider offsetTop="$16" offsetBottom="$8" />
+
+      <DialogButtons>
+        <Button variant="secondary" onClick={onRequestClose}>
+          Cancel
+        </Button>
+        <Button
+          variant="primary"
+          onClick={isLoading ? undefined : handleSubmit}
+        >
+          {isLoading ? (
+            <Spinner instant={true} size={16} />
+          ) : (
+            <>{isAddingLiquidity ? 'Add' : 'Remove'} liquidity</>
+          )}
+        </Button>
+      </DialogButtons>
+    </DialogV2>
   )
 }
 
@@ -189,7 +189,7 @@ function AddLiquidityContent({
   const tokenBAmount = maxApplicableBalanceForTokenB * liquidityPercentage
 
   return (
-    <StyledDivForContent>
+    <DialogContent>
       <StyledDivForLiquidityInputs>
         <LiquidityInput
           tokenSymbol={tokenASymbol}
@@ -221,7 +221,7 @@ function AddLiquidityContent({
       >
         Provide max liquidity
       </Button>
-    </StyledDivForContent>
+    </DialogContent>
   )
 }
 
@@ -252,7 +252,7 @@ function RemoveLiquidityContent({
 
   return (
     <>
-      <StyledDivForContent>
+      <DialogContent>
         <LiquidityInputSelector
           inputRef={percentageInputRef}
           maxLiquidity={availableLiquidityDollarValue}
@@ -278,9 +278,9 @@ function RemoveLiquidityContent({
           liquidity={liquidityToRemove}
           onChangeLiquidity={handleChangeLiquidity}
         />
-      </StyledDivForContent>
-      <Divider offsetY={16} />
-      <StyledDivForContent>
+      </DialogContent>
+      <DialogDivider offsetY="$8" />
+      <DialogContent>
         <Text variant="body" css={{ paddingBottom: '$7' }}>
           Removing
         </Text>
@@ -300,15 +300,10 @@ function RemoveLiquidityContent({
             </Text>
           </StyledDivForToken>
         </StyledDivForLiquiditySummary>
-      </StyledDivForContent>
+      </DialogContent>
     </>
   )
 }
-
-const StyledDivForContent = styled('div', {
-  padding: '0px $14',
-  variants: {},
-})
 
 const StyledDivForTxRates = styled('div', {
   padding: '$7 0 $12',
@@ -318,17 +313,6 @@ const StyledDivForLiquidityInputs = styled('div', {
   display: 'flex',
   flexWrap: 'wrap',
   rowGap: 8,
-})
-
-const StyledDivForFooter = styled('div', {
-  display: 'flex',
-  justifyContent: 'flex-end',
-  columnGap: '$space$6',
-  padding: '$8 0',
-})
-
-const StyledDivForDivider = styled('div', {
-  paddingTop: '$8',
 })
 
 const StyledGridForDollarValueTxInfo = styled('div', {

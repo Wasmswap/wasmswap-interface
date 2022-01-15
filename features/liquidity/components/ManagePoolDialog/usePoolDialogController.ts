@@ -131,7 +131,7 @@ const useMutateLiquidity = ({
           ),
           nativeDenom: tokenA.denom,
           maxToken: Math.floor(
-            convertDenomToMicroDenom(tokenBAmount, tokenB.decimals) + 5
+            convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
           minLiquidity: 0,
           swapAddress: tokenB.swap_address,

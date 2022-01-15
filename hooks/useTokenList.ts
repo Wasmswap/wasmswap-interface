@@ -2,13 +2,13 @@ import { useQuery } from 'react-query'
 import { queryClient } from 'services/queryClient'
 
 export type TokenInfo = {
-  id: string
+  symbol: string
+  name: string
+  coin_gecko_id: string
   pool_id: string
   chain_id: string
   token_address: string
   swap_address: string
-  symbol: string
-  name: string
   decimals: number
   logoURI: string
   tags: string[]

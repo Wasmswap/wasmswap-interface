@@ -12,7 +12,7 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
   const tokenInfo = useTokenInfo(tokenSymbol)
 
-  const tokenSymbolToLookupDollarValueFor = tokenInfo?.id
+  const tokenSymbolToLookupDollarValueFor = tokenInfo?.coin_gecko_id
     ? tokenSymbol
     : baseTokenSymbol
   const [[tokenDollarPrice], fetchingTokenDollarPrice] =
@@ -31,7 +31,7 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
 
   /* if the token has an id or it's the baseToken then let's return pure price from the api */
   const shouldRenderPureDollarPrice =
-    tokenSymbol === baseTokenSymbol || Boolean(tokenInfo?.id)
+    tokenSymbol === baseTokenSymbol || Boolean(tokenInfo?.coin_gecko_id)
   if (shouldRenderPureDollarPrice) {
     return [tokenDollarPrice, fetchingTokenDollarPrice] as const
   }
@@ -49,7 +49,8 @@ export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
     async (): Promise<Array<number>> => {
       const tokenIds = tokenSymbols.map(
         (tokenSymbol) =>
-          (unsafelyGetTokenInfo(tokenSymbol) || getIBCAssetInfo(tokenSymbol)).id
+          (unsafelyGetTokenInfo(tokenSymbol) || getIBCAssetInfo(tokenSymbol))
+            .coin_gecko_id
       )
 
       const response = await fetch(getApiUrl(tokenIds), {

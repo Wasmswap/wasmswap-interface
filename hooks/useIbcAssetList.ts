@@ -6,6 +6,7 @@ export type IBCAssetInfo = {
   name: string
   symbol: string
   chain_id: string
+  coin_gecko_id: string
   rpc: string
   denom: string
   decimals: number

@@ -2,11 +2,11 @@ import { styled } from 'components/theme'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { Text } from 'components/Text'
 import { IconWrapper } from 'components/IconWrapper'
-import { Chevron } from 'icons/Chevron'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { formatTokenBalance } from 'util/conversion'
 import { Button, ButtonForWrapper } from 'components/Button'
+import { Valid } from 'icons/Valid'
 
 export const AssetSelector = ({ tokenSymbol }) => {
   const assetInfo = useIBCAssetInfo(tokenSymbol)
@@ -30,13 +30,13 @@ export const AssetSelector = ({ tokenSymbol }) => {
       </StyledDivForTokenContent>
 
       <Button
-        variant="ghost"
+        variant="secondary"
         icon={
           <IconWrapper
             size="16px"
-            rotation="-90deg"
+            // rotation="-90deg"
             color="tertiary"
-            icon={<Chevron />}
+            icon={<Valid />}
           />
         }
       />

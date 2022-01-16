@@ -1,5 +1,5 @@
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Dialog, StyledCloseIcon } from 'components/Dialog'
+import { Dialog, DialogCloseButton } from 'components/Dialog'
 import { Text } from 'components/Text'
 import { styled } from 'components/theme'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
@@ -39,7 +39,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
   return (
     <Dialog kind="blank" isShowing={isShowing} onRequestClose={onRequestClose}>
-      <StyledCloseIcon onClick={onRequestClose} offset={19} size="16px" />
+      <DialogCloseButton onClick={onRequestClose} offset={19} size="16px" />
 
       <StyledDivForContent>
         {canManageStaking ? (

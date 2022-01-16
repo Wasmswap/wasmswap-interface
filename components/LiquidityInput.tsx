@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { styled } from 'components/theme'
 import { Text } from './Text'
 import { formatTokenBalance } from '../util/conversion'
@@ -21,13 +21,19 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
   onAmountChange,
 }) => {
   const [focusedOnInput, setFocusedOnInput] = useState(false)
+  const inputRef = useRef<HTMLInputElement>()
 
   const { name: tokenName, logoURI } = useTokenInfo(tokenSymbol)
 
   const handleAmountChange = (value: number) => onAmountChange(value)
 
   return (
-    <StyledDivForWrapper active={focusedOnInput}>
+    <StyledDivForWrapper
+      onClick={() => {
+        inputRef.current.focus()
+      }}
+      active={focusedOnInput}
+    >
       <StyledDivForColumn kind="info">
         <StyledImageForToken src={logoURI} as={logoURI ? 'img' : 'div'} />
         <div data-token-info="">
@@ -40,18 +46,21 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
         </div>
       </StyledDivForColumn>
       <StyledDivForColumn kind="input">
-        <BasicNumberInput
-          value={Number(formatTokenBalance(amount))}
-          min={0}
-          max={maxApplicableAmount}
-          onChange={handleAmountChange}
-          onFocus={() => {
-            setFocusedOnInput(true)
-          }}
-          onBlur={() => {
-            setFocusedOnInput(false)
-          }}
-        />
+        <Text variant="primary">
+          <BasicNumberInput
+            ref={inputRef}
+            value={Number(formatTokenBalance(amount))}
+            min={0}
+            max={maxApplicableAmount}
+            onChange={handleAmountChange}
+            onFocus={() => {
+              setFocusedOnInput(true)
+            }}
+            onBlur={() => {
+              setFocusedOnInput(false)
+            }}
+          />
+        </Text>
       </StyledDivForColumn>
     </StyledDivForWrapper>
   )
@@ -61,21 +70,21 @@ const StyledDivForWrapper = styled('div', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
-  borderRadius: '6px',
-  padding: '12px 24px 10px 10px',
+  backgroundColor: '$colors$dark10',
+  borderRadius: '$1',
+  padding: '$6 $12 $5 $5',
   width: '100%',
   transition: 'background 0.1s ease-out',
   '&:hover': {
-    backgroundColor: 'rgba(25, 29, 32, 0.15)',
+    backgroundColor: '$colors$dark15',
   },
   '&:active': {
-    backgroundColor: 'rgba(25, 29, 32, 0.05)',
+    backgroundColor: '$colors$dark5',
   },
   variants: {
     active: {
       true: {
-        backgroundColor: 'rgba(25, 29, 32, 0.05) !important',
+        backgroundColor: '$colors$dark10 !important',
       },
     },
   },
@@ -87,7 +96,7 @@ const StyledDivForColumn = styled('div', {
       info: {
         display: 'flex',
         alignItems: 'center',
-        columnGap: '12px',
+        columnGap: '$space$6',
       },
       input: {
         textAlign: 'right',

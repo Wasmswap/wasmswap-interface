@@ -37,8 +37,9 @@ export const SelectorToggle = ({
         <>
           <Text variant="body">Select a token</Text>
           <IconWrapper
-            size="16px"
+            size="24px"
             rotation={tokenSymbol ? '90deg' : '-90deg'}
+            color="tertiary"
             icon={<Chevron />}
           />
         </>
@@ -52,14 +53,14 @@ export const SelectorToggle = ({
           />
           <div>
             <Text variant="body">{tokenSymbol}</Text>
-            <Text variant="caption" color="disabled">
+            <Text variant="secondary">
               {formattedAvailableAmount} available
             </Text>
           </div>
           <IconWrapper
             size="16px"
             rotation="-90deg"
-            color="tertiaryIcon"
+            color="tertiary"
             icon={<Chevron />}
           />
         </>
@@ -92,7 +93,8 @@ const StyledDivForSelector = styled('div', {
         minWidth: 231,
       },
       selecting: {
-        padding: '$6 $8',
+        margin: 'calc($space$2 * 0.85) 0',
+        padding: '$space$6 $8',
         columnGap: '$space$4',
         gridTemplateColumns: '1fr $space$8',
       },

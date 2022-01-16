@@ -9,11 +9,17 @@ import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from 'util/conversion'
-import { toast } from 'react-toastify'
+import { toast } from 'react-hot-toast'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { getSwapInfo } from 'services/swap'
 import { useChainInfo } from 'hooks/useChainInfo'
 import { TokenInfo } from 'hooks/useTokenList'
+import { Toast } from 'components/Toast'
+import { IconWrapper } from 'components/IconWrapper'
+import { Valid } from 'icons/Valid'
+import { Error } from 'icons/Error'
+import { Button } from 'components/Button'
+import { UpRightArrow } from 'icons/UpRightArrow'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -156,44 +162,47 @@ const useMutateLiquidity = ({
     {
       onSuccess() {
         // show toast
-        toast.success(
-          `🎉 ${actionState === 'add' ? 'Add' : 'Remove'} Successful`,
-          {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        )
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Valid />} color="valid" />}
+            title={`${actionState === 'add' ? 'Add' : 'Remove'} Successful`}
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
 
         refetchQueries()
         setTimeout(mutation.reset, 350)
       },
       onError(e) {
         console.error(e)
-        let msg =
+        const errorMessage =
           String(e).length > 300
             ? `${String(e).substring(0, 150)} ... ${String(e).substring(
                 String(e).length - 150
               )}`
-            : e
-        toast.error(
-          `Couldn't ${
-            actionState === 'add' ? 'Add' : 'Remove'
-          } liquidity: ${msg}`,
-          {
-            position: 'top-center',
-            autoClose: 10000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        )
+            : String(e)
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Error />} color="error" />}
+            title={`Couldn't ${
+              actionState === 'add' ? 'Add' : 'Remove'
+            } liquidity`}
+            body={errorMessage}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
       },
     }
   )

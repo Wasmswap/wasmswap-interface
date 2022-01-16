@@ -1,5 +1,5 @@
 import { styled } from 'components/theme'
-import { SecondaryButton } from './SecondaryButton'
+import { Button } from 'components/Button'
 
 type StateSwitchButtonsProps = {
   activeValue: string
@@ -15,15 +15,16 @@ export const StateSwitchButtons = ({
   return (
     <StyledDivForGrid>
       {values.map((value) => (
-        <SecondaryButton
+        <Button
+          variant="ghost"
           key={value}
-          active={value === activeValue}
+          selected={value === activeValue}
           onClick={() => {
             onStateChange(value)
           }}
         >
           {value}
-        </SecondaryButton>
+        </Button>
       ))}
     </StyledDivForGrid>
   )

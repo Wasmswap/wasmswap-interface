@@ -1,5 +1,5 @@
 import { styled } from 'components/theme'
-import { SecondaryButton } from './SecondaryButton'
+import { Button } from 'components/Button'
 
 type PercentageSelectionProps = {
   maxLiquidity: number
@@ -19,16 +19,17 @@ export const PercentageSelection = ({
     <StyledDivForGrid>
       {valuesForSteps.map((valueForStep) => {
         return (
-          <SecondaryButton
+          <Button
             size="small"
-            active={percentage === valueForStep}
+            variant="ghost"
+            selected={percentage === valueForStep}
             key={valueForStep}
             onClick={() => {
               onChangeLiquidity(valueForStep * maxLiquidity)
             }}
           >
             {valueForStep * 100}%
-          </SecondaryButton>
+          </Button>
         )
       })}
     </StyledDivForGrid>

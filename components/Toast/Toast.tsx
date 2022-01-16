@@ -62,11 +62,13 @@ const StyledToast = styled(animated.div, {
   padding: '$8 $7',
   columnGap: '$space$2',
   borderRadius: '$1',
-  width: '22rem',
+  width: '90%',
+  maxWidth: '22rem',
 })
 
 const StyledBodyContent = styled('div', {
   paddingRight: 'calc(24px + $space$4)',
+  width: '100%',
 })
 
 const StyledButtonForCloseButton = styled(Button, {

@@ -35,7 +35,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ErrorBoundary>
             <Component {...pageProps} />
             {__TEST_MODE__ && <TestnetDialog />}
-            <Toaster position="top-right" toastOptions={{ duration: 15000 }} />
+            <Toaster
+              position="top-right"
+              toastOptions={{ duration: 15000000 }}
+            />
           </ErrorBoundary>
         </NextJsAppRoot>
       </QueryClientProvider>

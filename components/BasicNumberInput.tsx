@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, HTMLProps } from 'react'
+import { ForwardedRef, forwardRef, HTMLProps, useRef, useState } from 'react'
 import { useAmountChangeController } from '../hooks/useAmountChangeController'
 
 type Props = Omit<
@@ -72,4 +72,29 @@ export function calculateCharactersLength(value: string) {
   })
 
   return count.symbols + count.dotLikeSymbols * 0.3
+}
+
+export const useTriggerInputFocus = () => {
+  const ref = useRef<HTMLInputElement>()
+  const [isFocused, setIsFocused] = useState(false)
+
+  return {
+    isFocused,
+    bind: {
+      button: {
+        onClick() {
+          ref.current.focus()
+        },
+      },
+      input: {
+        ref,
+        onBlur() {
+          setIsFocused(false)
+        },
+        onFocus() {
+          setIsFocused(false)
+        },
+      },
+    },
+  }
 }

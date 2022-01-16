@@ -103,6 +103,26 @@ const StyledText = styled('p', {
         whiteSpace: 'pre',
       },
     },
+
+    truncate: {
+      true: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+    },
+
+    align: {
+      left: {
+        textAlign: 'left',
+      },
+      center: {
+        textAlign: 'center',
+      },
+      right: {
+        textAlign: 'right',
+      },
+    },
   },
 
   defaultVariants: {

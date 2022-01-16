@@ -7,5 +7,5 @@ export enum AppTheme {
 
 export const themeAtom = atom<AppTheme>({
   key: '@theme',
-  default: AppTheme.dark,
+  default: AppTheme.light,
 })

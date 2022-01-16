@@ -3,7 +3,7 @@ import { colorTokens } from '../util/constants'
 import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
 import { useTheme } from './theme'
 
-type IconWrapperProps = Omit<
+export type IconWrapperProps = Omit<
   HTMLProps<HTMLDivElement>,
   'children' | 'ref' | 'color' | 'size' | 'type'
 > & {

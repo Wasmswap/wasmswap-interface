@@ -1,6 +1,7 @@
-import React, { FC, SVGProps, useEffect, useState } from 'react'
+import React, { FC, SVGProps } from 'react'
 import styled from 'styled-components'
-import { colorTokens } from '../util/constants'
+import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
+import { colorTokens } from 'util/constants'
 import { useColors } from './theme'
 
 type SpinnerProps = SVGProps<SVGSVGElement> & {
@@ -17,7 +18,7 @@ export const Spinner: FC<SpinnerProps> = ({
   isLoading = true,
   ...rest
 }) => {
-  const isVisible = useIsLoadingDelayed(isLoading)
+  const isVisible = useDelayedAppearanceFlag(isLoading)
   const colors = useColors()
   return (
     <StyledSvg
@@ -73,21 +74,3 @@ const StyledSvg = styled.svg`
     }
   }
 `
-
-const useIsLoadingDelayed = (loading: boolean) => {
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    if (loading) {
-      let timeout = setTimeout(() => {
-        setIsLoading(true)
-      }, 350)
-
-      return () => clearTimeout(timeout)
-    }
-
-    setIsLoading(false)
-  }, [loading])
-
-  return isLoading
-}

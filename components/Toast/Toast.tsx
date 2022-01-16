@@ -36,7 +36,10 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
       <StyledBodyContent>
         <Text variant="primary">{title}</Text>
         {body && (
-          <Text variant="secondary" css={{ paddingTop: '$2' }}>
+          <Text
+            variant="secondary"
+            css={{ paddingTop: '$2', overflowWrap: 'break-word' }}
+          >
             {body}
           </Text>
         )}

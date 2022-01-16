@@ -238,10 +238,24 @@ const StyledButton = styled('button', {
     },
 
     {
+      variant: 'ghost',
+      selected: true,
+      css: {
+        $$backgroundColor: '$$backgroundColorOnHover',
+      },
+    },
+    {
+      variant: 'secondary',
+      selected: true,
+      css: {
+        $$backgroundColor: '$$backgroundColorOnHover',
+      },
+    },
+    {
       variant: 'menu',
       selected: true,
       css: {
-        $$backgroundColor: '$colors$brand10',
+        $$backgroundColor: '$$backgroundColorOnHover',
       },
     },
   ],
@@ -318,3 +332,14 @@ const mapIconVariant = ({
 }
 
 export const Button = forwardRef(ButtonComponent) as typeof ButtonComponent
+
+export const ButtonForWrapper = styled(
+  (props: any) => <Button as="div" {...props} />,
+  {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    cursor: 'pointer',
+  }
+) as typeof ButtonComponent

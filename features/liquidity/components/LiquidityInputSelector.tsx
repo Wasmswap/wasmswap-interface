@@ -113,7 +113,7 @@ const useDrag = ({ getIsException, onProgressUpdate }) => {
 
 const StyledDivForSelector = styled('div', {
   cursor: 'col-resize',
-  background: 'rgba(25, 29, 32, 0.1)',
+  background: '$colors$dark10',
   borderRadius: '6px',
   overflow: 'hidden',
   position: 'relative',
@@ -132,7 +132,7 @@ const StyledTextForInputWithSymbol: any = styled(Text, {
 })
 
 const StyledDivForProgress = styled('div', {
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  backgroundColor: '$colors$dark10',
   position: 'absolute',
   inset: '0 auto auto 0',
   width: '100%',

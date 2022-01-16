@@ -150,7 +150,7 @@ const StyledWrapper = styled('div', {
   flexDirection: 'column',
   justifyContent: 'space-between',
   padding: '0 $8',
-  backgroundColor: '$white',
+  backgroundColor: '$backgroundColors$base',
   overflow: 'auto',
   borderRight: '1px solid $borderColors$inactive',
 
@@ -190,5 +190,8 @@ const StyledDivForLogo = styled('div', {
   paddingBottom: '$8',
   '& [data-logo]': {
     marginBottom: '$2',
+  },
+  '& svg': {
+    color: '$colors$black',
   },
 })

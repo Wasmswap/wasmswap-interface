@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components'
 import { colorTokens } from '../util/constants'
 import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
-import { theme } from './theme'
+import { useTheme } from './theme'
 
-type IconWrapperProps = Omit<
+export type IconWrapperProps = Omit<
   HTMLProps<HTMLDivElement>,
   'children' | 'ref' | 'color' | 'size' | 'type'
 > & {
@@ -28,22 +28,26 @@ const IconWrapperComponent = (
     ...props
   }: IconWrapperProps,
   ref: ForwardedRef<any>
-) => (
-  <StyledIcon
-    {...props}
-    ref={ref}
-    role={type === 'button' ? 'button' : undefined}
-    $isButton={type === 'button'}
-    $color={color}
-    $rounded={rounded}
-    $rotation={rotation}
-    $size={size}
-    $width={width}
-    $height={height}
-  >
-    {icon}
-  </StyledIcon>
-)
+) => {
+  const theme = useTheme()
+  return (
+    <StyledIcon
+      {...props}
+      ref={ref}
+      role={type === 'button' ? 'button' : undefined}
+      $isButton={type === 'button'}
+      $theme={theme}
+      $color={color}
+      $rounded={rounded}
+      $rotation={rotation}
+      $size={size}
+      $width={width}
+      $height={height}
+    >
+      {icon}
+    </StyledIcon>
+  )
+}
 
 const buttonStyles = css`
   user-select: none;
@@ -67,7 +71,7 @@ const StyledIcon = styled.span`
   justify-content: center;
   align-items: center;
   color: ${(p) =>
-    colorTokens[p.$color] || theme.iconColors[p.$color]?.value || p.$color};
+    colorTokens[p.$color] || p.$theme.iconColors[p.$color]?.value || p.$color};
   width: ${(p) => p.$width || p.$size};
   height: ${(p) => p.$height || p.$size};
   min-width: ${(p) => p.$width || p.$size};

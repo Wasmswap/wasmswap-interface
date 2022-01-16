@@ -80,11 +80,10 @@ export default function Pool() {
         <StyledWrapperForNavigation>
           <StyledNavElement position="left">
             <Link href="/pools" passHref>
-              <IconWrapper
+              <Button
+                icon={<IconWrapper icon={<Chevron />} />}
+                variant="ghost"
                 as="a"
-                type="button"
-                size="20px"
-                icon={<Chevron />}
               />
             </Link>
           </StyledNavElement>

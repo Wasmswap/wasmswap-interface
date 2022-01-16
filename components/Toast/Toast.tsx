@@ -1,10 +1,12 @@
 import { Children, cloneElement, ReactElement, ReactNode } from 'react'
-import { styled } from '../theme'
+import { darkTheme, lightTheme, styled } from '../theme'
 import { Text } from '../Text'
 import { Button } from '../Button'
 import { IconWrapper } from '../IconWrapper'
 import { Union } from '../../icons/Union'
 import { animated, useSpring } from '@react-spring/web'
+import { useRecoilValue } from 'recoil'
+import { AppTheme, themeAtom } from '../theme/themeAtom'
 
 type ToastProps = {
   icon: ReactElement
@@ -19,18 +21,25 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
     from: { opacity: 0 },
     to: { opacity: 1 },
   })
+
+  const themeClassName =
+    useRecoilValue(themeAtom) === AppTheme.dark
+      ? lightTheme.className
+      : darkTheme.className
+
   return (
-    <StyledToast style={styles}>
+    <StyledToast className={themeClassName} style={styles}>
       {icon &&
         cloneElement(Children.only(icon), {
           size: '24px',
         })}
       <StyledBodyContent>
-        <Text variant="primary" color="white">
-          {title}
-        </Text>
+        <Text variant="primary">{title}</Text>
         {body && (
-          <Text variant="secondary" color="white" css={{ paddingTop: '$2' }}>
+          <Text
+            variant="secondary"
+            css={{ paddingTop: '$2', overflowWrap: 'break-word' }}
+          >
             {body}
           </Text>
         )}
@@ -48,16 +57,18 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
 const StyledToast = styled(animated.div, {
   display: 'flex',
   position: 'relative',
-  backgroundColor: '$dark',
+  backgroundColor: '$colors$white',
   boxShadow: '0px 4px 10px 0px $colors$dark15, 0 0 0 1px $colors$dark20',
   padding: '$8 $7',
   columnGap: '$space$2',
   borderRadius: '$1',
-  width: '22rem',
+  width: '90%',
+  maxWidth: '22rem',
 })
 
 const StyledBodyContent = styled('div', {
   paddingRight: 'calc(24px + $space$4)',
+  width: '100%',
 })
 
 const StyledButtonForCloseButton = styled(Button, {

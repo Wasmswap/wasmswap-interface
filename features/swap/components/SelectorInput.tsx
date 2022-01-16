@@ -41,4 +41,8 @@ export const SelectorInput = ({
   )
 }
 
-const StyledInput = styled('input', { width: 'auto', textAlign: 'right' })
+const StyledInput = styled('input', {
+  width: 'auto',
+  textAlign: 'right',
+  color: 'inherit',
+})

@@ -97,5 +97,5 @@ export const TokenSwap = () => {
 
 const StyledDivForWrapper = styled('div', {
   borderRadius: '8px',
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
+  backgroundColor: '$colors$dark10',
 })

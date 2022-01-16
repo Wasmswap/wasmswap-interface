@@ -1,4 +1,4 @@
-import { HTMLProps } from 'react'
+import { ForwardedRef, forwardRef, HTMLProps, useRef, useState } from 'react'
 import { useAmountChangeController } from '../hooks/useAmountChangeController'
 
 type Props = Omit<
@@ -13,16 +13,19 @@ type Props = Omit<
   onChange: (value: number) => void
 }
 
-export const BasicNumberInput = ({
-  min = -Infinity,
-  max = Infinity,
-  adjustedWidthToValue = true,
-  maximumFractionDigits = 6,
-  value: amount,
-  onChange,
-  style,
-  ...props
-}: Props) => {
+const BasicNumberInputComponent = (
+  {
+    min = -Infinity,
+    max = Infinity,
+    adjustedWidthToValue = true,
+    maximumFractionDigits = 6,
+    value: amount,
+    onChange,
+    style,
+    ...props
+  }: Props,
+  ref: ForwardedRef<HTMLInputElement>
+) => {
   const { value, setValue } = useAmountChangeController({
     maximumFractionDigits,
     maximumValue: max,
@@ -34,6 +37,7 @@ export const BasicNumberInput = ({
 
   return (
     <input
+      ref={ref}
       placeholder="0.0"
       type="number"
       lang="en-US"
@@ -52,6 +56,10 @@ export const BasicNumberInput = ({
   )
 }
 
+export const BasicNumberInput = forwardRef(
+  BasicNumberInputComponent
+) as typeof BasicNumberInputComponent
+
 export function calculateCharactersLength(value: string) {
   const count = { symbols: 0, dotLikeSymbols: 0 }
 
@@ -64,4 +72,29 @@ export function calculateCharactersLength(value: string) {
   })
 
   return count.symbols + count.dotLikeSymbols * 0.3
+}
+
+export const useTriggerInputFocus = () => {
+  const ref = useRef<HTMLInputElement>()
+  const [isFocused, setIsFocused] = useState(false)
+
+  return {
+    isFocused,
+    bind: {
+      button: {
+        onClick() {
+          ref.current.focus()
+        },
+      },
+      input: {
+        ref,
+        onBlur() {
+          setIsFocused(false)
+        },
+        onFocus() {
+          setIsFocused(false)
+        },
+      },
+    },
+  }
 }

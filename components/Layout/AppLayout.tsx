@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from '../theme'
 import { NavigationSidebar } from './NavigationSidebar'
 import { FooterBar } from './FooterBar'
 
@@ -21,32 +21,32 @@ export const AppLayout = ({
   )
 }
 
-const StyledWrapper = styled.div`
-  display: grid;
-  min-height: 100vh;
-  grid-template-columns: 264px 1fr;
-  background-color: #fff;
-`
+const StyledWrapper = styled('div', {
+  display: 'grid',
+  minHeight: '100vh',
+  gridTemplateColumns: '18rem 1fr',
+  backgroundColor: '$backgroundColors$base',
+})
 
-const StyledContainer = styled.div`
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 0 40px;
-  & main {
-    max-width: ${590 + 80}px;
-  }
-`
+const StyledContainer = styled('div', {
+  position: 'relative',
+  zIndex: '$2',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  padding: '0 $12',
+  '& main': {
+    maxWidth: '44rem',
+  },
+})
 
-const StyledSpringBottom = styled.img`
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  width: 35%;
-  max-width: 500px;
-  z-index: 0;
-  user-select: none;
-  user-drag: none;
-`
+const StyledSpringBottom = styled('img', {
+  position: 'fixed',
+  right: 0,
+  bottom: 0,
+  width: '35%',
+  maxWidth: '500px',
+  zIndex: '$1',
+  userSelect: 'none',
+  userDrag: 'none',
+})

@@ -8,7 +8,7 @@ import { APP_NAME } from '../../util/constants'
 export const FooterBar = () => {
   return (
     <StyledFooter>
-      <Text variant="legend" css={{ paddingRight: '$20' }}>
+      <Text variant="legend" css={{ paddingRight: '$12' }}>
         {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
       </Text>
       <StyledDivForGrid>

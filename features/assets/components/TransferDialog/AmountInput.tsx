@@ -1,0 +1,73 @@
+import { styled } from 'components/theme'
+import { ButtonForWrapper, Button } from 'components/Button'
+import { Text } from 'components/Text'
+import {
+  BasicNumberInput,
+  useTriggerInputFocus,
+} from 'components/BasicNumberInput'
+import { formatTokenBalance } from 'util/conversion'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+
+type AmountInputProps = {
+  tokenSymbol: string
+  amount: number
+  onAmountChange: (amount: number) => void
+}
+
+export const AmountInput = ({
+  tokenSymbol,
+  amount,
+  onAmountChange,
+}: AmountInputProps) => {
+  const { balance: maxApplicableAmount } = useIBCTokenBalance(tokenSymbol)
+
+  const { isFocused, bind } = useTriggerInputFocus()
+
+  return (
+    <StyledButtonForWrapper
+      variant="secondary"
+      selected={isFocused}
+      {...bind.button}
+    >
+      <StyledDivForButtons>
+        <Button
+          onClick={() => onAmountChange(maxApplicableAmount)}
+          variant="secondary"
+          size="small"
+        >
+          Max
+        </Button>
+        <Button
+          onClick={() => onAmountChange(maxApplicableAmount / 2)}
+          variant="secondary"
+          size="small"
+        >
+          1/2
+        </Button>
+      </StyledDivForButtons>
+      <StyledDivForInputWrapper>
+        <Text variant="primary" align="right">
+          <BasicNumberInput
+            value={Number(formatTokenBalance(amount))}
+            min={0}
+            max={maxApplicableAmount}
+            onChange={onAmountChange}
+            {...bind.input}
+          />
+        </Text>
+      </StyledDivForInputWrapper>
+    </StyledButtonForWrapper>
+  )
+}
+
+const StyledButtonForWrapper = styled(ButtonForWrapper, {
+  padding: '$8 $12 $8 $8 !important',
+})
+
+const StyledDivForButtons = styled('div', {
+  columnGap: '$space$4',
+  display: 'flex',
+  alignItems: 'center',
+})
+
+const StyledDivForInputWrapper = styled('div', {})

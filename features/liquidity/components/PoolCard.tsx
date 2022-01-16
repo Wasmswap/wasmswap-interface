@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import { styled } from 'components/theme'
-import { colorTokens } from '../../../util/constants'
-import { Text } from '../../../components/Text'
-import { useTokenInfo } from '../../../hooks/useTokenInfo'
-import { LiquidityType } from '../../../hooks/usePoolLiquidity'
+import { Text } from 'components/Text'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { LiquidityType } from 'hooks/usePoolLiquidity'
 
 type PoolCardProps = {
   poolId: string
@@ -177,7 +176,7 @@ const StyledTextForTokenNames: typeof Text = styled(Text, {
     height: 4,
     margin: '0 $3',
     borderRadius: '50%',
-    backgroundColor: colorTokens.black,
+    backgroundColor: '$textColors$primary',
   },
 })
 
@@ -191,7 +190,7 @@ const StyledDivForSeparator = styled('hr', {
 })
 
 const StyledDivForRowWrapper = styled('div', {
-  padding: '20px 24px 24px',
+  padding: '$10 $12 $12',
   position: 'relative',
   zIndex: 1,
 })
@@ -229,7 +228,7 @@ const StyledDivForLiquidityRows = styled('div', {
           background:
             'radial-gradient(71.15% 71.14% at 29.4% 81.87%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
           opacity: 0.4,
-          borderRadius: '0 0 8px 8px',
+          borderRadius: '0 0 $2 $2',
         },
       },
     },

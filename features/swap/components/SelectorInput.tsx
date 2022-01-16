@@ -22,7 +22,7 @@ export const SelectorInput = ({
   })
 
   return (
-    <Text css={{ fontWeight: '$bold' }}>
+    <Text variant="primary">
       <StyledInput
         ref={inputRef}
         type="number"
@@ -41,4 +41,8 @@ export const SelectorInput = ({
   )
 }
 
-const StyledInput = styled('input', { width: 'auto', textAlign: 'right' })
+const StyledInput = styled('input', {
+  width: 'auto',
+  textAlign: 'right',
+  color: 'inherit',
+})

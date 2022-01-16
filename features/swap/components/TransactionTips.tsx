@@ -10,6 +10,7 @@ import {
 import { useRecoilValue } from 'recoil'
 import { tokenSwapAtom } from '../swapAtoms'
 import { useTxRates } from '../hooks/useTxRates'
+import { Button } from 'components/Button'
 
 type TransactionTipsProps = {
   isPriceLoading: boolean
@@ -39,12 +40,11 @@ export const TransactionTips = ({
   return (
     <StyledDivForWrapper>
       <StyledDivForRateWrapper>
-        <StyledIconWrapper
-          type="button"
-          size="20px"
-          color="tertiaryIcon"
-          icon={<Exchange />}
-          flipped={swappedPosition}
+        <Button
+          icon={
+            <StyledIconWrapper icon={<Exchange />} flipped={swappedPosition} />
+          }
+          variant="ghost"
           onClick={
             !disabled
               ? () => {
@@ -53,14 +53,15 @@ export const TransactionTips = ({
                 }
               : undefined
           }
+          css={{
+            '& svg': {
+              color: '$colors$tertiary',
+            },
+          }}
         />
+
         {isShowing && (
-          <Text
-            variant="caption"
-            css={{ fontWeight: '$bold' }}
-            color="disabled"
-            wrap={false}
-          >
+          <Text variant="legend" wrap={false}>
             1 {tokenA.tokenSymbol} ≈ {formatTokenBalance(conversionRate)}{' '}
             {tokenB.tokenSymbol}
             {' ≈ '}$
@@ -71,7 +72,7 @@ export const TransactionTips = ({
         )}
       </StyledDivForRateWrapper>
 
-      <Text variant="caption" css={{ fontWeight: '$bold' }} color="secondary">
+      <Text variant="legend">
         $
         {dollarValueFormatterWithDecimals(dollarValue, {
           includeCommaSeparation: true,

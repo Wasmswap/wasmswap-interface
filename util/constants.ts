@@ -40,4 +40,7 @@ export const __POOL_REWARDS_ENABLED__ = false // is under development and cannot
 export const __TRANSFERS_ENABLED__ = JSON.parse(
   process.env.NEXT_PUBLIC_ENABLE_FEATURE_TRANSFERS
 )
+export const __DARK_MODE_ENABLED_BY_DEFAULT__ = JSON.parse(
+  process.env.NEXT_PUBLIC_DARK_MODE_ENABLED_BY_DEFAULT
+)
 /* /feature flags */

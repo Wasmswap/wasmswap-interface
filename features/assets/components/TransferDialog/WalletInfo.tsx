@@ -2,13 +2,11 @@ import { styled } from 'components/theme'
 import { Text } from 'components/Text'
 import { ConnectIcon } from 'icons/Connect'
 import { useRecoilValue } from 'recoil'
-import {
-  ibcWalletState,
-  walletState,
-} from '../../../../state/atoms/walletAtoms'
-import { IconWrapper } from '../../../../components/IconWrapper'
-import { Logo } from '../../../../icons/Logo'
+import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
+import { IconWrapper } from 'components/IconWrapper'
+import { Logo } from 'icons/Logo'
 import { CSS } from '@stitches/react'
+import { APP_NAME } from 'util/constants'
 
 export const WalletInfo = ({ label, icon, address, css }) => {
   return (
@@ -51,7 +49,7 @@ export const AppWalletInfo = ({ css, depositing }: WalletInfoProps) => {
   return (
     <WalletInfo
       css={css}
-      label={`${depositing ? 'To ' : ''}${process.env.NEXT_PUBLIC_SITE_TITLE}`}
+      label={`${depositing ? 'To ' : ''}${APP_NAME}`}
       icon={<IconWrapper color="secondary" size="32px" icon={<Logo />} />}
       address={walletAddress}
     />

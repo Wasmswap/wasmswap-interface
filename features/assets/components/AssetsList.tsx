@@ -48,14 +48,14 @@ export const AssetsList = ({ onActionClick }) => {
                   />
                 ))}
               {isConnected && !hasTransferredAssets && (
-                <Text variant="body" color="secondary" as="span">
+                <Text variant="body" as="span">
                   No IBC assets... yet!
                 </Text>
               )}
               {!isConnected && !isLoading && (
                 <Text variant="body">
                   Connect your wallet{' '}
-                  <Text variant="body" color="secondary" as="span">
+                  <Text variant="body" as="span">
                     to see your tokens.
                   </Text>
                 </Text>

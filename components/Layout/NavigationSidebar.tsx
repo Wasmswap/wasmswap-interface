@@ -153,13 +153,13 @@ const StyledWrapper = styled('div', {
   backgroundColor: '$backgroundColors$base',
   overflow: 'auto',
   borderRight: '1px solid $borderColors$inactive',
-
   position: 'sticky',
   top: 0,
   left: 0,
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
+  zIndex: '$2',
 })
 
 const StyledMenuContainer = styled('div', {

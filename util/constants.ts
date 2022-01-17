@@ -29,6 +29,7 @@ export const SLIPPAGE_OPTIONS = [0.01, 0.02, 0.03, 0.05]
 export const NETWORK_FEE = 0.003
 
 export const APP_NAME = process.env.NEXT_PUBLIC_SITE_TITLE
+export const APP_MAX_WIDTH = '1920px'
 
 /* the app operates in test mode */
 export const __TEST_MODE__ = !JSON.parse(

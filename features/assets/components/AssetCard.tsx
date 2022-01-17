@@ -6,6 +6,8 @@ import { IconWrapper } from '../../../components/IconWrapper'
 import { HTMLProps } from 'react'
 import { __TRANSFERS_ENABLED__ } from '../../../util/constants'
 import { ArrowUp } from '../../../icons'
+import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
+import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
 
 export enum AssetCardState {
   fetching = 'FETCHING',
@@ -30,6 +32,8 @@ export const AssetCard = ({
   ...htmlProps
 }: AssetCardProps) => {
   const { symbol, name, logoURI } = useIBCAssetInfo(tokenSymbol) || {}
+
+  const [dollarValue] = useTokenDollarValue(tokenSymbol)
 
   const handleDepositClick = () =>
     onActionClick({
@@ -56,44 +60,53 @@ export const AssetCard = ({
     )
   }
 
+  const rendersActiveAppearance = balance > 0
+
   return (
-    <StyledElementForCard {...(htmlProps as any)} kind="wrapper">
+    <StyledElementForCard
+      active={rendersActiveAppearance}
+      {...(htmlProps as any)}
+      kind="wrapper"
+    >
       <StyledElementForCard kind="content">
         <StyledElementForToken>
           <StyledTokenImage src={logoURI} />
-          <Text variant="title">
-            {balance} {name}{' '}
-            {!__TRANSFERS_ENABLED__ && (
-              <Text css={{ paddingLeft: '$8' }} as="span" variant="title">
-                Coming soon
+          <div>
+            <Text variant="primary">
+              {rendersActiveAppearance ? balance : null} {name}
+            </Text>
+            {rendersActiveAppearance && (
+              <Text variant="caption" css={{ paddingTop: '$1' }}>
+                $
+                {dollarValueFormatterWithDecimals(dollarValue * balance, {
+                  includeCommaSeparation: true,
+                })}
               </Text>
             )}
-          </Text>
+          </div>
         </StyledElementForToken>
       </StyledElementForCard>
 
       <StyledElementForCard kind="actions">
+        {balance > 0 && (
+          <Button
+            disabled={!__TRANSFERS_ENABLED__}
+            onClick={__TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined}
+            iconRight={<IconWrapper icon={<ArrowUp />} />}
+            variant="ghost"
+          >
+            Withdraw
+          </Button>
+        )}
         <Button
           disabled={!__TRANSFERS_ENABLED__}
           onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
-          iconLeft={<IconWrapper icon={<ArrowUp />} rotation="180deg" />}
+          iconRight={<IconWrapper icon={<ArrowUp />} rotation="180deg" />}
           variant="ghost"
         >
           Deposit
         </Button>
-        <Button
-          disabled={!__TRANSFERS_ENABLED__}
-          onClick={__TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined}
-          iconLeft={<IconWrapper icon={<ArrowUp />} />}
-          variant="ghost"
-        >
-          Withdraw
-        </Button>
       </StyledElementForCard>
-
-      {state === AssetCardState.active && (
-        <StyledElementForCard kind="background" />
-      )}
     </StyledElementForCard>
   )
 }
@@ -125,16 +138,12 @@ const StyledElementForCard = styled('div', {
         position: 'relative',
         zIndex: 1,
       },
-      background: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,
-        background:
-          'radial-gradient(92.33% 382.8% at 4.67% 100%, #DFB1E3 0%, rgba(247, 202, 178, 0) 100%)',
-        opacity: 0.4,
+    },
+    active: {
+      true: {
+        boxShadow: '$light',
+        border: '1px solid $borderColors$default',
+        backgroundColor: '$base',
       },
     },
   },
@@ -143,7 +152,7 @@ const StyledElementForCard = styled('div', {
 const StyledElementForToken = styled('div', {
   display: 'grid',
   gridAutoFlow: 'column',
-  columnGap: '7px',
+  columnGap: '$6',
   alignItems: 'center',
 })
 

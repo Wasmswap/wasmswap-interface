@@ -75,7 +75,7 @@ const StyledButtonForCloseButton = styled(Button, {
   position: 'absolute',
   right: '$space$4',
   top: '$space$4',
-  '& svg': { color: '$white50' },
+  '& svg': { color: '$iconColors$default' },
 })
 
 const StyledDivForButtons = styled('div', {

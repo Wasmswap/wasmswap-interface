@@ -100,15 +100,14 @@ export const TokenSelector = ({
         />
       </StyledDivForWrapper>
       {isTokenListShowing && (
-        <StyledDivForTokensListWrapper>
-          <TokenOptionsList
-            activeTokenSymbol={tokenSymbol}
-            onSelect={(selectedTokenSymbol) => {
-              onChange({ tokenSymbol: selectedTokenSymbol, amount })
-              setTokenListShowing(false)
-            }}
-          />
-        </StyledDivForTokensListWrapper>
+        <TokenOptionsList
+          activeTokenSymbol={tokenSymbol}
+          onSelect={(selectedTokenSymbol) => {
+            onChange({ tokenSymbol: selectedTokenSymbol, amount })
+            setTokenListShowing(false)
+          }}
+          css={{ padding: '$1 $6 $12' }}
+        />
       )}
     </StyledDivForContainer>
   )
@@ -136,10 +135,6 @@ const StyledDivForAmountWrapper = styled('div', {
   justifyContent: 'flex-end',
   position: 'relative',
   zIndex: 1,
-})
-
-const StyledDivForTokensListWrapper = styled('div', {
-  padding: '$1 $6 $12',
 })
 
 const StyledDivForOverlay = styled('div', {

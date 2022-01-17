@@ -33,6 +33,12 @@ export default function Transfer() {
     })
   }
 
+  function handleUpdateSelectedToken(tokenSymbol: string) {
+    updateState({
+      selectedToken: tokenSymbol,
+    })
+  }
+
   function handleTransferDialogClose() {
     updateState({ isTransferDialogShowing: false })
   }
@@ -118,6 +124,7 @@ export default function Transfer() {
           tokenSymbol={selectedToken}
           transactionKind={transactionKind}
           isShowing={isTransferDialogShowing}
+          onTokenSelect={handleUpdateSelectedToken}
           onRequestClose={handleTransferDialogClose}
         />
       )}

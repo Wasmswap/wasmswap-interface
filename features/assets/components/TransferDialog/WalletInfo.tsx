@@ -29,28 +29,29 @@ export const WalletInfo = ({ label, icon, address, css }) => {
 
 type WalletInfoProps = {
   css?: CSS
+  depositing?: boolean
 }
 
-export const KeplrWalletInfo = ({ css }: WalletInfoProps) => {
+export const KeplrWalletInfo = ({ css, depositing }: WalletInfoProps) => {
   const { address: ibcWalletAddress } = useRecoilValue(ibcWalletState)
 
   return (
     <WalletInfo
       css={css}
-      label="Keplr wallet"
+      label={`${depositing ? 'To ' : ''}Keplr wallet`}
       icon={<StyledImgForIcon src="/img/keplr-icon.png" alt="Keplr wallet" />}
       address={ibcWalletAddress}
     />
   )
 }
 
-export const AppWalletInfo = ({ css }: WalletInfoProps) => {
+export const AppWalletInfo = ({ css, depositing }: WalletInfoProps) => {
   const { address: walletAddress } = useRecoilValue(walletState)
 
   return (
     <WalletInfo
       css={css}
-      label={`To ${process.env.NEXT_PUBLIC_SITE_TITLE}`}
+      label={`${depositing ? 'To ' : ''}${process.env.NEXT_PUBLIC_SITE_TITLE}`}
       icon={<IconWrapper color="secondary" size="32px" icon={<Logo />} />}
       address={walletAddress}
     />

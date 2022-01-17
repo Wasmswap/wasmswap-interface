@@ -30,8 +30,8 @@ export const AssetsList = ({ onActionClick }) => {
     <>
       {__TRANSFERS_ENABLED__ && (
         <StyledGrid>
-          <Text variant="primary" css={{ paddingBottom: '$4' }}>
-            My tokens
+          <Text variant="primary" css={{ paddingBottom: '$12' }}>
+            My assets
           </Text>
           {isLoading ? (
             <AssetCard state={AssetCardState.fetching} />
@@ -48,14 +48,14 @@ export const AssetsList = ({ onActionClick }) => {
                   />
                 ))}
               {isConnected && !hasTransferredAssets && (
-                <Text variant="body" color="secondary" as="span">
+                <Text variant="body" as="span">
                   No IBC assets... yet!
                 </Text>
               )}
               {!isConnected && !isLoading && (
                 <Text variant="body">
                   Connect your wallet{' '}
-                  <Text variant="body" color="secondary" as="span">
+                  <Text variant="body" as="span">
                     to see your tokens.
                   </Text>
                 </Text>
@@ -68,11 +68,11 @@ export const AssetsList = ({ onActionClick }) => {
       <Text
         variant="primary"
         css={{
-          paddingTop: !__TRANSFERS_ENABLED__ ? '0' : '$19',
-          paddingBottom: !__TRANSFERS_ENABLED__ ? '$6' : '$10',
+          paddingTop: !__TRANSFERS_ENABLED__ ? '0' : '$16',
+          paddingBottom: !__TRANSFERS_ENABLED__ ? '$6' : '$12',
         }}
       >
-        All tokens
+        Other tokens
       </Text>
       <StyledGrid>
         {__TRANSFERS_ENABLED__ && isLoading ? (
@@ -98,7 +98,15 @@ export const AssetsList = ({ onActionClick }) => {
           </>
         )}
       </StyledGrid>
-      <Text variant="caption" css={{ paddingTop: '$12' }}>
+      <Text
+        variant="caption"
+        align="center"
+        color="disabled"
+        css={{
+          padding: '$16 0',
+          borderBottom: '1px solid $borderColors$inactive',
+        }}
+      >
         More tokens available soon
       </Text>
     </>

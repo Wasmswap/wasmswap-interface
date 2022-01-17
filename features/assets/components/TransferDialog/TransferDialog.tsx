@@ -22,11 +22,14 @@ import {
 import { AppWalletInfo, KeplrWalletInfo } from './WalletInfo'
 import { AssetSelector } from './AssetSelector'
 import { AmountInput } from './AmountInput'
+import { useIBCTokenBalance } from '../../../../hooks/useIBCTokenBalance'
+import { useTokenBalance } from '../../../../hooks/useTokenBalance'
 
 type TransferDialogProps = {
   tokenSymbol: string
   transactionKind: TransactionKind
   isShowing: boolean
+  onTokenSelect: (tokenSymbol: string) => void
   onRequestClose: () => void
 }
 
@@ -35,11 +38,14 @@ export const TransferDialog = ({
   transactionKind,
   isShowing,
   onRequestClose,
+  onTokenSelect,
 }: TransferDialogProps) => {
   const tokenInfo = useIBCAssetInfo(tokenSymbol)
 
-  const [tokenAmount, setTokenAmount] = useState(0)
+  const { balance: externalIbcAssetBalance } = useIBCTokenBalance(tokenSymbol)
+  const { balance: nativeAssetBalance } = useTokenBalance(tokenSymbol)
 
+  const [tokenAmount, setTokenAmount] = useState(0)
   const queryClient = useQueryClient()
 
   const { isLoading, mutate: mutateTransferAsset } = useTransferAssetMutation({
@@ -96,14 +102,25 @@ export const TransferDialog = ({
   const capitalizedTransactionType =
     transactionKind === 'deposit' ? 'Deposit' : 'Withdraw'
 
+  const WalletInfoPerformingActionFrom =
+    transactionKind === 'deposit' ? KeplrWalletInfo : AppWalletInfo
+  const WalletInfoPerformingActionAgainst =
+    transactionKind === 'withdraw' ? KeplrWalletInfo : AppWalletInfo
+
   return (
     <DialogV2 isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader paddingBottom="$13">
         <Text variant="header">{capitalizedTransactionType}</Text>
       </DialogHeader>
       <DialogContent>
-        <KeplrWalletInfo css={{ paddingBottom: '$12' }} />
-        <AssetSelector tokenSymbol={tokenSymbol} />
+        <WalletInfoPerformingActionFrom css={{ paddingBottom: '$12' }} />
+        <AssetSelector
+          activeTokenSymbol={tokenSymbol}
+          onTokenSymbolSelect={onTokenSelect}
+          fetchingBalancesAgainstChain={
+            transactionKind === 'deposit' ? 'ibc' : 'native'
+          }
+        />
       </DialogContent>
       <DialogDivider offsetY="$10" />
       <DialogContent>
@@ -118,13 +135,21 @@ export const TransferDialog = ({
       </DialogContent>
       <DialogDivider offsetY="$10" />
       <DialogContent css={{ paddingBottom: '$8' }}>
-        <AppWalletInfo />
+        <WalletInfoPerformingActionAgainst depositing={true} />
       </DialogContent>
       <DialogButtons>
         <Button onClick={onRequestClose} variant="secondary">
           Cancel
         </Button>
-        <Button onClick={() => mutateTransferAsset(null)} variant="primary">
+        <Button
+          disabled={
+            transactionKind === 'deposit'
+              ? externalIbcAssetBalance <= 0
+              : nativeAssetBalance <= 0
+          }
+          onClick={() => mutateTransferAsset(null)}
+          variant="primary"
+        >
           {isLoading ? <Spinner instant={true} size={16} /> : 'Transfer'}
         </Button>
       </DialogButtons>

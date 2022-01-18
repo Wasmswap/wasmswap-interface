@@ -29,40 +29,42 @@ export const AssetsList = ({ onActionClick }) => {
   return (
     <>
       {__TRANSFERS_ENABLED__ && (
-        <StyledGrid>
+        <>
           <Text variant="primary" css={{ paddingBottom: '$12' }}>
             My assets
           </Text>
-          {isLoading ? (
-            <AssetCard state={AssetCardState.fetching} />
-          ) : (
-            <>
-              {hasTransferredAssets &&
-                myTokens.map(({ tokenSymbol, balance }) => (
-                  <AssetCard
-                    state={AssetCardState.active}
-                    key={tokenSymbol}
-                    tokenSymbol={tokenSymbol}
-                    onActionClick={onActionClick}
-                    balance={balance}
-                  />
-                ))}
-              {isConnected && !hasTransferredAssets && (
-                <Text variant="body" as="span">
-                  No IBC assets... yet!
-                </Text>
-              )}
-              {!isConnected && !isLoading && (
-                <Text variant="body">
-                  Connect your wallet{' '}
+          <StyledGrid>
+            {isLoading ? (
+              <AssetCard state={AssetCardState.fetching} />
+            ) : (
+              <>
+                {hasTransferredAssets &&
+                  myTokens.map(({ tokenSymbol, balance }) => (
+                    <AssetCard
+                      state={AssetCardState.active}
+                      key={tokenSymbol}
+                      tokenSymbol={tokenSymbol}
+                      onActionClick={onActionClick}
+                      balance={balance}
+                    />
+                  ))}
+                {isConnected && !hasTransferredAssets && (
                   <Text variant="body" as="span">
-                    to see your tokens.
+                    No IBC assets... yet!
                   </Text>
-                </Text>
-              )}
-            </>
-          )}
-        </StyledGrid>
+                )}
+                {!isConnected && !isLoading && (
+                  <Text variant="body">
+                    Connect your wallet{' '}
+                    <Text variant="body" as="span">
+                      to see your tokens.
+                    </Text>
+                  </Text>
+                )}
+              </>
+            )}
+          </StyledGrid>
+        </>
       )}
 
       <Text

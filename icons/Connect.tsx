@@ -1,5 +1,5 @@
 import { SVGProps } from 'react'
-import { createIcon } from './createIcon'
+import { createIconComponent } from './createIconComponent'
 
 export const Connect = (props: SVGProps<SVGSVGElement>) => {
   return (
@@ -36,4 +36,4 @@ export const Connect = (props: SVGProps<SVGSVGElement>) => {
   )
 }
 
-export const ConnectIcon = createIcon(Connect)
+export const ConnectIcon = createIconComponent(Connect)

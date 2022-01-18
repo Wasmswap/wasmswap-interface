@@ -61,7 +61,15 @@ export const TokenSelectList = ({
               </div>
             </StyledDivForColumn>
             <StyledDivForColumn kind="balance">
-              <Text variant="body">
+              <Text
+                variant="body"
+                align="right"
+                css={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                }}
+              >
                 {fetchingBalanceMode === 'native' && (
                   <FetchBalanceTextForNativeTokenSymbol
                     tokenSymbol={tokenInfo.symbol}
@@ -87,14 +95,26 @@ export const TokenSelectList = ({
 const FetchBalanceTextForNativeTokenSymbol = ({ tokenSymbol }) => {
   const { balance, isLoading } = useTokenBalance(tokenSymbol)
   return (
-    <>{isLoading ? <Spinner size={16} /> : formatTokenBalance(balance || 0)}</>
+    <>
+      {isLoading ? (
+        <Spinner size={18} style={{ margin: 0 }} />
+      ) : (
+        formatTokenBalance(balance || 0)
+      )}
+    </>
   )
 }
 
 const FetchBalanceTextForIbcTokenSymbol = ({ tokenSymbol }) => {
   const { balance, isLoading } = useIBCTokenBalance(tokenSymbol)
   return (
-    <>{isLoading ? <Spinner size={16} /> : formatTokenBalance(balance || 0)}</>
+    <>
+      {isLoading ? (
+        <Spinner size={18} style={{ margin: 0 }} />
+      ) : (
+        formatTokenBalance(balance || 0)
+      )}
+    </>
   )
 }
 

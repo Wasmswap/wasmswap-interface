@@ -50,7 +50,7 @@ export const AssetSelector = ({
   }
 
   return (
-    <>
+    <StyledDivForWrapper>
       <StyledButtonForWrapper variant="secondary" onClick={handleToggleList}>
         <StyledDivForTokenContent>
           <ImageForTokenLogo
@@ -93,12 +93,17 @@ export const AssetSelector = ({
             onTokenSymbolSelect(tokenSymbol)
             setTokenListOpen(false)
           }}
-          css={{ padding: '$1 0 $12' }}
+          css={{ padding: '$1 $4 $12' }}
         />
       )}
-    </>
+    </StyledDivForWrapper>
   )
 }
+
+const StyledDivForWrapper = styled('div', {
+  backgroundColor: '$colors$dark10',
+  borderRadius: '$1',
+})
 
 const StyledButtonForWrapper = styled(ButtonForWrapper, {
   display: 'flex',

@@ -4,9 +4,8 @@ import { ComponentPropsWithoutRef } from 'react'
 
 const StyledImageForLogo = styled('img', {
   borderRadius: '50%',
-  flexShrink: 0,
-  flexGrow: 0,
-  backgroundColor: '#ccc',
+  flexShrink: 1,
+  flexGrow: 1,
   variants: {
     size: {
       small: {
@@ -45,3 +44,5 @@ export const ImageForTokenLogo = ({
     <StyledImageForLogo as={logoURI ? 'img' : 'div'} src={logoURI} {...props} />
   )
 }
+
+ImageForTokenLogo.toString = StyledImageForLogo.toString

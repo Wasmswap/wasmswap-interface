@@ -40,7 +40,7 @@ const StyledContainer = styled('div', {
   justifyContent: 'space-between',
   padding: '0 $12',
   '& main': {
-    maxWidth: '44rem',
+    maxWidth: '53.75rem',
   },
 })
 

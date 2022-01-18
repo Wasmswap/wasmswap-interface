@@ -8,7 +8,7 @@ import { Text } from 'components/Text'
 import { Chevron } from 'icons/Chevron'
 import { IconWrapper } from 'components/IconWrapper'
 import {
-  PoolBondedLiquidityCard,
+  ManageBondedLiquidityCard,
   UnbondingLiquidityCard,
   ManagePoolDialog,
   ManageLiquidityCard,
@@ -196,7 +196,7 @@ export default function Pool() {
                     })
                   }}
                 />
-                <PoolBondedLiquidityCard
+                <ManageBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
                   tokenASymbol={baseToken.symbol}
@@ -271,7 +271,7 @@ export default function Pool() {
 }
 
 const StyledWrapperForNavigation = styled('nav', {
-  padding: '24px 0',
+  padding: '$12 0',
   display: 'flex',
   alignItems: 'center',
 })
@@ -311,7 +311,7 @@ const StyledRowForTokensInfo = styled('div', {
   variants: {
     kind: {
       wrapper: {
-        padding: '14px 0',
+        padding: '$7 0',
         justifyContent: 'space-between',
       },
       column: {},

@@ -127,7 +127,7 @@ const StyledDivForPoolTokens = styled('div', {
   alignItems: 'center',
 })
 
-const StyledDivForTokenLogos = styled('div', {
+export const StyledDivForTokenLogos = styled('div', {
   [`& ${ImageForTokenLogo}`]: {
     position: 'relative',
     zIndex: '$2',

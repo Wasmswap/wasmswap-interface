@@ -20,13 +20,14 @@ import { StyledDivForTokenLogos } from 'features/liquidity/components/PoolCard'
 import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
 import { BondLiquidityDialog } from 'features/liquidity'
 import { Spinner } from 'components/Spinner'
-import { ArrowUp } from '../../icons'
-import { Divider } from '../../components/Divider'
-import { Inline } from '../../components/Inline'
-import { ImageForTokenLogo } from '../../components/ImageForTokenLogo'
-import { dollarValueFormatterWithDecimals } from '../../util/conversion'
-import { Column } from '../../components/Column'
-import { RewardsStatus } from '../../features/liquidity/components/RewardsStatus'
+import { ArrowUp } from 'icons'
+import { Divider } from 'components/Divider'
+import { Inline } from 'components/Inline'
+import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { dollarValueFormatterWithDecimals } from 'util/conversion'
+import { Column } from 'components/Column'
+import { RewardsStatus } from 'features/liquidity/components/RewardsStatus'
+import { UnbondingStatus } from 'features/liquidity/components/UnbondingStatus'
 
 export default function Pool() {
   const {
@@ -233,66 +234,28 @@ export default function Pool() {
                 />
               </StyledDivForCards>
             </>
-
-            <>
-              <RewardsStatus tokenA={tokenA} tokenB={tokenB} />
-              <Divider />
-            </>
-
             <>
               {__POOL_REWARDS_ENABLED__ && (
                 <>
-                  <StyledElementForRewards kind="wrapper">
-                    <StyledElementForRewards kind="column">
-                      <Text variant="hero">$289.00</Text>
-                    </StyledElementForRewards>
-
-                    <StyledElementForRewards kind="tokens">
-                      <StyledTextForTokens kind="element">
-                        <StyledImageForToken src="/crab.png" />
-                        <Text color="body" variant="caption">
-                          11 juno
-                        </Text>
-                      </StyledTextForTokens>
-                      <StyledTextForTokens kind="element">
-                        <StyledImageForToken src="/crab.png" />
-                        <Text color="body" variant="caption">
-                          31 atom
-                        </Text>
-                      </StyledTextForTokens>
-                    </StyledElementForRewards>
-
-                    <StyledElementForRewards kind="actions">
-                      <Button className="action-btn">Claim</Button>
-                    </StyledElementForRewards>
-                  </StyledElementForRewards>
-                  <StyledDivForSeparator />
+                  <RewardsStatus tokenA={tokenA} tokenB={tokenB} />
+                  <Divider />
+                  <UnbondingStatus tokenA={tokenA} tokenB={tokenB} />
+                  <Divider offsetBottom="$8" />
+                  <Column gap={6}>
+                    <UnbondingLiquidityCard tokenA={tokenA} tokenB={tokenB} />
+                    <UnbondingLiquidityCard tokenA={tokenA} tokenB={tokenB} />
+                    <UnbondingLiquidityCard tokenA={tokenA} tokenB={tokenB} />
+                  </Column>
                 </>
               )}
               {!__POOL_REWARDS_ENABLED__ && (
-                <StyledDivForRewardsPlaceholder>
-                  <Text color="secondary" variant="body">
-                    Work in progress. Stay tuned!
-                  </Text>
-                </StyledDivForRewardsPlaceholder>
+                <RewardsStatus
+                  disabled={true}
+                  tokenA={tokenA}
+                  tokenB={tokenB}
+                />
               )}
             </>
-
-            {__POOL_REWARDS_ENABLED__ && (
-              <>
-                <Text
-                  css={{ padding: '$12 0 $9', fontWeight: '$bold' }}
-                  color="body"
-                >
-                  Unbonding Liquidity
-                </Text>
-                <StyledElementForUnbonding kind="list">
-                  <UnbondingLiquidityCard />
-                  <UnbondingLiquidityCard />
-                  <UnbondingLiquidityCard />
-                </StyledElementForUnbonding>
-              </>
-            )}
           </>
         )}
       </AppLayout>
@@ -326,88 +289,10 @@ const StyledNavElement = styled('div', {
   },
 })
 
-const StyledDivForSeparator = styled('hr', {
-  margin: '0 auto',
-  border: 'none',
-  borderTop: '1px solid rgba(25, 29, 32, 0.1)',
-  width: '100%',
-  boxSizing: 'border-box',
-  height: 1,
-})
-
-const StyledTextForTokens = styled('div', {
-  display: 'grid',
-  gridAutoFlow: 'column',
-  alignItems: 'center',
-
-  variants: {
-    kind: {
-      element: {
-        columnGap: '6px',
-      },
-      wrapper: {
-        columnGap: '23px',
-      },
-    },
-  },
-})
-
-const StyledImageForToken = styled('img', {
-  width: 20,
-  height: 20,
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
-})
-
 const StyledDivForCards = styled('div', {
   display: 'grid',
   columnGap: '$8',
   gridTemplateColumns: '1fr 1fr',
-})
-
-const StyledElementForRewards = styled('div', {
-  variants: {
-    kind: {
-      wrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '18px 0',
-      },
-      tokens: {
-        display: 'grid',
-        columnGap: '32px',
-        gridAutoFlow: 'column',
-        alignItems: 'center',
-      },
-      column: {},
-      actions: {
-        '& .action-btn': {
-          padding: '6px 32px',
-          borderRadius: '8px',
-        },
-      },
-    },
-  },
-})
-
-const StyledElementForUnbonding = styled('div', {
-  variants: {
-    kind: {
-      list: {
-        display: 'grid',
-        rowGap: '8px',
-        paddingBottom: 24,
-      },
-    },
-  },
-})
-
-const StyledDivForRewardsPlaceholder = styled('div', {
-  padding: '22px 24px',
-  borderRadius: '8px',
-  border: '1px solid #E7E7E7',
-  backgroundColor: 'rgba(25, 29, 32, 0.1)',
 })
 
 const StyledDivForSpinner = styled('div', {

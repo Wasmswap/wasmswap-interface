@@ -94,11 +94,7 @@ export const ManageLiquidityCard = ({
         >
           {providedLiquidity && (
             <>
-              <Button
-                onClick={onRemoveLiquidityClick}
-                variant="secondary"
-                size="small"
-              >
+              <Button onClick={onRemoveLiquidityClick} variant="secondary">
                 Remove
               </Button>
               <Button

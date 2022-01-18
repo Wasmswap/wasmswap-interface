@@ -121,7 +121,7 @@ const StyledButton = styled('button', {
         padding: '$6 $8',
       },
       medium: {
-        padding: '$4 $8',
+        padding: '$3 $8',
       },
       small: {
         padding: '$2 $4',
@@ -154,6 +154,7 @@ const StyledButton = styled('button', {
       css: {
         $$backgroundColor: '$colors$dark30',
         $$textColor: '$colors$light95',
+        $$iconColor: '$iconColors$disabled',
       },
     },
     {
@@ -162,6 +163,7 @@ const StyledButton = styled('button', {
       css: {
         $$backgroundColor: '$colors$dark5',
         $$textColor: '$textColors$disabled',
+        $$iconColor: '$iconColors$disabled',
       },
     },
     {
@@ -169,6 +171,7 @@ const StyledButton = styled('button', {
       disabled: true,
       css: {
         $$textColor: '$textColors$disabled',
+        $$iconColor: '$iconColors$disabled',
       },
     },
     {

@@ -59,8 +59,12 @@ export const ManageBondedLiquidityCard = ({
               Currently no incentive
             </Text>
             <Inline justifyContent="flex-end">
-              <Button variant="ghost" iconRight={<MultisigIcon />}>
-                {unstakedLiquidityDollarValue} to stake
+              <Button
+                variant="ghost"
+                iconRight={<MultisigIcon />}
+                disabled={!__POOL_REWARDS_ENABLED__}
+              >
+                ${unstakedLiquidityDollarValue} to stake
               </Button>
             </Inline>
           </>

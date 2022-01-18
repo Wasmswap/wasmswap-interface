@@ -58,7 +58,7 @@ export const ManageBondedLiquidityCard = ({
             >
               Currently no incentive
             </Text>
-            <Inline align="flex-end">
+            <Inline justifyContent="flex-end">
               <Button variant="ghost" iconRight={<MultisigIcon />}>
                 {unstakedLiquidityDollarValue} to stake
               </Button>
@@ -95,7 +95,11 @@ export const ManageBondedLiquidityCard = ({
               </StyledDivForTokenLogos>
               <Text variant="link">$105/days in 4 tokens</Text>
             </Inline>
-            <Inline gap={4} align="flex-end" css={{ paddingBottom: '$10' }}>
+            <Inline
+              gap={4}
+              justifyContent="flex-end"
+              css={{ paddingBottom: '$10' }}
+            >
               <Button variant="menu" onClick={onButtonClick}>
                 ${unstakedLiquidityDollarValue} unstaked
               </Button>

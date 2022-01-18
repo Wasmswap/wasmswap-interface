@@ -87,7 +87,11 @@ export const ManageLiquidityCard = ({
             <Text variant="body">{tokenBReserve}</Text>
           </Inline>
         </Inline>
-        <Inline gap={4} align="flex-end" css={{ paddingBottom: '$10' }}>
+        <Inline
+          gap={4}
+          justifyContent="flex-end"
+          css={{ paddingBottom: '$10' }}
+        >
           {providedLiquidity && (
             <>
               <Button

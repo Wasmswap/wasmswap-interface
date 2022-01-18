@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { AppLayout } from 'components/Layout/AppLayout'
 import { Text } from 'components/Text'
-import { Chevron } from 'icons/Chevron'
 import { IconWrapper } from 'components/IconWrapper'
 import {
   ManageBondedLiquidityCard,
@@ -17,10 +16,17 @@ import { Button } from 'components/Button'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useTokenToTokenPrice } from 'features/swap/hooks/useTokenToTokenPrice'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
-import { parseCurrency } from 'features/liquidity/components/PoolCard'
+import { StyledDivForTokenLogos } from 'features/liquidity/components/PoolCard'
 import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
 import { BondLiquidityDialog } from 'features/liquidity'
 import { Spinner } from 'components/Spinner'
+import { ArrowUp } from '../../icons'
+import { Divider } from '../../components/Divider'
+import { Inline } from '../../components/Inline'
+import { ImageForTokenLogo } from '../../components/ImageForTokenLogo'
+import { dollarValueFormatterWithDecimals } from '../../util/conversion'
+import { Column } from '../../components/Column'
+import { RewardsStatus } from '../../features/liquidity/components/RewardsStatus'
 
 export default function Pool() {
   const {
@@ -33,12 +39,12 @@ export default function Pool() {
   ] = useState({ isShowing: false, actionType: 'add' as 'add' | 'remove' })
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
-  const tokenInfo = useTokenInfoByPoolId(pool as string)
-  const baseToken = useBaseTokenInfo()
+  const tokenA = useBaseTokenInfo()
+  const tokenB = useTokenInfoByPoolId(pool as string)
 
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
-    tokenASymbol: baseToken?.symbol,
-    tokenBSymbol: tokenInfo?.symbol,
+    tokenASymbol: tokenA?.symbol,
+    tokenBSymbol: tokenB?.symbol,
     tokenAmount: 1,
   })
 
@@ -49,7 +55,7 @@ export default function Pool() {
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
 
-  if (!tokenInfo || !pool) {
+  if (!tokenB || !pool) {
     return null
   }
 
@@ -79,7 +85,7 @@ export default function Pool() {
       {pool && (
         <Head>
           <title>
-            {APP_NAME} — Pool {tokenInfo.pool_id}
+            {APP_NAME} — Pool {tokenB.pool_id}
           </title>
         </Head>
       )}
@@ -89,20 +95,22 @@ export default function Pool() {
           <StyledNavElement position="left">
             <Link href="/pools" passHref>
               <Button
-                icon={<IconWrapper icon={<Chevron />} />}
+                iconLeft={<IconWrapper icon={<ArrowUp />} rotation="-90deg" />}
                 variant="ghost"
                 as="a"
-              />
+              >
+                Back
+              </Button>
             </Link>
           </StyledNavElement>
           <StyledNavElement position="center">
             <Text variant="header" transform="capitalize">
-              Pool {baseToken.name} + {tokenInfo.name}
+              Pool {tokenA.name} + {tokenB.name}
             </Text>
           </StyledNavElement>
         </StyledWrapperForNavigation>
 
-        <StyledDivForSeparator />
+        <Divider />
 
         {isLoadingInitial && (
           <StyledDivForSpinner>
@@ -112,77 +120,98 @@ export default function Pool() {
 
         {!isLoadingInitial && (
           <>
-            <StyledRowForTokensInfo kind="wrapper">
-              <StyledRowForTokensInfo kind="column">
-                <Text css={{ paddingRight: '$13' }}>
-                  Pool #{tokenInfo.pool_id}
-                </Text>
-                <StyledTextForTokens kind="wrapper">
-                  <StyledTextForTokens kind="element">
-                    <StyledImageForToken src="https://junochain.com/assets/logos/logo_512x512.png" />
-                    <Text color="body" variant="caption">
-                      {baseToken.symbol}
-                    </Text>
-                  </StyledTextForTokens>
-                  <StyledTextForTokens kind="element">
-                    <StyledImageForToken
-                      as={tokenInfo.logoURI ? 'img' : 'div'}
-                      src={tokenInfo.logoURI}
+            <Inline justifyContent="space-between" css={{ padding: '$8 0' }}>
+              <Inline gap={18}>
+                <Text variant="primary">Pool #{tokenB.pool_id}</Text>
+                <Inline gap={12}>
+                  <Inline gap={6}>
+                    <ImageForTokenLogo
+                      size="large"
+                      logoURI={tokenA.logoURI}
+                      alt={tokenA.symbol}
                     />
-                    <Text color="body" variant="caption">
-                      {tokenInfo.symbol}
-                    </Text>
-                  </StyledTextForTokens>
-                </StyledTextForTokens>
-              </StyledRowForTokensInfo>
-              <StyledRowForTokensInfo kind="column">
-                <Text variant="caption" color="tertiary" transform="lowercase">
-                  {isPriceLoading
-                    ? ''
-                    : `1 ${baseToken.symbol} = ${tokenPrice} ${tokenInfo.symbol}`}
-                </Text>
-              </StyledRowForTokensInfo>
-            </StyledRowForTokensInfo>
+                    <ImageForTokenLogo
+                      size="large"
+                      logoURI={tokenB.logoURI}
+                      alt={tokenB.symbol}
+                    />
+                  </Inline>
+                </Inline>
+              </Inline>
+              <Text variant="legend" color="secondary" transform="lowercase">
+                {isPriceLoading
+                  ? ''
+                  : `1 ${tokenA.symbol} = ${tokenPrice} ${tokenB.symbol}`}
+              </Text>
+            </Inline>
 
-            <StyledDivForSeparator />
-
-            <StyledElementForLiquidity kind="wrapper">
-              <StyledElementForLiquidity kind="row">
-                <Text
-                  variant="body"
-                  color="secondary"
-                  css={{ paddingBottom: '$3' }}
-                >
-                  Total Liquidity
-                </Text>
-                <Text
-                  variant="body"
-                  color="secondary"
-                  css={{ paddingBottom: '$3' }}
-                >
-                  APR reward
-                </Text>
-              </StyledElementForLiquidity>
-              <StyledElementForLiquidity kind="row">
-                <Text variant="header">
-                  {parseCurrency(totalLiquidity?.dollarValue)}
-                </Text>
-                <Text variant="header">0%</Text>
-              </StyledElementForLiquidity>
-            </StyledElementForLiquidity>
-
-            <StyledDivForSeparator />
+            <Divider />
 
             <>
-              <Text css={{ padding: '$12 0 $9' }} variant="primary">
-                Personal shares
-              </Text>
+              <Inline
+                css={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr 1fr',
+                  padding: '$12 0 $16',
+                }}
+              >
+                <Column gap={6} align="flex-start" justifyContent="flex-start">
+                  <Text variant="legend" color="secondary" align="left">
+                    Total liquidity
+                  </Text>
+                  <Text variant="header">
+                    $
+                    {dollarValueFormatterWithDecimals(
+                      totalLiquidity?.dollarValue,
+                      { includeCommaSeparation: true }
+                    )}
+                  </Text>
+                </Column>
+
+                <Column gap={6} align="center" justifyContent="center">
+                  <Text variant="legend" color="secondary" align="center">
+                    Token reward
+                  </Text>
+                  <StyledDivForTokenLogos>
+                    <ImageForTokenLogo
+                      size="large"
+                      logoURI={tokenA.logoURI}
+                      alt={tokenA.symbol}
+                    />
+                    <ImageForTokenLogo
+                      size="large"
+                      logoURI={tokenB.logoURI}
+                      alt={tokenB.symbol}
+                    />
+                    <ImageForTokenLogo
+                      size="large"
+                      logoURI={tokenA.logoURI}
+                      alt={tokenA.symbol}
+                    />
+                    <ImageForTokenLogo
+                      size="large"
+                      logoURI={tokenB.logoURI}
+                      alt={tokenB.symbol}
+                    />
+                  </StyledDivForTokenLogos>
+                </Column>
+
+                <Column gap={6} align="flex-end" justifyContent="flex-end">
+                  <Text variant="legend" color="secondary" align="right">
+                    APR reward
+                  </Text>
+                  <Text variant="header">0%</Text>
+                </Column>
+              </Inline>
+            </>
+
+            <>
               <StyledDivForCards>
                 <ManageLiquidityCard
                   myReserve={myReserve}
                   tokenDollarValue={tokenDollarValue}
-                  tokenASymbol={baseToken.symbol}
-                  tokenBSymbol={tokenInfo.symbol}
+                  tokenASymbol={tokenA.symbol}
+                  tokenBSymbol={tokenB.symbol}
                   onAddLiquidityClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
@@ -199,19 +228,20 @@ export default function Pool() {
                 <ManageBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
-                  tokenASymbol={baseToken.symbol}
-                  tokenBSymbol={tokenInfo.symbol}
+                  tokenASymbol={tokenA.symbol}
+                  tokenBSymbol={tokenB.symbol}
                 />
               </StyledDivForCards>
             </>
 
             <>
-              <Text variant="primary" css={{ padding: '$12 0 $9' }}>
-                Rewards
-              </Text>
+              <RewardsStatus tokenA={tokenA} tokenB={tokenB} />
+              <Divider />
+            </>
+
+            <>
               {__POOL_REWARDS_ENABLED__ && (
                 <>
-                  <StyledDivForSeparator />
                   <StyledElementForRewards kind="wrapper">
                     <StyledElementForRewards kind="column">
                       <Text variant="hero">$289.00</Text>
@@ -271,7 +301,7 @@ export default function Pool() {
 }
 
 const StyledWrapperForNavigation = styled('nav', {
-  padding: '$12 0',
+  padding: '$11 0',
   display: 'flex',
   alignItems: 'center',
 })
@@ -305,20 +335,6 @@ const StyledDivForSeparator = styled('hr', {
   height: 1,
 })
 
-const StyledRowForTokensInfo = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-  variants: {
-    kind: {
-      wrapper: {
-        padding: '$7 0',
-        justifyContent: 'space-between',
-      },
-      column: {},
-    },
-  },
-})
-
 const StyledTextForTokens = styled('div', {
   display: 'grid',
   gridAutoFlow: 'column',
@@ -341,22 +357,6 @@ const StyledImageForToken = styled('img', {
   height: 20,
   borderRadius: '50%',
   backgroundColor: '#ccc',
-})
-
-const StyledElementForLiquidity = styled('div', {
-  variants: {
-    kind: {
-      wrapper: {
-        paddingTop: 22,
-        paddingBottom: 28,
-      },
-      row: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      },
-    },
-  },
 })
 
 const StyledDivForCards = styled('div', {

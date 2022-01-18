@@ -1,8 +1,8 @@
 import { lightTheme, space, styled } from './theme'
 
-export const Inline = styled('div', {
+export const Column = styled('div', {
   display: 'flex',
-  alignItems: 'center',
+  flexDirection: 'column',
   variants: {
     align: {
       'flex-start': {
@@ -33,7 +33,7 @@ export const Inline = styled('div', {
       (gapSet, gapKey) => ({
         ...gapSet,
         [gapKey]: {
-          columnGap: lightTheme.space[gapKey].value,
+          rowGap: lightTheme.space[gapKey].value,
         },
       }),
       {}

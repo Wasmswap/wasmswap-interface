@@ -76,7 +76,7 @@ const StyledText = styled('p', {
       (colorVariants, colorToken) => ({
         ...colorVariants,
         [colorToken]: {
-          $$color: `$textColors$${colorToken}`,
+          $$color: `$textColors$${colorToken} !important`,
         },
       }),
       {} as Record<

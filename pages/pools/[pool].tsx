@@ -11,7 +11,7 @@ import {
   PoolBondedLiquidityCard,
   UnbondingLiquidityCard,
   ManagePoolDialog,
-  PoolAvailableLiquidityCard,
+  ManageLiquidityCard,
 } from 'features/liquidity'
 import { Button } from 'components/Button'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
@@ -27,8 +27,10 @@ export default function Pool() {
     query: { pool },
   } = useRouter()
 
-  const [isManageLiquidityDialogShowing, setIsManageLiquidityDialogShowing] =
-    useState(false)
+  const [
+    { isShowing: isManageLiquidityDialogShowing, actionType },
+    setManageLiquidityDialogState,
+  ] = useState({ isShowing: false, actionType: 'add' as 'add' | 'remove' })
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const tokenInfo = useTokenInfoByPoolId(pool as string)
@@ -56,7 +58,13 @@ export default function Pool() {
       {pool && (
         <ManagePoolDialog
           isShowing={isManageLiquidityDialogShowing}
-          onRequestClose={() => setIsManageLiquidityDialogShowing(false)}
+          initialActionType={actionType}
+          onRequestClose={() =>
+            setManageLiquidityDialogState({
+              isShowing: false,
+              actionType: 'add',
+            })
+          }
           poolId={pool as string}
         />
       )}
@@ -170,14 +178,23 @@ export default function Pool() {
                 Personal shares
               </Text>
               <StyledDivForCards>
-                <PoolAvailableLiquidityCard
-                  myLiquidity={myLiquidity}
+                <ManageLiquidityCard
                   myReserve={myReserve}
-                  totalLiquidity={totalLiquidity}
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={baseToken.symbol}
                   tokenBSymbol={tokenInfo.symbol}
-                  onButtonClick={() => setIsManageLiquidityDialogShowing(true)}
+                  onAddLiquidityClick={() =>
+                    setManageLiquidityDialogState({
+                      isShowing: true,
+                      actionType: 'add',
+                    })
+                  }
+                  onRemoveLiquidityClick={() => {
+                    setManageLiquidityDialogState({
+                      isShowing: true,
+                      actionType: 'remove',
+                    })
+                  }}
                 />
                 <PoolBondedLiquidityCard
                   onButtonClick={() => setIsBondingDialogShowing(true)}
@@ -344,7 +361,7 @@ const StyledElementForLiquidity = styled('div', {
 
 const StyledDivForCards = styled('div', {
   display: 'grid',
-  columnGap: '18px',
+  columnGap: '$8',
   gridTemplateColumns: '1fr 1fr',
 })
 

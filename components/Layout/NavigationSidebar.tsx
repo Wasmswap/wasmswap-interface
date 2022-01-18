@@ -159,7 +159,7 @@ const StyledWrapper = styled('div', {
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
-  zIndex: '$2',
+  zIndex: '$1',
 })
 
 const StyledMenuContainer = styled('div', {

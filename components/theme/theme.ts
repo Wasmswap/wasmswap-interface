@@ -45,7 +45,7 @@ const baseTheme = {
     2: '8px',
   },
   shadows: {
-    light: '0px $space$1 $space$3 0px $colors$black15',
+    light: '0px $space$1 $space$3 0px $colors$black10',
   },
   zIndices: {
     1: 0,

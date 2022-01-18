@@ -71,7 +71,7 @@ const StyledIcon = styled.span`
   justify-content: center;
   align-items: center;
   color: ${(p) =>
-    colorTokens[p.$color] || p.$theme.iconColors[p.$color]?.value || p.$color};
+    p.$theme.iconColors[p.$color]?.value || colorTokens[p.$color] || p.$color};
   width: ${(p) => p.$width || p.$size};
   height: ${(p) => p.$height || p.$size};
   min-width: ${(p) => p.$width || p.$size};

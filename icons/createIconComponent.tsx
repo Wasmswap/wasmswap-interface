@@ -1,6 +1,6 @@
 import { IconWrapper, IconWrapperProps } from '../components/IconWrapper'
 
-export const createIcon = (IconComponent: any) => {
+export const createIconComponent = (IconComponent: any) => {
   function Icon(props: Omit<IconWrapperProps, 'icon'>) {
     return <IconWrapper {...props} icon={<IconComponent />} />
   }
@@ -9,3 +9,8 @@ export const createIcon = (IconComponent: any) => {
 
   return Icon
 }
+
+export const createIcon = (IconComponent: any) => [
+  IconComponent,
+  createIconComponent(IconComponent),
+]

@@ -121,7 +121,7 @@ const StyledButton = styled('button', {
         padding: '$6 $8',
       },
       medium: {
-        padding: '$2 $8 $3',
+        padding: '$4 $8',
       },
       small: {
         padding: '$2 $4',

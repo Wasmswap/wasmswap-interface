@@ -129,15 +129,15 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
                   .format('MMM D')}.`}
           </Text>
         </Column>
-        <DialogButtons>
-          <Button variant="secondary" onClick={onRequestClose}>
-            Cancel
-          </Button>
-          <Button variant="primary">
-            {dialogState === 'stake' ? 'Stake' : 'Unstake'}
-          </Button>
-        </DialogButtons>
       </DialogContent>
+      <DialogButtons>
+        <Button variant="secondary" onClick={onRequestClose}>
+          Cancel
+        </Button>
+        <Button variant="primary">
+          {dialogState === 'stake' ? 'Stake' : 'Unstake'}
+        </Button>
+      </DialogButtons>
     </Dialog>
   )
 }

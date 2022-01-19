@@ -1,7 +1,7 @@
 import { Text } from './Text'
 import { useState } from 'react'
 import { Button } from './Button'
-import { DialogContent, DialogHeader, DialogV2 } from './DialogV2'
+import { DialogContent, DialogHeader, Dialog } from './Dialog'
 
 export const TestnetDialog = () => {
   const [isShowing, setShowing] = useState(true)
@@ -9,7 +9,7 @@ export const TestnetDialog = () => {
   const requestClose = () => setShowing(false)
 
   return (
-    <DialogV2 isShowing={isShowing} onRequestClose={requestClose}>
+    <Dialog isShowing={isShowing} onRequestClose={requestClose}>
       <DialogHeader paddingBottom="$10">
         <Text variant="header">Demo mode warning</Text>
       </DialogHeader>
@@ -23,6 +23,6 @@ export const TestnetDialog = () => {
           Enter the App
         </Button>
       </DialogContent>
-    </DialogV2>
+    </Dialog>
   )
 }

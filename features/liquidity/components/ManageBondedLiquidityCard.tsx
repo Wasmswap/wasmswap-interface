@@ -60,6 +60,7 @@ export const ManageBondedLiquidityCard = ({
             </Text>
             <Inline justifyContent="flex-end">
               <Button
+                onClick={onButtonClick}
                 variant="ghost"
                 iconRight={<MultisigIcon />}
                 disabled={!__POOL_REWARDS_ENABLED__}

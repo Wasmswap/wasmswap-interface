@@ -1,7 +1,5 @@
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Dialog, DialogCloseButton } from 'components/Dialog'
 import { Text } from 'components/Text'
-import { styled } from 'components/theme'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { useState } from 'react'
 import {
@@ -10,17 +8,22 @@ import {
 } from 'util/conversion'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
-import { Divider } from './Divider'
-import { DialogFooter } from './DialogFooter'
-import { SecondaryButton } from './SecondaryButton'
-import { PrimaryButton } from './PrimaryButton'
+import { Divider } from 'components/Divider'
+import { Column } from 'components/Column'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
 import dayjs from 'dayjs'
+import {
+  DialogHeader,
+  Dialog,
+  DialogContent,
+  DialogButtons,
+} from 'components/Dialog'
+import { Button } from 'components/Button'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
-  const baseToken = useBaseTokenInfo()
-  const tokenInfo = useTokenInfoByPoolId(poolId)
+  const tokenA = useBaseTokenInfo()
+  const tokenB = useTokenInfoByPoolId(poolId)
 
   const [
     {
@@ -38,10 +41,8 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const canManageStaking = true
 
   return (
-    <Dialog kind="blank" isShowing={isShowing} onRequestClose={onRequestClose}>
-      <DialogCloseButton onClick={onRequestClose} offset={19} size="16px" />
-
-      <StyledDivForContent>
+    <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
+      <DialogHeader>
         {canManageStaking ? (
           <Text variant="header" css={{ paddingBottom: '$8' }}>
             Manage staking
@@ -56,11 +57,11 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
             </Text>
           </>
         )}
-      </StyledDivForContent>
+      </DialogHeader>
 
       {canManageStaking && (
         <>
-          <StyledDivForContent kind="stakingHeader">
+          <DialogContent css={{ paddingBottom: '$8' }}>
             <StateSwitchButtons
               activeValue={dialogState === 'stake' ? 'staking' : 'unstaking'}
               values={['staking', 'unstaking']}
@@ -68,16 +69,16 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
                 setDialogState(value === 'staking' ? 'stake' : 'unstake')
               }}
             />
-          </StyledDivForContent>
+          </DialogContent>
           <Divider />
-          <StyledDivForContent>
+          <DialogContent>
             <Text variant="body" css={{ padding: '$8 0 $6' }}>
               Choose your token amount
             </Text>
-          </StyledDivForContent>
+          </DialogContent>
         </>
       )}
-      <StyledDivForContent kind="form">
+      <DialogContent css={{ paddingBottom: '$12' }}>
         <LiquidityInputSelector
           maxLiquidity={maxDollarValueLiquidity}
           liquidity={liquidityDollarAmount}
@@ -94,28 +95,29 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           liquidity={liquidityDollarAmount}
           onChangeLiquidity={setLiquidityDollarAmount}
         />
-      </StyledDivForContent>
+      </DialogContent>
       <Divider />
-      <StyledDivForContent>
+      <DialogContent>
         <StakingSummary
           label="Staking"
-          tokenA={baseToken}
-          tokenB={tokenInfo}
+          tokenA={tokenA}
+          tokenB={tokenB}
           maxLiquidity={maxDollarValueLiquidity}
           liquidityAmount={liquidityDollarAmount}
           onChangeLiquidity={setLiquidityDollarAmount}
         />
-      </StyledDivForContent>
+      </DialogContent>
       <Divider />
-      <StyledDivForContent>
-        <DialogFooter
-          title={
-            dialogState === 'stake'
+      <DialogContent>
+        <Column>
+          <Text variant="body" css={{ padding: '$8 0 $4' }}>
+            {dialogState === 'stake'
               ? 'Unbonding Period: 14 days'
-              : `Available on: ${dayjs().add(14, 'day').format('MMMM D YYYY')}`
-          }
-          text={
-            dialogState === 'stake'
+              : `Available on: ${dayjs().add(14, 'day').format('MMMM D YYYY')}`}
+          </Text>
+
+          <Text variant="secondary" css={{ paddingBottom: '$12' }}>
+            {dialogState === 'stake'
               ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous stake."
               : `Because of the 14 days unstaking period, you will be able to redeem your $${dollarValueFormatter(
                   liquidityDollarAmount,
@@ -124,32 +126,18 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
                   }
                 )} worth of staked token on ${dayjs()
                   .add(14, 'day')
-                  .format('MMM D')}.`
-          }
-          buttons={
-            <>
-              <SecondaryButton onClick={onRequestClose}>Cancel</SecondaryButton>
-              <PrimaryButton>
-                {dialogState === 'stake' ? 'Stake' : 'Unstake'}
-              </PrimaryButton>
-            </>
-          }
-        />
-      </StyledDivForContent>
+                  .format('MMM D')}.`}
+          </Text>
+        </Column>
+        <DialogButtons>
+          <Button variant="secondary" onClick={onRequestClose}>
+            Cancel
+          </Button>
+          <Button variant="primary">
+            {dialogState === 'stake' ? 'Stake' : 'Unstake'}
+          </Button>
+        </DialogButtons>
+      </DialogContent>
     </Dialog>
   )
 }
-
-const StyledDivForContent = styled('div', {
-  padding: '0px 28px',
-  variants: {
-    kind: {
-      form: {
-        paddingBottom: 24,
-      },
-      stakingHeader: {
-        paddingBottom: 16,
-      },
-    },
-  },
-})

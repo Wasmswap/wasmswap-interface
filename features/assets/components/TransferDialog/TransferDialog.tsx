@@ -17,8 +17,8 @@ import {
   DialogContent,
   DialogDivider,
   DialogHeader,
-  DialogV2,
-} from 'components/DialogV2'
+  Dialog,
+} from 'components/Dialog'
 import { AppWalletInfo, KeplrWalletInfo } from './WalletInfo'
 import { AssetSelector } from './AssetSelector'
 import { AmountInput } from './AmountInput'
@@ -108,7 +108,7 @@ export const TransferDialog = ({
     transactionKind === 'withdraw' ? KeplrWalletInfo : AppWalletInfo
 
   return (
-    <DialogV2 isShowing={isShowing} onRequestClose={onRequestClose}>
+    <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader paddingBottom="$13">
         <Text variant="header">{capitalizedTransactionType}</Text>
       </DialogHeader>
@@ -153,6 +153,6 @@ export const TransferDialog = ({
           {isLoading ? <Spinner instant={true} size={16} /> : 'Transfer'}
         </Button>
       </DialogButtons>
-    </DialogV2>
+    </Dialog>
   )
 }

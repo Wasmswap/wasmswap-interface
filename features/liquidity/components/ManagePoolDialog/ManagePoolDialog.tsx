@@ -21,10 +21,10 @@ import { Button } from 'components/Button'
 import {
   DialogHeader,
   DialogContent,
-  DialogV2,
+  Dialog,
   DialogDivider,
   DialogButtons,
-} from 'components/DialogV2'
+} from 'components/Dialog'
 import { Spinner } from 'components/Spinner'
 import { usePrevious } from '@reach/utils'
 
@@ -101,7 +101,7 @@ export const ManagePoolDialog = ({
   }, [initialActionType, previousIsShowing, isShowing])
 
   return (
-    <DialogV2 isShowing={isShowing} onRequestClose={onRequestClose}>
+    <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader paddingBottom={canManageLiquidity ? '$8' : '$12'}>
         <Text variant="header">Manage liquidity</Text>
       </DialogHeader>
@@ -169,7 +169,7 @@ export const ManagePoolDialog = ({
           )}
         </Button>
       </DialogButtons>
-    </DialogV2>
+    </Dialog>
   )
 }
 

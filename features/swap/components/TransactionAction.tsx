@@ -121,7 +121,7 @@ const StyledDivColumnForInfo = styled('div', {
       fees: {
         backgroundColor: '$colors$dark10',
         flex: 1,
-        padding: 'calc($space$8 - $space$1 / 1.5) $space$12',
+        padding: '$space$8 $space$12',
         borderRadius: '0 $2 $2 0',
       },
     },

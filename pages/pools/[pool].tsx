@@ -152,7 +152,9 @@ export default function Pool() {
               <Inline
                 css={{
                   display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr',
+                  gridTemplateColumns: __POOL_REWARDS_ENABLED__
+                    ? '1fr 1fr 1fr'
+                    : '1fr 1fr',
                   padding: '$12 0 $16',
                 }}
               >
@@ -169,33 +171,35 @@ export default function Pool() {
                   </Text>
                 </Column>
 
-                <Column gap={6} align="center" justifyContent="center">
-                  <Text variant="legend" color="secondary" align="center">
-                    Token reward
-                  </Text>
-                  <StyledDivForTokenLogos>
-                    <ImageForTokenLogo
-                      size="large"
-                      logoURI={tokenA.logoURI}
-                      alt={tokenA.symbol}
-                    />
-                    <ImageForTokenLogo
-                      size="large"
-                      logoURI={tokenB.logoURI}
-                      alt={tokenB.symbol}
-                    />
-                    <ImageForTokenLogo
-                      size="large"
-                      logoURI={tokenA.logoURI}
-                      alt={tokenA.symbol}
-                    />
-                    <ImageForTokenLogo
-                      size="large"
-                      logoURI={tokenB.logoURI}
-                      alt={tokenB.symbol}
-                    />
-                  </StyledDivForTokenLogos>
-                </Column>
+                {__POOL_REWARDS_ENABLED__ && (
+                  <Column gap={6} align="center" justifyContent="center">
+                    <Text variant="legend" color="secondary" align="center">
+                      Token reward
+                    </Text>
+                    <StyledDivForTokenLogos>
+                      <ImageForTokenLogo
+                        size="large"
+                        logoURI={tokenA.logoURI}
+                        alt={tokenA.symbol}
+                      />
+                      <ImageForTokenLogo
+                        size="large"
+                        logoURI={tokenB.logoURI}
+                        alt={tokenB.symbol}
+                      />
+                      <ImageForTokenLogo
+                        size="large"
+                        logoURI={tokenA.logoURI}
+                        alt={tokenA.symbol}
+                      />
+                      <ImageForTokenLogo
+                        size="large"
+                        logoURI={tokenB.logoURI}
+                        alt={tokenB.symbol}
+                      />
+                    </StyledDivForTokenLogos>
+                  </Column>
+                )}
 
                 <Column gap={6} align="flex-end" justifyContent="flex-end">
                   <Text variant="legend" color="secondary" align="right">

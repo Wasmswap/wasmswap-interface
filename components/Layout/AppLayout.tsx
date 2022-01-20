@@ -40,4 +40,9 @@ const StyledContainer = styled('div', {
   flexDirection: 'column',
   justifyContent: 'space-between',
   padding: '0 $12',
+  '& main': {
+    margin: '0 auto',
+    width: '100%',
+    maxWidth: '55rem',
+  },
 })

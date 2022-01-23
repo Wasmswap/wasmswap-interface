@@ -55,12 +55,27 @@ const baseTheme = {
     3: 2,
   },
   transitions: {},
+
+  breakpoints: {
+    sm: '640px',
+    md: '768px',
+    lg: '1024px',
+  },
+
   media: {
-    mobile: '(min-width: 640px)',
-    tablet: '(min-width: 768px)',
-    desktop: '(min-width: 1024px)',
+    sm: '(max-width: 640px)',
+    md: '(max-width: 768px)',
+    lg: '(max-width: 1024px)',
   },
 }
+
+export const media = Object.keys(baseTheme.media).reduce(
+  (mediaVariants, key) => ({
+    ...mediaVariants,
+    [key]: `@media ${baseTheme.media[key]}`,
+  }),
+  {} as Record<keyof typeof baseTheme.media, string>
+)
 
 /* build the dark theme */
 export const darkTheme = createTheme({

@@ -43,6 +43,6 @@ const StyledContainer = styled('div', {
   '& main': {
     margin: '0 auto',
     width: '100%',
-    maxWidth: '55rem',
+    maxWidth: '53.75rem',
   },
 })

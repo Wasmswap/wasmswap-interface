@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '../Button'
 import { Text } from '../Text'
@@ -22,8 +22,17 @@ import { ChevronIcon } from 'icons/Chevron'
 import { media, styled } from '../theme'
 import { __TEST_MODE__ } from 'util/constants'
 import { useMedia } from 'hooks/useMedia'
+import { Divider } from '../Divider'
 
-export function NavigationSidebar() {
+type NavigationSidebarProps = {
+  shouldRenderBackButton?: boolean
+  backButton?: ReactNode
+}
+
+export function NavigationSidebar({
+  shouldRenderBackButton,
+  backButton,
+}: NavigationSidebarProps) {
   const { mutate: connectWallet } = useConnectWallet()
   const [{ key }, setWalletState] = useRecoilState(walletState)
 
@@ -91,6 +100,55 @@ export function NavigationSidebar() {
   )
 
   if (isMobile) {
+    const triggerMenuButton = isOpen ? (
+      <Button
+        onClick={() => setOpen(false)}
+        icon={<UnionIcon />}
+        variant="ghost"
+      />
+    ) : (
+      <Button
+        onClick={() => setOpen(true)}
+        iconRight={<ChevronIcon rotation="-90deg" />}
+      >
+        Menu
+      </Button>
+    )
+
+    if (shouldRenderBackButton) {
+      return (
+        <>
+          <StyledWrapperForMobile>
+            <Inline align="center" justifyContent="space-between">
+              <Column align="flex-start" css={{ flex: 0.3 }}>
+                {backButton}
+              </Column>
+
+              <Link href="/" passHref>
+                <Column
+                  css={{ flex: 0.4, color: '$colors$black' }}
+                  align="center"
+                  as="a"
+                >
+                  <Logo data-logo="" width="37px" height="47px" />
+                </Column>
+              </Link>
+              <Column align="flex-end" css={{ flex: 0.3 }}>
+                {triggerMenuButton}
+              </Column>
+            </Inline>
+            {isOpen && (
+              <Column css={{ paddingTop: '$12' }}>
+                {walletButton}
+                {menuLinks}
+              </Column>
+            )}
+          </StyledWrapperForMobile>
+          <Divider />
+        </>
+      )
+    }
+
     return (
       <StyledWrapperForMobile>
         <Inline align="center" justifyContent="space-between">
@@ -109,20 +167,7 @@ export function NavigationSidebar() {
               </div>
             </StyledDivForLogo>
           </Link>
-          {isOpen ? (
-            <Button
-              onClick={() => setOpen(false)}
-              icon={<UnionIcon />}
-              variant="ghost"
-            />
-          ) : (
-            <Button
-              onClick={() => setOpen(true)}
-              iconRight={<ChevronIcon rotation="-90deg" />}
-            >
-              Menu
-            </Button>
-          )}
+          {triggerMenuButton}
         </Inline>
         {isOpen && (
           <Column css={{ paddingTop: '$12' }}>
@@ -261,6 +306,19 @@ const StyledDivForLogo = styled('div', {
 
   [media.sm]: {
     paddingBottom: 0,
+  },
+
+  variants: {
+    size: {
+      small: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        '& [data-logo]': {
+          marginBottom: 0,
+        },
+      },
+    },
   },
 })
 

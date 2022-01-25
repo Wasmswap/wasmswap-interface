@@ -74,6 +74,7 @@ const StyledWrapperForMobile = styled('div', {
   flexDirection: 'column',
   justifyContent: 'space-between',
   minHeight: '100vh',
+  backgroundColor: '$backgroundColors$base',
 })
 
 const StyledContainerForMobile = styled('div', {

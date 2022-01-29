@@ -5,6 +5,7 @@ import { IconWrapper } from 'components/IconWrapper'
 import React, { useRef, useState } from 'react'
 import { TokenOptionsList } from './TokenOptionsList'
 import { Union } from 'icons/Union'
+import { Inline } from '../../../components/Inline'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { SelectorToggle } from './SelectorToggle'
 import { SelectorInput } from './SelectorInput'
@@ -18,6 +19,7 @@ type TokenSelectorProps = {
   amount: number
   tokenSymbol: string
   onChange: (token: { tokenSymbol; amount }) => void
+  size?: 'small' | 'large'
 }
 
 export const TokenSelector = ({
@@ -26,6 +28,7 @@ export const TokenSelector = ({
   tokenSymbol,
   amount,
   onChange,
+  size = 'large',
 }: TokenSelectorProps) => {
   const wrapperRef = useRef<HTMLDivElement>()
   const inputRef = useRef<HTMLInputElement>()
@@ -35,11 +38,76 @@ export const TokenSelector = ({
   const [isTokenListShowing, setTokenListShowing] = useState(false)
   const { balance: availableAmount } = useTokenBalance(tokenSymbol)
 
+  const shouldShowConvenienceBalanceButtons =
+    !isTokenListShowing && tokenSymbol && !readOnly && availableAmount > 0
+
+  const handleAmountChange = (amount) => onChange({ tokenSymbol, amount })
+  const handleSelectToken = (selectedTokenSymbol) => {
+    onChange({ tokenSymbol: selectedTokenSymbol, amount })
+    setTokenListShowing(false)
+  }
+
   useOnClickOutside(wrapperRef, () => {
     setTokenListShowing(false)
   })
 
-  const handleAmountChange = (amount) => onChange({ tokenSymbol, amount })
+  if (size === 'small') {
+    return (
+      <StyledDivForContainer ref={wrapperRef}>
+        <Inline css={{ padding: '$6 $4', display: 'grid' }}>
+          <SelectorToggle
+            availableAmount={availableAmount}
+            tokenSymbol={tokenSymbol}
+            isSelecting={isTokenListShowing}
+            onToggle={
+              !disabled
+                ? () => setTokenListShowing((isShowing) => !isShowing)
+                : undefined
+            }
+          />
+        </Inline>
+        {!isTokenListShowing && (
+          <Inline
+            justifyContent={
+              shouldShowConvenienceBalanceButtons ? 'space-between' : 'flex-end'
+            }
+            css={{
+              padding: shouldShowConvenienceBalanceButtons
+                ? '$4 $12 $10 $11'
+                : '$6 $12 $12 $11',
+            }}
+            onClick={() => {
+              inputRef.current.focus()
+            }}
+          >
+            {shouldShowConvenienceBalanceButtons && (
+              <ConvenienceBalanceButtons
+                tokenSymbol={tokenSymbol}
+                availableAmount={availableAmount}
+                onChange={handleAmountChange}
+              />
+            )}
+            {!isTokenListShowing && (
+              <SelectorInput
+                inputRef={mergeRefs([inputRef, refForInput])}
+                amount={amount}
+                disabled={!tokenSymbol || readOnly || disabled}
+                onAmountChange={handleAmountChange}
+              />
+            )}
+          </Inline>
+        )}
+        {isTokenListShowing && (
+          <TokenOptionsList
+            activeTokenSymbol={tokenSymbol}
+            onSelect={handleSelectToken}
+            css={{ padding: '$1 $6 $12' }}
+            visibleNumberOfTokensInViewport={4.5}
+          />
+        )}
+      </StyledDivForContainer>
+    )
+  }
 
   return (
     <StyledDivForContainer ref={wrapperRef}>
@@ -55,7 +123,7 @@ export const TokenSelector = ({
                 : undefined
             }
           />
-          {!isTokenListShowing && tokenSymbol && !readOnly && (
+          {shouldShowConvenienceBalanceButtons && (
             <ConvenienceBalanceButtons
               disabled={availableAmount <= 0}
               tokenSymbol={tokenSymbol}
@@ -102,10 +170,7 @@ export const TokenSelector = ({
       {isTokenListShowing && (
         <TokenOptionsList
           activeTokenSymbol={tokenSymbol}
-          onSelect={(selectedTokenSymbol) => {
-            onChange({ tokenSymbol: selectedTokenSymbol, amount })
-            setTokenListShowing(false)
-          }}
+          onSelect={handleSelectToken}
           css={{ padding: '$1 $6 $12' }}
         />
       )}

@@ -119,12 +119,14 @@ export const TokenSelector = ({
             }
           />
           {shouldShowConvenienceBalanceButtons && (
-            <ConvenienceBalanceButtons
-              disabled={availableAmount <= 0}
-              tokenSymbol={tokenSymbol}
-              availableAmount={availableAmount}
-              onChange={!disabled ? handleAmountChange : () => {}}
-            />
+            <Inline gap={4} css={{ paddingLeft: '$8' }}>
+              <ConvenienceBalanceButtons
+                disabled={availableAmount <= 0}
+                tokenSymbol={tokenSymbol}
+                availableAmount={availableAmount}
+                onChange={!disabled ? handleAmountChange : () => {}}
+              />
+            </Inline>
           )}
         </StyledDivForSelector>
         <StyledDivForAmountWrapper>

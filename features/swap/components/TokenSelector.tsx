@@ -38,8 +38,9 @@ export const TokenSelector = ({
   const [isTokenListShowing, setTokenListShowing] = useState(false)
   const { balance: availableAmount } = useTokenBalance(tokenSymbol)
 
-  const shouldShowConvenienceBalanceButtons =
+  const shouldShowConvenienceBalanceButtons = Boolean(
     !isTokenListShowing && tokenSymbol && !readOnly && availableAmount > 0
+  )
 
   const handleAmountChange = (amount) => onChange({ tokenSymbol, amount })
   const handleSelectToken = (selectedTokenSymbol) => {
@@ -67,35 +68,29 @@ export const TokenSelector = ({
           />
         </Inline>
         {!isTokenListShowing && (
-          <Inline
-            justifyContent={
-              shouldShowConvenienceBalanceButtons ? 'space-between' : 'flex-end'
-            }
-            css={{
-              padding: shouldShowConvenienceBalanceButtons
-                ? '$4 $12 $10 $11'
-                : '$6 $12 $12 $11',
-            }}
+          <StyledInlineForInputWrapper
+            rendersButtons={shouldShowConvenienceBalanceButtons}
+            selected={readOnly ? false : isInputFocused}
             onClick={() => {
               inputRef.current.focus()
             }}
           >
             {shouldShowConvenienceBalanceButtons && (
-              <ConvenienceBalanceButtons
-                tokenSymbol={tokenSymbol}
-                availableAmount={availableAmount}
-                onChange={handleAmountChange}
-              />
+              <Inline gap={4}>
+                <ConvenienceBalanceButtons
+                  tokenSymbol={tokenSymbol}
+                  availableAmount={availableAmount}
+                  onChange={handleAmountChange}
+                />
+              </Inline>
             )}
-            {!isTokenListShowing && (
-              <SelectorInput
-                inputRef={mergeRefs([inputRef, refForInput])}
-                amount={amount}
-                disabled={!tokenSymbol || readOnly || disabled}
-                onAmountChange={handleAmountChange}
-              />
-            )}
-          </Inline>
+            <SelectorInput
+              inputRef={mergeRefs([inputRef, refForInput])}
+              amount={amount}
+              disabled={!tokenSymbol || readOnly || disabled}
+              onAmountChange={handleAmountChange}
+            />
+          </StyledInlineForInputWrapper>
         )}
         {isTokenListShowing && (
           <TokenOptionsList
@@ -223,25 +218,41 @@ const StyledDivForOverlay = styled('div', {
   },
 })
 
+const selectedVariantForInputWrapper = {
+  true: {
+    boxShadow: '0 0 0 $space$1 $borderColors$selected',
+  },
+  false: {
+    boxShadow: '0 0 0 $space$1 $colors$dark0',
+  },
+}
+
 const StyledDivForContainer = styled('div', {
   borderRadius: '$2',
   transition: 'box-shadow .1s ease-out',
   variants: {
-    selected: {
+    selected: selectedVariantForInputWrapper,
+  },
+})
+
+const StyledInlineForInputWrapper = styled('div', {
+  borderRadius: '$2',
+  transition: 'box-shadow .1s ease-out',
+  display: 'flex',
+  alignItems: 'center',
+
+  variants: {
+    selected: selectedVariantForInputWrapper,
+
+    rendersButtons: {
       true: {
-        boxShadow: '0 0 0 $space$1 $borderColors$selected',
+        justifyContent: 'space-between',
+        padding: '$10 $12',
       },
       false: {
-        boxShadow: '0 0 0 $space$1 $colors$dark0',
+        justifyContent: 'flex-end',
+        padding: '$13 $12',
       },
     },
-  },
-  [`&:first-of-type ${StyledDivForOverlay}`]: {
-    borderTopLeftRadius: '$2',
-    borderTopRightRadius: '$2',
-  },
-  [`&:last-of-type ${StyledDivForOverlay}`]: {
-    borderBottomLeftRadius: '$2',
-    borderBottomRightRadius: '$2',
   },
 })

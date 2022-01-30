@@ -77,14 +77,14 @@ export const TransactionTips = ({
       <Inline
         justifyContent="space-between"
         css={{
-          padding: isShowing ? '$10 $12 $10 $9' : '$13 $12 $13 $9',
+          padding: isShowing ? '$10 $12 $10 $9' : '$11 $12 $11 $9',
           borderTop: '1px solid $borderColors$inactive',
           borderBottom: '1px solid $borderColors$inactive',
         }}
       >
         {switchTokensButton}
         {isShowing && (
-          <Column align="flex-end" gap={3}>
+          <Column align="flex-end" gap={2}>
             <Text variant="caption" color="disabled" wrap={false}>
               {transactionRates}
             </Text>

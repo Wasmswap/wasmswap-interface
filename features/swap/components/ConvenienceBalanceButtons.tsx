@@ -1,5 +1,4 @@
 import React from 'react'
-import { styled } from 'components/theme'
 import { Button } from 'components/Button'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 
@@ -20,7 +19,7 @@ export const ConvenienceBalanceButtons = ({
   return (
     !disabled && (
       <>
-        <StyledButton
+        <Button
           variant="secondary"
           onClick={(event) => {
             event.stopPropagation()
@@ -34,21 +33,14 @@ export const ConvenienceBalanceButtons = ({
           }}
         >
           Max
-        </StyledButton>
-        <StyledButton
+        </Button>
+        <Button
           variant="secondary"
           onClick={() => onChange(availableAmount / 2)}
         >
           1/2
-        </StyledButton>
+        </Button>
       </>
     )
   )
 }
-
-const StyledButton = styled(Button, {
-  marginRight: 6,
-  '&:first-of-type': {
-    marginLeft: 8,
-  },
-})

@@ -9,6 +9,8 @@ import {
 import type { VariantProps, CSS } from '@stitches/react'
 import { styled } from './theme'
 import { GetRenderAsProps, RenderAsType } from './types'
+import { createColorVariants } from './theme/utils/createColorVariants'
+import { themeColorTokens } from './theme/colors'
 
 const StyledButton = styled('button', {
   $$textColor: '$textColors$primary',
@@ -145,6 +147,19 @@ const StyledButton = styled('button', {
       true: {},
       false: {},
     },
+
+    iconColor: createColorVariants(
+      themeColorTokens.iconColors,
+      (colorToken) => ({
+        $$iconColor: `$iconColors$${colorToken}`,
+      })
+    ),
+    textColor: createColorVariants(
+      themeColorTokens.textColors,
+      (colorToken) => ({
+        $$textColor: `$textColors$${colorToken}`,
+      })
+    ),
   },
 
   compoundVariants: [

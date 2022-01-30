@@ -110,7 +110,7 @@ export const TokenSelector = ({
   }
 
   return (
-    <StyledDivForContainer ref={wrapperRef}>
+    <StyledDivForContainer selected={isInputFocused} ref={wrapperRef}>
       <StyledDivForWrapper>
         <StyledDivForSelector>
           <SelectorToggle
@@ -224,6 +224,18 @@ const StyledDivForOverlay = styled('div', {
 })
 
 const StyledDivForContainer = styled('div', {
+  borderRadius: '$2',
+  transition: 'box-shadow .1s ease-out',
+  variants: {
+    selected: {
+      true: {
+        boxShadow: '0 0 0 $space$1 $borderColors$selected',
+      },
+      false: {
+        boxShadow: '0 0 0 $space$1 $colors$dark0',
+      },
+    },
+  },
   [`&:first-of-type ${StyledDivForOverlay}`]: {
     borderTopLeftRadius: '$2',
     borderTopRightRadius: '$2',

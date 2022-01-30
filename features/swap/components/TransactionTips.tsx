@@ -53,11 +53,7 @@ export const TransactionTips = ({
             }
           : undefined
       }
-      css={{
-        '& svg': {
-          color: '$colors$tertiary',
-        },
-      }}
+      iconColor="tertiary"
     />
   )
 
@@ -119,7 +115,7 @@ export const TransactionTips = ({
 }
 
 const StyledDivForWrapper = styled('div', {
-  padding: '$8 $16 $8 $14',
+  padding: '$8 $16 $8 $12',
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   justifyContent: 'space-between',
@@ -130,8 +126,7 @@ const StyledDivForWrapper = styled('div', {
 })
 
 const StyledDivForRateWrapper = styled('div', {
-  display: 'grid',
-  gridTemplateColumns: '$space$12 1fr',
+  display: 'flex',
   alignItems: 'center',
   textAlign: 'left',
   columnGap: '$space$6',

@@ -2,6 +2,7 @@ import React, { Ref } from 'react'
 import { Text } from 'components/Text'
 import { styled } from 'components/theme'
 import { useAmountChangeController } from 'hooks/useAmountChangeController'
+import { calculateCharactersLength } from 'components/BasicNumberInput'
 
 type SelectorInputProps = {
   amount: number
@@ -35,7 +36,7 @@ export const SelectorInput = ({
         }
         autoComplete="off"
         readOnly={disabled}
-        style={{ width: `${value.length + 1}ch` }}
+        style={{ width: `${calculateCharactersLength(value)}ch` }}
       />
     </Text>
   )

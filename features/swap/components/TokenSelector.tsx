@@ -12,6 +12,7 @@ import { SelectorInput } from './SelectorInput'
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
 import { useIsInteracted } from 'hooks/useIsInteracted'
 import { Button } from 'components/Button'
+import { QueryInput } from './QueryInput'
 
 type TokenSelectorProps = {
   readOnly?: boolean
@@ -33,10 +34,13 @@ export const TokenSelector = ({
   const wrapperRef = useRef<HTMLDivElement>()
   const inputRef = useRef<HTMLInputElement>()
 
-  const [refForInput, { isFocused: isInputFocused }] = useIsInteracted()
-
   const [isTokenListShowing, setTokenListShowing] = useState(false)
+
   const { balance: availableAmount } = useTokenBalance(tokenSymbol)
+  const [tokenSearchQuery, setTokenSearchQuery] = useState('')
+  const [isInputForSearchFocused, setInputForSearchFocused] = useState(false)
+  const [refForInput, { isFocused: isInputForAmountFocused }] =
+    useIsInteracted()
 
   const shouldShowConvenienceBalanceButtons = Boolean(
     !isTokenListShowing && tokenSymbol && !readOnly && availableAmount > 0
@@ -54,23 +58,48 @@ export const TokenSelector = ({
 
   if (size === 'small') {
     return (
-      <StyledDivForContainer ref={wrapperRef}>
-        <Inline css={{ padding: '$6 $4', display: 'grid' }}>
-          <SelectorToggle
-            availableAmount={availableAmount}
-            tokenSymbol={tokenSymbol}
-            isSelecting={isTokenListShowing}
-            onToggle={
-              !disabled
-                ? () => setTokenListShowing((isShowing) => !isShowing)
-                : undefined
-            }
-          />
-        </Inline>
+      <StyledDivForContainer
+        selected={isInputForSearchFocused}
+        ref={wrapperRef}
+      >
+        {isTokenListShowing && (
+          <Inline justifyContent="space-between" css={{ padding: '$5 $6' }}>
+            <QueryInput
+              searchQuery={tokenSearchQuery}
+              onQueryChange={setTokenSearchQuery}
+              onFocus={() => {
+                setInputForSearchFocused(true)
+              }}
+              onBlur={() => {
+                setInputForSearchFocused(false)
+              }}
+            />
+            <Button
+              icon={<IconWrapper icon={<Union />} />}
+              variant="ghost"
+              onClick={() => setTokenListShowing(false)}
+              iconColor="tertiary"
+            />
+          </Inline>
+        )}
+        {!isTokenListShowing && (
+          <Inline css={{ padding: '$6 $4', display: 'grid' }}>
+            <SelectorToggle
+              availableAmount={availableAmount}
+              tokenSymbol={tokenSymbol}
+              isSelecting={isTokenListShowing}
+              onToggle={
+                !disabled
+                  ? () => setTokenListShowing((isShowing) => !isShowing)
+                  : undefined
+              }
+            />
+          </Inline>
+        )}
         {!isTokenListShowing && (
           <StyledInlineForInputWrapper
             rendersButtons={shouldShowConvenienceBalanceButtons}
-            selected={readOnly ? false : isInputFocused}
+            selected={readOnly ? false : isInputForAmountFocused}
             onClick={() => {
               inputRef.current.focus()
             }}
@@ -97,6 +126,8 @@ export const TokenSelector = ({
             activeTokenSymbol={tokenSymbol}
             onSelect={handleSelectToken}
             css={{ padding: '$1 $6 $12' }}
+            queryFilter={tokenSearchQuery}
+            emptyStateLabel={`No result for “${tokenSearchQuery}”`}
             visibleNumberOfTokensInViewport={4.5}
           />
         )}
@@ -105,19 +136,36 @@ export const TokenSelector = ({
   }
 
   return (
-    <StyledDivForContainer selected={isInputFocused} ref={wrapperRef}>
+    <StyledDivForContainer
+      selected={isInputForAmountFocused || isInputForSearchFocused}
+      ref={wrapperRef}
+    >
       <StyledDivForWrapper>
         <StyledDivForSelector>
-          <SelectorToggle
-            availableAmount={availableAmount}
-            tokenSymbol={tokenSymbol}
-            isSelecting={isTokenListShowing}
-            onToggle={
-              !disabled
-                ? () => setTokenListShowing((isShowing) => !isShowing)
-                : undefined
-            }
-          />
+          {isTokenListShowing && (
+            <QueryInput
+              searchQuery={tokenSearchQuery}
+              onQueryChange={setTokenSearchQuery}
+              onFocus={() => {
+                setInputForSearchFocused(true)
+              }}
+              onBlur={() => {
+                setInputForSearchFocused(false)
+              }}
+            />
+          )}
+          {!isTokenListShowing && (
+            <SelectorToggle
+              availableAmount={availableAmount}
+              tokenSymbol={tokenSymbol}
+              isSelecting={isTokenListShowing}
+              onToggle={
+                !disabled
+                  ? () => setTokenListShowing((isShowing) => !isShowing)
+                  : undefined
+              }
+            />
+          )}
           {shouldShowConvenienceBalanceButtons && (
             <Inline gap={4} css={{ paddingLeft: '$8' }}>
               <ConvenienceBalanceButtons
@@ -135,11 +183,7 @@ export const TokenSelector = ({
               icon={<IconWrapper icon={<Union />} />}
               variant="ghost"
               onClick={() => setTokenListShowing(false)}
-              css={{
-                '& svg': {
-                  color: '$colors$tertiary',
-                },
-              }}
+              iconColor="tertiary"
             />
           )}
           {!isTokenListShowing && (
@@ -152,7 +196,7 @@ export const TokenSelector = ({
           )}
         </StyledDivForAmountWrapper>
         <StyledDivForOverlay
-          interactive={readOnly ? false : !isInputFocused}
+          interactive={readOnly ? false : !isInputForAmountFocused}
           onClick={() => {
             if (!readOnly) {
               if (isTokenListShowing) {
@@ -168,7 +212,9 @@ export const TokenSelector = ({
         <TokenOptionsList
           activeTokenSymbol={tokenSymbol}
           onSelect={handleSelectToken}
+          queryFilter={tokenSearchQuery}
           css={{ padding: '$1 $6 $12' }}
+          emptyStateLabel={`No result for “${tokenSearchQuery}”`}
         />
       )}
     </StyledDivForContainer>

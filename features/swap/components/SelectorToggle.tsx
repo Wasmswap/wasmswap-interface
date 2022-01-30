@@ -1,11 +1,11 @@
-import { Text } from '../../../components/Text'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Chevron } from '../../../icons/Chevron'
 import React from 'react'
-import { formatTokenBalance } from '../../../util/conversion'
+import { Text } from 'components/Text'
+import { IconWrapper } from 'components/IconWrapper'
+import { Chevron } from 'icons/Chevron'
+import { formatTokenBalance } from 'util/conversion'
 import { styled } from 'components/theme'
-import { useTokenInfo } from '../../../hooks/useTokenInfo'
-import { ButtonForWrapper } from '../../../components/Button'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { ButtonForWrapper } from 'components/Button'
 
 type SelectorToggleProps = {
   isSelecting: boolean
@@ -20,11 +20,11 @@ export const SelectorToggle = ({
   availableAmount,
   tokenSymbol,
 }: SelectorToggleProps) => {
+  const { logoURI } = useTokenInfo(tokenSymbol) || {}
+
   const formattedAvailableAmount = formatTokenBalance(availableAmount, {
     includeCommaSeparation: true,
   })
-
-  const { logoURI } = useTokenInfo(tokenSymbol) || {}
 
   const hasTokenSelected = Boolean(tokenSymbol)
 
@@ -100,8 +100,8 @@ const StyledDivForSelector = styled(ButtonForWrapper, {
 })
 
 const StyledImgForTokenLogo = styled('img', {
-  width: '30px',
-  height: '30px',
+  width: '1.875rem',
+  height: '1.875rem',
   borderRadius: '50%',
   backgroundColor: '#ccc',
 })

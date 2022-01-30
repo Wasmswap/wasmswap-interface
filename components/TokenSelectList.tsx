@@ -1,24 +1,28 @@
+import { ComponentPropsWithoutRef, useMemo } from 'react'
 import { styled } from 'components/theme'
 import { TokenInfo } from 'hooks/useTokenList'
 import { Text } from 'components/Text'
 import { formatTokenBalance } from 'util/conversion'
+import { RejectIcon } from 'icons/Reject'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { useIBCTokenBalance } from '../hooks/useIBCTokenBalance'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { ButtonForWrapper } from './Button'
-import { ComponentPropsWithoutRef } from 'react'
 import { Spinner } from './Spinner'
+import { Inline } from './Inline'
 
-type TokenSelectList = {
+const StyledDivForWrapper = styled('div', {
+  overflowY: 'scroll',
+})
+
+export type TokenSelectListProps = {
   activeTokenSymbol?: string
   tokenList: Array<Pick<TokenInfo, 'symbol' | 'logoURI' | 'name'>>
   onSelect: (tokenSymbol: string) => void
   fetchingBalanceMode: 'native' | 'ibc'
   visibleNumberOfTokensInViewport?: number
-}
-
-const StyledDivForWrapper = styled('div', {
-  overflowY: 'scroll',
-})
+  queryFilter?: string
+  emptyStateLabel?: string
+} & ComponentPropsWithoutRef<typeof StyledDivForWrapper>
 
 export const TokenSelectList = ({
   activeTokenSymbol,
@@ -26,17 +30,33 @@ export const TokenSelectList = ({
   onSelect,
   fetchingBalanceMode = 'native',
   visibleNumberOfTokensInViewport = 5.5,
+  emptyStateLabel = 'No result',
+  queryFilter,
   ...props
-}: TokenSelectList & ComponentPropsWithoutRef<typeof StyledDivForWrapper>) => {
+}: TokenSelectListProps) => {
+  const filteredTokenList = useMemo(() => {
+    if (!tokenList || isQueryEmpty(queryFilter)) {
+      return tokenList
+    }
+
+    const lowerCasedQueryFilter = queryFilter.toLowerCase()
+    return tokenList.filter(({ symbol, name }) => {
+      return (
+        symbol.toLowerCase().search(lowerCasedQueryFilter) >= 0 ||
+        name.toLowerCase().search(lowerCasedQueryFilter) >= 0
+      )
+    })
+  }, [tokenList, queryFilter])
+
   return (
     <StyledDivForWrapper
       {...props}
       css={{
-        maxHeight: `${visibleNumberOfTokensInViewport * 3.5}rem`,
+        height: `${visibleNumberOfTokensInViewport * 3.5}rem`,
         ...(props.css ? props.css : {}),
       }}
     >
-      {tokenList?.map((tokenInfo) => {
+      {filteredTokenList?.map((tokenInfo) => {
         return (
           <StyledButtonForRow
             role="listitem"
@@ -52,6 +72,7 @@ export const TokenSelectList = ({
                 as={tokenInfo.logoURI ? 'img' : 'div'}
                 src={tokenInfo.logoURI}
                 alt={tokenInfo.symbol}
+                loading="lazy"
               />
               <div data-token-info="">
                 <Text variant="body">{tokenInfo.symbol}</Text>
@@ -88,8 +109,20 @@ export const TokenSelectList = ({
           </StyledButtonForRow>
         )
       })}
+      {(filteredTokenList?.length || filteredTokenList?.length) === 0 && (
+        <Inline gap={6} css={{ padding: '$10 $4' }}>
+          <StyledImgForTokenLogo as="div">
+            <RejectIcon color="tertiary" />
+          </StyledImgForTokenLogo>
+          <Text variant="secondary">{emptyStateLabel}</Text>
+        </Inline>
+      )}
     </StyledDivForWrapper>
   )
+}
+
+function isQueryEmpty(query: string) {
+  return !query || !query.replace(new RegExp(' ', 'g'), '')
 }
 
 const FetchBalanceTextForNativeTokenSymbol = ({ tokenSymbol }) => {
@@ -152,4 +185,7 @@ const StyledImgForTokenLogo = styled('img', {
   height: '30px',
   borderRadius: '50%',
   backgroundColor: '#ccc',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 })

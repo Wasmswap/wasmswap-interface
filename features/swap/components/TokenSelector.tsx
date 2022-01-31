@@ -1,4 +1,3 @@
-import mergeRefs from 'react-merge-refs'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { styled } from 'components/theme'
 import { IconWrapper } from 'components/IconWrapper'
@@ -10,7 +9,6 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { SelectorToggle } from './SelectorToggle'
 import { SelectorInput } from './SelectorInput'
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
-import { useIsInteracted } from 'hooks/useIsInteracted'
 import { Button } from 'components/Button'
 import { QueryInput } from './QueryInput'
 
@@ -39,8 +37,7 @@ export const TokenSelector = ({
   const { balance: availableAmount } = useTokenBalance(tokenSymbol)
   const [tokenSearchQuery, setTokenSearchQuery] = useState('')
   const [isInputForSearchFocused, setInputForSearchFocused] = useState(false)
-  const [refForInput, { isFocused: isInputForAmountFocused }] =
-    useIsInteracted()
+  const [isInputForAmountFocused, setInputForAmountFocused] = useState(false)
 
   const shouldShowConvenienceBalanceButtons = Boolean(
     !isTokenListShowing && tokenSymbol && !readOnly && availableAmount > 0
@@ -114,10 +111,16 @@ export const TokenSelector = ({
               </Inline>
             )}
             <SelectorInput
-              inputRef={mergeRefs([inputRef, refForInput])}
+              inputRef={inputRef}
               amount={amount}
               disabled={!tokenSymbol || readOnly || disabled}
               onAmountChange={handleAmountChange}
+              onFocus={() => {
+                setInputForAmountFocused(true)
+              }}
+              onBlur={() => {
+                setInputForAmountFocused(false)
+              }}
             />
           </StyledInlineForInputWrapper>
         )}
@@ -188,10 +191,16 @@ export const TokenSelector = ({
           )}
           {!isTokenListShowing && (
             <SelectorInput
-              inputRef={mergeRefs([inputRef, refForInput])}
+              inputRef={inputRef}
               amount={amount}
               disabled={!tokenSymbol || readOnly || disabled}
               onAmountChange={handleAmountChange}
+              onFocus={() => {
+                setInputForAmountFocused(true)
+              }}
+              onBlur={() => {
+                setInputForAmountFocused(false)
+              }}
             />
           )}
         </StyledDivForAmountWrapper>

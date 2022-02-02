@@ -24,10 +24,9 @@ const StyledButton = styled('button', {
 
   fontFamily: '$primary',
   display: 'flex',
-  flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
   whiteSpace: 'pre',
+  justifyContent: 'center',
 
   color: '$$textColor',
   fontSize: '$6',
@@ -99,22 +98,26 @@ const StyledButton = styled('button', {
 
     icon: {
       left: {
-        display: 'grid',
-        gridTemplateAreas: '"a b"',
+        display: 'flex',
         columnGap: '$space$1',
+        flexDirection: 'row',
         justifyContent: 'start',
       },
       right: {
-        display: 'grid',
+        display: 'flex',
+        flexDirection: 'row',
         columnGap: '$space$1',
-        gridTemplateAreas: '"a b"',
         justifyContent: 'space-between',
       },
       both: {
-        display: 'grid',
+        display: 'flex',
+        flexDirection: 'row',
         columnGap: '$space$1',
-        gridTemplateAreas: '"a b c"',
         justifyContent: 'space-between',
+        '& [data-text]': {
+          flex: 1,
+          textAlign: 'left',
+        },
       },
       only: {},
     },
@@ -189,9 +192,10 @@ const StyledButton = styled('button', {
         $$iconColor: '$iconColors$disabled',
       },
     },
+
     {
-      size: 'medium',
       icon: 'left',
+      size: 'medium',
       css: {
         paddingLeft: '$3',
         paddingTop: '$2',
@@ -199,8 +203,8 @@ const StyledButton = styled('button', {
       },
     },
     {
-      size: 'medium',
       icon: 'right',
+      size: 'medium',
       css: {
         paddingRight: '$3',
         paddingTop: '$2',
@@ -208,15 +212,15 @@ const StyledButton = styled('button', {
       },
     },
     {
-      size: 'medium',
       icon: 'both',
+      size: 'medium',
       css: {
         padding: '$2 $3',
       },
     },
     {
-      size: 'large',
       icon: 'left',
+      size: 'large',
       css: {
         paddingLeft: '$3',
         paddingTop: '$4',
@@ -224,8 +228,8 @@ const StyledButton = styled('button', {
       },
     },
     {
-      size: 'large',
       icon: 'right',
+      size: 'large',
       css: {
         paddingRight: '$3',
         paddingTop: '$4',
@@ -233,23 +237,23 @@ const StyledButton = styled('button', {
       },
     },
     {
-      size: 'large',
       icon: 'both',
+      size: 'large',
       css: {
         padding: '$4 $3',
       },
     },
 
     {
-      size: 'medium',
       icon: 'only',
+      size: 'medium',
       css: {
         padding: '$2 $3',
       },
     },
     {
-      size: 'small',
       icon: 'only',
+      size: 'small',
       css: {
         padding: '0',
       },
@@ -325,7 +329,11 @@ function ButtonComponent<T extends RenderAsType = 'button'>(
               color: 'inherit',
               size: '24px',
             })}
-          {children}
+          {typeof children === 'string' ? (
+            <div data-text="">{children}</div>
+          ) : (
+            children
+          )}
           {iconRight &&
             cloneElement(Children.only(iconRight), {
               color: 'inherit',

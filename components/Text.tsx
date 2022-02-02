@@ -3,6 +3,7 @@ import { styled } from './theme'
 import type { GetRenderAsProps, RenderAsType } from './types'
 import { CSS, VariantProps } from '@stitches/react'
 import { themeColorTokens } from './theme/colors'
+import { createColorVariants } from './theme/utils/createColorVariants'
 
 const StyledText = styled('p', {
   fontFamily: '$primary',
@@ -72,18 +73,9 @@ const StyledText = styled('p', {
       },
     },
 
-    color: Object.keys(themeColorTokens.textColors).reduce(
-      (colorVariants, colorToken) => ({
-        ...colorVariants,
-        [colorToken]: {
-          $$color: `$textColors$${colorToken} !important`,
-        },
-      }),
-      {} as Record<
-        keyof typeof themeColorTokens.textColors,
-        { $$color: string }
-      >
-    ),
+    color: createColorVariants(themeColorTokens.textColors, (colorToken) => ({
+      $$color: `$textColors$${colorToken} !important`,
+    })),
 
     transform: {
       uppercase: {

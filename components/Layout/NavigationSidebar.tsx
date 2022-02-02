@@ -19,10 +19,13 @@ import { Telegram } from 'icons/Telegram'
 import { Twitter } from 'icons/Twitter'
 import { UnionIcon } from 'icons/Union'
 import { ChevronIcon } from 'icons/Chevron'
+import { MoonIcon } from 'icons/Moon'
 import { media, styled } from '../theme'
 import { __TEST_MODE__ } from 'util/constants'
 import { useMedia } from 'hooks/useMedia'
 import { Divider } from '../Divider'
+import { ToggleSwitch } from '../ToggleSwitch'
+import { AppTheme, themeAtom } from '../theme/themeAtom'
 
 type NavigationSidebarProps = {
   shouldRenderBackButton?: boolean
@@ -35,6 +38,8 @@ export function NavigationSidebar({
 }: NavigationSidebarProps) {
   const { mutate: connectWallet } = useConnectWallet()
   const [{ key }, setWalletState] = useRecoilState(walletState)
+
+  const [theme, setTheme] = useRecoilState(themeAtom)
 
   const isMobile = useMedia('sm')
   const [isOpen, setOpen] = useState(false)
@@ -57,6 +62,11 @@ export function NavigationSidebar({
       css={{ marginBottom: '$6' }}
     />
   )
+
+  const handleToggleAppTheme = () =>
+    setTheme((currentTheme) =>
+      currentTheme === AppTheme.light ? AppTheme.dark : AppTheme.light
+    )
 
   const { pathname } = useRouter()
   const getIsLinkActive = (path) => pathname === path
@@ -201,44 +211,65 @@ export function NavigationSidebar({
         {walletButton}
         {menuLinks}
       </StyledMenuContainer>
-      <StyledDivForFooter data-footer="">
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_DISCORD_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Discord />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Telegram />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_TWITTER_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Twitter />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Github />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-      </StyledDivForFooter>
+      <div>
+        <Inline css={{ display: 'grid' }}>
+          <Button
+            iconLeft={<MoonIcon />}
+            variant="menu"
+            size="large"
+            onClick={handleToggleAppTheme}
+            iconRight={
+              <ToggleSwitch
+                id="theme-toggle"
+                name="dark-theme"
+                onChange={handleToggleAppTheme}
+                checked={theme === AppTheme.dark}
+                optionLabels={['Dark theme', 'Light theme']}
+              />
+            }
+          >
+            Dark mode
+          </Button>
+        </Inline>
+        <Inline gap={2} css={{ padding: '$13 0' }}>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_DISCORD_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Discord />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Telegram />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_TWITTER_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Twitter />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Github />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+        </Inline>
+      </div>
     </StyledWrapper>
   )
 }
@@ -282,12 +313,6 @@ const StyledListForLinks = styled('div', {
   display: 'flex',
   rowGap: '$space$2',
   flexDirection: 'column',
-})
-
-const StyledDivForFooter = styled('div', {
-  display: 'flex',
-  columnGap: '$space$2',
-  padding: '$13 0',
 })
 
 const StyledDivForLogo = styled('div', {

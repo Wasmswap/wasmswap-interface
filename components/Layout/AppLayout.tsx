@@ -1,8 +1,9 @@
-import { styled } from '../theme'
+import { media, styled } from '../theme'
 import { NavigationSidebar } from './NavigationSidebar'
 import { FooterBar } from './FooterBar'
 import { APP_MAX_WIDTH } from 'util/constants'
 import { ExtensionSidebar } from './ExtensionSidebar'
+import { useMedia } from 'hooks/useMedia'
 
 export const AppLayout = ({
   navigationSidebar = <NavigationSidebar />,
@@ -10,6 +11,24 @@ export const AppLayout = ({
   footerBar = <FooterBar />,
   children,
 }) => {
+  const isMobile = useMedia('sm')
+
+  if (isMobile) {
+    return (
+      <StyledWrapperForMobile>
+        <StyledContainerForMobile>
+          {navigationSidebar}
+
+          <main data-content="">{children}</main>
+        </StyledContainerForMobile>
+
+        <StyledContainerForMobile>
+          <div data-content="">{footerBar}</div>
+        </StyledContainerForMobile>
+      </StyledWrapperForMobile>
+    )
+  }
+
   return (
     <StyledWrapper>
       {navigationSidebar}
@@ -44,5 +63,26 @@ const StyledContainer = styled('div', {
     margin: '0 auto',
     width: '100%',
     maxWidth: '53.75rem',
+  },
+  [media.sm]: {
+    zIndex: '$1',
+  },
+})
+
+const StyledWrapperForMobile = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  minHeight: '100vh',
+  backgroundColor: '$backgroundColors$base',
+})
+
+const StyledContainerForMobile = styled('div', {
+  position: 'relative',
+  zIndex: '$1',
+  '& [data-content]': {
+    margin: '0 auto',
+    width: '100%',
+    padding: '0 $12',
   },
 })

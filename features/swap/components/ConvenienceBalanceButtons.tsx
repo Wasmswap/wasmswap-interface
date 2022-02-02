@@ -22,11 +22,14 @@ export const ConvenienceBalanceButtons = ({
       <>
         <StyledButton
           variant="secondary"
-          onClick={() => {
-            let amount =
+          onClick={(event) => {
+            event.stopPropagation()
+
+            const amount =
               tokenSymbol === baseToken?.symbol
                 ? availableAmount - 0.025
                 : availableAmount
+
             onChange(amount)
           }}
         >

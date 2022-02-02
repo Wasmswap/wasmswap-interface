@@ -1,4 +1,4 @@
-import { styled } from './theme'
+import { media, styled } from './theme'
 
 export const Card = styled('div', {
   borderRadius: '$2',
@@ -28,5 +28,26 @@ export const Card = styled('div', {
 })
 
 export const CardContent = styled('div', {
-  padding: '0 $16',
+  variants: {
+    size: {
+      medium: {
+        padding: '0 $12',
+        [media.sm]: {
+          padding: '0 $8',
+        },
+      },
+      small: {
+        padding: '0 $8',
+      },
+      large: {
+        padding: '0 $16',
+        [media.sm]: {
+          padding: '0 $12',
+        },
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'large',
+  },
 })

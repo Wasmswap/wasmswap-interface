@@ -11,15 +11,18 @@ import { Spinner } from '../../../components/Spinner'
 import { SlippageSelector } from './SlippageSelector'
 import { NETWORK_FEE } from '../../../util/constants'
 import { useTokenBalance } from '../../../hooks/useTokenBalance'
+import { Inline } from '../../../components/Inline'
 
 type TransactionTipsProps = {
   isPriceLoading?: boolean
   tokenToTokenPrice?: number
+  size?: 'small' | 'large'
 }
 
 export const TransactionAction = ({
   isPriceLoading,
   tokenToTokenPrice,
+  size = 'large',
 }: TransactionTipsProps) => {
   const [requestedSwap, setRequestedSwap] = useState(false)
   const [tokenA, tokenB] = useRecoilValue(tokenSwapAtom)
@@ -64,6 +67,47 @@ export const TransactionAction = ({
     (status === WalletStatusType.connected && tokenA.amount <= 0) ||
     tokenA?.amount > tokenABalance
 
+  if (size === 'small') {
+    return (
+      <>
+        <Inline css={{ display: 'grid', padding: '$6 0' }}>
+          <SlippageSelector
+            slippage={slippage}
+            onSlippageChange={setSlippage}
+            css={{ width: '100%' }}
+          />
+        </Inline>
+        <Inline
+          justifyContent="space-between"
+          css={{
+            padding: '$8 $12',
+            backgroundColor: '$colors$dark10',
+            borderRadius: '$1',
+          }}
+        >
+          <Text variant="legend" transform="uppercase">
+            Swap fee
+          </Text>
+          <Text variant="legend">{NETWORK_FEE * 100}%</Text>
+        </Inline>
+        <Inline css={{ display: 'grid', paddingTop: '$8' }}>
+          <Button
+            variant="primary"
+            size="large"
+            disabled={shouldDisableSubmissionButton}
+            onClick={
+              !isExecutingTransaction && !isPriceLoading
+                ? handleSwapButtonClick
+                : undefined
+            }
+          >
+            {isExecutingTransaction ? <Spinner instant /> : 'Swap'}
+          </Button>
+        </Inline>
+      </>
+    )
+  }
+
   return (
     <StyledDivForWrapper>
       <StyledDivForInfo>
@@ -71,6 +115,7 @@ export const TransactionAction = ({
           <SlippageSelector
             slippage={slippage}
             onSlippageChange={setSlippage}
+            css={{ borderRadius: '$2 0 0 $2' }}
           />
         </StyledDivColumnForInfo>
         <StyledDivColumnForInfo kind="fees">

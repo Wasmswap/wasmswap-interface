@@ -88,6 +88,7 @@ export const Dialog = ({
 const StyledDivForModal = styled('div', {
   opacity: 0,
   width: '28rem',
+  maxWidth: '95%',
   position: 'absolute',
   zIndex: 99,
   left: '50%',

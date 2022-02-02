@@ -19,8 +19,8 @@ const IconWrapperComponent = (
   {
     icon,
     rounded,
-    color,
-    size = '16px',
+    color = 'primary',
+    size = '24px',
     width,
     height,
     rotation,

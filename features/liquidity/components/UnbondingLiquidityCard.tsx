@@ -1,75 +1,71 @@
-import { styled } from 'components/theme'
-import { Text } from '../../../components/Text'
+import { Card, CardContent } from 'components/Card'
+import { Inline } from 'components/Inline'
+import { Text } from 'components/Text'
+import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { ErrorIcon } from 'icons/Error'
 
-export const UnbondingLiquidityCard = () => {
+export const UnbondingLiquidityCard = ({ tokenA, tokenB, size = 'large' }) => {
+  if (size === 'small') {
+    return (
+      <Card>
+        <CardContent size="medium">
+          <Inline css={{ padding: '$4 0' }} gap={4}>
+            <ErrorIcon />
+            <Text variant="legend">3 hr left / 14 days</Text>
+          </Inline>
+          <Inline justifyContent="space-between" css={{ paddingBottom: '$10' }}>
+            <Inline gap={12}>
+              <Inline gap={3}>
+                <ImageForTokenLogo
+                  size="medium"
+                  logoURI={tokenA.logoURI}
+                  alt={tokenA.symbol}
+                />
+                <Text variant="link">0 {tokenA.symbol}</Text>
+              </Inline>
+              <Inline gap={3}>
+                <ImageForTokenLogo
+                  size="medium"
+                  logoURI={tokenB.logoURI}
+                  alt={tokenB.symbol}
+                />
+                <Text variant="link">0 {tokenB.symbol}</Text>
+              </Inline>
+            </Inline>
+            <Text variant="link">$289.00</Text>
+          </Inline>
+        </CardContent>
+      </Card>
+    )
+  }
   return (
-    <StyledElementForCard kind="wrapper">
-      <StyledElementForCard kind="content">
-        <StyledElementForCard kind="columnLeft">
-          <Text variant="body" color="secondary">
-            Unstaked tokens
-          </Text>
-          <Text variant="body" color="body">
-            + $999.00
-          </Text>
-        </StyledElementForCard>
-        <StyledElementForCard kind="columnRight">
-          <Text variant="body" color="secondary">
-            12 hrs
-          </Text>
-        </StyledElementForCard>
-      </StyledElementForCard>
-      <StyledElementForBar kind="wrapper">
-        <StyledElementForBar kind="element" />
-      </StyledElementForBar>
-    </StyledElementForCard>
+    <Card>
+      <CardContent>
+        <Inline justifyContent="space-between" css={{ padding: '$11 0' }}>
+          <Inline gap={16}>
+            <Text variant="link">$289.00</Text>
+            <Inline gap={12}>
+              <Inline gap={3}>
+                <ImageForTokenLogo
+                  logoURI={tokenA.logoURI}
+                  alt={tokenA.symbol}
+                />
+                <Text variant="link">0 {tokenA.symbol}</Text>
+              </Inline>
+              <Inline gap={3}>
+                <ImageForTokenLogo
+                  logoURI={tokenB.logoURI}
+                  alt={tokenB.symbol}
+                />
+                <Text variant="link">0 {tokenB.symbol}</Text>
+              </Inline>
+            </Inline>
+          </Inline>
+          <Inline>
+            <Text variant="legend">3 hr left / 14 days</Text>
+          </Inline>
+        </Inline>
+      </CardContent>
+    </Card>
   )
 }
-
-const StyledElementForCard = styled('div', {
-  variants: {
-    kind: {
-      wrapper: {
-        padding: '0 35px 12px 24px',
-        borderRadius: '8px',
-        border: '1px solid $borderColors$default',
-        backgroundColor: '$dark10',
-      },
-      content: {
-        padding: '$10 0',
-        display: 'flex',
-        justifyContent: 'space-between',
-      },
-      columnLeft: {
-        display: 'grid',
-        columnGap: '$space$11',
-        gridAutoFlow: 'column',
-        alignItems: 'center',
-      },
-      columnRight: {},
-    },
-  },
-})
-
-const StyledElementForBar = styled('div', {
-  variants: {
-    kind: {
-      wrapper: {
-        width: '100%',
-        height: 4,
-        background: '#C4C4C4',
-        position: 'relative',
-        overflow: 'hidden',
-      },
-      element: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        background: '#161616',
-        transform: 'translate(-10%)',
-      },
-    },
-  },
-})

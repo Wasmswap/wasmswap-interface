@@ -1,5 +1,6 @@
 import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
+import { CSS } from '@stitches/react'
 import { IconWrapper } from '../../../components/IconWrapper'
 import { Chevron } from '../../../icons/Chevron'
 import { useRef, useState } from 'react'
@@ -9,10 +10,12 @@ import { useOnClickOutside } from '../../../hooks/useOnClickOutside'
 type SlippageSelectorProps = {
   slippage: number
   onSlippageChange: (slippage: number) => void
+  css?: CSS
 }
 export const SlippageSelector = ({
   slippage = 0.01,
   onSlippageChange,
+  css,
 }: SlippageSelectorProps) => {
   const [isShowingSettings, setShowingSettings] = useState(false)
 
@@ -25,6 +28,7 @@ export const SlippageSelector = ({
     <StyledDivForWrapper ref={refForWrapper}>
       <StyledDivForSelector
         active={isShowingSettings}
+        css={css}
         onClick={() => {
           setShowingSettings(!isShowingSettings)
         }}
@@ -71,11 +75,13 @@ const StyledDivForSelector = styled('button', {
   textTransform: 'uppercase',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
   columnGap: '$space$4',
   padding: '$6 $13',
   userSelect: 'none',
-  borderRadius: '$2 0 0 $2',
+  borderRadius: '$2',
   transition: 'background-color .1s ease-out',
+
   '&:hover': {
     backgroundColor: '$colors$dark15',
   },

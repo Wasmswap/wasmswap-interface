@@ -37,7 +37,9 @@ export const __TEST_MODE__ = !JSON.parse(
 )
 
 /* feature flags */
-export const __POOL_REWARDS_ENABLED__ = true // is under development and cannot be enabled
+export const __POOL_REWARDS_ENABLED__ = JSON.parse(
+  process.env.NEXT_PUBLIC_ENABLE_FEATURE_REWARDS
+)
 export const __TRANSFERS_ENABLED__ = JSON.parse(
   process.env.NEXT_PUBLIC_ENABLE_FEATURE_TRANSFERS
 )

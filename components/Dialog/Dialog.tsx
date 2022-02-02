@@ -2,25 +2,18 @@ import Portal from '@reach/portal'
 import { styled, useThemeClassName } from 'components/theme'
 import gsap from 'gsap'
 import { useEffect, useState, useRef, ReactNode } from 'react'
-import { Union } from '../icons/Union'
-import { Button } from './Button'
-import { IconWrapper } from './IconWrapper'
+import { DialogContextProvider } from './DialogContext'
 
 type DialogProps = {
   children: ReactNode
   isShowing: boolean
   onRequestClose: () => void
-  kind?: 'blank'
-  width?: 'normal' | 'large'
 }
-
-const paddingX = 18
 
 export const Dialog = ({
   children,
   isShowing,
   onRequestClose,
-  kind,
   ...props
 }: DialogProps) => {
   const [isRenderingDialog, setIsRenderingDialog] = useState(false)
@@ -69,15 +62,15 @@ export const Dialog = ({
   return (
     <Portal>
       {(isShowing || isRenderingDialog) && (
-        <>
+        <DialogContextProvider
+          onRequestClose={onRequestClose}
+          isShowing={isShowing}
+        >
           <StyledDivForModal
             className={themeClassName}
             ref={modalRef}
             {...props}
           >
-            {kind !== 'blank' && (
-              <DialogCloseButton offset={paddingX} onClick={onRequestClose} />
-            )}
             {children}
           </StyledDivForModal>
           <StyledDivForOverlay
@@ -86,7 +79,7 @@ export const Dialog = ({
             onClick={onRequestClose}
             ref={overlayRef}
           />
-        </>
+        </DialogContextProvider>
       )}
     </Portal>
   )
@@ -94,7 +87,8 @@ export const Dialog = ({
 
 const StyledDivForModal = styled('div', {
   opacity: 0,
-  width: '28.5rem',
+  width: '28rem',
+  maxWidth: '95%',
   position: 'absolute',
   zIndex: 99,
   left: '50%',
@@ -115,16 +109,3 @@ const StyledDivForOverlay = styled('div', {
   top: 0,
   backgroundColor: '$colors$light',
 })
-
-export const DialogCloseButton = ({ size = '24px', offset = 0, ...props }) => (
-  <Button
-    variant="ghost"
-    icon={<IconWrapper icon={<Union />} size={size} />}
-    css={{
-      marginLeft: 'auto',
-      marginRight: `${offset}px`,
-      marginTop: `${offset}px`,
-    }}
-    {...props}
-  />
-)

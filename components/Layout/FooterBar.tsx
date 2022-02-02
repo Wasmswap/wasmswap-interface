@@ -17,6 +17,8 @@ export const FooterBar = () => {
           href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
           target="__blank"
           variant="ghost"
+          textColor="tertiary"
+          iconColor="tertiary"
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           Provide feedback

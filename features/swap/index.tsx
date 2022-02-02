@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { useTokenList } from 'hooks/useTokenList'
 import { styled } from 'components/theme'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
@@ -10,8 +12,7 @@ import { TransactionTips } from './components/TransactionTips'
 import { TransactionAction } from './components/TransactionAction'
 import { useTokenToTokenPrice } from './hooks/useTokenToTokenPrice'
 import { tokenSwapAtom } from './swapAtoms'
-import { useTokenList } from '../../hooks/useTokenList'
-import { useEffect } from 'react'
+import { useMedia } from '../../hooks/useMedia'
 
 export const TokenSwap = () => {
   /* connect to recoil */
@@ -36,6 +37,7 @@ export const TokenSwap = () => {
 
   const isUiDisabled =
     transactionStatus === TransactionStatus.EXECUTING || isTokenListLoading
+  const uiSize = useMedia('sm') ? 'small' : 'large'
 
   /* fetch token to token price */
   const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({
@@ -70,12 +72,14 @@ export const TokenSwap = () => {
             setTokenSwapState([updateTokenA, tokenB])
           }}
           disabled={isUiDisabled}
+          size={uiSize}
         />
         <TransactionTips
           disabled={isUiDisabled}
           isPriceLoading={isPriceLoading}
           tokenToTokenPrice={tokenPrice}
           onTokenSwaps={handleSwapTokenPositions}
+          size={uiSize}
         />
         <TokenSelector
           readOnly
@@ -85,11 +89,13 @@ export const TokenSwap = () => {
             setTokenSwapState([tokenA, updatedTokenB])
           }}
           disabled={isUiDisabled}
+          size={uiSize}
         />
       </StyledDivForWrapper>
       <TransactionAction
         isPriceLoading={isPriceLoading}
         tokenToTokenPrice={tokenPrice}
+        size={uiSize}
       />
     </>
   )

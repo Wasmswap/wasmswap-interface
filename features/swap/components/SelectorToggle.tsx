@@ -1,10 +1,11 @@
-import { Text } from '../../../components/Text'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Chevron } from '../../../icons/Chevron'
 import React from 'react'
-import { formatTokenBalance } from '../../../util/conversion'
+import { Text } from 'components/Text'
+import { IconWrapper } from 'components/IconWrapper'
+import { Chevron } from 'icons/Chevron'
+import { formatTokenBalance } from 'util/conversion'
 import { styled } from 'components/theme'
-import { useTokenInfo } from '../../../hooks/useTokenInfo'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { ButtonForWrapper } from 'components/Button'
 
 type SelectorToggleProps = {
   isSelecting: boolean
@@ -19,11 +20,11 @@ export const SelectorToggle = ({
   availableAmount,
   tokenSymbol,
 }: SelectorToggleProps) => {
+  const { logoURI } = useTokenInfo(tokenSymbol) || {}
+
   const formattedAvailableAmount = formatTokenBalance(availableAmount, {
     includeCommaSeparation: true,
   })
-
-  const { logoURI } = useTokenInfo(tokenSymbol) || {}
 
   const hasTokenSelected = Boolean(tokenSymbol)
 
@@ -31,6 +32,7 @@ export const SelectorToggle = ({
     <StyledDivForSelector
       state={isSelecting || !tokenSymbol ? 'selecting' : 'selected'}
       onClick={onToggle}
+      variant="ghost"
       role="button"
     >
       {(isSelecting || !hasTokenSelected) && (
@@ -69,7 +71,7 @@ export const SelectorToggle = ({
   )
 }
 
-const StyledDivForSelector = styled('div', {
+const StyledDivForSelector = styled(ButtonForWrapper, {
   cursor: 'pointer',
   display: 'grid',
   alignItems: 'center',
@@ -78,12 +80,7 @@ const StyledDivForSelector = styled('div', {
   transition: 'background-color .1s ease-out',
   userSelect: 'none',
   whiteSpace: 'pre',
-  '&:hover': {
-    backgroundColor: '$colors$dark10',
-  },
-  '&:active': {
-    backgroundColor: '$colors$dark5',
-  },
+
   variants: {
     state: {
       selected: {
@@ -93,7 +90,7 @@ const StyledDivForSelector = styled('div', {
         minWidth: 231,
       },
       selecting: {
-        margin: 'calc($space$2 * 0.85) 0',
+        margin: '$space$1 0',
         padding: '$space$6 $8',
         columnGap: '$space$4',
         gridTemplateColumns: '1fr $space$8',
@@ -103,8 +100,8 @@ const StyledDivForSelector = styled('div', {
 })
 
 const StyledImgForTokenLogo = styled('img', {
-  width: '30px',
-  height: '30px',
+  width: '1.875rem',
+  height: '1.875rem',
   borderRadius: '50%',
   backgroundColor: '#ccc',
 })

@@ -40,6 +40,12 @@ export const useIsInteracted = () => {
       node.addEventListener('mouseleave', handleMouseLeave)
       node.addEventListener('focus', handleFocus)
       node.addEventListener('blur', handleBlur)
+
+      requestAnimationFrame(() => {
+        if (document.activeElement === node) {
+          handleFocus()
+        }
+      })
     }
 
     return () => {

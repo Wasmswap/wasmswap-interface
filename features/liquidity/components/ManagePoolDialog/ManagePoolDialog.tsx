@@ -21,26 +21,31 @@ import { Button } from 'components/Button'
 import {
   DialogHeader,
   DialogContent,
-  DialogV2,
+  Dialog,
   DialogDivider,
   DialogButtons,
-} from 'components/DialogV2'
+} from 'components/Dialog'
 import { Spinner } from 'components/Spinner'
+import { usePrevious } from '@reach/utils'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
+  initialActionType: 'add' | 'remove'
   onRequestClose: () => void
   poolId: string
 }
 
 export const ManagePoolDialog = ({
   isShowing,
+  initialActionType,
   onRequestClose,
   poolId,
 }: ManagePoolDialogProps) => {
   const tokenInfo = useTokenInfoByPoolId(poolId)
 
-  const [isAddingLiquidity, setAddingLiquidity] = useState(true)
+  const [isAddingLiquidity, setAddingLiquidity] = useState(
+    initialActionType !== 'remove'
+  )
 
   const [addLiquidityPercent, setAddLiquidityPercent] = useState(0)
   const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
@@ -85,8 +90,18 @@ export const ManagePoolDialog = ({
     }
   }, [canManageLiquidity])
 
+  /* update initial tab whenever dialog opens */
+  const previousIsShowing = usePrevious(isShowing)
+  useEffect(() => {
+    const shouldUpdateInitialState =
+      previousIsShowing !== isShowing && isShowing
+    if (shouldUpdateInitialState) {
+      setAddingLiquidity(initialActionType !== 'remove')
+    }
+  }, [initialActionType, previousIsShowing, isShowing])
+
   return (
-    <DialogV2 isShowing={isShowing} onRequestClose={onRequestClose}>
+    <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader paddingBottom={canManageLiquidity ? '$8' : '$12'}>
         <Text variant="header">Manage liquidity</Text>
       </DialogHeader>
@@ -154,7 +169,7 @@ export const ManagePoolDialog = ({
           )}
         </Button>
       </DialogButtons>
-    </DialogV2>
+    </Dialog>
   )
 }
 

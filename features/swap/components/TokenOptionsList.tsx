@@ -1,7 +1,14 @@
 import { useTokenList } from 'hooks/useTokenList'
-import { TokenSelectList } from '../../../components/TokenSelectList'
+import {
+  TokenSelectList,
+  TokenSelectListProps,
+} from 'components/TokenSelectList'
 
-export const TokenOptionsList = ({ activeTokenSymbol, onSelect, ...props }) => {
+export const TokenOptionsList = ({
+  activeTokenSymbol,
+  onSelect,
+  ...props
+}: Omit<TokenSelectListProps, 'tokenList' | 'fetchingBalanceMode'>) => {
   const [tokenList] = useTokenList()
   return (
     <TokenSelectList

@@ -1,16 +1,13 @@
 import { IconWrapper, IconWrapperProps } from '../components/IconWrapper'
+import { ComponentType } from 'react'
 
-export const createIconComponent = (IconComponent: any) => {
-  function Icon(props: Omit<IconWrapperProps, 'icon'>) {
+export function createIconComponent<T extends ComponentType = any>(icon: T) {
+  const IconComponent = icon as any
+  return function Icon(props: Omit<IconWrapperProps, 'icon'>) {
     return <IconWrapper {...props} icon={<IconComponent />} />
   }
-
-  Icon.displayName = IconComponent.displayName
-
-  return Icon
 }
 
-export const createIcon = (IconComponent: any) => [
-  IconComponent,
-  createIconComponent(IconComponent),
-]
+export function createIcon<T extends ComponentType>(IconComponent: T) {
+  return [IconComponent, createIconComponent(IconComponent)] as const
+}

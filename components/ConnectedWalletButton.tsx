@@ -1,4 +1,4 @@
-import { styled } from 'components/theme'
+import { media, styled } from 'components/theme'
 import { Wallet } from '../icons/Wallet'
 import { Text } from './Text'
 import { IconWrapper } from './IconWrapper'
@@ -128,6 +128,12 @@ const StyledWalletButton = styled('div', {
   textAlign: 'left',
   border: '1px solid $borderColors$default',
   '&:hover': {
+    border: '1px solid $borderColors$focus',
+    [`${StyledDivForActions}`]: {
+      opacity: 1,
+    },
+  },
+  [media.sm]: {
     border: '1px solid $borderColors$focus',
     [`${StyledDivForActions}`]: {
       opacity: 1,

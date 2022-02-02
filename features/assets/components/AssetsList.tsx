@@ -74,7 +74,7 @@ export const AssetsList = ({ onActionClick }) => {
           paddingBottom: !__TRANSFERS_ENABLED__ ? '$6' : '$12',
         }}
       >
-        Other tokens
+        {__TRANSFERS_ENABLED__ ? 'Other tokens' : 'Soon available to transfer'}
       </Text>
       <StyledGrid>
         {__TRANSFERS_ENABLED__ && isLoading ? (

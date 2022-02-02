@@ -2,13 +2,15 @@ import { createStitches, createTheme } from '@stitches/react'
 import { lightThemeColorTokens, darkThemeColorTokens } from './colors'
 import { createSpacing } from './utils/createSpacing'
 
+export const space = createSpacing({
+  steps: 22,
+  multiplier: 2,
+  baseSize: 16,
+})
+
 /* build the base theme */
 const baseTheme = {
-  space: createSpacing({
-    steps: 20,
-    multiplier: 2,
-    baseSize: 16,
-  }),
+  space,
 
   fonts: {
     primary:

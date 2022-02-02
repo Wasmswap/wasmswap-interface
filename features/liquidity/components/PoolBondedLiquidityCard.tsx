@@ -50,10 +50,16 @@ export const PoolBondedLiquidityCard = ({
         <Button
           css={{ width: '100%' }}
           size="large"
-          disabled={!__POOL_REWARDS_ENABLED__}
-          onClick={__POOL_REWARDS_ENABLED__ ? onButtonClick : undefined}
+          disabled={!(__POOL_REWARDS_ENABLED__ && tokenB.staking_address)}
+          onClick={
+            __POOL_REWARDS_ENABLED__ && tokenB.staking_address
+              ? onButtonClick
+              : undefined
+          }
         >
-          {__POOL_REWARDS_ENABLED__ ? 'Bond / Unbond tokens' : 'Coming soon'}
+          {__POOL_REWARDS_ENABLED__ && tokenB.staking_address
+            ? 'Bond / Unbond tokens'
+            : 'Coming soon'}
         </Button>
       </StyledElementForCardLayout>
     </StyledElementForCardLayout>

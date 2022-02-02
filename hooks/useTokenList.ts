@@ -14,6 +14,8 @@ export type TokenInfo = {
   tags: string[]
   denom: string
   native: boolean
+  staking_address: string
+  rewards_addresses: string[]
 }
 
 export type TokenList = {

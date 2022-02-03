@@ -11,11 +11,18 @@ import {
 import { convertMicroDenomToDenom } from 'util/conversion'
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useChainInfo } from './useChainInfo'
-import { useBaseTokenInfo, useTokenInfo } from './useTokenInfo'
+import {
+  useBaseTokenInfo,
+  useTokenInfo,
+  useTokenInfoByPoolId,
+} from './useTokenInfo'
 import { useSwapInfo } from './useSwapInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 
-export const useGetPoolTokensDollarValue = ({ poolId, tokenAmount }) => {
+export const useGetPoolTokensDollarValue = ({
+  poolId,
+  tokenAmountInMicroDenom,
+}) => {
   const tokenA = useBaseTokenInfo()
 
   const [swapInfo, isLoading] = useSwapInfo({ poolId })
@@ -24,7 +31,7 @@ export const useGetPoolTokensDollarValue = ({ poolId, tokenAmount }) => {
   if (swapInfo) {
     return [
       convertMicroDenomToDenom(
-        (tokenAmount / swapInfo.lp_token_supply) *
+        (tokenAmountInMicroDenom / swapInfo.lp_token_supply) *
           swapInfo.token1_reserve *
           junoPrice *
           2,
@@ -37,17 +44,16 @@ export const useGetPoolTokensDollarValue = ({ poolId, tokenAmount }) => {
   return [0, isLoading || isPriceLoading]
 }
 
-export const useStakedTokenBalance = (tokenSymbol: string) => {
+export const useStakedTokenBalance = ({ poolId }) => {
   const { address, status, client } = useRecoilValue(walletState)
 
-  const token = useTokenInfo(tokenSymbol)
+  const token = useTokenInfoByPoolId(poolId)
 
   const { data = 0, isLoading } = useQuery<number>(
-    [`stakedTokenBalance/${tokenSymbol}`, address],
+    [`stakedTokenBalance/${poolId}`, address],
     async () => {
-      return convertMicroDenomToDenom(
-        await getStakedBalance(address, token.staking_address, client),
-        6
+      return Number(
+        await getStakedBalance(address, token.staking_address, client)
       )
     },
     {
@@ -63,12 +69,12 @@ export const useStakedTokenBalance = (tokenSymbol: string) => {
   return [data, isLoading] as const
 }
 
-export const useTotalStaked = (tokenSymbol: string) => {
-  const token = useTokenInfo(tokenSymbol)
+export const useTotalStaked = ({ poolId }) => {
+  const token = useTokenInfo(poolId)
   const [chainInfo] = useChainInfo()
 
   const { data = 0, isLoading } = useQuery(
-    `totalStaked/${tokenSymbol}`,
+    `totalStaked/${poolId}`,
     async () => {
       const client = await CosmWasmClient.connect(chainInfo.rpc)
       return convertMicroDenomToDenom(
@@ -87,12 +93,12 @@ export const useTotalStaked = (tokenSymbol: string) => {
   return [data, isLoading] as const
 }
 
-export const useGetClaims = (tokenSymbol: string) => {
-  const token = useTokenInfo(tokenSymbol)
+export const useGetClaims = ({ poolId }) => {
+  const token = useTokenInfo(poolId)
   const { address, status, client } = useRecoilValue(walletState)
 
   const { data = [], isLoading } = useQuery(
-    [`claims/${tokenSymbol}`, address],
+    [`claims/${poolId}`, address],
     async () => {
       return getClaims(address, token.staking_address, client)
     },
@@ -108,12 +114,12 @@ export const useGetClaims = (tokenSymbol: string) => {
   return [data, isLoading] as const
 }
 
-export const useUnstakingDuration = (tokenSymbol: string) => {
-  const token = useTokenInfo(tokenSymbol)
+export const useUnstakingDuration = ({ poolId }) => {
+  const token = useTokenInfo(poolId)
   const [chainInfo] = useChainInfo()
 
   const { data = 0, isLoading } = useQuery(
-    `unstakingDuration/${tokenSymbol}`,
+    `unstakingDuration/${poolId}`,
     async () => {
       const client = await CosmWasmClient.connect(chainInfo.rpc)
       return getUnstakingDuration(token?.staking_address, client)

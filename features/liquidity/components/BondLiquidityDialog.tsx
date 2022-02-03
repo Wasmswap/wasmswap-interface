@@ -1,7 +1,7 @@
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { Text } from 'components/Text'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
@@ -20,38 +20,61 @@ import {
   DialogButtons,
 } from 'components/Dialog'
 import { Button } from 'components/Button'
-import { useBondTokens } from '../../../hooks/useBondTokens'
-import { useGetPoolTokensDollarValue } from '../../../hooks/useStakedToken'
+import { useBondTokens, useUnbondTokens } from '../../../hooks/useBondTokens'
+import {
+  useGetPoolTokensDollarValue,
+  useStakedTokenBalance,
+} from '../../../hooks/useStakedToken'
 import { Spinner } from '../../../components/Spinner'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
-  const canManageStaking = true
 
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(poolId)
 
   const [{ myLiquidity } = {} as any] = usePoolLiquidity({ poolId })
+  const [stakedAmount] = useStakedTokenBalance({ poolId })
+
+  const maxLiquidityTokenAmount =
+    dialogState === 'stake' ? myLiquidity?.coins ?? 0 : stakedAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
+  // todo reset cache & show toasts
+  const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
+    poolId,
+  })
+  // todo reset cache & show toasts
+  const { mutate: unbondTokens, isLoading: isRequestingToUnbond } =
+    useUnbondTokens({ poolId })
 
-  const { mutate: bondTokens, isLoading } = useBondTokens({ poolId })
+  const isLoading = isRequestingToBond || isRequestingToUnbond
 
-  const handleBondTokens = () => {
-    bondTokens(tokenAmount)
+  const handleAction = () => {
+    if (dialogState === 'stake') {
+      bondTokens(tokenAmount)
+    } else {
+      unbondTokens(tokenAmount)
+    }
   }
-
-  const maxLiquidityTokenAmount = myLiquidity?.coins ?? 0
 
   const [maxDollarValueLiquidity] = useGetPoolTokensDollarValue({
     poolId,
-    tokenAmount: maxLiquidityTokenAmount,
+    tokenAmountInMicroDenom: maxLiquidityTokenAmount,
   })
 
   const [liquidityDollarAmount] = useGetPoolTokensDollarValue({
     poolId,
-    tokenAmount,
+    tokenAmountInMicroDenom: tokenAmount,
   })
+
+  const canManageStaking = stakedAmount > 0
+
+  useEffect(() => {
+    const shouldResetDialogState =
+      !canManageStaking && dialogState === 'unstake'
+    if (shouldResetDialogState) setDialogState('stake')
+  }, [canManageStaking, dialogState])
 
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
@@ -80,6 +103,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
               values={['staking', 'unstaking']}
               onStateChange={(value) => {
                 setDialogState(value === 'staking' ? 'stake' : 'unstake')
+                setTokenAmount(0)
               }}
             />
           </DialogContent>
@@ -113,7 +137,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       <Divider />
       <DialogContent>
         <StakingSummary
-          label="Staking"
+          label={dialogState === 'stake' ? 'Staking' : 'Unstaking'}
           poolId={poolId}
           tokenA={tokenA}
           tokenB={tokenB}
@@ -149,11 +173,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <Button variant="secondary" onClick={onRequestClose}>
           Cancel
         </Button>
-        <Button
-          variant="primary"
-          onClick={handleBondTokens}
-          disabled={isLoading}
-        >
+        <Button variant="primary" onClick={handleAction} disabled={isLoading}>
           {isLoading ? (
             <Spinner instant />
           ) : dialogState === 'stake' ? (

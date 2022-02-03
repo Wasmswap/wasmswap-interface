@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query'
-import { stakeTokens } from '../services/staking'
+import { stakeTokens, unstakeTokens } from '../services/staking'
 import { useSwapInfo } from './useSwapInfo'
 import { useTokenInfoByPoolId } from './useTokenInfo'
 import { useRecoilValue } from 'recoil'
@@ -22,5 +22,21 @@ export const useBondTokens = ({ poolId, ...options }: UseBondTokensArgs) => {
       amount,
       client
     )
+  }, options)
+}
+
+type UseUnbondTokensArgs = {
+  poolId: string
+} & Parameters<typeof useMutation>[2]
+
+export const useUnbondTokens = ({
+  poolId,
+  ...options
+}: UseUnbondTokensArgs) => {
+  const token = useTokenInfoByPoolId(poolId)
+  const { address, client } = useRecoilValue(walletState)
+
+  return useMutation(async (amount: number) => {
+    return unstakeTokens(address, token.staking_address, amount, client)
   }, options)
 }

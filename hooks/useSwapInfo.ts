@@ -1,7 +1,9 @@
+import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { getSwapInfo, InfoResponse } from '../services/swap'
-import { useTokenInfo } from './useTokenInfo'
+import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 import { useChainInfo } from './useChainInfo'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
 type SwapInfo = Pick<
   InfoResponse,
@@ -12,26 +14,63 @@ type SwapInfo = Pick<
   token2_reserve: number
 }
 
-export const useSwapInfo = ({ tokenSymbol }) => {
-  const tokenInfo = useTokenInfo(tokenSymbol)
+export const useMultipleSwapInfo = ({
+  tokenSymbols,
+  poolIds,
+}: {
+  tokenSymbols?: Array<string>
+  poolIds?: Array<string>
+}) => {
   const [chainInfo] = useChainInfo()
-  const { data = {} as Record<string, undefined>, isLoading } =
-    useQuery<SwapInfo>(
-      `swapInfo/${tokenInfo.swap_address}`,
-      async () => {
-        const swap = await getSwapInfo(tokenInfo.swap_address, chainInfo.rpc)
 
-        return {
-          ...swap,
-          token1_reserve: Number(swap.token1_reserve),
-          token2_reserve: Number(swap.token2_reserve),
-          lp_token_supply: Number(swap.lp_token_supply),
-        }
-      },
-      {
-        enabled: Boolean(tokenInfo?.swap_address && chainInfo?.rpc),
-      }
-    )
+  const tokensByPoolIds = useTokenInfoByPoolIds(poolIds)
+  const tokensByTokenSymbols = useMultipleTokenInfo(tokenSymbols)
+
+  const { data = [], isLoading } = useQuery<Array<SwapInfo>>(
+    `swapInfo/${tokenSymbols?.join('+')}`,
+    async () => {
+      const tokens = tokensByPoolIds || tokensByTokenSymbols
+
+      const swaps: Array<InfoResponse> = await Promise.all(
+        tokens.map(({ swap_address }) =>
+          getSwapInfo(swap_address, chainInfo.rpc)
+        )
+      )
+
+      return swaps.map((swap) => ({
+        ...swap,
+        token1_reserve: Number(swap.token1_reserve),
+        token2_reserve: Number(swap.token2_reserve),
+        lp_token_supply: Number(swap.lp_token_supply),
+      }))
+    },
+    {
+      enabled: Boolean(
+        (tokenSymbols?.length || poolIds?.length) && chainInfo?.rpc
+      ),
+      refetchOnMount: 'always',
+      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+      refetchIntervalInBackground: true,
+    }
+  )
 
   return [data, isLoading] as const
+}
+
+export const useSwapInfo = ({
+  tokenSymbol,
+  poolId,
+}: {
+  tokenSymbol?: string
+  poolId?: string
+}) => {
+  return useMultipleSwapInfo(
+    useMemo(
+      () => ({
+        tokenSymbols: tokenSymbol ? [tokenSymbol] : undefined,
+        poolIds: poolId ? [poolId] : undefined,
+      }),
+      [tokenSymbol, poolId]
+    )
+  )?.[0]
 }

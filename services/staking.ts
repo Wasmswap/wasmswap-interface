@@ -12,16 +12,16 @@ export const stakeTokens = async (
   amount: number,
   client: SigningCosmWasmClient
 ) => {
-  let subMsg = { stake: {} }
-  let encodedMsg = toBase64(toUtf8(JSON.stringify(subMsg)))
-  console.log(encodedMsg)
-  let msg = {
+  const subMsg = { stake: {} }
+  const encodedMsg = toBase64(toUtf8(JSON.stringify(subMsg)))
+  const msg = {
     send: {
       contract: stakeContractAddress,
-      amount: amount.toString(),
+      amount: String(amount),
       msg: encodedMsg,
     },
   }
+
   return await client.execute(
     senderAddress,
     lpTokenAddress,
@@ -54,7 +54,7 @@ export const claimTokens = async (
   stakingContractAddress: string,
   client: SigningCosmWasmClient
 ) => {
-  let msg = { claim: {} }
+  const msg = { claim: {} }
   return await client.execute(
     senderAddress,
     stakingContractAddress,
@@ -70,8 +70,8 @@ export const getStakedBalance = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<string> => {
-  let msg = { staked_balance_at_height: { address: address } }
-  let result = await client.queryContractSmart(stakingContractAddress, msg)
+  const msg = { staked_balance_at_height: { address: address } }
+  const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.balance
 }
 

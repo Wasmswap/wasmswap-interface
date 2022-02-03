@@ -128,6 +128,7 @@ const StyledDivForPoolTokens = styled('div', {
 })
 
 export const StyledDivForTokenLogos = styled('div', {
+  display: 'flex',
   [`& ${ImageForTokenLogo}`]: {
     position: 'relative',
     zIndex: '$2',

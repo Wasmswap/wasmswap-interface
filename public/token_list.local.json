@@ -41,7 +41,7 @@
       "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNO-POOD",
       "chain_id": "lucina",
       "token_address": "juno1wl59k23zngj34l7d42y9yltask7rjlnxgccawc7ltrknp6n52fpsndlmj0",
@@ -57,7 +57,7 @@
       "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNO-CRAB",
       "chain_id": "lucina",
       "token_address": "juno14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skjuwg8",
@@ -65,7 +65,7 @@
       "symbol": "CRAB",
       "name": "Crab",
       "decimals": 6,
-      "logoURI": "",
+      "logoURI": "https://cryptologos.cc/logos/aave-aave-logo.svg",
       "tags": ["memecoin"],
       "native":false,
       "denom":"ucrab",
@@ -73,7 +73,7 @@
       "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "chain_id": "lucina",
       "pool_id": "JUNO-DAO",
       "token_address": "juno1yw4xvtc43me9scqfr2jr2gzvcxd3a9y4eq7gaukreugw2yd2f8ts9z8cq8",
@@ -89,7 +89,7 @@
       "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNO-COSM",
       "chain_id": "lucina",
       "token_address": "",

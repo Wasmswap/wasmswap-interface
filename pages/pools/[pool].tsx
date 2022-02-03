@@ -49,10 +49,11 @@ export default function Pool() {
   ] = usePoolLiquidity({ poolId: pool })
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
+  const supportsIncentives = Boolean(
+    __POOL_REWARDS_ENABLED__ && tokenB?.staking_address
+  )
 
-  if (!tokenB || !pool) {
-    return null
-  }
+  if (!tokenB || !pool) return null
 
   return (
     <>
@@ -148,7 +149,7 @@ export default function Pool() {
               </StyledDivForCards>
             </>
             <>
-              {__POOL_REWARDS_ENABLED__ && (
+              {supportsIncentives && (
                 <>
                   <RewardsStatus
                     tokenA={tokenA}
@@ -179,7 +180,7 @@ export default function Pool() {
                   </Column>
                 </>
               )}
-              {!__POOL_REWARDS_ENABLED__ && (
+              {!supportsIncentives && (
                 <RewardsStatus
                   disabled={true}
                   tokenA={tokenA}

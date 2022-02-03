@@ -3,10 +3,16 @@ import { styled } from 'components/theme'
 import { Text } from 'components/Text'
 import { TokenInfo } from 'hooks/useTokenList'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { dollarValueFormatter, formatTokenBalance } from 'util/conversion'
+import {
+  convertMicroDenomToDenom,
+  dollarValueFormatter,
+  formatTokenBalance,
+} from 'util/conversion'
+import { useGetPoolTokensDollarValue } from '../../../hooks/useStakedToken'
 
 type StakingSummaryProps = {
   label: string
+  poolId: string
   tokenA: TokenInfo
   tokenB: TokenInfo
   maxLiquidity: number
@@ -16,6 +22,7 @@ type StakingSummaryProps = {
 
 export const StakingSummary = ({
   label,
+  poolId,
   tokenA,
   tokenB,
   maxLiquidity,
@@ -24,15 +31,26 @@ export const StakingSummary = ({
 }: StakingSummaryProps) => {
   const [tokenAPrice] = useTokenDollarValue(tokenA?.symbol)
   const [tokenBPrice] = useTokenDollarValue(tokenB?.symbol)
+  const liquidityAmountInDenom = convertMicroDenomToDenom(liquidityAmount, 6)
 
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
     useState(false)
+
   const refForInput = useRef<HTMLInputElement>()
 
-  const tokenAAmount = (liquidityAmount * 0.5) / tokenAPrice
-  const tokenBAmount = (liquidityAmount * 0.5) / tokenBPrice
+  const tokenAAmount = (liquidityAmountInDenom * 0.5) / tokenAPrice
+  const tokenBAmount = (liquidityAmountInDenom * 0.5) / tokenBPrice
 
-  const formattedLiquidityAmount = String(dollarValueFormatter(liquidityAmount))
+  const [liquidityInDollarValue] = useGetPoolTokensDollarValue({
+    poolId,
+    tokenAmount: liquidityAmount,
+  })
+
+  const formattedLiquidityAmountInDollarValue = String(
+    dollarValueFormatter(
+      typeof liquidityInDollarValue === 'number' ? liquidityInDollarValue : 0
+    )
+  )
 
   const handleChangeDollarValue = ({ target: { value } }) => {
     const validatedValue =
@@ -74,9 +92,9 @@ export const StakingSummary = ({
               min="0"
               type="number"
               lang="en-US"
-              value={formattedLiquidityAmount}
+              value={formattedLiquidityAmountInDollarValue}
               style={{
-                width: `${formattedLiquidityAmount.length}ch`,
+                width: `${formattedLiquidityAmountInDollarValue.length}ch`,
               }}
               onChange={handleChangeDollarValue}
               onFocus={() => {

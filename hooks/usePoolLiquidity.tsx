@@ -1,13 +1,13 @@
 import { useQuery } from 'react-query'
-import { getSwapInfo, InfoResponse } from '../services/swap'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
-import { unsafelyGetTokenInfoByPoolId, useBaseTokenInfo } from './useTokenInfo'
+import { useBaseTokenInfo } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
+import { useMultipleSwapInfo } from './useSwapInfo'
 
 export type LiquidityType = {
   coins: number
@@ -28,7 +28,7 @@ export const usePoolLiquidity = ({ poolId }) => {
     poolIds: poolId ? [poolId] : undefined,
   })
 
-  return [liquidity?.[0], isLoading]
+  return [liquidity?.[0], isLoading] as const
 }
 
 export const useMultiplePoolsLiquidity = ({
@@ -37,30 +37,7 @@ export const useMultiplePoolsLiquidity = ({
   const { address } = useRecoilValue(walletState)
   const [chainInfo] = useChainInfo()
 
-  const { data: swaps = [], isLoading: fetchingSwaps } = useQuery(
-    `swapInfo/${poolIds?.join('+')}`,
-    async () => {
-      const swaps: Array<InfoResponse> = await Promise.all(
-        poolIds
-          .map((poolId) => unsafelyGetTokenInfoByPoolId(poolId).swap_address)
-          .map((swap_address) => getSwapInfo(swap_address, chainInfo.rpc))
-      )
-
-      return swaps.map((swap) => ({
-        ...swap,
-        token1_reserve: Number(swap.token1_reserve),
-        token2_reserve: Number(swap.token2_reserve),
-        lp_token_supply: Number(swap.lp_token_supply),
-      }))
-    },
-    {
-      enabled: Boolean(poolIds?.length && chainInfo?.rpc),
-      refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
-    }
-  )
-
+  const [swaps, fetchingSwaps] = useMultipleSwapInfo({ poolIds })
   const { data: myLiquidityCoins, isLoading: fetchingMyLiquidity } = useQuery(
     [
       `myLiquidity/${swaps
@@ -89,8 +66,8 @@ export const useMultiplePoolsLiquidity = ({
     }
   )
 
-  const baseToken = useBaseTokenInfo()
-  const [junoPrice] = useTokenDollarValue(baseToken?.symbol)
+  const tokenA = useBaseTokenInfo()
+  const [tokenADollarPrice] = useTokenDollarValue(tokenA?.symbol)
 
   const liquidity = swaps?.map(
     (
@@ -110,21 +87,21 @@ export const useMultiplePoolsLiquidity = ({
         protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
       ]
 
-      const baseTokenDecimals = baseToken.decimals
+      const tokenADecimals = tokenA.decimals
 
       const totalLiquidity = {
         coins: lp_token_supply,
         dollarValue:
-          convertMicroDenomToDenom(reserve[0], baseTokenDecimals) *
-          junoPrice *
+          convertMicroDenomToDenom(reserve[0], tokenADecimals) *
+          tokenADollarPrice *
           2,
       }
 
       const myLiquidity = {
         coins: balance,
         dollarValue:
-          convertMicroDenomToDenom(myReserve[0], baseTokenDecimals) *
-          junoPrice *
+          convertMicroDenomToDenom(myReserve[0], tokenADecimals) *
+          tokenADollarPrice *
           2,
       }
 
@@ -133,7 +110,7 @@ export const useMultiplePoolsLiquidity = ({
         myReserve,
         totalLiquidity,
         myLiquidity,
-        tokenDollarValue: junoPrice,
+        tokenDollarValue: tokenADollarPrice,
       }
     }
   )

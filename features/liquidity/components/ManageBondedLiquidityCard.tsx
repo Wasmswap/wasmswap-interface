@@ -37,7 +37,7 @@ export const ManageBondedLiquidityCard = ({
   })
 
   return (
-    <Card active={bondedLiquidity}>
+    <Card>
       <CardContent>
         <Inline gap={1} css={{ padding: '$12 0 $3' }}>
           <SharesIcon color="brand" size="24px" />

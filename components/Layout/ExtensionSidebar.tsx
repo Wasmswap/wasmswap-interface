@@ -45,16 +45,6 @@ const StyledDivForWrapper = styled('div', {
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
-  // '&:after': {
-  //   content: '""',
-  //   display: 'block',
-  //   position: 'fixed',
-  //   top: 0,
-  //   right: 0,
-  //   backgroundColor: '$colors$light50',
-  //   height: '100%',
-  //   width: '100%',
-  // },
 })
 
 const StyledDivForContainer = styled('div', {

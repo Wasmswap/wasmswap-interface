@@ -42,7 +42,6 @@ export const useMultiplePoolsLiquidity = ({
   const { data: swaps = [], isLoading: fetchingSwaps } = useQuery(
     `swapInfo/${poolIds?.join('+')}`,
     async () => {
-      console.log('fetching shit')
       const swaps: Array<InfoResponse> = await Promise.all(
         poolIds
           .map((poolId) => unsafelyGetTokenInfoByPoolId(poolId).swap_address)
@@ -74,7 +73,6 @@ export const useMultiplePoolsLiquidity = ({
       address,
     ],
     async () => {
-      console.log('fetching shit111')
       const balances = await Promise.all(
         swaps.map(({ lp_token_address }) =>
           getLiquidityBalance({

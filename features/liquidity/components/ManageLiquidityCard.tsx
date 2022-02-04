@@ -54,7 +54,7 @@ export const ManageLiquidityCard = ({
   )
 
   return (
-    <Card active={providedLiquidity}>
+    <Card>
       <CardContent>
         <Inline gap={1} css={{ padding: '$12 0 $3' }}>
           <SharesIcon size="24px" />

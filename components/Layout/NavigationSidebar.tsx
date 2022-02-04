@@ -21,11 +21,14 @@ import { UnionIcon } from 'icons/Union'
 import { ChevronIcon } from 'icons/Chevron'
 import { MoonIcon } from 'icons/Moon'
 import { media, styled } from '../theme'
-import { __TEST_MODE__ } from 'util/constants'
+import { __TEST_MODE__, APP_NAME } from 'util/constants'
 import { useMedia } from 'hooks/useMedia'
 import { Divider } from '../Divider'
 import { ToggleSwitch } from '../ToggleSwitch'
-import { AppTheme, themeAtom } from '../theme/themeAtom'
+import { FeedbackIcon } from '../../icons/Feedback'
+import { AppTheme } from '../theme/themeAtom'
+import { useControlTheme } from '../theme/hooks/useTheme'
+import { UpRightArrow } from '../../icons/UpRightArrow'
 
 type NavigationSidebarProps = {
   shouldRenderBackButton?: boolean
@@ -39,7 +42,7 @@ export function NavigationSidebar({
   const { mutate: connectWallet } = useConnectWallet()
   const [{ key }, setWalletState] = useRecoilState(walletState)
 
-  const [theme, setTheme] = useRecoilState(themeAtom)
+  const themeController = useControlTheme()
 
   const isMobile = useMedia('sm')
   const [isOpen, setOpen] = useState(false)
@@ -62,11 +65,6 @@ export function NavigationSidebar({
       css={{ marginBottom: '$6' }}
     />
   )
-
-  const handleToggleAppTheme = () =>
-    setTheme((currentTheme) =>
-      currentTheme === AppTheme.light ? AppTheme.dark : AppTheme.light
-    )
 
   const { pathname } = useRouter()
   const getIsLinkActive = (path) => pathname === path
@@ -212,18 +210,25 @@ export function NavigationSidebar({
         {menuLinks}
       </StyledMenuContainer>
       <div>
+        <Text variant="legend" css={{ padding: '$4 $3' }}>
+          {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
+        </Text>
         <Inline css={{ display: 'grid' }}>
           <Button
             iconLeft={<MoonIcon />}
-            variant="menu"
+            variant="ghost"
             size="large"
-            onClick={handleToggleAppTheme}
+            onClick={(e) => {
+              if (e.target !== document.querySelector('#theme-toggle')) {
+                themeController.toggle()
+              }
+            }}
             iconRight={
               <ToggleSwitch
                 id="theme-toggle"
                 name="dark-theme"
-                onChange={handleToggleAppTheme}
-                checked={theme === AppTheme.dark}
+                onChange={themeController.setDarkTheme}
+                checked={themeController.theme === AppTheme.dark}
                 optionLabels={['Dark theme', 'Light theme']}
               />
             }
@@ -231,7 +236,19 @@ export function NavigationSidebar({
             Dark mode
           </Button>
         </Inline>
-        <Inline gap={2} css={{ padding: '$13 0' }}>
+        <Divider offsetY="$6" />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+          target="__blank"
+          variant="ghost"
+          size="large"
+          iconLeft={<FeedbackIcon />}
+          iconRight={<IconWrapper icon={<UpRightArrow />} />}
+        >
+          Provide feedback
+        </Button>
+        <Inline gap={2} css={{ padding: '$20 0 $13' }}>
           <Button
             as="a"
             href={process.env.NEXT_PUBLIC_DISCORD_LINK}

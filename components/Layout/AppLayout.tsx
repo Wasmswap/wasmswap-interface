@@ -35,7 +35,6 @@ export const AppLayout = ({
 
       <StyledContainer>
         <main>{children}</main>
-        {footerBar}
       </StyledContainer>
 
       {extensionSidebar}
@@ -58,11 +57,11 @@ const StyledContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  padding: '0 $12',
+  padding: '0 $12 $20 $12',
   '& main': {
     margin: '0 auto',
     width: '100%',
-    maxWidth: '53.75rem',
+    maxWidth: '69.5rem',
   },
   [media.sm]: {
     zIndex: '$1',

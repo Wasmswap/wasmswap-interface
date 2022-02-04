@@ -11,9 +11,11 @@ import { TestnetDialog } from 'components/TestnetDialog'
 import { queryClient } from 'services/queryClient'
 import { __TEST_MODE__ } from '../util/constants'
 import { useThemeClassName } from '../components/theme'
+import { useSubscribeDefaultAppTheme } from '../components/theme/hooks/useTheme'
 
 function NextJsAppRoot({ children }) {
   const themeClassName = useThemeClassName()
+  useSubscribeDefaultAppTheme()
 
   return (
     <div

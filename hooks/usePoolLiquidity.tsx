@@ -6,7 +6,7 @@ import { walletState } from '../state/atoms/walletAtoms'
 import { unsafelyGetTokenInfoByPoolId, useBaseTokenInfo } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+// import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 
 export type LiquidityType = {
@@ -30,6 +30,8 @@ export const usePoolLiquidity = ({ poolId }) => {
 
   return [liquidity?.[0], isLoading]
 }
+
+// const refetchInterval = DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL * 3
 
 export const useMultiplePoolsLiquidity = ({
   poolIds,
@@ -55,9 +57,9 @@ export const useMultiplePoolsLiquidity = ({
     },
     {
       enabled: Boolean(poolIds?.length && chainInfo?.rpc),
-      refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
+      // refetchOnMount: 'always',
+      // refetchInterval,
+      // refetchIntervalInBackground: true,
     }
   )
 
@@ -83,9 +85,9 @@ export const useMultiplePoolsLiquidity = ({
     },
     {
       enabled: Boolean(swaps?.length && address && chainInfo.rpc),
-      refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
+      // refetchOnMount: "always",
+      // refetchInterval,
+      // refetchIntervalInBackground: true,
     }
   )
 

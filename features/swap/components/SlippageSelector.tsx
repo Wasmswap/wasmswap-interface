@@ -4,7 +4,7 @@ import { CSS } from '@stitches/react'
 import { IconWrapper } from '../../../components/IconWrapper'
 import { Chevron } from '../../../icons/Chevron'
 import { useRef, useState } from 'react'
-import { colorTokens, SLIPPAGE_OPTIONS } from '../../../util/constants'
+import { SLIPPAGE_OPTIONS } from '../../../util/constants'
 import { useOnClickOutside } from '../../../hooks/useOnClickOutside'
 
 type SlippageSelectorProps = {
@@ -126,7 +126,7 @@ const StyledDivForSlippageList = styled('div', {
 const StyledButton = styled('button', {
   borderRadius: '$1',
   padding: '$4 $8',
-  color: colorTokens.secondaryText,
+  color: '$textColors$secondary',
   transition: 'background-color .1s ease-out',
   variants: {
     active: {

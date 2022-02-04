@@ -6,7 +6,7 @@ import { walletState } from '../state/atoms/walletAtoms'
 import { unsafelyGetTokenInfoByPoolId, useBaseTokenInfo } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
-// import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 
 export type LiquidityType = {
@@ -26,15 +26,15 @@ export type LiquidityInfoType = {
 export const usePoolLiquidity = ({ poolId }) => {
   const [liquidity, isLoading] = useMultiplePoolsLiquidity({
     poolIds: poolId ? [poolId] : undefined,
+    refetchInBackground: true,
   })
 
   return [liquidity?.[0], isLoading]
 }
 
-// const refetchInterval = DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL * 3
-
 export const useMultiplePoolsLiquidity = ({
   poolIds,
+  refetchInBackground = false,
 }): readonly [LiquidityInfoType[] | undefined, boolean] => {
   const { address } = useRecoilValue(walletState)
   const [chainInfo] = useChainInfo()
@@ -42,6 +42,7 @@ export const useMultiplePoolsLiquidity = ({
   const { data: swaps = [], isLoading: fetchingSwaps } = useQuery(
     `swapInfo/${poolIds?.join('+')}`,
     async () => {
+      console.log('fetching shit')
       const swaps: Array<InfoResponse> = await Promise.all(
         poolIds
           .map((poolId) => unsafelyGetTokenInfoByPoolId(poolId).swap_address)
@@ -57,9 +58,11 @@ export const useMultiplePoolsLiquidity = ({
     },
     {
       enabled: Boolean(poolIds?.length && chainInfo?.rpc),
-      // refetchOnMount: 'always',
-      // refetchInterval,
-      // refetchIntervalInBackground: true,
+      refetchOnMount: 'always',
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: refetchInBackground,
     }
   )
 
@@ -71,6 +74,7 @@ export const useMultiplePoolsLiquidity = ({
       address,
     ],
     async () => {
+      console.log('fetching shit111')
       const balances = await Promise.all(
         swaps.map(({ lp_token_address }) =>
           getLiquidityBalance({
@@ -85,9 +89,11 @@ export const useMultiplePoolsLiquidity = ({
     },
     {
       enabled: Boolean(swaps?.length && address && chainInfo.rpc),
-      // refetchOnMount: "always",
-      // refetchInterval,
-      // refetchIntervalInBackground: true,
+      refetchOnMount: 'always',
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: refetchInBackground,
     }
   )
 

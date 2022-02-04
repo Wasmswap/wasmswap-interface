@@ -10,24 +10,38 @@ import { Toaster } from 'react-hot-toast'
 import { TestnetDialog } from 'components/TestnetDialog'
 import { queryClient } from 'services/queryClient'
 import { __TEST_MODE__ } from '../util/constants'
-import { useThemeClassName } from '../components/theme'
+import { styled, useThemeClassName } from '../components/theme'
 import { useSubscribeDefaultAppTheme } from '../components/theme/hooks/useTheme'
+import { useEffect } from 'react'
 
 function NextJsAppRoot({ children }) {
   const themeClassName = useThemeClassName()
+
   useSubscribeDefaultAppTheme()
 
+  /* apply theme class on body also */
+  useEffect(() => {
+    document.body.classList.add(themeClassName)
+    return () => {
+      document.body.classList.remove(themeClassName)
+    }
+  }, [themeClassName])
+
   return (
-    <div
+    <StyledContentWrapper
       data-app-wrapper=""
       lang="en-US"
       className={themeClassName}
       suppressHydrationWarning
     >
       {typeof window === 'undefined' ? null : children}
-    </div>
+    </StyledContentWrapper>
   )
 }
+
+const StyledContentWrapper = styled('div', {
+  backgroundColor: '$backgroundColors$base',
+})
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

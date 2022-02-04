@@ -86,6 +86,7 @@ export const darkTheme = createTheme({
 /* build the light theme & configure stitches */
 export const {
   theme: lightTheme,
+  globalCss,
   styled,
   css,
 } = createStitches({

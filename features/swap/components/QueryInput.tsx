@@ -31,7 +31,7 @@ export const QueryInput = ({
           ref={inputRef}
           type="text"
           lang="en-US"
-          placeholder="Search a token"
+          placeholder="Search name or symbol"
           value={searchQuery}
           onChange={({ target: { value } }) => onQueryChange(value)}
           autoComplete="off"

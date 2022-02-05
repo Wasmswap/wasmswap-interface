@@ -109,13 +109,19 @@ export default function Pools() {
 
 const StyledDivForPoolsGrid = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  columnGap: '$10',
-  rowGap: '$12',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  columnGap: '$8',
+  rowGap: '$8',
 
   [media.sm]: {
     gridTemplateColumns: '1fr',
     rowGap: '$8',
+  },
+
+  '@media (max-width: 1360px)': {
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: '$10',
+    rowGap: '$12',
   },
 })
 

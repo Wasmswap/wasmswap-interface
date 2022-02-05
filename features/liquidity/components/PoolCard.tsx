@@ -17,12 +17,6 @@ type PoolCardProps = {
   myLiquidity: LiquidityType
 }
 
-export const parseCurrency = (value: number | string) =>
-  Number(value).toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  })
-
 export const PoolCard = ({
   poolId,
   tokenASymbol,
@@ -38,7 +32,7 @@ export const PoolCard = ({
 
   return (
     <Link href={`/pools/${poolId}`} passHref>
-      <Card active={hasProvidedLiquidity}>
+      <Card>
         <CardContent>
           <Text
             variant="legend"
@@ -128,6 +122,7 @@ const StyledDivForPoolTokens = styled('div', {
 })
 
 export const StyledDivForTokenLogos = styled('div', {
+  display: 'flex',
   [`& ${ImageForTokenLogo}`]: {
     position: 'relative',
     zIndex: '$2',

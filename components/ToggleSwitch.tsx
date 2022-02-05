@@ -24,7 +24,9 @@ export const ToggleSwitch = ({
         name={name}
         id={id}
         checked={checked}
-        onChange={(e) => onChange(Boolean(e.target.checked))}
+        onChange={(e) => {
+          onChange(Boolean(e.target.checked))
+        }}
         disabled={disabled}
       />
       {id ? (
@@ -157,7 +159,7 @@ const StyledInputForCheckbox = styled('input', {
   height: '100%',
   display: 'block',
   position: 'absolute',
-  zIndex: '$1',
+  zIndex: '$2',
   inset: 0,
   cursor: 'pointer',
   userSelect: 'none',
@@ -166,5 +168,5 @@ const StyledInputForCheckbox = styled('input', {
 const StyledLabelForContainer = styled('label', {
   display: 'flex',
   position: 'relative',
-  zIndex: '$2',
+  zIndex: '$1',
 })

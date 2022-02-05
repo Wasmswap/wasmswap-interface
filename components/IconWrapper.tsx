@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
-import { colorTokens } from '../util/constants'
 import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
 import { useTheme } from './theme'
+import { lightThemeColorTokens } from './theme/colors'
 
 export type IconWrapperProps = Omit<
   HTMLProps<HTMLDivElement>,
@@ -10,7 +10,7 @@ export type IconWrapperProps = Omit<
   type?: 'button'
   icon: ReactNode
   rounded?: boolean
-  color?: keyof typeof colorTokens | string
+  color?: keyof typeof lightThemeColorTokens.iconColors | string
   size?: string
   rotation?: string
 }
@@ -70,8 +70,7 @@ const StyledIcon = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${(p) =>
-    p.$theme.iconColors[p.$color]?.value || colorTokens[p.$color] || p.$color};
+  color: ${(p) => p.$theme.iconColors[p.$color]?.value || p.$color};
   width: ${(p) => p.$width || p.$size};
   height: ${(p) => p.$height || p.$size};
   min-width: ${(p) => p.$width || p.$size};

@@ -1,31 +1,84 @@
 import { media, styled } from './theme'
+import { ComponentPropsWithoutRef } from 'react'
 
-export const Card = styled('div', {
+const StyledDivForOverlay = styled('div', {
+  position: 'absolute',
+  inset: 0,
+  width: '100%',
+  height: '100%',
+  zIndex: '$1',
+})
+
+const StyledDivForContent = styled('div', {
+  position: 'relative',
+  zIndex: '$2',
+})
+
+const StyledDivForCardWrapper = styled('div', {
+  $$backgroundColor: '$colors$light',
+  $$backgroundColorOnHover: '$colors$light',
+  $$backgroundColorOnActive: '$colors$light50',
+
+  $$overlayColor: '$colors$brand0',
+  $$overlayColorOnHover: '$colors$brand10',
+  $$overlayColorOnActive: '$colors$brand5',
+
+  position: 'relative',
+  zIndex: '$1',
   borderRadius: '$2',
+  cursor: 'pointer',
+  transition: 'background-color 0.1s ease-out, box-shadow 0.1s ease-out',
+  backgroundColor: '$$backgroundColor',
+
+  [`${StyledDivForOverlay}`]: {
+    transition: 'background-color 0.1s ease-out',
+    backgroundColor: '$$overlayColor',
+    borderRadius: '$2',
+  },
+
+  '&:hover': {
+    $$backgroundColor: '$$backgroundColorOnHover',
+    $$overlayColor: '$$overlayColorOnHover',
+  },
+
+  '&:active': {
+    $$backgroundColor: '$$backgroundColorOnActive',
+    $$overlayColor: '$$overlayColorOnActive',
+  },
+
+  boxShadow: '0 0 0 0 $colors$dark0',
+  '&:focus': {
+    boxShadow: '0 0 0 2px $borderColors$default',
+  },
+
   variants: {
-    active: {
+    disabled: {
       true: {
-        backgroundColor: '$colors$white',
-        border: '1px solid $borderColors$default',
-        boxShadow: '$light',
-      },
-      false: {
-        cursor: 'pointer',
-        transition: 'background-color 0.1s ease-out',
-        backgroundColor: '$backgroundColors$primary',
-        '&:hover': {
-          backgroundColor: '$colors$dark15',
-        },
-        '&:active': {
-          backgroundColor: '$colors$dark5',
-        },
+        $$backgroundColor: '$colors$light60',
+        $$backgroundColorOnHover: '$colors$light60',
+        $$backgroundColorOnActive: '$colors$light60',
+
+        $$overlayColor: '$colors$brand0',
+        $$overlayColorOnHover: '$colors$brand0',
+        $$overlayColorOnActive: '$colors$brand0',
+
+        cursor: 'auto',
       },
     },
   },
-  defaultVariants: {
-    active: false,
-  },
 })
+
+export const Card = ({
+  children,
+  ...props
+}: ComponentPropsWithoutRef<typeof StyledDivForCardWrapper>) => {
+  return (
+    <StyledDivForCardWrapper {...props} role="button" tabIndex={-1}>
+      <StyledDivForOverlay />
+      <StyledDivForContent>{children}</StyledDivForContent>
+    </StyledDivForCardWrapper>
+  )
+}
 
 export const CardContent = styled('div', {
   variants: {

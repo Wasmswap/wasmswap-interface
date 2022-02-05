@@ -1,13 +1,13 @@
 import React, { FC, SVGProps } from 'react'
 import styled from 'styled-components'
 import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
-import { colorTokens } from 'util/constants'
 import { useColors } from './theme'
+import { lightThemeColorPalette } from './theme/colors'
 
 type SpinnerProps = SVGProps<SVGSVGElement> & {
   isLoading?: boolean
   size?: number
-  color?: keyof typeof colorTokens
+  color?: keyof typeof lightThemeColorPalette
   instant?: boolean
 }
 

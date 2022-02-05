@@ -1,7 +1,9 @@
 import React, { ForwardedRef, forwardRef, ReactNode } from 'react'
-import { styled, theme } from './theme'
+import { styled } from './theme'
 import type { GetRenderAsProps, RenderAsType } from './types'
 import { CSS, VariantProps } from '@stitches/react'
+import { themeColorTokens } from './theme/colors'
+import { createColorVariants } from './theme/utils/createColorVariants'
 
 const StyledText = styled('p', {
   fontFamily: '$primary',
@@ -23,13 +25,13 @@ const StyledText = styled('p', {
         $$color: '$textColors$primary',
         fontSize: '$2',
         lineHeight: '$2',
-        fontWeight: '$semiBold',
+        fontWeight: '$medium',
       },
       title: {
         $$color: '$textColors$primary',
         fontSize: '$3',
         lineHeight: '$3',
-        fontWeight: '$semiBold',
+        fontWeight: '$medium',
       },
       primary: {
         $$color: '$textColors$body',
@@ -41,7 +43,7 @@ const StyledText = styled('p', {
         $$color: '$textColors$body',
         fontSize: '$5',
         lineHeight: '$3',
-        fontWeight: '$light',
+        fontWeight: '$normal',
       },
       link: {
         $$color: '$textColors$body',
@@ -57,35 +59,23 @@ const StyledText = styled('p', {
         color: '$textColors$secondary',
       },
       legend: {
-        $$color: '$textColors$secondary',
+        $$color: '$textColors$tertiary',
         fontSize: '$7',
         lineHeight: '$4',
         fontWeight: '$light',
         fontFamily: '$mono',
       },
       caption: {
-        $$color: '$textColors$tertiary',
+        $$color: '$textColors$secondary',
         fontSize: '$7',
         lineHeight: '$4',
-        fontWeight: '$light',
+        fontWeight: '$normal',
       },
     },
-    color: Object.assign(
-      {
-        inherit: {
-          color: 'inherit',
-        },
-      },
-      Object.keys(theme.textColors).reduce(
-        (colorVariants, textColorName) => ({
-          ...colorVariants,
-          [textColorName]: {
-            $$color: theme.textColors[textColorName].value,
-          },
-        }),
-        {} as Record<keyof typeof theme['textColors'], { color: string }>
-      )
-    ),
+
+    color: createColorVariants(themeColorTokens.textColors, (colorToken) => ({
+      $$color: `$textColors$${colorToken} !important`,
+    })),
 
     transform: {
       uppercase: {
@@ -103,6 +93,26 @@ const StyledText = styled('p', {
       true: {},
       false: {
         whiteSpace: 'pre',
+      },
+    },
+
+    truncate: {
+      true: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+    },
+
+    align: {
+      left: {
+        textAlign: 'left',
+      },
+      center: {
+        textAlign: 'center',
+      },
+      right: {
+        textAlign: 'right',
       },
     },
   },

@@ -1,0 +1,27 @@
+$JetBrainsMonoPath: "/fonts" !default;
+$JetBrainsMonoVersion: "1.101" !default;
+
+@mixin fontdef($FontType: "Regular") {
+  src: url("#{$JetBrainsMonoPath}/JetBrainsMono/JetBrainsMono-#{$FontType}.woff2?v=#{$JetBrainsMonoVersion}") format("woff2");
+}
+
+//@font-face {
+//  font-family: "JetBrains Mono";
+//  @include fontdef("Bold");
+//  font-weight: 600;
+//  font-style: normal;
+//}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  @include fontdef("Regular");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  @include fontdef("Light");
+  font-weight: 400;
+  font-style: normal;
+}

@@ -1,10 +1,11 @@
 import { AssetCard, AssetCardState } from './AssetCard'
-import { Text } from '../../../components/Text'
-import { styled } from '@stitches/react'
-import { walletState } from '../../../state/atoms/walletAtoms'
-import { useWalletConnectionStatus } from '../../../hooks/useWalletConnectionStatus'
+import { Text } from 'components/Text'
+import { styled } from 'components/theme'
+import { walletState } from 'state/atoms/walletAtoms'
+import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
 import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'
-import { __TRANSFERS_ENABLED__ } from '../../../util/constants'
+import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
+import { __TRANSFERS_ENABLED__ } from 'util/constants'
 
 export const AssetsList = ({ onActionClick }) => {
   const [loadingBalances, [myTokens, allTokens]] =
@@ -18,53 +19,62 @@ export const AssetsList = ({ onActionClick }) => {
   const hasTransferredAssets =
     isConnected && !loadingBalances && myTokens.length > 0
 
+  const isLoadingStateShowing = useDelayedAppearanceFlag(isLoading, 650)
+
+  /* don't show the fetching state just yet */
+  if (isLoading && !isLoadingStateShowing) {
+    return null
+  }
+
   return (
     <>
       {__TRANSFERS_ENABLED__ && (
-        <StyledGrid>
-          <Text variant="primary" css={{ paddingBottom: '$4' }}>
-            My tokens
+        <>
+          <Text variant="primary" css={{ paddingBottom: '$12' }}>
+            My assets
           </Text>
-          {isLoading ? (
-            <AssetCard state={AssetCardState.fetching} />
-          ) : (
-            <>
-              {hasTransferredAssets &&
-                myTokens.map(({ tokenSymbol, balance }) => (
-                  <AssetCard
-                    state={AssetCardState.active}
-                    key={tokenSymbol}
-                    tokenSymbol={tokenSymbol}
-                    onActionClick={onActionClick}
-                    balance={balance}
-                  />
-                ))}
-              {isConnected && !hasTransferredAssets && (
-                <Text variant="body" color="secondary" as="span">
-                  No IBC assets... yet!
-                </Text>
-              )}
-              {!isConnected && !isLoading && (
-                <Text variant="body">
-                  Connect your wallet{' '}
-                  <Text variant="body" color="secondary" as="span">
-                    to see your tokens.
+          <StyledGrid>
+            {isLoading ? (
+              <AssetCard state={AssetCardState.fetching} />
+            ) : (
+              <>
+                {hasTransferredAssets &&
+                  myTokens.map(({ tokenSymbol, balance }) => (
+                    <AssetCard
+                      state={AssetCardState.active}
+                      key={tokenSymbol}
+                      tokenSymbol={tokenSymbol}
+                      onActionClick={onActionClick}
+                      balance={balance}
+                    />
+                  ))}
+                {isConnected && !hasTransferredAssets && (
+                  <Text variant="body" as="span">
+                    No IBC assets... yet!
                   </Text>
-                </Text>
-              )}
-            </>
-          )}
-        </StyledGrid>
+                )}
+                {!isConnected && !isLoading && (
+                  <Text variant="body">
+                    Connect your wallet{' '}
+                    <Text variant="body" as="span">
+                      to see your tokens.
+                    </Text>
+                  </Text>
+                )}
+              </>
+            )}
+          </StyledGrid>
+        </>
       )}
 
       <Text
         variant="primary"
         css={{
-          paddingTop: !__TRANSFERS_ENABLED__ ? '0' : '$19',
-          paddingBottom: !__TRANSFERS_ENABLED__ ? '$6' : '$10',
+          paddingTop: !__TRANSFERS_ENABLED__ ? '0' : '$16',
+          paddingBottom: !__TRANSFERS_ENABLED__ ? '$6' : '$12',
         }}
       >
-        All tokens
+        {__TRANSFERS_ENABLED__ ? 'Other tokens' : 'Soon available to transfer'}
       </Text>
       <StyledGrid>
         {__TRANSFERS_ENABLED__ && isLoading ? (
@@ -90,11 +100,22 @@ export const AssetsList = ({ onActionClick }) => {
           </>
         )}
       </StyledGrid>
+      <Text
+        variant="caption"
+        align="center"
+        color="disabled"
+        css={{
+          padding: '$16 0',
+          borderBottom: '1px solid $borderColors$inactive',
+        }}
+      >
+        More tokens available soon
+      </Text>
     </>
   )
 }
 
 const StyledGrid = styled('div', {
   display: 'grid',
-  rowGap: '8px',
+  rowGap: '$space$4',
 })

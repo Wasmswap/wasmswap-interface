@@ -1,11 +1,13 @@
-import React, { FC, SVGProps, useEffect, useState } from 'react'
+import React, { FC, SVGProps } from 'react'
 import styled from 'styled-components'
-import { colorTokens } from '../util/constants'
+import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
+import { useColors } from './theme'
+import { lightThemeColorPalette } from './theme/colors'
 
 type SpinnerProps = SVGProps<SVGSVGElement> & {
   isLoading?: boolean
   size?: number
-  color?: keyof typeof colorTokens
+  color?: keyof typeof lightThemeColorPalette
   instant?: boolean
 }
 
@@ -16,11 +18,12 @@ export const Spinner: FC<SpinnerProps> = ({
   isLoading = true,
   ...rest
 }) => {
-  const isVisible = useIsLoadingDelayed(isLoading)
+  const isVisible = useDelayedAppearanceFlag(isLoading)
+  const colors = useColors()
   return (
     <StyledSvg
       {...rest}
-      $color={color}
+      $color={colors[color]}
       $visible={instant || isVisible}
       src="/spinner.svg"
       alt="loading"
@@ -60,7 +63,7 @@ const StyledSvg = styled.svg`
   background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
   display: block;
   shape-rendering: auto;
-  color: ${(p) => colorTokens[p.$color] || p.$color};
+  color: ${(p) => p.$color};
   opacity: ${(p) => (p.$visible ? 1 : 0)};
   @keyframes spin {
     0% {
@@ -71,21 +74,3 @@ const StyledSvg = styled.svg`
     }
   }
 `
-
-const useIsLoadingDelayed = (loading: boolean) => {
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    if (loading) {
-      let timeout = setTimeout(() => {
-        setIsLoading(true)
-      }, 350)
-
-      return () => clearTimeout(timeout)
-    }
-
-    setIsLoading(false)
-  }, [loading])
-
-  return isLoading
-}

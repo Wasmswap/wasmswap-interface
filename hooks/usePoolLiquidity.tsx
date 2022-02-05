@@ -26,6 +26,7 @@ export type LiquidityInfoType = {
 export const usePoolLiquidity = ({ poolId }) => {
   const [liquidity, isLoading] = useMultiplePoolsLiquidity({
     poolIds: poolId ? [poolId] : undefined,
+    refetchInBackground: true,
   })
 
   return [liquidity?.[0], isLoading]
@@ -33,6 +34,7 @@ export const usePoolLiquidity = ({ poolId }) => {
 
 export const useMultiplePoolsLiquidity = ({
   poolIds,
+  refetchInBackground = false,
 }): readonly [LiquidityInfoType[] | undefined, boolean] => {
   const { address } = useRecoilValue(walletState)
   const [chainInfo] = useChainInfo()
@@ -56,8 +58,10 @@ export const useMultiplePoolsLiquidity = ({
     {
       enabled: Boolean(poolIds?.length && chainInfo?.rpc),
       refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: refetchInBackground,
     }
   )
 
@@ -84,8 +88,10 @@ export const useMultiplePoolsLiquidity = ({
     {
       enabled: Boolean(swaps?.length && address && chainInfo.rpc),
       refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: refetchInBackground,
     }
   )
 

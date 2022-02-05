@@ -1,18 +1,21 @@
 import { styled } from 'components/theme'
 import { Text } from '../../../components/Text'
+import { CSS } from '@stitches/react'
 import { IconWrapper } from '../../../components/IconWrapper'
 import { Chevron } from '../../../icons/Chevron'
 import { useRef, useState } from 'react'
-import { colorTokens, SLIPPAGE_OPTIONS } from '../../../util/constants'
+import { SLIPPAGE_OPTIONS } from '../../../util/constants'
 import { useOnClickOutside } from '../../../hooks/useOnClickOutside'
 
 type SlippageSelectorProps = {
   slippage: number
   onSlippageChange: (slippage: number) => void
+  css?: CSS
 }
 export const SlippageSelector = ({
   slippage = 0.01,
   onSlippageChange,
+  css,
 }: SlippageSelectorProps) => {
   const [isShowingSettings, setShowingSettings] = useState(false)
 
@@ -25,16 +28,15 @@ export const SlippageSelector = ({
     <StyledDivForWrapper ref={refForWrapper}>
       <StyledDivForSelector
         active={isShowingSettings}
+        css={css}
         onClick={() => {
           setShowingSettings(!isShowingSettings)
         }}
       >
-        <Text variant="caption" css={{ fontWeight: '$bold' }} color="disabled">
-          Slippage {slippage * 100}%
-        </Text>
+        <Text variant="legend">Slippage {slippage * 100}%</Text>
         <IconWrapper
-          size="16px"
-          color="tertiaryIcon"
+          size="24px"
+          color="tertiary"
           icon={<Chevron />}
           rotation={isShowingSettings ? '90deg' : '-90deg'}
         />
@@ -72,11 +74,14 @@ const StyledDivForWrapper = styled('div', {
 const StyledDivForSelector = styled('button', {
   textTransform: 'uppercase',
   display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
   columnGap: '$space$4',
-  padding: '$8 $13',
+  padding: '$6 $13',
   userSelect: 'none',
-  borderRadius: '$2 0 0 $2',
+  borderRadius: '$2',
   transition: 'background-color .1s ease-out',
+
   '&:hover': {
     backgroundColor: '$colors$dark15',
   },
@@ -98,18 +103,17 @@ const StyledDivForSelector = styled('button', {
 
 const StyledDivForPopover = styled('div', {
   textTransform: 'none',
-  backgroundColor: '#DADBDB',
+  backgroundColor: '$colors$light',
   padding: '$7',
   position: 'absolute',
   width: '284px',
-  bottom: 'calc(100% + 4px)',
+  bottom: 'calc(100% + $space$2)',
   left: 0,
   borderRadius: '$1',
   display: 'flex',
   flexDirection: 'column',
   rowGap: '13px',
-  border: '1px solid rgba(25, 29, 32, 0.25)',
-  boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
+  border: '1px solid $borderColors$default',
 })
 
 const StyledDivForSlippageList = styled('div', {
@@ -121,7 +125,7 @@ const StyledDivForSlippageList = styled('div', {
 const StyledButton = styled('button', {
   borderRadius: '$1',
   padding: '$4 $8',
-  color: colorTokens.secondaryText,
+  color: '$textColors$secondary',
   transition: 'background-color .1s ease-out',
   variants: {
     active: {

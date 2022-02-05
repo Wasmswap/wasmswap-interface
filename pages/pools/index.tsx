@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
+import { media, styled } from 'components/theme'
 import { AppLayout } from 'components/Layout/AppLayout'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { PoolCard } from 'features/liquidity/components/PoolCard'
@@ -8,6 +8,7 @@ import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
 import { Text } from 'components/Text'
 import { Spinner } from 'components/Spinner'
 import { useTokenList } from 'hooks/useTokenList'
+import { Column } from '../../components/Column'
 
 export default function Pools() {
   const [tokenList] = useTokenList()
@@ -56,9 +57,13 @@ export default function Pools() {
 
       {shouldShowFetchingState && (
         <>
-          <StyledDivForFullSpace>
+          <Column
+            justifyContent="center"
+            align="center"
+            css={{ paddingTop: '$24' }}
+          >
             <Spinner size={32} color="black" />
-          </StyledDivForFullSpace>
+          </Column>
         </>
       )}
 
@@ -102,25 +107,23 @@ export default function Pools() {
   )
 }
 
-const StyledDivForFullSpace = styled.div`
-  padding-top: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`
+const StyledDivForPoolsGrid = styled('div', {
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr 1fr',
+  columnGap: '$8',
+  rowGap: '$8',
 
-const rowGap = '24px'
+  [media.sm]: {
+    gridTemplateColumns: '1fr',
+    rowGap: '$8',
+  },
 
-const StyledDivForPoolsGrid = styled.div`
-  display: grid;
-  grid-template-columns: minmax(auto, calc(50% - ${rowGap})) minmax(
-      auto,
-      calc(50%)
-    );
-  column-gap: 20px;
-  row-gap: ${rowGap};
-`
+  '@media (max-width: 1360px)': {
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: '$10',
+    rowGap: '$12',
+  },
+})
 
 const SectionTitle = ({ variant = 'my', children }) => {
   return (

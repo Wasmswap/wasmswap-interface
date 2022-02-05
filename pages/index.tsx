@@ -2,7 +2,7 @@ import React from 'react'
 import { AppLayout } from '../components/Layout/AppLayout'
 import { TokenSwap } from '../features/swap'
 import { PageHeader } from '../components/Layout/PageHeader'
-import { styled } from '@stitches/react'
+import { styled } from 'components/theme'
 
 export default function Home() {
   return (

@@ -40,12 +40,28 @@ export const TokenSelectList = ({
     }
 
     const lowerCasedQueryFilter = queryFilter.toLowerCase()
-    return tokenList.filter(({ symbol, name }) => {
-      return (
-        symbol.toLowerCase().search(lowerCasedQueryFilter) >= 0 ||
-        name.toLowerCase().search(lowerCasedQueryFilter) >= 0
-      )
-    })
+    return tokenList
+      .filter(({ symbol, name }) => {
+        return (
+          symbol.toLowerCase().search(lowerCasedQueryFilter) >= 0 ||
+          name.toLowerCase().search(lowerCasedQueryFilter) >= 0
+        )
+      })
+      .sort((tokenA, tokenB) => {
+        if (
+          tokenA.symbol.toLowerCase().startsWith(lowerCasedQueryFilter) ||
+          tokenA.name.toLowerCase().startsWith(lowerCasedQueryFilter)
+        ) {
+          return -1
+        }
+        if (
+          tokenB.symbol.toLowerCase().startsWith(lowerCasedQueryFilter) ||
+          tokenB.name.toLowerCase().startsWith(lowerCasedQueryFilter)
+        ) {
+          return 1
+        }
+        return 0
+      })
   }, [tokenList, queryFilter])
 
   return (

@@ -16,7 +16,7 @@ export const RewardsStatus = ({
     return (
       <>
         <Column gap={4} css={{ paddingTop: '$20' }}>
-          <Text variant="primary">Pooling reward</Text>
+          <Text variant="primary">Liquidity rewards</Text>
           {!disabled && (
             <Text variant="legend" color="brand">
               Next reward: $32 in 4hrs
@@ -55,7 +55,7 @@ export const RewardsStatus = ({
   return (
     <>
       <Inline justifyContent="space-between" css={{ padding: '$20 0 $4' }}>
-        <Text variant="primary">Pooling reward</Text>
+        <Text variant="primary">Liquidity rewards</Text>
         {disabled && <Text variant="legend">No rewards expected</Text>}
         {!disabled && (
           <Text variant="legend" color="brand">

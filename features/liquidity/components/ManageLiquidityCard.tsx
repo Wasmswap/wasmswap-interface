@@ -59,7 +59,7 @@ export const ManageLiquidityCard = ({
         <Inline gap={1} css={{ padding: '$12 0 $3' }}>
           <SharesIcon size="24px" />
           <Text variant="legend" color="body">
-            Provided liquidity
+            Available liquidity
           </Text>
         </Inline>
         <Text variant="hero">${providedLiquidityDollarValue}</Text>

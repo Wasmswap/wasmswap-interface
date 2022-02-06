@@ -6,21 +6,18 @@ import {
   useTriggerInputFocus,
 } from 'components/BasicNumberInput'
 import { formatTokenBalance } from 'util/conversion'
-import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 
 type AmountInputProps = {
-  tokenSymbol: string
   amount: number
+  maxApplicableAmount: number
   onAmountChange: (amount: number) => void
 }
 
 export const AmountInput = ({
-  tokenSymbol,
   amount,
+  maxApplicableAmount,
   onAmountChange,
 }: AmountInputProps) => {
-  const { balance: maxApplicableAmount } = useIBCTokenBalance(tokenSymbol)
-
   const { isFocused, bind } = useTriggerInputFocus()
 
   return (

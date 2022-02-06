@@ -36,7 +36,7 @@ export const SlippageSelector = ({
         <Text variant="legend">Slippage {slippage * 100}%</Text>
         <IconWrapper
           size="24px"
-          color="tertiaryIcon"
+          color="tertiary"
           icon={<Chevron />}
           rotation={isShowingSettings ? '90deg' : '-90deg'}
         />
@@ -103,18 +103,17 @@ const StyledDivForSelector = styled('button', {
 
 const StyledDivForPopover = styled('div', {
   textTransform: 'none',
-  backgroundColor: '#DADBDB',
+  backgroundColor: '$colors$light',
   padding: '$7',
   position: 'absolute',
   width: '284px',
-  bottom: 'calc(100% + 4px)',
+  bottom: 'calc(100% + $space$2)',
   left: 0,
   borderRadius: '$1',
   display: 'flex',
   flexDirection: 'column',
   rowGap: '13px',
-  border: '1px solid rgba(25, 29, 32, 0.25)',
-  boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.1)',
+  border: '1px solid $borderColors$default',
 })
 
 const StyledDivForSlippageList = styled('div', {

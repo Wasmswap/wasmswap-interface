@@ -67,7 +67,7 @@ export const useTransferAssetMutation = ({
   const [chainInfo] = useChainInfo()
 
   return useMutation(async () => {
-    const timeout = Math.floor(new Date().getTime() / 1000) + 300
+    const timeout = Math.floor(new Date().getTime() / 1000) + 600
 
     const defaultExecuteFee = getDefaultExecuteFee(chainInfo.feeCurrencies)
 

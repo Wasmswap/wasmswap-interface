@@ -11,36 +11,13 @@ import { useTokenList } from 'hooks/useTokenList'
 import { Column } from '../../components/Column'
 
 export default function Pools() {
-  const [tokenList] = useTokenList()
-  const [supportedTokens, poolIds] = useMemo(() => {
-    const tokensCollection =
-      tokenList?.tokens.filter(({ swap_address }) => Boolean(swap_address)) ??
-      []
-
-    const poolIdsCollection = tokensCollection
-      .map(({ pool_id }) => pool_id)
-      .filter(Boolean)
-
-    return [tokensCollection, poolIdsCollection]
-  }, [tokenList])
-
+  const [supportedTokens, poolIds] = usePlatformPools()
   const [liquidity, isLoading] = useMultiplePoolsLiquidity({
+    refetchInBackground: false,
     poolIds,
   })
 
-  const [myPools, allPools] = useMemo(() => {
-    if (!liquidity?.length) return []
-    const pools = [[], []]
-    liquidity.forEach((liquidityInfo, index) => {
-      const poolIndex = liquidityInfo.myLiquidity.coins > 0 ? 0 : 1
-      pools[poolIndex].push({
-        liquidityInfo,
-        tokenInfo: supportedTokens[index],
-      })
-    })
-
-    return pools
-  }, [liquidity, supportedTokens])
+  const [myPools, allPools] = useSplitTokens({ liquidity, supportedTokens })
 
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
 
@@ -107,21 +84,53 @@ export default function Pools() {
   )
 }
 
+const usePlatformPools = () => {
+  const [tokenList] = useTokenList()
+
+  return useMemo(() => {
+    const tokensCollection =
+      tokenList?.tokens.filter(({ swap_address }) => Boolean(swap_address)) ??
+      []
+
+    const poolIdsCollection = tokensCollection
+      .map(({ pool_id }) => pool_id)
+      .filter(Boolean)
+
+    return [tokensCollection, poolIdsCollection]
+  }, [tokenList])
+}
+
+const useSplitTokens = ({ liquidity, supportedTokens }) => {
+  return useMemo(() => {
+    if (!liquidity?.length) return []
+    const pools = [[], []]
+    liquidity.forEach((liquidityInfo, index) => {
+      const poolIndex = liquidityInfo.myLiquidity.coins > 0 ? 0 : 1
+      pools[poolIndex].push({
+        liquidityInfo,
+        tokenInfo: supportedTokens[index],
+      })
+    })
+
+    return pools
+  }, [liquidity, supportedTokens])
+}
+
 const StyledDivForPoolsGrid = styled('div', {
   display: 'grid',
   gridTemplateColumns: '1fr 1fr 1fr',
   columnGap: '$8',
   rowGap: '$8',
 
-  [media.sm]: {
-    gridTemplateColumns: '1fr',
-    rowGap: '$8',
-  },
-
   '@media (max-width: 1360px)': {
     gridTemplateColumns: '1fr 1fr',
     columnGap: '$10',
     rowGap: '$12',
+  },
+
+  [media.sm]: {
+    gridTemplateColumns: '1fr',
+    rowGap: '$8',
   },
 })
 

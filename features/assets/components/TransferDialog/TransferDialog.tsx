@@ -67,9 +67,9 @@ export const TransferDialog = ({
       toast.custom((t) => (
         <Toast
           icon={<IconWrapper icon={<Valid />} color="valid" />}
-          title={`${
-            transactionKind === 'deposit' ? 'Deposited' : 'Withdrawn'
-          } ${tokenInfo.name} Successfully`}
+          title={`${tokenSymbol} IBC ${
+            transactionKind === 'deposit' ? 'deposit' : 'withdrawal'
+          } initiated`}
           onClose={() => toast.dismiss(t.id)}
         />
       ))

@@ -107,7 +107,7 @@ export const useTokenSwap = ({
         toast.custom((t) => (
           <Toast
             icon={<IconWrapper icon={<Valid />} color="valid" />}
-            title="Swap successfull!"
+            title="Swap successful!"
             onClose={() => toast.dismiss(t.id)}
           />
         ))

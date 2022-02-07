@@ -10,8 +10,11 @@ import { Toaster } from 'react-hot-toast'
 import { TestnetDialog } from 'components/TestnetDialog'
 import { queryClient } from 'services/queryClient'
 import { __TEST_MODE__ } from '../util/constants'
-import { styled, useThemeClassName } from '../components/theme'
-import { useSubscribeDefaultAppTheme } from '../components/theme/hooks/useTheme'
+import {
+  styled,
+  useThemeClassName,
+  useSubscribeDefaultAppTheme,
+} from '../components/theme'
 import { useEffect } from 'react'
 
 function NextJsAppRoot({ children }) {
@@ -31,7 +34,7 @@ function NextJsAppRoot({ children }) {
     <StyledContentWrapper
       data-app-wrapper=""
       lang="en-US"
-      className={themeClassName}
+      className={typeof window === 'undefined' ? null : themeClassName}
       suppressHydrationWarning
     >
       {typeof window === 'undefined' ? null : children}
@@ -51,10 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ErrorBoundary>
             <Component {...pageProps} />
             {__TEST_MODE__ && <TestnetDialog />}
-            <Toaster
-              position="top-right"
-              toastOptions={{ duration: 15000000 }}
-            />
+            <Toaster position="top-right" toastOptions={{ duration: 10000 }} />
           </ErrorBoundary>
         </NextJsAppRoot>
       </QueryClientProvider>

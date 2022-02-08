@@ -25,6 +25,10 @@ import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
 import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
+import {
+  useGetPoolTokensDollarValue,
+  useStakedTokenBalance,
+} from '../../hooks/useStakedToken'
 
 export default function Pool() {
   const {
@@ -42,6 +46,20 @@ export default function Pool() {
 
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(pool as string)
+
+  const [stakedBalanceCoins] = useStakedTokenBalance({
+    poolId: pool,
+  })
+
+  const [stakedBalanceInDollarValue] = useGetPoolTokensDollarValue({
+    poolId: pool,
+    tokenAmountInMicroDenom: stakedBalanceCoins,
+  })
+
+  const stakedBalance = {
+    coins: stakedBalanceCoins,
+    dollarValue: stakedBalanceInDollarValue,
+  }
 
   const [
     { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } = {} as any,
@@ -146,6 +164,7 @@ export default function Pool() {
                   myLiquidity={myLiquidity}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
+                  stakedBalance={stakedBalance}
                   supportsIncentives={supportsIncentives}
                 />
               </StyledDivForCards>

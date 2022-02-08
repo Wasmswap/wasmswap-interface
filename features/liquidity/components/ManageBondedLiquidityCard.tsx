@@ -12,30 +12,34 @@ import { Inline } from 'components/Inline'
 import { SharesIcon } from 'icons/Shares'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { StyledDivForTokenLogos } from './PoolCard'
-import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
 
 export const ManageBondedLiquidityCard = ({
   onButtonClick,
   tokenASymbol,
   tokenBSymbol,
   myLiquidity,
+  stakedBalance,
   supportsIncentives,
 }) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const bondedLiquidity = __POOL_REWARDS_ENABLED__ && false
+  const bondedLiquidity = supportsIncentives && stakedBalance.coins > 0
 
   const unstakedLiquidityDollarValue = dollarValueFormatter(
+    /* let's not show decimals to save up some space */
     parseInt(myLiquidity.dollarValue, 10),
     {
       includeCommaSeparation: true,
     }
   )
 
-  const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(0.0, {
-    includeCommaSeparation: true,
-  })
+  const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(
+    stakedBalance.dollarValue,
+    {
+      includeCommaSeparation: true,
+    }
+  )
 
   return (
     <Card>

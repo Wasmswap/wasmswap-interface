@@ -26,7 +26,7 @@ export const useGetPoolTokensDollarValue = ({
   const tokenA = useBaseTokenInfo()
 
   const [swapInfo, isLoading] = useSwapInfo({ poolId })
-  const [junoPrice, isPriceLoading] = useTokenDollarValue(tokenA.symbol)
+  const [junoPrice, isPriceLoading] = useTokenDollarValue(tokenA?.symbol)
 
   if (swapInfo) {
     return [

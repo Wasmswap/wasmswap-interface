@@ -38,7 +38,7 @@ export const ManageLiquidityCard = ({
   const providedLiquidity = myReserve?.[0] > 0
 
   const tokenAReserve = formatTokenBalance(
-    convertMicroDenomToDenom(myReserve[0], tokenB.decimals),
+    convertMicroDenomToDenom(myReserve[0], tokenA.decimals),
     { includeCommaSeparation: true }
   )
   const tokenBReserve = formatTokenBalance(
@@ -54,12 +54,12 @@ export const ManageLiquidityCard = ({
   )
 
   return (
-    <Card active={providedLiquidity}>
+    <Card>
       <CardContent>
         <Inline gap={1} css={{ padding: '$12 0 $3' }}>
           <SharesIcon size="24px" />
           <Text variant="legend" color="body">
-            Provided liquidity
+            Available liquidity
           </Text>
         </Inline>
         <Text variant="hero">${providedLiquidityDollarValue}</Text>

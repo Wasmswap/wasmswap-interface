@@ -1,12 +1,10 @@
 import { Children, cloneElement, ReactElement, ReactNode } from 'react'
-import { darkTheme, lightTheme, styled } from '../theme'
+import { darkTheme, lightTheme, styled, useTheme } from '../theme'
 import { Text } from '../Text'
 import { Button } from '../Button'
 import { IconWrapper } from '../IconWrapper'
 import { Union } from '../../icons/Union'
 import { animated, useSpring } from '@react-spring/web'
-import { useRecoilValue } from 'recoil'
-import { AppTheme, themeAtom } from '../theme/themeAtom'
 
 type ToastProps = {
   icon: ReactElement
@@ -22,10 +20,9 @@ export const Toast = ({ title, body, buttons, onClose, icon }: ToastProps) => {
     to: { opacity: 1 },
   })
 
+  const theme = useTheme()
   const themeClassName =
-    useRecoilValue(themeAtom) === AppTheme.dark
-      ? lightTheme.className
-      : darkTheme.className
+    theme === lightTheme ? darkTheme.className : lightTheme.className
 
   return (
     <StyledToast className={themeClassName} style={styles}>

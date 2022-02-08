@@ -34,14 +34,14 @@ export const ExtensionSidebar = () => {
 
 const StyledDivForWrapper = styled('div', {
   zIndex: '$2',
-  padding: '$11 $12',
-  backgroundColor: '$colors$light50',
   position: 'sticky',
+  backgroundColor: '$colors$light50',
   top: 0,
   right: 0,
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
+  padding: '$11 $12',
 })
 
 const StyledDivForTitleWrapper = styled('div', {

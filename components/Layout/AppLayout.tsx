@@ -11,9 +11,10 @@ export const AppLayout = ({
   footerBar = <FooterBar />,
   children,
 }) => {
-  const isMobile = useMedia('sm')
+  const isSmallScreen = useMedia('sm')
+  const isMediumScreen = useMedia('md')
 
-  if (isMobile) {
+  if (isSmallScreen) {
     return (
       <StyledWrapperForMobile>
         <StyledContainerForMobile>
@@ -35,10 +36,9 @@ export const AppLayout = ({
 
       <StyledContainer>
         <main>{children}</main>
-        {footerBar}
       </StyledContainer>
 
-      {extensionSidebar}
+      {!isMediumScreen && extensionSidebar}
     </StyledWrapper>
   )
 }
@@ -46,10 +46,13 @@ export const AppLayout = ({
 const StyledWrapper = styled('div', {
   display: 'grid',
   minHeight: '100vh',
-  gridTemplateColumns: '18rem 1fr 18rem',
+  gridTemplateColumns: '16.5rem 1fr 16.5rem',
   backgroundColor: '$backgroundColors$base',
   maxWidth: APP_MAX_WIDTH,
   margin: '0 auto',
+  [media.md]: {
+    gridTemplateColumns: '15rem 1fr',
+  },
 })
 
 const StyledContainer = styled('div', {
@@ -58,11 +61,11 @@ const StyledContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  padding: '0 $12',
+  padding: '0 $12 $20 $12',
   '& main': {
     margin: '0 auto',
     width: '100%',
-    maxWidth: '53.75rem',
+    maxWidth: '69.5rem',
   },
   [media.sm]: {
     zIndex: '$1',

@@ -70,6 +70,7 @@ export default function Pool() {
           poolId={pool as string}
         />
       )}
+
       {__POOL_REWARDS_ENABLED__ && (
         <BondLiquidityDialog
           isShowing={isBondingDialogShowing}

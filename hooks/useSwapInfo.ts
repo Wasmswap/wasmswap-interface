@@ -14,13 +14,17 @@ type SwapInfo = Pick<
   token2_reserve: number
 }
 
+type UseMultipleSwapInfoArgs = {
+  tokenSymbols?: Array<string>
+  poolIds?: Array<string>
+  refetchInBackground?: boolean
+}
+
 export const useMultipleSwapInfo = ({
   tokenSymbols,
   poolIds,
-}: {
-  tokenSymbols?: Array<string>
-  poolIds?: Array<string>
-}) => {
+  refetchInBackground,
+}: UseMultipleSwapInfoArgs) => {
   const [chainInfo] = useChainInfo()
 
   const tokensByPoolIds = useTokenInfoByPoolIds(poolIds)
@@ -49,8 +53,10 @@ export const useMultipleSwapInfo = ({
         (tokenSymbols?.length || poolIds?.length) && chainInfo?.rpc
       ),
       refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: refetchInBackground,
     }
   )
 
@@ -69,6 +75,7 @@ export const useSwapInfo = ({
       () => ({
         tokenSymbols: tokenSymbol ? [tokenSymbol] : undefined,
         poolIds: poolId ? [poolId] : undefined,
+        refetchInBackground: true,
       }),
       [tokenSymbol, poolId]
     )

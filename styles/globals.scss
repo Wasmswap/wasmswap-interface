@@ -52,6 +52,7 @@ button {
   background: none;
   cursor: pointer;
   user-select: none;
+  outline: none;
 }
 
 input {
@@ -65,5 +66,10 @@ input {
   background: transparent;
   line-height: inherit;
   text-align: inherit;
+  outline: none;
+}
+
+[role="button"] {
+  outline: none;
 }
 

@@ -41,6 +41,9 @@ export const TransferDialog = ({
   onTokenSelect,
 }: TransferDialogProps) => {
   const tokenInfo = useIBCAssetInfo(tokenSymbol)
+  const deposit_gas_fee = tokenInfo.deposit_gas_fee
+    ? tokenInfo.deposit_gas_fee
+    : 0.01
 
   const { balance: externalIbcAssetBalance } = useIBCTokenBalance(tokenSymbol)
   const { balance: nativeAssetBalance } = useTokenBalance(tokenSymbol)
@@ -64,9 +67,9 @@ export const TransferDialog = ({
       toast.custom((t) => (
         <Toast
           icon={<IconWrapper icon={<Valid />} color="valid" />}
-          title={`${
-            transactionKind === 'deposit' ? 'Deposited' : 'Withdrawn'
-          } ${tokenInfo.name} Successfully`}
+          title={`${tokenSymbol} ${
+            transactionKind === 'deposit' ? 'deposit' : 'withdrawal'
+          } successfully initiated`}
           onClose={() => toast.dismiss(t.id)}
         />
       ))
@@ -128,7 +131,11 @@ export const TransferDialog = ({
           Amount
         </Text>
         <AmountInput
-          tokenSymbol={tokenSymbol}
+          maxApplicableAmount={
+            transactionKind === 'deposit'
+              ? Math.max(externalIbcAssetBalance - deposit_gas_fee, 0)
+              : nativeAssetBalance
+          }
           amount={tokenAmount}
           onAmountChange={setTokenAmount}
         />

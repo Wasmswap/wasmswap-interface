@@ -63,9 +63,9 @@ const baseTheme = {
   },
 
   media: {
-    sm: '(max-width: 640px)',
-    md: '(max-width: 768px)',
-    lg: '(max-width: 1024px)',
+    sm: '(max-width: 876px)',
+    md: '(max-width: 1140px)',
+    lg: '(min-width: 1140px)',
   },
 }
 
@@ -86,6 +86,7 @@ export const darkTheme = createTheme({
 /* build the light theme & configure stitches */
 export const {
   theme: lightTheme,
+  globalCss,
   styled,
   css,
 } = createStitches({

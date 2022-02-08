@@ -19,6 +19,7 @@ export const ManageBondedLiquidityCard = ({
   tokenASymbol,
   tokenBSymbol,
   myLiquidity,
+  supportsIncentives,
 }) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
@@ -63,7 +64,7 @@ export const ManageBondedLiquidityCard = ({
                 onClick={onButtonClick}
                 variant="ghost"
                 iconRight={<MultisigIcon />}
-                disabled={!__POOL_REWARDS_ENABLED__}
+                disabled={!supportsIncentives || myLiquidity?.coins <= 0}
               >
                 ${unstakedLiquidityDollarValue} to stake
               </Button>

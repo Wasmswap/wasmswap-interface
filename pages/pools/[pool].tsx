@@ -146,6 +146,7 @@ export default function Pool() {
                   myLiquidity={myLiquidity}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
+                  supportsIncentives={supportsIncentives}
                 />
               </StyledDivForCards>
             </>

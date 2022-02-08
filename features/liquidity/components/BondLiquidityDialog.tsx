@@ -1,7 +1,7 @@
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { Text } from 'components/Text'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
@@ -26,6 +26,13 @@ import {
   useStakedTokenBalance,
 } from '../../../hooks/useStakedToken'
 import { Spinner } from '../../../components/Spinner'
+import { toast } from 'react-hot-toast'
+import { Toast } from '../../../components/Toast'
+import { IconWrapper } from '../../../components/IconWrapper'
+import { Valid } from '../../../icons/Valid'
+import { Error } from '../../../icons/Error'
+import { UpRightArrow } from '../../../icons/UpRightArrow'
+import { useQueryClient } from 'react-query'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
@@ -40,23 +47,6 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     dialogState === 'stake' ? myLiquidity?.coins ?? 0 : stakedAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
-  // todo reset cache & show toasts
-  const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
-    poolId,
-  })
-  // todo reset cache & show toasts
-  const { mutate: unbondTokens, isLoading: isRequestingToUnbond } =
-    useUnbondTokens({ poolId })
-
-  const isLoading = isRequestingToBond || isRequestingToUnbond
-
-  const handleAction = () => {
-    if (dialogState === 'stake') {
-      bondTokens(tokenAmount)
-    } else {
-      unbondTokens(tokenAmount)
-    }
-  }
 
   const [maxDollarValueLiquidity] = useGetPoolTokensDollarValue({
     poolId,
@@ -68,7 +58,132 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     tokenAmountInMicroDenom: tokenAmount,
   })
 
-  const canManageStaking = stakedAmount > 0
+  const queryClient = useQueryClient()
+  const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
+    poolId,
+
+    onSuccess() {
+      // reset cache
+      queryClient
+        .resetQueries([
+          'tokenBalance',
+          'ibcTokenBalance',
+          'myLiquidity',
+          'staked',
+        ])
+        .then((...args) => {
+          console.log('Refetched queries', ...args)
+        })
+
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Valid />} color="valid" />}
+          title={`Successfully bonded $${dollarValueFormatterWithDecimals(
+            liquidityDollarAmount as number,
+            { includeCommaSeparation: true }
+          )}`}
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
+
+      // close modal
+      requestAnimationFrame(onRequestClose)
+    },
+    onError(error) {
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Error />} color="error" />}
+          title={`Couldn't bond your $${dollarValueFormatterWithDecimals(
+            liquidityDollarAmount as number,
+            { includeCommaSeparation: true }
+          )}`}
+          body={(error as any)?.message ?? error?.toString()}
+          buttons={
+            <Button
+              as="a"
+              variant="ghost"
+              href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+              target="__blank"
+              iconRight={<UpRightArrow />}
+            >
+              Provide feedback
+            </Button>
+          }
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
+    },
+  })
+
+  // todo reset cache & show toasts
+  const { mutate: unbondTokens, isLoading: isRequestingToUnbond } =
+    useUnbondTokens({
+      poolId,
+
+      onSuccess() {
+        // reset cache
+        queryClient
+          .resetQueries([
+            'tokenBalance',
+            'ibcTokenBalance',
+            'myLiquidity',
+            'staked',
+          ])
+          .then((...args) => {
+            console.log('Refetched queries', ...args)
+          })
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Valid />} color="valid" />}
+            title={`Unbond of $${dollarValueFormatterWithDecimals(
+              liquidityDollarAmount as number,
+              { includeCommaSeparation: true }
+            )} successfully started!`}
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+
+        // close modal
+        requestAnimationFrame(onRequestClose)
+      },
+      onError(error) {
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Error />} color="error" />}
+            title={`Could not unbond your $${dollarValueFormatterWithDecimals(
+              liquidityDollarAmount as number,
+              { includeCommaSeparation: true }
+            )}`}
+            body={(error as any)?.message ?? error?.toString()}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+      },
+    })
+
+  const isLoading = isRequestingToBond || isRequestingToUnbond
+
+  const handleAction = () => {
+    if (dialogState === 'stake') {
+      bondTokens(tokenAmount)
+    } else {
+      unbondTokens(tokenAmount)
+    }
+  }
+
+  const canManageStaking = Boolean(stakedAmount > 0)
 
   useEffect(() => {
     const shouldResetDialogState =
@@ -122,7 +237,8 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
-          Max available for stacking is worth $
+          Max available for {dialogState === 'stake' ? 'staking' : 'unstaking'}{' '}
+          is worth $
           {typeof maxDollarValueLiquidity === 'number' &&
             dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
               includeCommaSeparation: true,

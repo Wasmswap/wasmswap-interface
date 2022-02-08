@@ -17,7 +17,6 @@ import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreak
 import { BondLiquidityDialog } from 'features/liquidity'
 import {
   ManageBondedLiquidityCard,
-  UnbondingLiquidityCard,
   ManagePoolDialog,
   ManageLiquidityCard,
 } from 'features/liquidity'
@@ -28,7 +27,8 @@ import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
 import {
   useGetPoolTokensDollarValue,
   useStakedTokenBalance,
-} from '../../hooks/useStakedToken'
+} from 'hooks/useStakedToken'
+import { UnbondingLiquidityList } from 'features/liquidity/components/UnbondingLiquidityList'
 
 export default function Pool() {
   const {
@@ -183,17 +183,8 @@ export default function Pool() {
                     size={isMobile ? 'small' : 'large'}
                   />
                   <Column gap={6}>
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                    <UnbondingLiquidityCard
+                    <UnbondingLiquidityList
+                      poolId={pool}
                       tokenA={tokenA}
                       tokenB={tokenB}
                       size={isMobile ? 'small' : 'large'}

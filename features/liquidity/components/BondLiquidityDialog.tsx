@@ -59,21 +59,24 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   })
 
   const queryClient = useQueryClient()
+  const refetchRelatedQueries = () =>
+    queryClient
+      .resetQueries([
+        'tokenBalance',
+        'ibcTokenBalance',
+        'myLiquidity',
+        'stakedTokenBalance',
+      ])
+      .then((...args) => {
+        console.log('Refetched queries', ...args)
+      })
+
   const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
     poolId,
 
     onSuccess() {
       // reset cache
-      queryClient
-        .resetQueries([
-          'tokenBalance',
-          'ibcTokenBalance',
-          'myLiquidity',
-          'staked',
-        ])
-        .then((...args) => {
-          console.log('Refetched queries', ...args)
-        })
+      refetchRelatedQueries()
 
       toast.custom((t) => (
         <Toast
@@ -122,16 +125,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
       onSuccess() {
         // reset cache
-        queryClient
-          .resetQueries([
-            'tokenBalance',
-            'ibcTokenBalance',
-            'myLiquidity',
-            'staked',
-          ])
-          .then((...args) => {
-            console.log('Refetched queries', ...args)
-          })
+        refetchRelatedQueries()
 
         toast.custom((t) => (
           <Toast

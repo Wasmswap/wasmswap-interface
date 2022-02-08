@@ -11,9 +11,10 @@ export const AppLayout = ({
   footerBar = <FooterBar />,
   children,
 }) => {
-  const isMobile = useMedia('sm')
+  const isSmallScreen = useMedia('sm')
+  const isMediumScreen = useMedia('md')
 
-  if (isMobile) {
+  if (isSmallScreen) {
     return (
       <StyledWrapperForMobile>
         <StyledContainerForMobile>
@@ -37,7 +38,7 @@ export const AppLayout = ({
         <main>{children}</main>
       </StyledContainer>
 
-      {extensionSidebar}
+      {!isMediumScreen && extensionSidebar}
     </StyledWrapper>
   )
 }
@@ -45,10 +46,13 @@ export const AppLayout = ({
 const StyledWrapper = styled('div', {
   display: 'grid',
   minHeight: '100vh',
-  gridTemplateColumns: '18rem 1fr 18rem',
+  gridTemplateColumns: '16.5rem 1fr 16.5rem',
   backgroundColor: '$backgroundColors$base',
   maxWidth: APP_MAX_WIDTH,
   margin: '0 auto',
+  [media.md]: {
+    gridTemplateColumns: '15rem 1fr',
+  },
 })
 
 const StyledContainer = styled('div', {

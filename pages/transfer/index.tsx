@@ -72,8 +72,10 @@ export default function Transfer() {
       toast.custom((t) => (
         <Toast
           icon={<IconWrapper icon={<Error />} color="error" />}
-          title={`Cannot connect to your wallet`}
-          body={(error as any)?.message ?? error?.toString()}
+          title="Cannot connect to your wallet"
+          body={
+            (error as any)?.message ?? error?.toString() ?? 'Unknown error.'
+          }
           buttons={
             <Button
               as="a"

@@ -38,7 +38,7 @@ export const ManageLiquidityCard = ({
   const providedLiquidity = myReserve?.[0] > 0
 
   const tokenAReserve = formatTokenBalance(
-    convertMicroDenomToDenom(myReserve[0], tokenB.decimals),
+    convertMicroDenomToDenom(myReserve[0], tokenA.decimals),
     { includeCommaSeparation: true }
   )
   const tokenBReserve = formatTokenBalance(

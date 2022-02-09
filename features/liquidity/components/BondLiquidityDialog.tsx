@@ -20,15 +20,15 @@ import {
   DialogButtons,
 } from 'components/Dialog'
 import { Button } from 'components/Button'
-import { useBondTokens, useUnbondTokens } from '../../../hooks/useBondTokens'
+import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
 import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
-import { Spinner } from '../../../components/Spinner'
+import { Spinner } from 'components/Spinner'
 import { toast } from 'react-hot-toast'
-import { Toast } from '../../../components/Toast'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Valid } from '../../../icons/Valid'
-import { Error } from '../../../icons/Error'
-import { UpRightArrow } from '../../../icons/UpRightArrow'
+import { Toast } from 'components/Toast'
+import { IconWrapper } from 'components/IconWrapper'
+import { Valid } from 'icons/Valid'
+import { Error } from 'icons/Error'
+import { UpRightArrow } from 'icons/UpRightArrow'
 import { useQueryClient } from 'react-query'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {

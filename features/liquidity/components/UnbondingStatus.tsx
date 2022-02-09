@@ -16,11 +16,11 @@ import {
 } from 'util/conversion'
 import { useClaimTokens } from '../hooks'
 import { toast } from 'react-hot-toast'
-import { Toast } from '../../../components/Toast'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Valid } from '../../../icons/Valid'
-import { Error } from '../../../icons/Error'
-import { UpRightArrow } from '../../../icons/UpRightArrow'
+import { Toast } from 'components/Toast'
+import { IconWrapper } from 'components/IconWrapper'
+import { Valid } from 'icons/Valid'
+import { Error } from 'icons/Error'
+import { UpRightArrow } from 'icons/UpRightArrow'
 import { useQueryClient } from 'react-query'
 
 export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {

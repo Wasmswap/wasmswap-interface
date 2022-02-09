@@ -178,6 +178,7 @@ export default function Pool() {
                     size={isMobile ? 'small' : 'large'}
                   />
                   <UnbondingStatus
+                    poolId={pool}
                     tokenA={tokenA}
                     tokenB={tokenB}
                     size={isMobile ? 'small' : 'large'}

@@ -3,12 +3,13 @@ import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 import {
+  Claim,
   getClaims,
   getStakedBalance,
   getTotalStakedBalance,
   getUnstakingDuration,
 } from 'services/staking'
-import { convertMicroDenomToDenom } from 'util/conversion'
+import { calcPoolTokenValue, convertMicroDenomToDenom } from 'util/conversion'
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useChainInfo } from './useChainInfo'
 import {
@@ -18,6 +19,27 @@ import {
 } from './useTokenInfo'
 import { useSwapInfo } from './useSwapInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
+
+export const usePoolPairTokenAmount = ({
+  tokenAmountInMicroDenom,
+  tokenPairIndex,
+  poolId,
+}) => {
+  const [swapInfo, isLoading] = useSwapInfo({ poolId })
+
+  const tokenReserves =
+    swapInfo?.[tokenPairIndex === 0 ? 'token1_reserve' : 'token2_reserve'] ?? 0
+
+  const amount = tokenReserves
+    ? calcPoolTokenValue({
+        tokenAmountInMicroDenom,
+        tokenSupply: swapInfo.lp_token_supply,
+        tokenReserves,
+      })
+    : 0
+
+  return [amount, isLoading] as const
+}
 
 export const useGetPoolTokensDollarValue = ({
   poolId,
@@ -30,13 +52,13 @@ export const useGetPoolTokensDollarValue = ({
 
   if (swapInfo) {
     return [
-      convertMicroDenomToDenom(
-        (tokenAmountInMicroDenom / swapInfo.lp_token_supply) *
-          swapInfo.token1_reserve *
-          junoPrice *
-          2,
-        6
-      ),
+      calcPoolTokenValue({
+        tokenAmountInMicroDenom,
+        tokenSupply: swapInfo.lp_token_supply,
+        tokenReserves: swapInfo.token1_reserve,
+      }) *
+        junoPrice *
+        2,
       isLoading || isPriceLoading,
     ]
   }
@@ -94,10 +116,10 @@ export const useTotalStaked = ({ poolId }) => {
 }
 
 export const useGetClaims = ({ poolId }) => {
-  const token = useTokenInfo(poolId)
+  const token = useTokenInfoByPoolId(poolId)
   const { address, status, client } = useRecoilValue(walletState)
 
-  const { data = [], isLoading } = useQuery(
+  const { data = [], isLoading } = useQuery<Array<Claim>>(
     [`claims/${poolId}`, address],
     async () => {
       return getClaims(address, token.staking_address, client)

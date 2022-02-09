@@ -38,7 +38,7 @@ export const unstakeTokens = async (
   amount: number,
   client: SigningCosmWasmClient
 ) => {
-  let msg = { unstake: { amount: amount.toString() } }
+  const msg = { unstake: { amount: amount.toString() } }
   return await client.execute(
     senderAddress,
     stakingContractAddress,
@@ -79,13 +79,13 @@ export const getTotalStakedBalance = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<string> => {
-  let msg = { total_staked_at_height: {} }
-  let result = await client.queryContractSmart(stakingContractAddress, msg)
+  const msg = { total_staked_at_height: {} }
+  const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.total
 }
 
-export type claim = {
-  amount: string
+export type Claim = {
+  amount: number
   release_at: number
 }
 
@@ -93,13 +93,14 @@ export const getClaims = async (
   address: string,
   stakingContractAddress: string,
   client: CosmWasmClient
-): Promise<Array<claim>> => {
-  let msg = { claims: { address: address } }
-  let resp = await client.queryContractSmart(stakingContractAddress, msg)
+): Promise<Array<Claim>> => {
+  const msg = { claims: { address: address } }
+  const resp = await client.queryContractSmart(stakingContractAddress, msg)
+
   return resp.claims.map((c) => {
     return {
-      amount: c.amount,
-      release_at: c.release_at.at_time,
+      amount: Number(c.amount),
+      release_at: Number(c.release_at.at_time),
     }
   })
 }
@@ -108,7 +109,7 @@ export const getUnstakingDuration = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<number> => {
-  let msg = { unstaking_duration: {} }
-  let result = await client.queryContractSmart(stakingContractAddress, msg)
+  const msg = { unstaking_duration: {} }
+  const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.duration.time
 }

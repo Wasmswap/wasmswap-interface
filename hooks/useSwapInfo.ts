@@ -64,20 +64,22 @@ export const useMultipleSwapInfo = ({
 }
 
 export const useSwapInfo = ({
+  refetchInBackground = true,
   tokenSymbol,
   poolId,
 }: {
   tokenSymbol?: string
   poolId?: string
+  refetchInBackground?: boolean
 }) => {
   return useMultipleSwapInfo(
     useMemo(
       () => ({
         tokenSymbols: tokenSymbol ? [tokenSymbol] : undefined,
         poolIds: poolId ? [poolId] : undefined,
-        refetchInBackground: true,
+        refetchInBackground,
       }),
-      [tokenSymbol, poolId]
+      [tokenSymbol, poolId, refetchInBackground]
     )
   )?.[0]
 }

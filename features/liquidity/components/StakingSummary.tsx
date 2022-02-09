@@ -7,7 +7,7 @@ import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
 import {
   useGetPoolTokensDollarValue,
   usePoolPairTokenAmount,
-} from 'hooks/useStakedToken'
+} from 'features/liquidity/hooks'
 
 type StakingSummaryProps = {
   label: string

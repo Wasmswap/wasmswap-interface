@@ -23,11 +23,15 @@ import {
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
-import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  __POOL_STAKING_ENABLED__,
+  APP_NAME,
+} from 'util/constants'
 import {
   useGetPoolTokensDollarValue,
   useStakedTokenBalance,
-} from 'hooks/useStakedToken'
+} from 'features/liquidity/hooks'
 import { UnbondingLiquidityList } from 'features/liquidity/components/UnbondingLiquidityList'
 
 export default function Pool() {
@@ -68,7 +72,7 @@ export default function Pool() {
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
   const supportsIncentives = Boolean(
-    __POOL_REWARDS_ENABLED__ && tokenB?.staking_address
+    __POOL_STAKING_ENABLED__ && tokenB?.staking_address
   )
 
   if (!tokenB || !pool) return null
@@ -89,7 +93,7 @@ export default function Pool() {
         />
       )}
 
-      {__POOL_REWARDS_ENABLED__ && (
+      {__POOL_STAKING_ENABLED__ && (
         <BondLiquidityDialog
           isShowing={isBondingDialogShowing}
           onRequestClose={() => setIsBondingDialogShowing(false)}
@@ -176,6 +180,7 @@ export default function Pool() {
                     tokenA={tokenA}
                     tokenB={tokenB}
                     size={isMobile ? 'small' : 'large'}
+                    disabled={!__POOL_REWARDS_ENABLED__}
                   />
                   <UnbondingStatus
                     poolId={pool}
@@ -193,6 +198,7 @@ export default function Pool() {
                   </Column>
                 </>
               )}
+              {/* disabled state */}
               {!supportsIncentives && (
                 <RewardsStatus
                   disabled={true}

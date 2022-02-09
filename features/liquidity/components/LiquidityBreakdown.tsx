@@ -1,5 +1,5 @@
 import { Inline } from '../../../components/Inline'
-import { __POOL_REWARDS_ENABLED__ } from '../../../util/constants'
+import { __POOL_STAKING_ENABLED__ } from '../../../util/constants'
 import { Column } from '../../../components/Column'
 import { Text } from '../../../components/Text'
 import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
@@ -65,7 +65,7 @@ export const LiquidityBreakdown = ({
             <Text variant="header">0%</Text>
           </Column>
         </Inline>
-        {__POOL_REWARDS_ENABLED__ && (
+        {__POOL_STAKING_ENABLED__ && (
           <Column gap={6} css={{ paddingBottom: '$20' }}>
             <Text variant="legend" color="secondary">
               Token reward distribution
@@ -119,7 +119,7 @@ export const LiquidityBreakdown = ({
         <Inline
           css={{
             display: 'grid',
-            gridTemplateColumns: __POOL_REWARDS_ENABLED__
+            gridTemplateColumns: __POOL_STAKING_ENABLED__
               ? '1fr 1fr 1fr'
               : '1fr 1fr',
             padding: '$12 0 $16',
@@ -137,7 +137,7 @@ export const LiquidityBreakdown = ({
             </Text>
           </Column>
 
-          {__POOL_REWARDS_ENABLED__ && (
+          {__POOL_STAKING_ENABLED__ && (
             <Column gap={6} align="center" justifyContent="center">
               <Text variant="legend" color="secondary" align="center">
                 Token reward

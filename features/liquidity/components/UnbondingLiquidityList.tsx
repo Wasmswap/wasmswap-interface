@@ -1,13 +1,13 @@
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
 import React from 'react'
-import { useGetClaims } from 'hooks/useStakedToken'
+import { useStakingClaims } from 'features/liquidity/hooks'
 
 export const UnbondingLiquidityList = ({ poolId, tokenA, tokenB, size }) => {
-  const [claims] = useGetClaims({ poolId })
+  const [{ allClaims }] = useStakingClaims({ poolId })
 
   return (
     <>
-      {claims?.map(({ amount, release_at }, idx) => (
+      {allClaims?.map(({ amount, release_at }, idx) => (
         <UnbondingLiquidityCard
           key={idx}
           tokenA={tokenA}

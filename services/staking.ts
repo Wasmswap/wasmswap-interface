@@ -100,7 +100,7 @@ export const getClaims = async (
   return resp.claims.map((c) => {
     return {
       amount: Number(c.amount),
-      release_at: Number(c.release_at.at_time),
+      release_at: Number(c.release_at.at_time) / 1000000,
     }
   })
 }

@@ -13,6 +13,9 @@ export const __TEST_MODE__ = !JSON.parse(
 )
 
 /* feature flags */
+export const __POOL_STAKING_ENABLED__ = JSON.parse(
+  process.env.NEXT_PUBLIC_ENABLE_FEATURE_STAKING
+)
 export const __POOL_REWARDS_ENABLED__ = JSON.parse(
   process.env.NEXT_PUBLIC_ENABLE_FEATURE_REWARDS
 )

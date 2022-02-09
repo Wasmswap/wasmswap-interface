@@ -21,10 +21,7 @@ import {
 } from 'components/Dialog'
 import { Button } from 'components/Button'
 import { useBondTokens, useUnbondTokens } from '../../../hooks/useBondTokens'
-import {
-  useGetPoolTokensDollarValue,
-  useStakedTokenBalance,
-} from '../../../hooks/useStakedToken'
+import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { Spinner } from '../../../components/Spinner'
 import { toast } from 'react-hot-toast'
 import { Toast } from '../../../components/Toast'
@@ -60,16 +57,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
   const queryClient = useQueryClient()
   const refetchRelatedQueries = () =>
-    queryClient
-      .resetQueries([
-        'tokenBalance',
-        'ibcTokenBalance',
-        'myLiquidity',
-        'stakedTokenBalance',
-      ])
-      .then((...args) => {
-        console.log('Refetched queries', ...args)
-      })
+    setTimeout(() => queryClient.refetchQueries({ active: true }), 2000)
 
   const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
     poolId,

@@ -9,7 +9,7 @@ import { TokenInfo } from 'hooks/useTokenList'
 import {
   useGetPoolTokensDollarValue,
   usePoolPairTokenAmount,
-} from 'hooks/useStakedToken'
+} from 'features/liquidity/hooks'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
@@ -24,8 +24,6 @@ type UnbondingLiquidityCardProps = {
   releaseAt: number
   amount: number
 }
-
-const testDate = dayjs().add(10, 'minutes')
 
 export const UnbondingLiquidityCard = ({
   tokenA,
@@ -67,8 +65,7 @@ export const UnbondingLiquidityCard = ({
   })} ${tokenB.symbol}`
 
   const timeLeftLabel = useRelativeTimestamp({
-    /* sort out the dates situation */
-    timestamp: testDate || dayjs(releaseAt),
+    timestamp: releaseAt,
   })
 
   if (size === 'small') {
@@ -87,9 +84,7 @@ export const UnbondingLiquidityCard = ({
                   logoURI={tokenA.logoURI}
                   alt={tokenA.symbol}
                 />
-                <Text variant="link">
-                  {tokenAFormattedAmount} {tokenA.symbol}
-                </Text>
+                <Text variant="link">{tokenAFormattedAmount}</Text>
               </Inline>
               <Inline gap={3}>
                 <ImageForTokenLogo
@@ -97,9 +92,7 @@ export const UnbondingLiquidityCard = ({
                   logoURI={tokenB.logoURI}
                   alt={tokenB.symbol}
                 />
-                <Text variant="link">
-                  {tokenBFormattedAmount} {tokenB.symbol}
-                </Text>
+                <Text variant="link">{tokenBFormattedAmount}</Text>
               </Inline>
             </Inline>
             <Text variant="link">${formattedDollarValue}</Text>
@@ -108,6 +101,7 @@ export const UnbondingLiquidityCard = ({
       </Card>
     )
   }
+
   return (
     <Card>
       <CardContent>
@@ -148,8 +142,6 @@ const useRelativeTimestamp = ({ timestamp }) => {
       const date = dayjs(timestamp)
       const now = dayjs()
 
-      console.log(timestamp.toString())
-
       const hoursLeft = date.diff(now, 'hours')
 
       /* more than a day */
@@ -159,7 +151,7 @@ const useRelativeTimestamp = ({ timestamp }) => {
 
         return `${
           hoursLeftAfterDays > 0
-            ? `${maybePluralize(hoursLeftAfterDays, 'hour')} / `
+            ? `${maybePluralize(hoursLeftAfterDays, 'hour')} and `
             : ''
         } ${maybePluralize(daysLeft, 'day')}`
       }
@@ -174,6 +166,12 @@ const useRelativeTimestamp = ({ timestamp }) => {
       if (minsLeft > 0) {
         /* less than an hour */
         return maybePluralize(minsLeft, 'minute')
+      }
+
+      const secondsLeft = date.diff(now, 'seconds')
+
+      if (secondsLeft > 0) {
+        return 'less than a minute'
       }
 
       return 'now'

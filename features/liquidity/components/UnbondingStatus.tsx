@@ -6,32 +6,29 @@ import React, { useMemo } from 'react'
 import { Divider } from 'components/Divider'
 import { Column } from 'components/Column'
 import {
-  useGetClaims,
+  useStakingClaims,
   useGetPoolTokensDollarValue,
   usePoolPairTokenAmount,
-} from 'hooks/useStakedToken'
+} from 'features/liquidity/hooks'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-
-const useRedeemableTokensBalance = ({ poolId }) => {
-  const [claims, isLoading] = useGetClaims({ poolId })
-  const totalStaked = useMemo(() => {
-    if (!claims?.length) return 0
-    return claims.reduce((value, { amount }) => value + amount, 0)
-  }, [claims])
-
-  return {
-    amount: totalStaked,
-    canRedeem: false,
-    isLoading,
-  }
-}
+import { useClaimTokens } from '../hooks'
+import { toast } from 'react-hot-toast'
+import { Toast } from '../../../components/Toast'
+import { IconWrapper } from '../../../components/IconWrapper'
+import { Valid } from '../../../icons/Valid'
+import { Error } from '../../../icons/Error'
+import { UpRightArrow } from '../../../icons/UpRightArrow'
+import { useQueryClient } from 'react-query'
 
 export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
   /* mocks for getting the amount of tokens that can be redeemed  */
-  const { amount, canRedeem } = useRedeemableTokensBalance({ poolId })
+  const { amount, canRedeem, hasUnstakingTokens, isLoading } =
+    useRedeemableTokensBalance({
+      poolId,
+    })
 
   const [tokenAAmount] = usePoolPairTokenAmount({
     poolId,
@@ -65,6 +62,47 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
         })
       : '0.00'
 
+  const queryClient = useQueryClient()
+  const { mutate: claimTokens } = useClaimTokens({
+    poolId,
+    onSuccess() {
+      queryClient.refetchQueries({ active: true })
+
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Valid />} color="valid" />}
+          title={`Successfully claimed your tokens in the amount of $${formattedRedeemableTokenDollarValue}`}
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
+    },
+    onError(error) {
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Error />} color="error" />}
+          title={`Couldn't claim your tokens in the amount of $${formattedRedeemableTokenDollarValue}`}
+          body={(error as any)?.message ?? error?.toString()}
+          buttons={
+            <Button
+              as="a"
+              variant="ghost"
+              href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+              target="__blank"
+              iconRight={<UpRightArrow />}
+            >
+              Provide feedback
+            </Button>
+          }
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
+    },
+  })
+
+  if (!hasUnstakingTokens && !isLoading) {
+    return null
+  }
+
   if (size === 'small') {
     return (
       <Column gap={4} css={{ padding: '$20 0 $8' }}>
@@ -97,7 +135,7 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
         <Divider />
         <Inline justifyContent="space-between" css={{ padding: '$12 0' }}>
           <Text variant="header">${formattedRedeemableTokenDollarValue}</Text>
-          <Button variant="primary" disabled={!canRedeem}>
+          <Button variant="primary" onClick={claimTokens} disabled={!canRedeem}>
             Redeem
           </Button>
         </Inline>
@@ -105,6 +143,7 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
       </Column>
     )
   }
+
   return (
     <>
       <Text variant="primary" css={{ padding: '$20 0 $4' }}>
@@ -130,11 +169,29 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
             <Text variant="link">{formattedTokenBAmount}</Text>
           </Inline>
         </Inline>
-        <Button variant="primary" disabled={!canRedeem}>
+        <Button variant="primary" onClick={claimTokens} disabled={!canRedeem}>
           Redeem
         </Button>
       </Inline>
       <Divider offsetBottom="$8" />
     </>
   )
+}
+
+const useRedeemableTokensBalance = ({ poolId }) => {
+  const [{ redeemableClaims, allClaims }, isLoading] = useStakingClaims({
+    poolId,
+  })
+
+  const totalRedeemableAmount = useMemo(() => {
+    if (!redeemableClaims?.length) return 0
+    return redeemableClaims.reduce((value, { amount }) => value + amount, 0)
+  }, [redeemableClaims])
+
+  return {
+    amount: totalRedeemableAmount,
+    canRedeem: totalRedeemableAmount > 0,
+    hasUnstakingTokens: Boolean(allClaims?.length),
+    isLoading,
+  }
 }

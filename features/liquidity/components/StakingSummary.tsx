@@ -1,14 +1,13 @@
 import { useRef, useState } from 'react'
 import { styled } from 'components/theme'
 import { Text } from 'components/Text'
+import { BasicNumberInput } from 'components/BasicNumberInput'
 import { TokenInfo } from 'hooks/useTokenList'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
 import {
-  convertMicroDenomToDenom,
-  dollarValueFormatter,
-  formatTokenBalance,
-} from 'util/conversion'
-import { useGetPoolTokensDollarValue } from '../../../hooks/useStakedToken'
+  useGetPoolTokensDollarValue,
+  usePoolPairTokenAmount,
+} from 'hooks/useStakedToken'
 
 type StakingSummaryProps = {
   label: string
@@ -29,33 +28,38 @@ export const StakingSummary = ({
   liquidityAmount,
   onChangeLiquidity,
 }: StakingSummaryProps) => {
-  const [tokenAPrice] = useTokenDollarValue(tokenA?.symbol)
-  const [tokenBPrice] = useTokenDollarValue(tokenB?.symbol)
-  const liquidityAmountInDenom = convertMicroDenomToDenom(liquidityAmount, 6)
-
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
     useState(false)
 
   const refForInput = useRef<HTMLInputElement>()
 
-  const tokenAAmount = (liquidityAmountInDenom * 0.5) / tokenAPrice
-  const tokenBAmount = (liquidityAmountInDenom * 0.5) / tokenBPrice
+  const [tokenAAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: liquidityAmount / 2,
+    tokenPairIndex: 0,
+    poolId,
+  })
+
+  const [tokenBAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: liquidityAmount / 2,
+    tokenPairIndex: 1,
+    poolId,
+  })
+
+  const [maxLiquidityInDollarValue] = useGetPoolTokensDollarValue({
+    poolId,
+    tokenAmountInMicroDenom: maxLiquidity,
+  })
 
   const [liquidityInDollarValue] = useGetPoolTokensDollarValue({
     poolId,
-    tokenAmount: liquidityAmount,
+    tokenAmountInMicroDenom: liquidityAmount,
   })
 
-  const formattedLiquidityAmountInDollarValue = String(
-    dollarValueFormatter(
-      typeof liquidityInDollarValue === 'number' ? liquidityInDollarValue : 0
-    )
-  )
+  const handleChangeDollarValue = (amount: number) => {
+    const multiplier = liquidityAmount / Number(liquidityInDollarValue)
+    const liquidityValue = amount * multiplier
 
-  const handleChangeDollarValue = ({ target: { value } }) => {
-    const validatedValue =
-      Number(value) > maxLiquidity ? maxLiquidity : dollarValueFormatter(value)
-    onChangeLiquidity(Number(validatedValue))
+    onChangeLiquidity(protectAgainstNaN(liquidityValue))
   }
 
   return (
@@ -86,16 +90,12 @@ export const StakingSummary = ({
         >
           <StyledTextForInputWithSymbol variant="caption">
             $
-            <input
-              ref={refForInput}
+            <BasicNumberInput
               placeholder="0.0"
-              min="0"
-              type="number"
-              lang="en-US"
-              value={formattedLiquidityAmountInDollarValue}
-              style={{
-                width: `${formattedLiquidityAmountInDollarValue.length}ch`,
-              }}
+              min={0}
+              max={(maxLiquidityInDollarValue as number) || 0}
+              value={(liquidityInDollarValue as number) || 0}
+              maximumFractionDigits={2}
               onChange={handleChangeDollarValue}
               onFocus={() => {
                 setIsDollarValueInputFocused(true)

@@ -31,7 +31,7 @@ export const useMultipleSwapInfo = ({
   const tokensByTokenSymbols = useMultipleTokenInfo(tokenSymbols)
 
   const { data = [], isLoading } = useQuery<Array<SwapInfo>>(
-    `swapInfo/${tokenSymbols?.join('+')}`,
+    `swapInfo/${(tokenSymbols || poolIds)?.join('+')}`,
     async () => {
       const tokens = tokensByPoolIds || tokensByTokenSymbols
 

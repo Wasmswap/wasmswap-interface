@@ -103,8 +103,10 @@ const useSplitTokens = ({ liquidity, supportedTokens }) => {
   return useMemo(() => {
     if (!liquidity?.length) return []
     const pools = [[], []]
+
     liquidity.forEach((liquidityInfo, index) => {
       const poolIndex = liquidityInfo.myLiquidity.coins > 0 ? 0 : 1
+
       pools[poolIndex].push({
         liquidityInfo,
         tokenInfo: supportedTokens[index],

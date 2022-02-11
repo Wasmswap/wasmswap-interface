@@ -8,6 +8,7 @@ import { Divider } from 'components/Divider'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { dollarValueFormatterWithDecimals } from 'util/conversion'
 import { MultisigIcon } from 'icons/Multisig'
+import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 
 type PoolCardProps = {
   poolId: string
@@ -26,6 +27,12 @@ export const PoolCard = ({
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
+
+  const [stakedTokenBalance] = useStakedTokenBalance({ poolId })
+  const [stakedTokenBalanceDollarValue] = useGetPoolTokensDollarValue({
+    poolId,
+    tokenAmountInMicroDenom: stakedTokenBalance,
+  })
 
   const hasProvidedLiquidity =
     typeof myLiquidity.coins === 'number' && myLiquidity.coins > 0
@@ -105,7 +112,15 @@ export const PoolCard = ({
               <StyledDivForStakedRowValue>
                 <MultisigIcon color="brand" size="24px" />
                 <Text variant="primary" color="brand">
-                  $0.00
+                  $
+                  {dollarValueFormatterWithDecimals(
+                    typeof stakedTokenBalanceDollarValue === 'number'
+                      ? stakedTokenBalanceDollarValue
+                      : 0,
+                    {
+                      includeCommaSeparation: true,
+                    }
+                  )}
                 </Text>
               </StyledDivForStakedRowValue>
             </StyledDivForStatsRow>

@@ -21,11 +21,25 @@ import { IconWrapper } from 'components/IconWrapper'
 import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { UpRightArrow } from 'icons/UpRightArrow'
-import { useQueryClient } from 'react-query'
+import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
+import { TokenInfo } from '../../../hooks/useTokenList'
+import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
 
-export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
+type Props = {
+  poolId: string
+  tokenA: TokenInfo
+  tokenB: TokenInfo
+  size: 'large' | 'small'
+}
+
+export const UnbondingLiquidityStatusList = ({
+  poolId,
+  tokenA,
+  tokenB,
+  size = 'large',
+}: Props) => {
   /* mocks for getting the amount of tokens that can be redeemed  */
-  const { amount, canRedeem, hasUnstakingTokens, isLoading } =
+  const { amount, claims, canRedeem, hasUnstakingTokens, isLoading } =
     useRedeemableTokensBalance({
       poolId,
     })
@@ -62,11 +76,15 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
         })
       : '0.00'
 
-  const queryClient = useQueryClient()
+  const refetchQueries = useRefetchQueries(
+    ['tokenBalance', 'myLiquidity', 'stakedTokenBalance', 'claimTokens'],
+    3500
+  )
+
   const { mutate: claimTokens } = useClaimTokens({
     poolId,
     onSuccess() {
-      queryClient.refetchQueries({ active: true })
+      refetchQueries()
 
       toast.custom((t) => (
         <Toast
@@ -103,44 +121,67 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
     return null
   }
 
+  const renderedListForClaims = (
+    <Column gap={6}>
+      {claims?.map(({ amount, release_at }, idx) => (
+        <UnbondingLiquidityCard
+          key={idx}
+          tokenA={tokenA}
+          tokenB={tokenB}
+          size={size}
+          poolId={poolId}
+          amount={amount}
+          releaseAt={release_at}
+        />
+      ))}
+    </Column>
+  )
+
   if (size === 'small') {
     return (
-      <Column gap={4} css={{ padding: '$20 0 $8' }}>
-        <Text variant="primary">Unbonding tokens</Text>
-        <Inline
-          css={{
-            rowGap: '$8',
-            columnGap: '$12',
-            flexWrap: 'wrap',
-            padding: '$12 0',
-          }}
-        >
-          <Inline gap={3}>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenA.logoURI}
-              alt={tokenA.symbol}
-            />
-            <Text variant="link">{formattedTokenAAmount}</Text>
+      <>
+        <Column gap={4} css={{ padding: '$20 0 $8' }}>
+          <Text variant="primary">Unbonding tokens</Text>
+          <Inline
+            css={{
+              rowGap: '$8',
+              columnGap: '$12',
+              flexWrap: 'wrap',
+              padding: '$12 0',
+            }}
+          >
+            <Inline gap={3}>
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenA.logoURI}
+                alt={tokenA.symbol}
+              />
+              <Text variant="link">{formattedTokenAAmount}</Text>
+            </Inline>
+            <Inline gap={3}>
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenB.logoURI}
+                alt={tokenB.symbol}
+              />
+              <Text variant="link">{formattedTokenBAmount}</Text>
+            </Inline>
           </Inline>
-          <Inline gap={3}>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenB.logoURI}
-              alt={tokenB.symbol}
-            />
-            <Text variant="link">{formattedTokenBAmount}</Text>
+          <Divider />
+          <Inline justifyContent="space-between" css={{ padding: '$12 0' }}>
+            <Text variant="header">${formattedRedeemableTokenDollarValue}</Text>
+            <Button
+              variant="primary"
+              onClick={claimTokens}
+              disabled={!canRedeem}
+            >
+              Redeem
+            </Button>
           </Inline>
-        </Inline>
-        <Divider />
-        <Inline justifyContent="space-between" css={{ padding: '$12 0' }}>
-          <Text variant="header">${formattedRedeemableTokenDollarValue}</Text>
-          <Button variant="primary" onClick={claimTokens} disabled={!canRedeem}>
-            Redeem
-          </Button>
-        </Inline>
-        <Divider />
-      </Column>
+          <Divider />
+        </Column>
+        {renderedListForClaims}
+      </>
     )
   }
 
@@ -174,6 +215,7 @@ export const UnbondingStatus = ({ poolId, tokenA, tokenB, size = 'large' }) => {
         </Button>
       </Inline>
       <Divider offsetBottom="$8" />
+      {renderedListForClaims}
     </>
   )
 }
@@ -190,6 +232,7 @@ const useRedeemableTokensBalance = ({ poolId }) => {
 
   return {
     amount: totalRedeemableAmount,
+    claims: allClaims,
     canRedeem: totalRedeemableAmount > 0,
     hasUnstakingTokens: Boolean(allClaims?.length),
     isLoading,

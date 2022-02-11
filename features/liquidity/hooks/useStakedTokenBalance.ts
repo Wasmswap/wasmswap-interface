@@ -11,7 +11,7 @@ export const useStakedTokenBalance = ({ poolId }) => {
   const token = useTokenInfoByPoolId(poolId)
 
   const { data = 0, isLoading } = useQuery<number>(
-    [`stakedTokenBalance/${poolId}`, address],
+    `stakedTokenBalance/${poolId}/${address}`,
     async () => {
       return Number(
         await getStakedBalance(address, token.staking_address, client)

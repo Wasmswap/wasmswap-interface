@@ -1,5 +1,4 @@
 import { toast } from 'react-hot-toast'
-import { useQueryClient } from 'react-query'
 import { Text } from 'components/Text'
 import { Button } from 'components/Button'
 import { Spinner } from 'components/Spinner'
@@ -24,6 +23,7 @@ import { AssetSelector } from './AssetSelector'
 import { AmountInput } from './AmountInput'
 import { useIBCTokenBalance } from '../../../../hooks/useIBCTokenBalance'
 import { useTokenBalance } from '../../../../hooks/useTokenBalance'
+import { useRefetchQueries } from '../../../../hooks/useRefetchQueries'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -49,7 +49,7 @@ export const TransferDialog = ({
   const { balance: nativeAssetBalance } = useTokenBalance(tokenSymbol)
 
   const [tokenAmount, setTokenAmount] = useState(0)
-  const queryClient = useQueryClient()
+  const refetchQueries = useRefetchQueries(['tokenBalance', 'ibcTokenBalance'])
 
   const { isLoading, mutate: mutateTransferAsset } = useTransferAssetMutation({
     transactionKind,
@@ -58,11 +58,7 @@ export const TransferDialog = ({
 
     onSuccess() {
       // reset cache
-      queryClient
-        .resetQueries(['tokenBalance', 'ibcTokenBalance'])
-        .then((...args) => {
-          console.log('Refetched queries', ...args)
-        })
+      refetchQueries()
 
       toast.custom((t) => (
         <Toast

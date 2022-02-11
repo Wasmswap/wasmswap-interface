@@ -13,13 +13,14 @@ import {
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation } from 'react-query'
 import { Toast } from 'components/Toast'
 import { IconWrapper } from 'components/IconWrapper'
 import { Error } from 'icons/Error'
 import { Button } from 'components/Button'
 import { UpRightArrow } from 'icons/UpRightArrow'
 import { Valid } from 'icons/Valid'
+import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
 
 type UseTokenSwapArgs = {
   tokenASymbol: string
@@ -41,7 +42,7 @@ export const useTokenSwap = ({
 
   const baseToken = useBaseTokenInfo()
 
-  const queryClient = useQueryClient()
+  const refetchQueries = useRefetchQueries(['tokenBalance'])
 
   return useMutation(
     'swapTokens',
@@ -120,7 +121,7 @@ export const useTokenSwap = ({
           tokenB,
         ])
 
-        queryClient.refetchQueries({ active: true })
+        refetchQueries()
       },
       onError(e) {
         const errorMessage =

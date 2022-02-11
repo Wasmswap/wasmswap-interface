@@ -8,10 +8,9 @@ import { Button } from 'components/Button'
 import { Spinner } from 'components/Spinner'
 import { ChevronIcon } from 'icons/Chevron'
 import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
 import { NavigationSidebar } from 'components/Layout/NavigationSidebar'
 import { RewardsStatus } from 'features/liquidity/components/RewardsStatus'
-import { UnbondingStatus } from 'features/liquidity/components/UnbondingStatus'
+import { UnbondingLiquidityStatusList } from 'features/liquidity/components/UnbondingLiquidityStatusList'
 import { LiquidityHeader } from 'features/liquidity/components/LiquidityHeader'
 import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreakdown'
 import { BondLiquidityDialog } from 'features/liquidity'
@@ -32,7 +31,6 @@ import {
   useGetPoolTokensDollarValue,
   useStakedTokenBalance,
 } from 'features/liquidity/hooks'
-import { UnbondingLiquidityList } from 'features/liquidity/components/UnbondingLiquidityList'
 
 export default function Pool() {
   const {
@@ -182,20 +180,12 @@ export default function Pool() {
                     size={isMobile ? 'small' : 'large'}
                     disabled={!__POOL_REWARDS_ENABLED__}
                   />
-                  <UnbondingStatus
-                    poolId={pool}
+                  <UnbondingLiquidityStatusList
+                    poolId={pool as string}
                     tokenA={tokenA}
                     tokenB={tokenB}
                     size={isMobile ? 'small' : 'large'}
                   />
-                  <Column gap={6}>
-                    <UnbondingLiquidityList
-                      poolId={pool}
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                  </Column>
                 </>
               )}
               {/* disabled state */}

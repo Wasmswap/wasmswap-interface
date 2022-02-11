@@ -1,7 +1,7 @@
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { Text } from 'components/Text'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
@@ -12,6 +12,7 @@ import { Divider } from 'components/Divider'
 import { Column } from 'components/Column'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
+import { useUpdateEffect } from '@reach/utils'
 import dayjs from 'dayjs'
 import {
   DialogHeader,
@@ -29,7 +30,7 @@ import { IconWrapper } from 'components/IconWrapper'
 import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { UpRightArrow } from 'icons/UpRightArrow'
-import { useQueryClient } from 'react-query'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
@@ -55,16 +56,19 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     tokenAmountInMicroDenom: tokenAmount,
   })
 
-  const queryClient = useQueryClient()
-  const refetchRelatedQueries = () =>
-    setTimeout(() => queryClient.refetchQueries({ active: true }), 2000)
+  const refetchQueries = useRefetchQueries([
+    'tokenBalance',
+    'myLiquidity',
+    'stakedTokenBalance',
+    'claimTokens',
+  ])
 
   const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
     poolId,
 
     onSuccess() {
       // reset cache
-      refetchRelatedQueries()
+      refetchQueries()
 
       toast.custom((t) => (
         <Toast
@@ -113,7 +117,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
       onSuccess() {
         // reset cache
-        refetchRelatedQueries()
+        refetchQueries()
 
         toast.custom((t) => (
           <Toast
@@ -173,6 +177,19 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     if (shouldResetDialogState) setDialogState('stake')
   }, [canManageStaking, dialogState])
 
+  useUpdateEffect(() => {
+    if (isShowing) {
+      setTokenAmount(0)
+    }
+  }, [isShowing])
+
+  const inputRef = useRef<HTMLInputElement>()
+  useEffect(() => {
+    if (isShowing) {
+      inputRef.current?.focus()
+    }
+  }, [isShowing])
+
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader>
@@ -214,6 +231,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       )}
       <DialogContent css={{ paddingBottom: '$12' }}>
         <LiquidityInputSelector
+          inputRef={inputRef}
           maxLiquidity={maxLiquidityTokenAmount}
           liquidity={tokenAmount}
           onChangeLiquidity={setTokenAmount}

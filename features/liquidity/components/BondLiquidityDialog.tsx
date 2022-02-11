@@ -181,7 +181,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     if (isShowing) {
       setTokenAmount(0)
     }
-  }, [isShowing])
+  }, [isShowing, dialogState])
 
   const inputRef = useRef<HTMLInputElement>()
   useEffect(() => {
@@ -217,7 +217,6 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
               values={['staking', 'unstaking']}
               onStateChange={(value) => {
                 setDialogState(value === 'staking' ? 'stake' : 'unstake')
-                setTokenAmount(0)
               }}
             />
           </DialogContent>

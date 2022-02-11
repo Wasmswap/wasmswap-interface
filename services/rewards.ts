@@ -37,6 +37,7 @@ export type rewardsInfoResponse = {
   total_amount: string
   denom: string
   distribution_token: String
+  payment_block_delta: number
 }
 
 export const getRewardsInfo = async (

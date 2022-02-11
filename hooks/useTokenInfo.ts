@@ -23,20 +23,36 @@ export const useBaseTokenInfo = () => {
   return useMemo(() => unsafelyGetBaseToken(tokenList), [tokenList])
 }
 
-/* hook for token info retrieval based on `tokenSymbol` */
-export const useTokenInfo = (tokenSymbol: string) => {
+/* hook for token info retrieval based on multiple `tokenSymbol` */
+export const useMultipleTokenInfo = (tokenSymbols: Array<string>) => {
   const [tokenList] = useTokenList()
   return useMemo(
-    () => unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens),
-    [tokenSymbol, tokenList]
+    () =>
+      tokenSymbols?.map((tokenSymbol) =>
+        unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens)
+      ),
+    [tokenSymbols, tokenList]
+  )
+}
+
+/* hook for token info retrieval based on `tokenSymbol` */
+export const useTokenInfo = (tokenSymbol: string) => {
+  return useMultipleTokenInfo(useMemo(() => [tokenSymbol], [tokenSymbol]))?.[0]
+}
+
+/* hook for token info retrieval based on `poolId` */
+export const useTokenInfoByPoolIds = (poolIds: Array<string>) => {
+  const [tokenList] = useTokenList()
+  return useMemo(
+    () =>
+      poolIds?.map((poolId) =>
+        unsafelyGetTokenInfoByPoolId(poolId, tokenList?.tokens)
+      ),
+    [poolIds, tokenList]
   )
 }
 
 /* hook for token info retrieval based on `poolId` */
 export const useTokenInfoByPoolId = (poolId: string) => {
-  const [tokenList] = useTokenList()
-  return useMemo(
-    () => unsafelyGetTokenInfoByPoolId(poolId, tokenList?.tokens),
-    [poolId, tokenList]
-  )
+  return useTokenInfoByPoolIds(useMemo(() => [poolId], [poolId]))?.[0]
 }

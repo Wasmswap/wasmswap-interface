@@ -11,8 +11,6 @@ import {
 } from 'util/conversion'
 import { toast } from 'react-hot-toast'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { getSwapInfo } from 'services/swap'
-import { useChainInfo } from 'hooks/useChainInfo'
 import { TokenInfo } from 'hooks/useTokenList'
 import { Toast } from 'components/Toast'
 import { IconWrapper } from 'components/IconWrapper'
@@ -20,6 +18,7 @@ import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { Button } from 'components/Button'
 import { UpRightArrow } from 'icons/UpRightArrow'
+import { useSwapInfo } from '../../../../hooks/useSwapInfo'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -127,15 +126,15 @@ const useMutateLiquidity = ({
   myLiquidity,
 }) => {
   const { address, client } = useRecoilValue(walletState)
-  const refetchQueries = useRefetchQueries()
-  const [chainInfo] = useChainInfo()
+  const refetchQueries = useRefetchQueries(['tokenBalance', 'myLiquidity'])
+
+  const [swap] = useSwapInfo({
+    tokenSymbol: tokenB.symbol,
+  })
 
   const mutation = useMutation(
     async () => {
-      const { lp_token_address } = await getSwapInfo(
-        tokenB.swap_address,
-        chainInfo.rpc
-      )
+      const { lp_token_address } = swap
 
       const tokenAAmount = percentage * maxApplicableBalanceForTokenA
       const tokenBAmount = percentage * maxApplicableBalanceForTokenB

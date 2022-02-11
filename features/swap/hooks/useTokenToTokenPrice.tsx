@@ -3,39 +3,37 @@ import {
   getToken1ForToken2Price,
   getToken2ForToken1Price,
   getTokenForTokenPrice,
-} from '../../../services/swap'
-import {
-  unsafelyGetTokenInfo,
-  useBaseTokenInfo,
-} from '../../../hooks/useTokenInfo'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
+} from 'services/swap'
+import { useBaseTokenInfo, useTokenInfo } from 'hooks/useTokenInfo'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from 'util/conversion'
-import { useChainInfo } from '../../../hooks/useChainInfo'
+import { useChainInfo } from 'hooks/useChainInfo'
 
 export const useTokenToTokenPrice = ({
   tokenASymbol,
   tokenBSymbol,
   tokenAmount,
 }) => {
-  const [chainInfo] = useChainInfo()
+  const [chainInfoReference] = useChainInfo()
   const baseToken = useBaseTokenInfo()
+
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
 
   const { data, isLoading } = useQuery(
     [
       `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-      tokenASymbol,
-      tokenBSymbol,
+      tokenA,
+      tokenB,
+      chainInfoReference,
       tokenAmount,
     ],
     async ({
-      queryKey: [, symbolForTokenA, symbolForTokenB, amount],
+      queryKey: [, fromTokenInfo, toTokenInfo, chainInfo, amount],
     }): Promise<number | undefined> => {
-      const fromTokenInfo = unsafelyGetTokenInfo(symbolForTokenA)
-      const toTokenInfo = unsafelyGetTokenInfo(symbolForTokenB)
-
       const formatPrice = (price) =>
         convertMicroDenomToDenom(price, toTokenInfo.decimals)
 
@@ -44,7 +42,10 @@ export const useTokenToTokenPrice = ({
         fromTokenInfo.decimals
       )
 
-      if (fromTokenInfo.symbol === baseToken.symbol) {
+      if (
+        fromTokenInfo.symbol === baseToken.symbol &&
+        toTokenInfo.swap_address
+      ) {
         return formatPrice(
           await getToken1ForToken2Price({
             nativeAmount: convertedTokenAmount,
@@ -52,7 +53,10 @@ export const useTokenToTokenPrice = ({
             rpcEndpoint: chainInfo.rpc,
           })
         )
-      } else if (toTokenInfo.symbol === baseToken.symbol) {
+      } else if (
+        toTokenInfo.symbol === baseToken.symbol &&
+        fromTokenInfo.swap_address
+      ) {
         return formatPrice(
           await getToken2ForToken1Price({
             tokenAmount: convertedTokenAmount,
@@ -73,7 +77,7 @@ export const useTokenToTokenPrice = ({
     },
     {
       enabled: Boolean(
-        chainInfo?.rpc &&
+        chainInfoReference?.rpc &&
           baseToken &&
           tokenBSymbol &&
           tokenASymbol &&

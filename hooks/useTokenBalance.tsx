@@ -65,9 +65,9 @@ export const useTokenBalance = (tokenSymbol: string) => {
   const { address, status, client } = useRecoilValue(walletState)
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`tokenBalance`, tokenSymbol, address],
+    ['tokenBalance', tokenSymbol, address],
     async ({ queryKey: [, symbol] }) => {
-      if (symbol) {
+      if (symbol && client) {
         return await fetchTokenBalance({
           client,
           address,

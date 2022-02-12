@@ -36,10 +36,12 @@
       "logoURI": "https://junochain.com/assets/logos/logo_512x512.png",
       "tags": ["native"],
       "native":true,
-      "denom":"ujuno"
+      "denom":"ujuno",
+      "staking_address":"",
+      "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNO-POOD",
       "chain_id": "lucina",
       "token_address": "juno1wl59k23zngj34l7d42y9yltask7rjlnxgccawc7ltrknp6n52fpsndlmj0",
@@ -50,10 +52,12 @@
       "logoURI": "https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2017/11/29231450/Poodle-Standard-Gray-On-White-Standing.jpg",
       "tags": ["memecoin"],
       "native":false,
-      "denom":"upood"
+      "denom":"upood",
+      "staking_address":"",
+      "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNO-CRAB",
       "chain_id": "lucina",
       "token_address": "juno14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skjuwg8",
@@ -61,13 +65,15 @@
       "symbol": "CRAB",
       "name": "Crab",
       "decimals": 6,
-      "logoURI": "",
+      "logoURI": "https://cryptologos.cc/logos/aave-aave-logo.svg",
       "tags": ["memecoin"],
       "native":false,
-      "denom":"ucrab"
+      "denom":"ucrab",
+      "staking_address":"juno1jkte0pytr85qg0whmgux3vmz9ehmh82w40h8gaqeg435fnkyfxqqau5rja",
+      "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "chain_id": "lucina",
       "pool_id": "JUNO-DAO",
       "token_address": "juno1yw4xvtc43me9scqfr2jr2gzvcxd3a9y4eq7gaukreugw2yd2f8ts9z8cq8",
@@ -78,10 +84,12 @@
       "logoURI": "",
       "tags": ["memecoin"],
       "native":false,
-      "denom":"udao"
+      "denom":"udao",
+      "staking_address":"",
+      "rewards_addresses":[]
     },
     {
-      "id": "juno-network",
+      "id": "",
       "pool_id": "JUNO-COSM",
       "chain_id": "lucina",
       "token_address": "",
@@ -92,7 +100,9 @@
       "logoURI": "",
       "tags": ["memecoin"],
       "native":true,
-      "denom":"ucosm"
+      "denom":"ucosm",
+      "staking_address":"",
+      "rewards_addresses":[]
     }
   ],
   "version": {

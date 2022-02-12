@@ -1,5 +1,5 @@
 import { media, styled } from './theme'
-import { ComponentPropsWithoutRef } from 'react'
+import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 
 const StyledDivForOverlay = styled('div', {
   position: 'absolute',
@@ -68,17 +68,22 @@ const StyledDivForCardWrapper = styled('div', {
   },
 })
 
-export const Card = ({
-  children,
-  ...props
-}: ComponentPropsWithoutRef<typeof StyledDivForCardWrapper>) => {
+const CardComponent = (
+  {
+    children,
+    ...props
+  }: ComponentPropsWithoutRef<typeof StyledDivForCardWrapper>,
+  ref: ForwardedRef<any>
+) => {
   return (
-    <StyledDivForCardWrapper {...props} role="button" tabIndex={-1}>
+    <StyledDivForCardWrapper {...props} ref={ref} role="button" tabIndex={-1}>
       <StyledDivForOverlay />
       <StyledDivForContent>{children}</StyledDivForContent>
     </StyledDivForCardWrapper>
   )
 }
+
+export const Card = forwardRef(CardComponent) as typeof CardComponent
 
 export const CardContent = styled('div', {
   variants: {

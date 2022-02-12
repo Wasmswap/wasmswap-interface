@@ -2,8 +2,8 @@ import { Inline } from 'components/Inline'
 import { Text } from 'components/Text'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { Button } from 'components/Button'
-import { Column } from '../../../components/Column'
-import { Divider } from '../../../components/Divider'
+import { Column } from 'components/Column'
+import { Divider } from 'components/Divider'
 import React from 'react'
 
 export const RewardsStatus = ({

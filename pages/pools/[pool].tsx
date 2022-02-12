@@ -8,23 +8,29 @@ import { Button } from 'components/Button'
 import { Spinner } from 'components/Spinner'
 import { ChevronIcon } from 'icons/Chevron'
 import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
 import { NavigationSidebar } from 'components/Layout/NavigationSidebar'
 import { RewardsStatus } from 'features/liquidity/components/RewardsStatus'
-import { UnbondingStatus } from 'features/liquidity/components/UnbondingStatus'
+import { UnbondingLiquidityStatusList } from 'features/liquidity/components/UnbondingLiquidityStatusList'
 import { LiquidityHeader } from 'features/liquidity/components/LiquidityHeader'
 import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreakdown'
 import { BondLiquidityDialog } from 'features/liquidity'
 import {
   ManageBondedLiquidityCard,
-  UnbondingLiquidityCard,
   ManagePoolDialog,
   ManageLiquidityCard,
 } from 'features/liquidity'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
-import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  __POOL_STAKING_ENABLED__,
+  APP_NAME,
+} from 'util/constants'
+import {
+  useGetPoolTokensDollarValue,
+  useStakedTokenBalance,
+} from 'features/liquidity/hooks'
 
 export default function Pool() {
   const {
@@ -43,16 +49,31 @@ export default function Pool() {
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(pool as string)
 
+  const [stakedBalanceCoins] = useStakedTokenBalance({
+    poolId: pool,
+  })
+
+  const [stakedBalanceInDollarValue] = useGetPoolTokensDollarValue({
+    poolId: pool,
+    tokenAmountInMicroDenom: stakedBalanceCoins,
+  })
+
+  const stakedBalance = {
+    coins: stakedBalanceCoins,
+    dollarValue: stakedBalanceInDollarValue,
+  }
+
   const [
     { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } = {} as any,
     isLoading,
   ] = usePoolLiquidity({ poolId: pool })
 
   const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
+  const supportsIncentives = Boolean(
+    __POOL_STAKING_ENABLED__ && tokenB?.staking_address
+  )
 
-  if (!tokenB || !pool) {
-    return null
-  }
+  if (!tokenB || !pool) return null
 
   return (
     <>
@@ -70,7 +91,7 @@ export default function Pool() {
         />
       )}
 
-      {__POOL_REWARDS_ENABLED__ && (
+      {__POOL_STAKING_ENABLED__ && (
         <BondLiquidityDialog
           isShowing={isBondingDialogShowing}
           onRequestClose={() => setIsBondingDialogShowing(false)}
@@ -145,42 +166,30 @@ export default function Pool() {
                   myLiquidity={myLiquidity}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
+                  stakedBalance={stakedBalance}
+                  supportsIncentives={supportsIncentives}
                 />
               </StyledDivForCards>
             </>
             <>
-              {__POOL_REWARDS_ENABLED__ && (
+              {supportsIncentives && (
                 <>
                   <RewardsStatus
                     tokenA={tokenA}
                     tokenB={tokenB}
                     size={isMobile ? 'small' : 'large'}
+                    disabled={!__POOL_REWARDS_ENABLED__}
                   />
-                  <UnbondingStatus
+                  <UnbondingLiquidityStatusList
+                    poolId={pool as string}
                     tokenA={tokenA}
                     tokenB={tokenB}
                     size={isMobile ? 'small' : 'large'}
                   />
-                  <Column gap={6}>
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                  </Column>
                 </>
               )}
-              {!__POOL_REWARDS_ENABLED__ && (
+              {/* disabled state */}
+              {!supportsIncentives && (
                 <RewardsStatus
                   disabled={true}
                   tokenA={tokenA}

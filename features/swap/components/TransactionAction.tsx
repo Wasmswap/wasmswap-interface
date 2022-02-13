@@ -1,17 +1,17 @@
 import { styled } from 'components/theme'
-import { Text } from '../../../components/Text'
-import { Button } from '../../../components/Button'
+import { Text } from 'components/Text'
+import { Button } from 'components/Button'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
-import { walletState, WalletStatusType } from '../../../state/atoms/walletAtoms'
-import { useConnectWallet } from '../../../hooks/useConnectWallet'
+import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
+import { useConnectWallet } from 'hooks/useConnectWallet'
 import { useTokenSwap } from '../hooks/useTokenSwap'
-import { Spinner } from '../../../components/Spinner'
+import { Spinner } from 'components/Spinner'
 import { SlippageSelector } from './SlippageSelector'
-import { NETWORK_FEE } from '../../../util/constants'
-import { useTokenBalance } from '../../../hooks/useTokenBalance'
-import { Inline } from '../../../components/Inline'
+import { NETWORK_FEE } from 'util/constants'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { Inline } from 'components/Inline'
 
 type TransactionTipsProps = {
   isPriceLoading?: boolean
@@ -64,7 +64,8 @@ export const TransactionAction = ({
     isExecutingTransaction ||
     !tokenB.tokenSymbol ||
     !tokenA.tokenSymbol ||
-    (status === WalletStatusType.connected && tokenA.amount <= 0) ||
+    status !== WalletStatusType.connected ||
+    tokenA.amount <= 0 ||
     tokenA?.amount > tokenABalance
 
   if (size === 'small') {

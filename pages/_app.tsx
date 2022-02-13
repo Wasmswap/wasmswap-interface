@@ -14,8 +14,15 @@ import {
   styled,
   useThemeClassName,
   useSubscribeDefaultAppTheme,
+  globalCss,
 } from '../components/theme'
 import { useEffect } from 'react'
+
+const applyGlobalStyles = globalCss({
+  body: {
+    backgroundColor: '$backgroundColors$base',
+  },
+})
 
 function NextJsAppRoot({ children }) {
   const themeClassName = useThemeClassName()
@@ -25,6 +32,7 @@ function NextJsAppRoot({ children }) {
   /* apply theme class on body also */
   useEffect(() => {
     document.body.classList.add(themeClassName)
+    applyGlobalStyles()
     return () => {
       document.body.classList.remove(themeClassName)
     }

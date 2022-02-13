@@ -35,7 +35,7 @@ export const ConnectedWalletButton = ({
 
   if (!connected) {
     return (
-      <Button onClick={onConnect} variant="primary" {...props}>
+      <Button onClick={onConnect} size="large" variant="primary" {...props}>
         Connect Keplr
       </Button>
     )

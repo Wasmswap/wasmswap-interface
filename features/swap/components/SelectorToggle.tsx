@@ -7,6 +7,7 @@ import { styled } from 'components/theme'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { ButtonForWrapper } from 'components/Button'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { getPropsForInteractiveElement } from '../../../util/getPropsForInteractiveElement'
 
 type SelectorToggleProps = {
   isSelecting: boolean
@@ -32,9 +33,8 @@ export const SelectorToggle = ({
   return (
     <StyledDivForSelector
       state={isSelecting || !tokenSymbol ? 'selecting' : 'selected'}
-      onClick={onToggle}
+      {...getPropsForInteractiveElement({ onClick: onToggle })}
       variant="ghost"
-      role="button"
     >
       {(isSelecting || !hasTokenSelected) && (
         <>

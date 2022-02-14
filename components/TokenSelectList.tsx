@@ -11,6 +11,7 @@ import { Spinner } from './Spinner'
 import { Inline } from './Inline'
 import { Divider } from './Divider'
 import { ImageForTokenLogo } from './ImageForTokenLogo'
+import { getPropsForInteractiveElement } from '../util/getPropsForInteractiveElement'
 
 const StyledDivForScrollContainer = styled('div', {
   overflowY: 'scroll',
@@ -86,9 +87,11 @@ export const TokenSelectList = ({
               variant="ghost"
               key={tokenInfo.symbol}
               selected={tokenInfo.symbol === activeTokenSymbol}
-              onClick={() => {
-                onSelect(tokenInfo.symbol)
-              }}
+              {...getPropsForInteractiveElement({
+                onClick() {
+                  onSelect(tokenInfo.symbol)
+                },
+              })}
             >
               <StyledDivForColumn kind="token">
                 <ImageForTokenLogo

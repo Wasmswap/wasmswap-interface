@@ -22,7 +22,7 @@ export interface AllAllowancesResponse {
   readonly allowances: readonly AllowanceInfo[]
 }
 
-export interface TokenInfo {
+export interface CW20TokenInfo {
   readonly name: string
   readonly symbol: string
   readonly decimals: number
@@ -68,7 +68,7 @@ export interface CW20Instance {
     startAfter?: string,
     limit?: number
   ) => Promise<readonly string[]>
-  tokenInfo: () => Promise<TokenInfo>
+  tokenInfo: () => Promise<CW20TokenInfo>
   investment: () => Promise<Investment>
   claims: (address: string) => Promise<Claims>
   minter: (sender: string) => Promise<any>
@@ -150,7 +150,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
       return accounts.accounts
     }
 
-    const tokenInfo = async (): Promise<TokenInfo> => {
+    const tokenInfo = async (): Promise<CW20TokenInfo> => {
       return client.queryContractSmart(contractAddress, { token_info: {} })
     }
 

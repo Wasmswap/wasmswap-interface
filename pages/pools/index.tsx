@@ -1,14 +1,21 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { media, styled } from 'components/theme'
 import { AppLayout } from 'components/Layout/AppLayout'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { PoolCard } from 'features/liquidity/components/PoolCard'
+import { ButtonWithDropdownForSorting } from 'features/liquidity/components/ButtonWithDropdownForSorting'
 import { PageHeader } from 'components/Layout/PageHeader'
+import { Inline } from 'components/Inline'
 import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
 import { Text } from 'components/Text'
 import { Spinner } from 'components/Spinner'
 import { useTokenList } from 'hooks/useTokenList'
-import { Column } from '../../components/Column'
+import { Column } from 'components/Column'
+import {
+  SortDirections,
+  SortParameters,
+  useSortPools,
+} from 'features/liquidity/hooks/useSortPools'
 
 export default function Pools() {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
@@ -19,7 +26,22 @@ export default function Pools() {
     poolIds,
   })
 
-  const [myPools, allPools] = useSplitTokens({ liquidity, supportedTokens })
+  const [sortParameter, setSortParameter] =
+    useState<SortParameters>('liquidity')
+  const [sortDirection, setSortDirection] = useState<SortDirections>('desc')
+
+  const [myPools, allPools] = useSortPools({
+    liquidity,
+    supportedTokens,
+    sortBy: useMemo(
+      () => ({
+        parameter: sortParameter,
+        direction: sortDirection,
+      }),
+      [sortParameter, sortDirection]
+    ),
+  })
+
   const shouldShowFetchingState = isLoading || !liquidity?.length
   const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
 
@@ -47,31 +69,48 @@ export default function Pools() {
         <>
           {Boolean(myPools?.length) && (
             <>
-              <SectionTitle>My Pools</SectionTitle>
+              <Text variant="primary" css={{ paddingBottom: '$11' }}>
+                Your Liquidity Pools
+              </Text>
+
               <StyledDivForPoolsGrid>
-                {myPools.map(({ liquidityInfo, tokenInfo }, key) => (
+                {myPools.map(({ liquidityInfo, tokenB }, key) => (
                   <PoolCard
                     key={key}
                     tokenASymbol={baseTokenSymbol}
-                    poolId={tokenInfo.pool_id}
-                    tokenBSymbol={tokenInfo.symbol}
+                    poolId={tokenB.pool_id}
+                    tokenBSymbol={tokenB.symbol}
                     myLiquidity={liquidityInfo.myLiquidity}
                     totalLiquidity={liquidityInfo.totalLiquidity}
                   />
                 ))}
               </StyledDivForPoolsGrid>
               {Boolean(allPools?.length) && (
-                <SectionTitle variant="all">All pools</SectionTitle>
+                <Inline
+                  gap={4}
+                  css={{
+                    paddingTop: '$19',
+                    paddingBottom: '$11',
+                  }}
+                >
+                  <Text variant="primary">{allPools.length} Other Pools</Text>
+                  <ButtonWithDropdownForSorting
+                    sortParameter={sortParameter}
+                    sortDirection={sortDirection}
+                    onSortParameterChange={setSortParameter}
+                    onSortDirectionChange={setSortDirection}
+                  />
+                </Inline>
               )}
             </>
           )}
           <StyledDivForPoolsGrid>
-            {allPools?.map(({ liquidityInfo, tokenInfo }, key) => (
+            {allPools?.map(({ liquidityInfo, tokenB }, key) => (
               <PoolCard
                 key={key}
                 tokenASymbol={baseTokenSymbol}
-                poolId={tokenInfo.pool_id}
-                tokenBSymbol={tokenInfo.symbol}
+                poolId={tokenB.pool_id}
+                tokenBSymbol={tokenB.symbol}
                 myLiquidity={liquidityInfo.myLiquidity}
                 totalLiquidity={liquidityInfo.totalLiquidity}
               />
@@ -95,26 +134,8 @@ const usePlatformPools = () => {
       .map(({ pool_id }) => pool_id)
       .filter(Boolean)
 
-    return [tokensCollection, poolIdsCollection]
+    return [tokensCollection, poolIdsCollection] as const
   }, [tokenList])
-}
-
-const useSplitTokens = ({ liquidity, supportedTokens }) => {
-  return useMemo(() => {
-    if (!liquidity?.length) return []
-    const pools = [[], []]
-
-    liquidity.forEach((liquidityInfo, index) => {
-      const poolIndex = liquidityInfo.myLiquidity.coins > 0 ? 0 : 1
-
-      pools[poolIndex].push({
-        liquidityInfo,
-        tokenInfo: supportedTokens[index],
-      })
-    })
-
-    return pools
-  }, [liquidity, supportedTokens])
 }
 
 const StyledDivForPoolsGrid = styled('div', {
@@ -134,17 +155,3 @@ const StyledDivForPoolsGrid = styled('div', {
     rowGap: '$8',
   },
 })
-
-const SectionTitle = ({ variant = 'my', children }) => {
-  return (
-    <Text
-      variant="primary"
-      css={{
-        paddingBottom: '$11',
-        paddingTop: variant === 'all' ? '$19' : '0px',
-      }}
-    >
-      {children}
-    </Text>
-  )
-}

@@ -9,8 +9,11 @@ import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { ButtonForWrapper } from './Button'
 import { Spinner } from './Spinner'
 import { Inline } from './Inline'
+import { Divider } from './Divider'
+import { ImageForTokenLogo } from './ImageForTokenLogo'
+import { getPropsForInteractiveElement } from '../util/getPropsForInteractiveElement'
 
-const StyledDivForWrapper = styled('div', {
+const StyledDivForScrollContainer = styled('div', {
   overflowY: 'scroll',
 })
 
@@ -22,7 +25,7 @@ export type TokenSelectListProps = {
   visibleNumberOfTokensInViewport?: number
   queryFilter?: string
   emptyStateLabel?: string
-} & ComponentPropsWithoutRef<typeof StyledDivForWrapper>
+} & ComponentPropsWithoutRef<typeof StyledDivForScrollContainer>
 
 export const TokenSelectList = ({
   activeTokenSymbol,
@@ -65,75 +68,83 @@ export const TokenSelectList = ({
   }, [tokenList, queryFilter])
 
   return (
-    <StyledDivForWrapper
-      {...props}
-      css={{
-        height: `${visibleNumberOfTokensInViewport * 3.5}rem`,
-        ...(props.css ? props.css : {}),
-      }}
-    >
-      {filteredTokenList?.map((tokenInfo) => {
-        return (
-          <StyledButtonForRow
-            role="listitem"
-            variant="ghost"
-            key={tokenInfo.symbol}
-            selected={tokenInfo.symbol === activeTokenSymbol}
-            onClick={() => {
-              onSelect(tokenInfo.symbol)
-            }}
-          >
-            <StyledDivForColumn kind="token">
-              <StyledImgForTokenLogo
-                as={tokenInfo.logoURI ? 'img' : 'div'}
-                src={tokenInfo.logoURI}
-                alt={tokenInfo.symbol}
-                loading="lazy"
-              />
-              <div data-token-info="">
-                <Text variant="body">{tokenInfo.symbol}</Text>
-                <Text variant="caption" color="disabled">
-                  {tokenInfo.name}
+    <>
+      <Inline css={{ padding: '0 $8' }}>
+        <Divider />
+      </Inline>
+
+      <StyledDivForScrollContainer
+        {...props}
+        css={{
+          height: `${visibleNumberOfTokensInViewport * 3.5}rem`,
+          ...(props.css ? props.css : {}),
+        }}
+      >
+        {filteredTokenList?.map((tokenInfo) => {
+          return (
+            <StyledButtonForRow
+              role="listitem"
+              variant="ghost"
+              key={tokenInfo.symbol}
+              selected={tokenInfo.symbol === activeTokenSymbol}
+              {...getPropsForInteractiveElement({
+                onClick() {
+                  onSelect(tokenInfo.symbol)
+                },
+              })}
+            >
+              <StyledDivForColumn kind="token">
+                <ImageForTokenLogo
+                  logoURI={tokenInfo.logoURI}
+                  size="big"
+                  alt={tokenInfo.symbol}
+                  loading="lazy"
+                />
+                <div data-token-info="">
+                  <Text variant="body">{tokenInfo.symbol}</Text>
+                  <Text variant="caption" color="disabled">
+                    {tokenInfo.name}
+                  </Text>
+                </div>
+              </StyledDivForColumn>
+              <StyledDivForColumn kind="balance">
+                <Text
+                  variant="body"
+                  align="right"
+                  css={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end',
+                  }}
+                >
+                  {fetchingBalanceMode === 'native' && (
+                    <FetchBalanceTextForNativeTokenSymbol
+                      tokenSymbol={tokenInfo.symbol}
+                    />
+                  )}
+                  {fetchingBalanceMode === 'ibc' && (
+                    <FetchBalanceTextForIbcTokenSymbol
+                      tokenSymbol={tokenInfo.symbol}
+                    />
+                  )}
                 </Text>
-              </div>
-            </StyledDivForColumn>
-            <StyledDivForColumn kind="balance">
-              <Text
-                variant="body"
-                align="right"
-                css={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-end',
-                }}
-              >
-                {fetchingBalanceMode === 'native' && (
-                  <FetchBalanceTextForNativeTokenSymbol
-                    tokenSymbol={tokenInfo.symbol}
-                  />
-                )}
-                {fetchingBalanceMode === 'ibc' && (
-                  <FetchBalanceTextForIbcTokenSymbol
-                    tokenSymbol={tokenInfo.symbol}
-                  />
-                )}
-              </Text>
-              <Text variant="caption" color="disabled">
-                available
-              </Text>
-            </StyledDivForColumn>
-          </StyledButtonForRow>
-        )
-      })}
-      {(filteredTokenList?.length || filteredTokenList?.length) === 0 && (
-        <Inline gap={6} css={{ padding: '$10 $4' }}>
-          <StyledImgForTokenLogo as="div">
-            <RejectIcon color="tertiary" />
-          </StyledImgForTokenLogo>
-          <Text variant="secondary">{emptyStateLabel}</Text>
-        </Inline>
-      )}
-    </StyledDivForWrapper>
+                <Text variant="caption" color="disabled">
+                  available
+                </Text>
+              </StyledDivForColumn>
+            </StyledButtonForRow>
+          )
+        })}
+        {(filteredTokenList?.length || filteredTokenList?.length) === 0 && (
+          <Inline gap={6} css={{ padding: '$5 $6' }}>
+            <ImageForTokenLogo size="big">
+              <RejectIcon color="tertiary" />
+            </ImageForTokenLogo>
+            <Text variant="secondary">{emptyStateLabel}</Text>
+          </Inline>
+        )}
+      </StyledDivForScrollContainer>
+    </>
   )
 }
 
@@ -194,14 +205,4 @@ const StyledDivForColumn = styled('div', {
       },
     },
   },
-})
-
-const StyledImgForTokenLogo = styled('img', {
-  width: '30px',
-  height: '30px',
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
 })

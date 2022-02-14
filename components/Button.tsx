@@ -85,6 +85,8 @@ const StyledButton = styled('button', {
         $$borderColorOnFocus: '$borderColors$selected',
       },
       menu: {
+        fontSize: '$4',
+
         $$textColor: '$textColors$body',
         $$iconColor: '$iconColors$primary',
 
@@ -147,7 +149,9 @@ const StyledButton = styled('button', {
       },
     },
     selected: {
-      true: {},
+      true: {
+        backgroundColor: '$$backgroundColorOnActive',
+      },
       false: {},
     },
 
@@ -256,28 +260,6 @@ const StyledButton = styled('button', {
       size: 'small',
       css: {
         padding: '0',
-      },
-    },
-
-    {
-      variant: 'ghost',
-      selected: true,
-      css: {
-        $$backgroundColor: '$$backgroundColorOnHover',
-      },
-    },
-    {
-      variant: 'secondary',
-      selected: true,
-      css: {
-        $$backgroundColor: '$$backgroundColorOnHover',
-      },
-    },
-    {
-      variant: 'menu',
-      selected: true,
-      css: {
-        $$backgroundColor: '$$backgroundColorOnHover',
       },
     },
   ],

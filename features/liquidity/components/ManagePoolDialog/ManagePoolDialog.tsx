@@ -27,6 +27,7 @@ import {
 } from 'components/Dialog'
 import { Spinner } from 'components/Spinner'
 import { usePrevious } from '@reach/utils'
+import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -301,14 +302,22 @@ function RemoveLiquidityContent({
         </Text>
         <StyledDivForLiquiditySummary>
           <StyledDivForToken>
-            <StyledImageForTokenLogo src={tokenA.logoURI} alt={tokenA.name} />
+            <ImageForTokenLogo
+              size="large"
+              logoURI={tokenA.logoURI}
+              alt={tokenA.name}
+            />
             <Text variant="caption">
               {formatTokenBalance(tokenAReserve * liquidityPercentage)}{' '}
               {tokenA.symbol}
             </Text>
           </StyledDivForToken>
           <StyledDivForToken>
-            <StyledImageForTokenLogo src={tokenB.logoURI} alt={tokenB.name} />
+            <ImageForTokenLogo
+              size="large"
+              logoURI={tokenB.logoURI}
+              alt={tokenB.name}
+            />
             <Text variant="caption">
               {formatTokenBalance(tokenBReserve * liquidityPercentage)}{' '}
               {tokenB.symbol}
@@ -345,10 +354,4 @@ const StyledDivForToken = styled('div', {
   display: 'flex',
   alignItems: 'center',
   columnGap: '$space$4',
-})
-
-const StyledImageForTokenLogo = styled('img', {
-  width: 20,
-  height: 20,
-  borderRadius: '50%',
 })

@@ -4,8 +4,13 @@ import { ComponentPropsWithoutRef } from 'react'
 
 const StyledImageForLogo = styled('img', {
   borderRadius: '50%',
-  flexShrink: 1,
-  flexGrow: 1,
+  flexShrink: 0,
+  flexGrow: 0,
+  border: '1px solid $borderColors$inactive',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '$backgroundColors$disabled',
   variants: {
     size: {
       small: {
@@ -33,7 +38,7 @@ const StyledImageForLogo = styled('img', {
 
 type ImageForTokenLogoProps = VariantProps<typeof StyledImageForLogo> &
   ComponentPropsWithoutRef<typeof StyledImageForLogo> & {
-    logoURI: string | null
+    logoURI?: string | null
   }
 
 export const ImageForTokenLogo = ({
@@ -41,7 +46,12 @@ export const ImageForTokenLogo = ({
   ...props
 }: ImageForTokenLogoProps) => {
   return (
-    <StyledImageForLogo as={logoURI ? 'img' : 'div'} src={logoURI} {...props} />
+    <StyledImageForLogo
+      as={logoURI ? 'img' : 'div'}
+      src={logoURI}
+      loading="lazy"
+      {...props}
+    />
   )
 }
 

@@ -6,7 +6,6 @@ import { Text } from 'components/Text'
 import { ChevronIcon } from 'icons/Chevron'
 import { ButtonWithDropdown } from 'components/ButtonWithDropdown'
 import { SortDirections, SortParameters } from '../hooks/useSortPools'
-import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
 
 type Props = {
   sortParameter: SortParameters

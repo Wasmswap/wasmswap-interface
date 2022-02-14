@@ -16,6 +16,7 @@ import {
   SortParameters,
   useSortPools,
 } from 'features/liquidity/hooks/useSortPools'
+import { useUpdateEffect } from '@reach/utils'
 
 export default function Pools() {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
@@ -26,9 +27,8 @@ export default function Pools() {
     poolIds,
   })
 
-  const [sortParameter, setSortParameter] =
-    useState<SortParameters>('liquidity')
-  const [sortDirection, setSortDirection] = useState<SortDirections>('desc')
+  const { sortDirection, sortParameter, setSortDirection, setSortParameter } =
+    useSortControllers()
 
   const [myPools, allPools] = useSortPools({
     liquidity,
@@ -136,6 +136,36 @@ const usePlatformPools = () => {
 
     return [tokensCollection, poolIdsCollection] as const
   }, [tokenList])
+}
+
+const useSortControllers = () => {
+  const storeKeyForParameter = '@pools/sort/parameter'
+  const storeKeyForDirection = '@pools/sort/direction'
+
+  const [sortParameter, setSortParameter] = useState<SortParameters>(
+    () =>
+      (localStorage.getItem(storeKeyForParameter) as SortParameters) ||
+      'liquidity'
+  )
+  const [sortDirection, setSortDirection] = useState<SortDirections>(
+    () =>
+      (localStorage.getItem(storeKeyForDirection) as SortDirections) || 'desc'
+  )
+
+  useUpdateEffect(() => {
+    localStorage.setItem(storeKeyForParameter, sortParameter)
+  }, [sortParameter])
+
+  useUpdateEffect(() => {
+    localStorage.setItem(storeKeyForParameter, sortDirection)
+  }, [sortDirection])
+
+  return {
+    sortDirection,
+    sortParameter,
+    setSortDirection,
+    setSortParameter,
+  }
 }
 
 const StyledDivForPoolsGrid = styled('div', {

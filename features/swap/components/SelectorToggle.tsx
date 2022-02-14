@@ -6,6 +6,8 @@ import { formatTokenBalance } from 'util/conversion'
 import { styled } from 'components/theme'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { ButtonForWrapper } from 'components/Button'
+import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { getPropsForInteractiveElement } from '../../../util/getPropsForInteractiveElement'
 
 type SelectorToggleProps = {
   isSelecting: boolean
@@ -31,9 +33,8 @@ export const SelectorToggle = ({
   return (
     <StyledDivForSelector
       state={isSelecting || !tokenSymbol ? 'selecting' : 'selected'}
-      onClick={onToggle}
+      {...getPropsForInteractiveElement({ onClick: onToggle })}
       variant="ghost"
-      role="button"
     >
       {(isSelecting || !hasTokenSelected) && (
         <>
@@ -48,11 +49,7 @@ export const SelectorToggle = ({
       )}
       {!isSelecting && hasTokenSelected && (
         <>
-          <StyledImgForTokenLogo
-            as={logoURI ? 'img' : 'div'}
-            src={logoURI}
-            alt={tokenSymbol}
-          />
+          <ImageForTokenLogo logoURI={logoURI} size="big" alt={tokenSymbol} />
           <div>
             <Text variant="body">{tokenSymbol}</Text>
             <Text variant="secondary">
@@ -97,11 +94,4 @@ const StyledDivForSelector = styled(ButtonForWrapper, {
       },
     },
   },
-})
-
-const StyledImgForTokenLogo = styled('img', {
-  width: '1.875rem',
-  height: '1.875rem',
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
 })

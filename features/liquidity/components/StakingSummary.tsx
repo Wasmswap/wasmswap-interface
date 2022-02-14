@@ -8,6 +8,7 @@ import {
   useGetPoolTokensDollarValue,
   usePoolPairTokenAmount,
 } from 'features/liquidity/hooks'
+import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 
 type StakingSummaryProps = {
   label: string
@@ -113,7 +114,7 @@ export const StakingSummary = ({
 
 const StyledNodeForToken = ({ logoURI, name, amount }) => (
   <StyledDivForToken>
-    <StyledImgForTokenLogo as={logoURI ? 'img' : 'div'} src={logoURI} />
+    <ImageForTokenLogo logoURI={logoURI} alt={name} size="large" />
     <Text transform="uppercase" variant="caption" wrap={false}>
       {formatTokenBalance(amount)} {name}
     </Text>
@@ -164,13 +165,6 @@ const StyledDivForToken = styled('div', {
   alignItems: 'center',
   columnGap: '$space$4',
   width: '100%',
-})
-
-const StyledImgForTokenLogo = styled('img', {
-  width: '20px',
-  height: '20px',
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
 })
 
 const StyledTextForInputWithSymbol: any = styled(Text, {

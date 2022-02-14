@@ -5,10 +5,16 @@ type DividerProps = {
   offsetY?: string
   offsetTop?: string
   offsetBottom?: string
+  css?: CSS
 }
 
-export const Divider = ({ offsetY, offsetTop, offsetBottom }: DividerProps) => {
-  const css: CSS = {}
+export const Divider = ({
+  offsetY,
+  offsetTop,
+  offsetBottom,
+  css: forwardedCSS,
+}: DividerProps) => {
+  const css: CSS = forwardedCSS ? { ...forwardedCSS } : {}
 
   if (offsetTop) css.marginTop = offsetTop
   if (offsetBottom) css.marginBottom = offsetBottom

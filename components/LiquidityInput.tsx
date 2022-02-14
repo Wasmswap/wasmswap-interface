@@ -4,6 +4,7 @@ import { Text } from './Text'
 import { formatTokenBalance } from '../util/conversion'
 import { useTokenInfo } from '../hooks/useTokenInfo'
 import { BasicNumberInput } from './BasicNumberInput'
+import { ImageForTokenLogo } from './ImageForTokenLogo'
 
 type LiquidityInputProps = {
   tokenSymbol: string
@@ -35,7 +36,7 @@ export const LiquidityInput: FC<LiquidityInputProps> = ({
       active={focusedOnInput}
     >
       <StyledDivForColumn kind="info">
-        <StyledImageForToken src={logoURI} as={logoURI ? 'img' : 'div'} />
+        <ImageForTokenLogo logoURI={logoURI} alt={tokenName} size="big" />
         <div data-token-info="">
           <Text variant="title" transform="uppercase">
             {tokenName}
@@ -103,11 +104,4 @@ const StyledDivForColumn = styled('div', {
       },
     },
   },
-})
-
-const StyledImageForToken = styled('img', {
-  width: 30,
-  height: 30,
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
 })

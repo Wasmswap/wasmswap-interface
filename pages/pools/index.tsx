@@ -157,7 +157,7 @@ const useSortControllers = () => {
   }, [sortParameter])
 
   useUpdateEffect(() => {
-    localStorage.setItem(storeKeyForParameter, sortDirection)
+    localStorage.setItem(storeKeyForDirection, sortDirection)
   }, [sortDirection])
 
   return {

@@ -13,6 +13,7 @@ export type IconWrapperProps = Omit<
   color?: keyof typeof lightThemeColorTokens.iconColors | string
   size?: string
   rotation?: string
+  visible?: boolean
 }
 
 const IconWrapperComponent = (
@@ -25,6 +26,7 @@ const IconWrapperComponent = (
     height,
     rotation,
     type,
+    visible,
     ...props
   }: IconWrapperProps,
   ref: ForwardedRef<any>
@@ -36,6 +38,7 @@ const IconWrapperComponent = (
       ref={ref}
       role={type === 'button' ? 'button' : undefined}
       $isButton={type === 'button'}
+      $visible={visible}
       $theme={theme}
       $color={color}
       $rounded={rounded}
@@ -54,7 +57,7 @@ const buttonStyles = css`
   cursor: pointer;
   transition: box-shadow 0.1s ease-out, background-color 0.1s ease-out;
   background-color: rgba(25, 29, 32, 0);
-  box-shadow: 0 0 0 0px rgba(25, 29, 32, 0);
+  box-shadow: 0 0 0 0 rgba(25, 29, 32, 0);
   border-radius: 50%;
   &:hover {
     background-color: rgba(25, 29, 32, 0.1);
@@ -79,6 +82,10 @@ const StyledIcon = styled.span`
   ${(p) => (p.$rotation ? `transform: rotateZ(${p.$rotation})` : '')};
   fill: currentColor;
   ${(p) => (p.$isButton ? buttonStyles : undefined)}
+  ${(p) =>
+    typeof p.$visible === 'boolean'
+      ? `opacity: ${p.$visible ? 1 : 0}`
+      : undefined}
 `
 
 export const IconWrapper = forwardRef(IconWrapperComponent)

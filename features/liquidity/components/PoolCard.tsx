@@ -28,7 +28,10 @@ export const PoolCard = ({
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const [stakedTokenBalance] = useStakedTokenBalance({ poolId })
+  const [stakedTokenBalance] = useStakedTokenBalance({
+    poolId,
+    enabled: Boolean(myLiquidity?.coins),
+  })
   const [stakedTokenBalanceDollarValue] = useGetPoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: stakedTokenBalance,

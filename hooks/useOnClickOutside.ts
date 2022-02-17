@@ -6,6 +6,14 @@ export function useOnClickOutside(
 ) {
   const handlerRef = useRef(handler)
 
+  const initialRefs = useRef(refs).current
+
+  if (initialRefs.length !== refs.length) {
+    throw new Error(
+      '`refs` array has to persist its length throughout re-renders.'
+    )
+  }
+
   useEffect(
     () => {
       if (refs?.length) {

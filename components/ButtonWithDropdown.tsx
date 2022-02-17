@@ -21,6 +21,7 @@ export const ButtonWithDropdown = ({ dropdown, ...buttonProps }: Props) => {
       const clientRect = (
         buttonRef.current as HTMLButtonElement
       ).getBoundingClientRect()
+
       setPosition({
         left: clientRect.left,
         top: clientRect.top + clientRect.height + window.pageYOffset,

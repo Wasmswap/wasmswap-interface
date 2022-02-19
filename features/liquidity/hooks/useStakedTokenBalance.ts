@@ -5,7 +5,7 @@ import { useQuery } from 'react-query'
 import { getStakedBalance } from 'services/staking'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
-export const useStakedTokenBalance = ({ poolId }) => {
+export const useStakedTokenBalance = ({ poolId, enabled = true }) => {
   const { address, status, client } = useRecoilValue(walletState)
 
   const token = useTokenInfoByPoolId(poolId)
@@ -19,7 +19,9 @@ export const useStakedTokenBalance = ({ poolId }) => {
     },
     {
       enabled: Boolean(
-        token?.staking_address && status === WalletStatusType.connected
+        token?.staking_address &&
+          status === WalletStatusType.connected &&
+          enabled
       ),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,

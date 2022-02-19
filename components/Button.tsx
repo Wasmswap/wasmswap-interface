@@ -148,6 +148,11 @@ const StyledButton = styled('button', {
         cursor: 'pointer',
       },
     },
+    dropdownVisible: {
+      true: {
+        borderRadius: '$1 $1 0 0',
+      },
+    },
     selected: {
       true: {
         backgroundColor: '$$backgroundColorOnActive',
@@ -342,7 +347,7 @@ const mapIconVariant = ({
 export const Button = forwardRef(ButtonComponent) as typeof ButtonComponent
 
 export const ButtonForWrapper = styled(
-  (props: any) => <Button as="div" {...props} />,
+  (props: any) => <Button as={props.as || 'div'} {...props} />,
   {
     display: 'flex',
     flexDirection: 'row',

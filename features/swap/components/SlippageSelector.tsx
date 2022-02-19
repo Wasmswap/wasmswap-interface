@@ -12,6 +12,7 @@ type SlippageSelectorProps = {
   onSlippageChange: (slippage: number) => void
   css?: CSS
 }
+
 export const SlippageSelector = ({
   slippage = 0.01,
   onSlippageChange,
@@ -20,7 +21,7 @@ export const SlippageSelector = ({
   const [isShowingSettings, setShowingSettings] = useState(false)
 
   const refForWrapper = useRef()
-  useOnClickOutside(refForWrapper, () => {
+  useOnClickOutside([refForWrapper], () => {
     setShowingSettings(false)
   })
 

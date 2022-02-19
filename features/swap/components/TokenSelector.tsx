@@ -49,7 +49,7 @@ export const TokenSelector = ({
     setTokenListShowing(false)
   }
 
-  useOnClickOutside(wrapperRef, () => {
+  useOnClickOutside([wrapperRef], () => {
     setTokenListShowing(false)
   })
 

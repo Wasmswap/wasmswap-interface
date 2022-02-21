@@ -11,7 +11,7 @@ export const getDefaultExecuteFee = (
 
 export const unsafelyGetDefaultExecuteFee = () => {
   /* hack: read chain info from query cache */
-  const chainInfo = unsafelyReadChainInfoCache()
+  const chainInfo = unsafelyReadChainInfoCache()?.base_chain
 
   /* throw an error if the function was called before the cache is available */
   if (!chainInfo) {

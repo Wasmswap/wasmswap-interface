@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { getSwapInfo, InfoResponse } from '../services/swap'
 import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
-import { useChainInfo } from './useChainInfo'
+import { useBaseChainInfo } from './useChainInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
 type SwapInfo = Pick<
@@ -25,7 +25,7 @@ export const useMultipleSwapInfo = ({
   poolIds,
   refetchInBackground,
 }: UseMultipleSwapInfoArgs) => {
-  const [chainInfo] = useChainInfo()
+  const [chainInfo] = useBaseChainInfo()
 
   const tokensByPoolIds = useTokenInfoByPoolIds(poolIds)
   const tokensByTokenSymbols = useMultipleTokenInfo(tokenSymbols)

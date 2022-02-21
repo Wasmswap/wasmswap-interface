@@ -3,13 +3,13 @@ import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useMutation } from 'react-query'
 import { useEffect } from 'react'
-import { useChainInfo } from './useChainInfo'
+import { useBaseChainInfo } from './useChainInfo'
 
 export const useConnectWallet = (
   mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
   const [{ status }, setWalletState] = useRecoilState(walletState)
-  const [chainInfo] = useChainInfo()
+  const [chainInfo] = useBaseChainInfo()
 
   const mutation = useMutation(async () => {
     if (window && !window?.keplr) {

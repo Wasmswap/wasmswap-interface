@@ -6,6 +6,7 @@ export const APP_NAME = process.env.NEXT_PUBLIC_SITE_TITLE
 export const APP_MAX_WIDTH = '1920px'
 
 export const POOL_TOKENS_DECIMALS = 6
+export const DEFAULT_GAS_FEE_FOR_SWAP = 0.05
 
 /* the app operates in test mode */
 export const __TEST_MODE__ = !JSON.parse(

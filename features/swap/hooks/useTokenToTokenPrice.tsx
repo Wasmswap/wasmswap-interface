@@ -10,14 +10,14 @@ import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from 'util/conversion'
-import { useChainInfo } from 'hooks/useChainInfo'
+import { useBaseChainInfo } from 'hooks/useChainInfo'
 
 export const useTokenToTokenPrice = ({
   tokenASymbol,
   tokenBSymbol,
   tokenAmount,
 }) => {
-  const [chainInfoReference] = useChainInfo()
+  const [chainInfoReference] = useBaseChainInfo()
   const baseToken = useBaseTokenInfo()
 
   const tokenA = useTokenInfo(tokenASymbol)

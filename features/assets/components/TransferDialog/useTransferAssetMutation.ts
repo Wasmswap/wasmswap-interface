@@ -15,7 +15,7 @@ import { TransactionKind } from './types'
 import { IBCAssetInfo } from 'hooks/useIbcAssetList'
 import { getDefaultExecuteFee } from 'util/fees'
 import { convertDenomToMicroDenom } from 'util/conversion'
-import { useChainInfo } from 'hooks/useChainInfo'
+import { useBaseChainInfo } from 'hooks/useChainInfo'
 
 type UseTransferAssetMutationArgs = {
   transactionKind: TransactionKind
@@ -64,7 +64,7 @@ export const useTransferAssetMutation = ({
   const { address: ibcAddress, client: ibcClient } =
     useRecoilValue(ibcWalletState)
 
-  const [chainInfo] = useChainInfo()
+  const [chainInfo] = useBaseChainInfo()
 
   return useMutation(async () => {
     const timeout = Math.floor(new Date().getTime() / 1000) + 120

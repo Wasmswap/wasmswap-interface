@@ -1,5 +1,5 @@
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { useChainInfo } from 'hooks/useChainInfo'
+import { useBaseChainInfo } from 'hooks/useChainInfo'
 import { useQuery } from 'react-query'
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { getUnstakingDuration } from 'services/staking'
@@ -7,7 +7,7 @@ import { WalletStatusType } from 'state/atoms/walletAtoms'
 
 export const useUnstakingDuration = ({ poolId }) => {
   const token = useTokenInfo(poolId)
-  const [chainInfo] = useChainInfo()
+  const [chainInfo] = useBaseChainInfo()
 
   const { data = 0, isLoading } = useQuery(
     `unstakingDuration/${poolId}`,

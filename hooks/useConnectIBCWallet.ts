@@ -4,6 +4,7 @@ import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useIBCAssetInfo } from './useIBCAssetInfo'
 import { useMutation } from 'react-query'
 import { useEffect } from 'react'
+import { useExternalChainsInfo } from './useChainInfo'
 
 /* shares very similar logic with `useConnectWallet` and is a subject to refactor */
 export const useConnectIBCWallet = (
@@ -14,6 +15,10 @@ export const useConnectIBCWallet = (
     useRecoilState(ibcWalletState)
 
   const assetInfo = useIBCAssetInfo(tokenSymbol || storedTokenSymbol)
+
+  const [externalChains] = useExternalChainsInfo()
+
+  console.log({ externalChains })
 
   const mutation = useMutation(async () => {
     if (window && !window?.keplr) {
@@ -43,6 +48,14 @@ export const useConnectIBCWallet = (
 
     try {
       const { chain_id, rpc } = assetInfo
+
+      /* suggest the chain if config provided */
+      const chainInfo = externalChains.find(
+        (chain) => chain.chainId === chain_id
+      )
+      if (chainInfo) {
+        await window.keplr.experimentalSuggestChain(chainInfo)
+      }
 
       await window.keplr.enable(chain_id)
       const offlineSigner = await window.getOfflineSigner(chain_id)

@@ -13,7 +13,6 @@ export type IBCAssetInfo = {
   juno_channel: string
   channel: string
   logoURI: string
-  deposit_gas_fee?: number
 }
 
 export type IBCAssetList = {

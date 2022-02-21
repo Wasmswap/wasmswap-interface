@@ -7,6 +7,7 @@ import {
 import { getIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { usePriceForOneToken } from '../features/swap/hooks/usePriceForOneToken'
+import { protectAgainstNaN } from '../util/conversion'
 
 export const useTokenDollarValue = (tokenSymbol?: string) => {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
@@ -38,7 +39,7 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
 
   /* otherwise, let's query the chain and calculate the dollar price based on ratio to base token */
   return [
-    tokenDollarPrice * oneTokenToTokenPrice,
+    protectAgainstNaN(tokenDollarPrice * oneTokenToTokenPrice),
     fetchingTokenDollarPrice || fetchingTokenToTokenPrice,
   ] as const
 }

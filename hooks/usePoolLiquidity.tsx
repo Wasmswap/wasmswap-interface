@@ -6,7 +6,7 @@ import { useBaseTokenInfo } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { useChainInfo } from './useChainInfo'
+import { useBaseChainInfo } from './useChainInfo'
 import { useMultipleSwapInfo } from './useSwapInfo'
 
 export type LiquidityType = {
@@ -37,7 +37,7 @@ export const useMultiplePoolsLiquidity = ({
   refetchInBackground = false,
 }): readonly [LiquidityInfoType[] | undefined, boolean] => {
   const { address } = useRecoilValue(walletState)
-  const [chainInfo] = useChainInfo()
+  const [chainInfo] = useBaseChainInfo()
 
   const [swaps, fetchingSwaps] = useMultipleSwapInfo({
     poolIds,

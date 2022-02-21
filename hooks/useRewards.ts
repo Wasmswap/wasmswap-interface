@@ -5,7 +5,7 @@ import { getClaimableRewards, getRewardsInfo } from 'services/rewards'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 import { convertMicroDenomToDenom } from 'util/conversion'
-import { useChainInfo } from './useChainInfo'
+import { useBaseChainInfo } from './useChainInfo'
 
 export const useClaimableRewardsBalance = (
   rewardsAddress: string,
@@ -33,7 +33,7 @@ export const useClaimableRewardsBalance = (
 }
 
 export const useRewardsInfo = (rewardsAddress: string) => {
-  const [chainInfo] = useChainInfo()
+  const [chainInfo] = useBaseChainInfo()
 
   const { data: info = {}, isLoading } = useQuery(
     `rewardsInfo/${rewardsAddress}`,

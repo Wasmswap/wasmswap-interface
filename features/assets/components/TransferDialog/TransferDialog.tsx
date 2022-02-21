@@ -21,9 +21,10 @@ import {
 import { AppWalletInfo, KeplrWalletInfo } from './WalletInfo'
 import { AssetSelector } from './AssetSelector'
 import { AmountInput } from './AmountInput'
-import { useIBCTokenBalance } from '../../../../hooks/useIBCTokenBalance'
-import { useTokenBalance } from '../../../../hooks/useTokenBalance'
-import { useRefetchQueries } from '../../../../hooks/useRefetchQueries'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { useTokenGasPrice } from 'hooks/useTokenGasPrice'
 
 type TransferDialogProps = {
   tokenSymbol: string
@@ -41,9 +42,7 @@ export const TransferDialog = ({
   onTokenSelect,
 }: TransferDialogProps) => {
   const tokenInfo = useIBCAssetInfo(tokenSymbol)
-  const deposit_gas_fee = tokenInfo.deposit_gas_fee
-    ? tokenInfo.deposit_gas_fee
-    : 0.01
+  const tokenGasFee = useTokenGasPrice({ tokenSymbol })
 
   const { balance: externalIbcAssetBalance } = useIBCTokenBalance(tokenSymbol)
   const { balance: nativeAssetBalance } = useTokenBalance(tokenSymbol)
@@ -129,7 +128,7 @@ export const TransferDialog = ({
         <AmountInput
           maxApplicableAmount={
             transactionKind === 'deposit'
-              ? Math.max(externalIbcAssetBalance - deposit_gas_fee, 0)
+              ? Math.max(externalIbcAssetBalance - tokenGasFee, 0)
               : nativeAssetBalance
           }
           amount={tokenAmount}

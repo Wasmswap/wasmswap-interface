@@ -18,7 +18,8 @@ import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { Button } from 'components/Button'
 import { UpRightArrow } from 'icons/UpRightArrow'
-import { useSwapInfo } from '../../../../hooks/useSwapInfo'
+import { useSwapInfo } from 'hooks/useSwapInfo'
+import { useTokenGasPrice } from 'hooks/useTokenGasPrice'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -40,6 +41,8 @@ export const usePoolDialogController = ({
     poolId: tokenB.pool_id,
   })
 
+  const tokenGasPrice = useTokenGasPrice({ tokenSymbol: tokenA.symbol })
+
   function calculateMaxApplicableBalances() {
     // Decimal converted reserves
     const tokenAReserve = convertMicroDenomToDenom(
@@ -54,7 +57,7 @@ export const usePoolDialogController = ({
     // TODO: Make slippage configurable
     const slippage = 0.99
     const tokenAToTokenBRatio = (tokenAReserve * slippage) / tokenBReserve
-    const tokenABalanceMinusGasFee = Math.max(tokenABalance - 0.1, 0)
+    const tokenABalanceMinusGasFee = Math.max(tokenABalance - tokenGasPrice, 0)
 
     const isTokenALimitingFactor =
       tokenABalance < tokenBBalance * tokenAToTokenBRatio

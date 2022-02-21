@@ -18,8 +18,6 @@ export const useConnectIBCWallet = (
 
   const [externalChains] = useExternalChainsInfo()
 
-  console.log({ externalChains })
-
   const mutation = useMutation(async () => {
     if (window && !window?.keplr) {
       alert('Please install Keplr extension and refresh the page.')

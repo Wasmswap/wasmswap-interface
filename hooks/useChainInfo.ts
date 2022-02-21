@@ -32,8 +32,6 @@ export const useChainInfo = () =>
 export const useExternalChainsInfo = () => {
   const { data, isLoading } = useChainInfo()
 
-  console.log({ data })
-
   return [data?.external_chains, isLoading] as const
 }
 

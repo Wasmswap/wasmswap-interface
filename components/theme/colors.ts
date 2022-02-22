@@ -15,9 +15,9 @@ export const lightThemeColors = {
 /* invert light theme main tokens to get the dark theme tokens */
 export const darkThemeColors = {
   ...lightThemeColors,
-  brand: '#8F74FA',
-  error: '#AD3049',
-  valid: '#31908A',
+  brand: '#5756D5',
+  error: '#C73E59',
+  valid: '#39A699',
   white: lightThemeColors.black,
   black: lightThemeColors.white,
   light: lightThemeColors.dark,

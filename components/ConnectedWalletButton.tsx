@@ -131,13 +131,13 @@ const StyledWalletButton = styled('div', {
   textAlign: 'left',
   border: '1px solid $borderColors$default',
   '&:hover': {
-    border: '1px solid $borderColors$focus',
+    border: '1px solid $borderColors$selected',
     [`${StyledDivForActions}`]: {
       opacity: 1,
     },
   },
   [media.sm]: {
-    border: '1px solid $borderColors$focus',
+    border: '1px solid $borderColors$selected',
     [`${StyledDivForActions}`]: {
       opacity: 1,
     },

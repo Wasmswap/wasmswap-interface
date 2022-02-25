@@ -1,32 +1,29 @@
 import { Text } from 'components/Text'
 import { Button } from 'components/Button'
-import { Card, CardContent } from 'components/Card'
-import { PlusIcon } from '../../../icons/Plus'
+import { CardContent, Card } from 'components/Card'
 import {
   convertMicroDenomToDenom,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { SharesIcon } from '../../../icons/Shares'
 import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { Inline } from '../../../components/Inline'
 import { Divider } from '../../../components/Divider'
 import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
+import { useSubscribeInteractions } from '../../../hooks/useSubscribeInteractions'
 
 type ManageLiquidityCardProps = Pick<
   LiquidityInfoType,
   'myReserve' | 'tokenDollarValue'
 > & {
-  onAddLiquidityClick: () => void
-  onRemoveLiquidityClick: () => void
+  onClick: () => void
   tokenASymbol: string
   tokenBSymbol: string
 }
 
 export const ManageLiquidityCard = ({
-  onAddLiquidityClick,
-  onRemoveLiquidityClick,
+  onClick,
   myReserve,
   tokenDollarValue,
   tokenASymbol,
@@ -34,6 +31,8 @@ export const ManageLiquidityCard = ({
 }: ManageLiquidityCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
+
+  const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
   const providedLiquidity = myReserve?.[0] > 0
 
@@ -54,22 +53,25 @@ export const ManageLiquidityCard = ({
   )
 
   return (
-    <Card>
+    <Card
+      ref={refForCard}
+      tabIndex={-1}
+      role="button"
+      variant={providedLiquidity ? 'primary' : 'secondary'}
+      onClick={onClick}
+    >
       <CardContent>
-        <Inline gap={1} css={{ padding: '$12 0 $3' }}>
-          <SharesIcon size="24px" />
-          <Text variant="legend" color="body">
-            Available liquidity
-          </Text>
-        </Inline>
+        <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
+          Available liquidity
+        </Text>
         <Text variant="hero">${providedLiquidityDollarValue}</Text>
       </CardContent>
-      <Divider offsetTop="$16" offsetBottom="$10" />
+      <Divider offsetTop="$22" offsetBottom="$12" />
       <CardContent>
         <Text variant="legend" color="secondary">
           Underlying assets
         </Text>
-        <Inline gap={12} css={{ padding: '$6 0 $18' }}>
+        <Inline gap={12} css={{ padding: '$6 0 $22' }}>
           <Inline gap={3}>
             <ImageForTokenLogo
               size="large"
@@ -87,30 +89,31 @@ export const ManageLiquidityCard = ({
             <Text variant="body">{tokenBReserve}</Text>
           </Inline>
         </Inline>
-        <Inline
-          gap={4}
-          justifyContent="flex-end"
-          css={{ paddingBottom: '$10' }}
-        >
+        <Inline css={{ paddingBottom: '$13' }}>
           {providedLiquidity && (
-            <>
-              <Button onClick={onRemoveLiquidityClick} variant="secondary">
-                Remove
-              </Button>
-              <Button
-                onClick={onAddLiquidityClick}
-                variant="secondary"
-                iconRight={<PlusIcon />}
-              >
-                Add Liquidity
-              </Button>
-            </>
+            <Button
+              variant="secondary"
+              size="large"
+              state={cardInteractionState}
+              css={{ width: '100%' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
+            >
+              Manage Liquidity
+            </Button>
           )}
           {!providedLiquidity && (
             <Button
-              onClick={onAddLiquidityClick}
-              variant="ghost"
-              iconRight={<PlusIcon />}
+              variant="primary"
+              size="large"
+              state={cardInteractionState}
+              css={{ width: '100%' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
             >
               Add Liquidity
             </Button>

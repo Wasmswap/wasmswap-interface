@@ -42,7 +42,7 @@ export const PoolCard = ({
 
   return (
     <Link href={`/pools/${poolId}`} passHref>
-      <Card>
+      <Card variant="secondary" active={hasProvidedLiquidity}>
         <CardContent>
           <Text
             variant="legend"

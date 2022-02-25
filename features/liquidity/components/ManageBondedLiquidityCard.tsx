@@ -1,21 +1,21 @@
 import { Text } from 'components/Text'
 import { Button } from 'components/Button'
-import { MultisigIcon } from 'icons/Multisig'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { Divider } from 'components/Divider'
-import {
-  dollarValueFormatter,
-  dollarValueFormatterWithDecimals,
-} from 'util/conversion'
-import { Card, CardContent } from 'components/Card'
+import { dollarValueFormatterWithDecimals } from 'util/conversion'
+import { CardContent, Card } from 'components/Card'
 import { Inline } from 'components/Inline'
-import { SharesIcon } from 'icons/Shares'
+import { Column } from 'components/Column'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { StyledDivForTokenLogos } from './PoolCard'
+import { AprPill } from './AprPill'
+import { BaseCardForEmptyState } from './BaseCardForEmptyState'
+import { useSubscribeInteractions } from '../../../hooks/useSubscribeInteractions'
 
 export const ManageBondedLiquidityCard = ({
-  onButtonClick,
+  onClick,
   tokenASymbol,
+
   tokenBSymbol,
   myLiquidity,
   stakedBalance,
@@ -24,11 +24,13 @@ export const ManageBondedLiquidityCard = ({
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const bondedLiquidity = supportsIncentives && stakedBalance.coins > 0
+  const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const unstakedLiquidityDollarValue = dollarValueFormatter(
-    /* let's not show decimals to save up some space */
-    parseInt(myLiquidity.dollarValue, 10),
+  const bondedLiquidity = supportsIncentives && stakedBalance.coins > 0
+  const providedLiquidity = myLiquidity.coins > 0
+
+  const unstakedLiquidityDollarValue = dollarValueFormatterWithDecimals(
+    myLiquidity.dollarValue,
     {
       includeCommaSeparation: true,
     }
@@ -41,84 +43,112 @@ export const ManageBondedLiquidityCard = ({
     }
   )
 
-  return (
-    <Card>
-      <CardContent>
-        <Inline gap={1} css={{ padding: '$12 0 $3' }}>
-          <SharesIcon color="brand" size="24px" />
-          <Text variant="legend" color="brand">
-            Staked liquidity
+  if (!providedLiquidity) {
+    return (
+      <BaseCardForEmptyState>
+        <Column align="center">
+          <AprPill />
+          <Text
+            align="center"
+            variant="body"
+            color="tertiary"
+            css={{ padding: '$15 0 $6' }}
+          >
+            No staked liquidity yet
           </Text>
-        </Inline>
-        <Text variant="hero">${bondedLiquidityDollarValue}</Text>
-      </CardContent>
-      <Divider offsetTop="$16" offsetBottom="$10" />
+          <Text align="center" variant="primary">
+            Add liquidity to the pool so you can stake it
+          </Text>
+        </Column>
+      </BaseCardForEmptyState>
+    )
+  }
+
+  return (
+    <Card
+      ref={refForCard}
+      onClick={supportsIncentives ? onClick : undefined}
+      variant={bondedLiquidity ? 'primary' : 'secondary'}
+    >
       <CardContent>
-        {!bondedLiquidity && (
-          <>
-            <Text
-              variant="legend"
-              color="secondary"
-              css={{ paddingBottom: '4.55rem' }}
+        <Text variant="legend" color="brand" css={{ padding: '$16 0 $6' }}>
+          Staked liquidity
+        </Text>
+        <Text variant="hero">${bondedLiquidityDollarValue}</Text>
+        <Text variant="link" color="brand" css={{ paddingTop: '$4' }}>
+          ${unstakedLiquidityDollarValue} unstaked
+        </Text>
+      </CardContent>
+      <Divider offsetTop="$8" offsetBottom="$12" />
+      <CardContent>
+        <Text variant="legend" color="secondary" css={{ paddingBottom: '$6' }}>
+          Currently reward incentive
+        </Text>
+        <Inline gap={12}>
+          <AprPill />
+
+          <Inline gap={6}>
+            <StyledDivForTokenLogos>
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenA.logoURI}
+                alt={tokenA.symbol}
+              />
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenB.logoURI}
+                alt={tokenB.symbol}
+              />
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenA.logoURI}
+                alt={tokenA.symbol}
+              />
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenB.logoURI}
+                alt={tokenB.symbol}
+              />
+            </StyledDivForTokenLogos>
+            <Text variant="link">$105/days</Text>
+          </Inline>
+        </Inline>
+        <Inline css={{ padding: '$17 0 $13' }}>
+          {bondedLiquidity && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
+              state={supportsIncentives ? cardInteractionState : undefined}
+              variant="secondary"
+              size="large"
+              disabled={!supportsIncentives}
+              css={{ width: '100%' }}
             >
-              Currently no incentive
-            </Text>
-            <Inline justifyContent="flex-end">
-              <Button
-                onClick={onButtonClick}
-                variant="ghost"
-                iconRight={<MultisigIcon />}
-                disabled={!supportsIncentives || myLiquidity?.coins <= 0}
-              >
-                ${unstakedLiquidityDollarValue} to stake
-              </Button>
-            </Inline>
-          </>
-        )}
-        {bondedLiquidity && (
-          <>
-            <Text variant="legend" color="secondary">
-              Current reward incentive
-            </Text>
-            <Inline gap={6} css={{ padding: '$6 0 $18' }}>
-              <StyledDivForTokenLogos>
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-              </StyledDivForTokenLogos>
-              <Text variant="link">$105/days in 4 tokens</Text>
-            </Inline>
-            <Inline
-              gap={4}
-              justifyContent="flex-end"
-              css={{ paddingBottom: '$10' }}
+              {supportsIncentives
+                ? 'Manage staking'
+                : 'Does not support staking'}
+            </Button>
+          )}
+          {!bondedLiquidity && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
+              state={supportsIncentives ? cardInteractionState : undefined}
+              variant="primary"
+              size="large"
+              css={{ width: '100%' }}
+              disabled={!supportsIncentives}
             >
-              <Button variant="menu" onClick={onButtonClick}>
-                ${unstakedLiquidityDollarValue} unstaked
-              </Button>
-              <Button variant="secondary" onClick={onButtonClick}>
-                Manage staking
-              </Button>
-            </Inline>
-          </>
-        )}
+              {supportsIncentives
+                ? 'Stake liquidity'
+                : 'Does not support staking'}
+            </Button>
+          )}
+        </Inline>
       </CardContent>
     </Card>
   )

@@ -31,6 +31,7 @@ import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { UpRightArrow } from 'icons/UpRightArrow'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { formatSdkErrorMessage } from '../../../util/formatSdkErrorMessage'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
@@ -92,7 +93,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
             liquidityDollarAmount as number,
             { includeCommaSeparation: true }
           )}`}
-          body={(error as any)?.message ?? error?.toString()}
+          body={formatSdkErrorMessage(error)}
           buttons={
             <Button
               as="a"

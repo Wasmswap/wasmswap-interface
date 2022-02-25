@@ -22,6 +22,13 @@ export const stakeTokens = async (
     },
   }
 
+  console.log({
+    senderAddress,
+    lpTokenAddress,
+    msg,
+    fee: unsafelyGetDefaultExecuteFee(),
+  })
+
   return await client.execute(
     senderAddress,
     lpTokenAddress,

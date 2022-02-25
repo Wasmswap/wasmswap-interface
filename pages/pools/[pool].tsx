@@ -31,6 +31,7 @@ import {
   useGetPoolTokensDollarValue,
   useStakedTokenBalance,
 } from 'features/liquidity/hooks'
+import { LiquidityRewardsCard } from 'features/liquidity/components/LiquidityRewardsCard'
 
 export default function Pool() {
   const {
@@ -148,26 +149,27 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
-                  onAddLiquidityClick={() =>
+                  onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
                       actionType: 'add',
                     })
                   }
-                  onRemoveLiquidityClick={() => {
-                    setManageLiquidityDialogState({
-                      isShowing: true,
-                      actionType: 'remove',
-                    })
-                  }}
                 />
                 <ManageBondedLiquidityCard
-                  onButtonClick={() => setIsBondingDialogShowing(true)}
+                  onClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
                   stakedBalance={stakedBalance}
                   supportsIncentives={supportsIncentives}
+                />
+                <LiquidityRewardsCard
+                  onClick={() => console.log('Test')}
+                  hasBondedLiquidity={stakedBalance.coins > 0}
+                  hasProvidedLiquidity={myLiquidity?.coins > 0}
+                  tokenASymbol={tokenA.symbol}
+                  tokenBSymbol={tokenB.symbol}
                 />
               </StyledDivForCards>
             </>
@@ -207,7 +209,7 @@ export default function Pool() {
 const StyledDivForCards = styled('div', {
   display: 'grid',
   columnGap: '$8',
-  gridTemplateColumns: '1fr 1fr',
+  gridTemplateColumns: '1fr 1fr 1fr',
   [media.sm]: {
     gridTemplateColumns: '1fr',
     rowGap: '$8',

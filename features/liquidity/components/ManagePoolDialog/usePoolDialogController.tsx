@@ -19,6 +19,7 @@ import { Error } from 'icons/Error'
 import { Button } from 'components/Button'
 import { UpRightArrow } from 'icons/UpRightArrow'
 import { useSwapInfo } from '../../../../hooks/useSwapInfo'
+import { formatSdkErrorMessage } from '../../../../util/formatSdkErrorMessage'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -184,12 +185,6 @@ const useMutateLiquidity = ({
       },
       onError(e) {
         console.error(e)
-        const errorMessage =
-          String(e).length > 300
-            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
-                String(e).length - 150
-              )}`
-            : String(e)
 
         toast.custom((t) => (
           <Toast
@@ -197,7 +192,7 @@ const useMutateLiquidity = ({
             title={`Couldn't ${
               actionState === 'add' ? 'Add' : 'Remove'
             } liquidity`}
-            body={errorMessage}
+            body={formatSdkErrorMessage(e)}
             buttons={
               <Button
                 as="a"

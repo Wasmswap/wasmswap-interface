@@ -83,6 +83,7 @@ const StyledDivForCardWrapper = styled('div', {
         $$backgroundColorOnActive: '$colors$dark5',
       },
       ghost: {
+        cursor: 'auto',
         border: '1px dashed $borderColors$default',
         $$backgroundColor: '$colors$white',
         $$backgroundColorOnHover: '$$backgroundColor',
@@ -132,6 +133,9 @@ const StyledDivForCardWrapper = styled('div', {
       },
     },
   ],
+  defaultVariants: {
+    variant: 'primary',
+  },
 })
 
 const CardComponent = (

@@ -47,7 +47,7 @@ export const ManageBondedLiquidityCard = ({
     return (
       <BaseCardForEmptyState>
         <Column align="center">
-          <AprPill />
+          <AprPill value="158%" />
           <Text
             align="center"
             variant="body"
@@ -85,7 +85,7 @@ export const ManageBondedLiquidityCard = ({
           Currently reward incentive
         </Text>
         <Inline gap={12}>
-          <AprPill />
+          <AprPill value="158%" />
 
           <Inline gap={6}>
             <StyledDivForTokenLogos>
@@ -113,7 +113,7 @@ export const ManageBondedLiquidityCard = ({
             <Text variant="link">$105/days</Text>
           </Inline>
         </Inline>
-        <Inline css={{ padding: '$17 0 $13' }}>
+        <Inline css={{ padding: '$18 0 $13' }}>
           {bondedLiquidity && (
             <Button
               onClick={(e) => {

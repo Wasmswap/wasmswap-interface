@@ -7,8 +7,9 @@ import { Card, CardContent } from 'components/Card'
 import { Divider } from 'components/Divider'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { dollarValueFormatterWithDecimals } from 'util/conversion'
-import { MultisigIcon } from 'icons/Multisig'
 import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { Column } from 'components/Column'
+import { Inline } from 'components/Inline'
 
 type PoolCardProps = {
   poolId: string
@@ -44,100 +45,90 @@ export const PoolCard = ({
     <Link href={`/pools/${poolId}`} passHref>
       <Card variant="secondary" active={hasProvidedLiquidity}>
         <CardContent>
-          <Text
-            variant="legend"
-            color="secondary"
-            css={{ padding: '$14 0 $6' }}
-          >
-            Pool #{poolId}
-          </Text>
-
-          <StyledDivForPoolTokens>
-            <StyledDivForTokenLogos>
+          <Column align="center">
+            <StyledDivForTokenLogos css={{ paddingTop: '$20' }}>
               <ImageForTokenLogo
-                size="large"
+                size="big"
                 logoURI={tokenA.logoURI}
                 alt={tokenA.symbol}
               />
               <ImageForTokenLogo
-                size="large"
+                size="big"
                 logoURI={tokenB.logoURI}
                 alt={tokenB.symbol}
               />
             </StyledDivForTokenLogos>
             <StyledTextForTokenNames
               variant="title"
-              css={{ paddingLeft: '$6' }}
+              align="center"
+              css={{ paddingTop: '$8' }}
             >
               {tokenA.symbol} <span /> {tokenB.symbol}
             </StyledTextForTokenNames>
-          </StyledDivForPoolTokens>
+          </Column>
         </CardContent>
-        <Divider offsetTop="$16" />
+        <Divider offsetTop="$16" offsetBottom="$12" />
         <CardContent>
-          <StyledDivForStatsRowWrapper>
-            <StyledDivForStatsRow>
-              <Text variant="legend" color="secondary">
-                Total liquidity
-              </Text>
-              <Text variant="legend" color="secondary">
-                APR
-              </Text>
-            </StyledDivForStatsRow>
-            <StyledDivForStatsRow>
-              <Text variant="primary">
-                $
-                {dollarValueFormatterWithDecimals(totalLiquidity.dollarValue, {
-                  includeCommaSeparation: true,
-                })}
-              </Text>
-              <Text variant="primary">0%</Text>
-            </StyledDivForStatsRow>
-          </StyledDivForStatsRowWrapper>
-        </CardContent>
-        {hasProvidedLiquidity && (
-          <StyledDivForStatsActiveRowWrapper>
-            <StyledDivForStatsRow>
-              <Text variant="legend" color="secondary">
-                My liquidity
-              </Text>
-              <Text variant="legend" color="brand">
+          <Column gap={3}>
+            <Text variant="legend" color="secondary">
+              Total liquidity
+            </Text>
+            <Text variant="primary">
+              $
+              {dollarValueFormatterWithDecimals(totalLiquidity.dollarValue, {
+                includeCommaSeparation: true,
+              })}
+            </Text>
+          </Column>
+          <Inline justifyContent="space-between" css={{ padding: '$14 0' }}>
+            <StyledDivForStatsColumn align="left">
+              <Text variant="legend" color="secondary" align="left">
                 Staked
               </Text>
-            </StyledDivForStatsRow>
-            <StyledDivForStatsRow>
               <Text variant="primary">
                 $
-                {dollarValueFormatterWithDecimals(myLiquidity.dollarValue, {
-                  includeCommaSeparation: true,
-                })}
+                {dollarValueFormatterWithDecimals(
+                  typeof stakedTokenBalanceDollarValue === 'number'
+                    ? stakedTokenBalanceDollarValue
+                    : 0,
+                  {
+                    includeCommaSeparation: true,
+                  }
+                )}
               </Text>
-              <StyledDivForStakedRowValue>
-                <MultisigIcon color="brand" size="24px" />
-                <Text variant="primary" color="brand">
-                  $
-                  {dollarValueFormatterWithDecimals(
-                    typeof stakedTokenBalanceDollarValue === 'number'
-                      ? stakedTokenBalanceDollarValue
-                      : 0,
-                    {
-                      includeCommaSeparation: true,
-                    }
-                  )}
-                </Text>
-              </StyledDivForStakedRowValue>
-            </StyledDivForStatsRow>
-          </StyledDivForStatsActiveRowWrapper>
-        )}
+            </StyledDivForStatsColumn>
+            <StyledDivForStatsColumn align="center">
+              <Text variant="legend" color="secondary" align="center">
+                Rewards
+              </Text>
+              <StyledDivForTokenLogos css={{ paddingTop: '0' }}>
+                <ImageForTokenLogo
+                  size="medium"
+                  logoURI={tokenA.logoURI}
+                  alt={tokenA.symbol}
+                />
+                <ImageForTokenLogo
+                  size="medium"
+                  logoURI={tokenB.logoURI}
+                  alt={tokenB.symbol}
+                />
+              </StyledDivForTokenLogos>
+            </StyledDivForStatsColumn>
+            <StyledDivForStatsColumn align="right">
+              <Text variant="legend" color="secondary" align="right">
+                APR
+              </Text>
+
+              <Text variant="primary" align="right">
+                0%
+              </Text>
+            </StyledDivForStatsColumn>
+          </Inline>
+        </CardContent>
       </Card>
     </Link>
   )
 }
-
-const StyledDivForPoolTokens = styled('div', {
-  display: 'flex',
-  alignItems: 'center',
-})
 
 export const StyledDivForTokenLogos = styled('div', {
   display: 'flex',
@@ -167,32 +158,27 @@ const StyledTextForTokenNames: typeof Text = styled(Text, {
   },
 })
 
-const StyledDivForStatsRowWrapper = styled('div', {
+const StyledDivForStatsColumn = styled('div', {
   display: 'flex',
-  rowGap: '$3',
-  padding: '$12 0',
-  flexWrap: 'wrap',
-})
-
-const StyledDivForStatsActiveRowWrapper = styled('div', {
-  display: 'flex',
-  flexWrap: 'wrap',
-  padding: '$9 $12',
-  margin: '0 $8 $8',
-  rowGap: '$2',
-  backgroundColor: '$colors$brand10',
-  borderRadius: '$1',
-})
-
-const StyledDivForStatsRow = styled('div', {
-  display: 'flex',
-  justifyContent: 'space-between',
+  flexDirection: 'column',
+  flex: 0.3,
+  justifyContent: 'center',
   alignItems: 'center',
-  width: '100%',
-})
-
-const StyledDivForStakedRowValue = styled('div', {
-  columnGap: '$2',
-  display: 'flex',
-  alignItems: 'center',
+  rowGap: '$space$3',
+  variants: {
+    align: {
+      left: {
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+      },
+      center: {
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      right: {
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+      },
+    },
+  },
 })

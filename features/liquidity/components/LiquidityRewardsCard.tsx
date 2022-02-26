@@ -98,7 +98,7 @@ export const LiquidityRewardsCard = ({
           </StyledDivForTokenLogos>
           <Text variant="link">$105/days</Text>
         </Inline>
-        <Inline css={{ padding: '$18 0 $13' }}>
+        <Inline css={{ padding: '$19 0 $13' }}>
           <Button
             onClick={(e) => {
               e.stopPropagation()

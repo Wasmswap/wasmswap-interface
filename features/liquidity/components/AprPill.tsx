@@ -1,15 +1,21 @@
-import { ArrowUpIcon } from '../../../icons/ArrowUp'
-import { Button, ButtonProps } from '../../../components/Button'
+import { ArrowUpIcon } from 'icons/ArrowUp'
+import { styled } from '../../../components/theme'
+import { Inline } from '../../../components/Inline'
+import { Text } from 'components/Text'
 
-export const AprPill = (
-  props: Omit<ButtonProps, 'children' | 'variant' | 'selected' | 'iconLeft'>
-) => (
-  <Button
-    {...props} // @ts-ignore
-    variant="menu"
-    selected={true}
-    iconLeft={<ArrowUpIcon rotation="45deg" />}
-  >
-    158% APR
-  </Button>
+export const AprPill = ({ value, ...props }) => (
+  <StyledDivForPill {...props}>
+    <Inline gap={4}>
+      <ArrowUpIcon color="brand" rotation="45deg" />
+      <Text variant="link" color="brand">
+        {value}
+      </Text>
+    </Inline>
+  </StyledDivForPill>
 )
+
+const StyledDivForPill = styled('div', {
+  borderRadius: '16px',
+  backgroundColor: '$colors$brand20',
+  padding: '$2 $8 $2 $3',
+})

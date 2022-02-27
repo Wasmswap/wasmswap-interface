@@ -2,16 +2,22 @@ import { Inline } from '../../../components/Inline'
 import { __POOL_STAKING_ENABLED__ } from '../../../util/constants'
 import { Column } from '../../../components/Column'
 import { Text } from '../../../components/Text'
-import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
+import {
+  dollarValueFormatterWithDecimals,
+  formatTokenBalance,
+} from '../../../util/conversion'
 import { StyledDivForTokenLogos } from './PoolCard'
 import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
 import React from 'react'
 import { Divider } from '../../../components/Divider'
 import { useTokenToTokenPrice } from '../../swap/hooks/useTokenToTokenPrice'
+import { AprPill } from './AprPill'
+import { usePoolPairTokenAmount } from '../hooks'
 
 export const LiquidityBreakdown = ({
   tokenA,
   tokenB,
+  poolId,
   totalLiquidity,
   size = 'large',
 }) => {
@@ -19,6 +25,18 @@ export const LiquidityBreakdown = ({
     tokenASymbol: tokenA?.symbol,
     tokenBSymbol: tokenB?.symbol,
     tokenAmount: 1,
+  })
+
+  const [tokenAAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: (totalLiquidity?.coins ?? 0) / 2,
+    tokenPairIndex: 0,
+    poolId,
+  })
+
+  const [tokenBAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: (totalLiquidity?.coins ?? 0) / 2,
+    tokenPairIndex: 1,
+    poolId,
   })
 
   const priceBreakdown = isPriceLoading
@@ -120,9 +138,9 @@ export const LiquidityBreakdown = ({
           css={{
             display: 'grid',
             gridTemplateColumns: __POOL_STAKING_ENABLED__
-              ? '1fr 1fr 1fr'
+              ? '1fr 1fr 1fr 0.75fr 0.75fr'
               : '1fr 1fr',
-            padding: '$12 0 $16',
+            padding: '$15 0 $18',
           }}
         >
           <Column gap={6} align="flex-start" justifyContent="flex-start">
@@ -135,6 +153,20 @@ export const LiquidityBreakdown = ({
                 includeCommaSeparation: true,
               })}
             </Text>
+          </Column>
+
+          <Column gap={6} align="flex-start" justifyContent="flex-start">
+            <Text variant="legend" color="secondary" align="left">
+              {tokenA?.symbol}
+            </Text>
+            <Text variant="header">{formatTokenBalance(tokenAAmount)}</Text>
+          </Column>
+
+          <Column gap={6} align="flex-start" justifyContent="flex-start">
+            <Text variant="legend" color="secondary" align="left">
+              {tokenB?.symbol}
+            </Text>
+            <Text variant="header">{formatTokenBalance(tokenBAmount)}</Text>
           </Column>
 
           {__POOL_STAKING_ENABLED__ && (
@@ -171,7 +203,7 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="right">
               APR reward
             </Text>
-            <Text variant="header">0%</Text>
+            <AprPill value="0" />
           </Column>
         </Inline>
       </>

@@ -3,6 +3,7 @@ import { styled, useThemeClassName } from 'components/theme'
 import gsap from 'gsap'
 import { useEffect, useState, useRef, ReactNode } from 'react'
 import { DialogContextProvider } from './DialogContext'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 
 type DialogProps = {
   children: ReactNode
@@ -19,8 +20,8 @@ export const Dialog = ({
   const [isRenderingDialog, setIsRenderingDialog] = useState(false)
   const themeClassName = useThemeClassName()
 
-  const modalRef = useRef()
-  const overlayRef = useRef()
+  const modalRef = useRef<HTMLDivElement>()
+  const overlayRef = useRef<HTMLDivElement>()
 
   // render the dialog
   useEffect(() => {
@@ -29,7 +30,15 @@ export const Dialog = ({
     }
   }, [isShowing])
 
+  /* animate the dialog */
   useEffect(() => {
+    function getShouldCenterDialog() {
+      return (
+        modalRef.current.getBoundingClientRect().height <=
+        window.innerHeight * 0.95
+      )
+    }
+
     const shouldAnimateCloseOut = !isShowing && isRenderingDialog
 
     const tl = gsap.timeline({
@@ -53,11 +62,29 @@ export const Dialog = ({
     }
 
     if (isShowing && isRenderingDialog) {
+      tl.set(
+        modalRef.current,
+        {
+          alignSelf: getShouldCenterDialog() ? 'center' : 'flex-start',
+        },
+        0
+      )
+
       tl.to(overlayRef.current, { opacity: 0.75 }, 0)
       tl.to(modalRef.current, { opacity: 1 }, 0.1)
       return
     }
   }, [isRenderingDialog, isShowing])
+
+  /* lock the scroll */
+  useEffect(() => {
+    if (isShowing) {
+      const rootNode = document.querySelector('#__next')
+
+      disableBodyScroll(rootNode)
+      return () => enableBodyScroll(rootNode)
+    }
+  }, [isShowing])
 
   return (
     <Portal>
@@ -66,37 +93,50 @@ export const Dialog = ({
           onRequestClose={onRequestClose}
           isShowing={isShowing}
         >
-          <StyledDivForModal
-            className={themeClassName}
-            ref={modalRef}
-            {...props}
-          >
-            {children}
-          </StyledDivForModal>
-          <StyledDivForOverlay
-            className={themeClassName}
-            role="presentation"
-            onClick={onRequestClose}
-            ref={overlayRef}
-          />
+          <StyledDivForScroller>
+            <StyledDivForModal
+              className={themeClassName}
+              ref={modalRef}
+              {...props}
+            >
+              {children}
+            </StyledDivForModal>
+            <StyledDivForOverlay
+              className={themeClassName}
+              role="presentation"
+              onClick={onRequestClose}
+              ref={overlayRef}
+            />
+          </StyledDivForScroller>
         </DialogContextProvider>
       )}
     </Portal>
   )
 }
 
+const StyledDivForScroller = styled('div', {
+  padding: '$12',
+  height: '100vh',
+  width: '100%',
+  overflowY: 'scroll',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  zIndex: 99,
+  position: 'fixed',
+  left: 0,
+  top: 0,
+})
+
 const StyledDivForModal = styled('div', {
   opacity: 0,
   width: '28rem',
   maxWidth: '95%',
-  position: 'absolute',
-  zIndex: 99,
-  left: '50%',
-  top: '50%',
-  transform: 'translate(-50%, -50%)',
   backgroundColor: '$backgroundColors$base',
   borderRadius: '$1',
   border: '1px solid $borderColors$default',
+  position: 'relative',
+  zIndex: '$2',
 })
 
 const StyledDivForOverlay = styled('div', {
@@ -104,7 +144,7 @@ const StyledDivForOverlay = styled('div', {
   width: '100vw',
   height: '100vh',
   position: 'fixed',
-  zIndex: 98,
+  zIndex: '$1',
   left: 0,
   top: 0,
   backgroundColor: '$colors$light',

@@ -2,14 +2,22 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { unsafelyGetDefaultExecuteFee } from '../util/fees'
+import { unsafelyGetDefaultExecuteFee } from 'util/fees'
+
+type Denom =
+  | {
+      native: string
+    }
+  | {
+      cw20: string
+    }
 
 export const claimRewards = async (
   senderAddress: string,
   rewardsAddress: string,
   client: SigningCosmWasmClient
 ) => {
-  let msg = { stake: { claim: {} } }
+  const msg = { stake: { claim: {} } }
   return await client.execute(
     senderAddress,
     rewardsAddress,
@@ -20,30 +28,39 @@ export const claimRewards = async (
   )
 }
 
-export const getClaimableRewards = async (
+type PendingRewardsResponse = {
+  address: string
+  pending_rewards: number
+  denom: Denom
+}
+
+export const getPendingRewards = async (
   address: string,
   rewardsAddress: string,
   client: CosmWasmClient
-) => {
-  let msg = { claimable_rewards: { address: address } }
-  return (await client.queryContractSmart(rewardsAddress, msg)).amount
+): Promise<PendingRewardsResponse> => {
+  const msg = { get_pending_rewards: { address } }
+  return await client.queryContractSmart(rewardsAddress, msg)
 }
 
-export type rewardsInfoResponse = {
-  start_block: number
-  end_block: number
-  payment_per_block: string
-  payment_time: number
-  total_amount: string
-  denom: string
-  distribution_token: String
-  payment_block_delta: number
+type RewardsInfoResponse = {
+  config: {
+    owner?: string
+    manager?: string
+    staking_contract: string
+    reward_token: Denom
+  }
+  reward_config: {
+    periodFinish: number
+    rewardRate: number
+    rewardDuration: number
+  }
 }
 
 export const getRewardsInfo = async (
   rewardsAddress: string,
   client: CosmWasmClient
-): Promise<rewardsInfoResponse> => {
-  let msg = { info: {} }
-  return (await client.queryContractSmart(rewardsAddress, msg)).amount
+): Promise<RewardsInfoResponse> => {
+  const msg = { info: {} }
+  return await client.queryContractSmart(rewardsAddress, msg)
 }

@@ -7,8 +7,8 @@ export const AprPill = ({ value, ...props }) => (
   <StyledDivForPill {...props}>
     <Inline gap={4}>
       <ArrowUpIcon color="brand" rotation="45deg" />
-      <Text variant="link" color="brand">
-        {value}
+      <Text variant="link" color="brand" wrap={false}>
+        {value}% APR
       </Text>
     </Inline>
   </StyledDivForPill>

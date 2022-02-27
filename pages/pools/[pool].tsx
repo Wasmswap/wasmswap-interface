@@ -9,10 +9,10 @@ import { Spinner } from 'components/Spinner'
 import { ChevronIcon } from 'icons/Chevron'
 import { Divider } from 'components/Divider'
 import { NavigationSidebar } from 'components/Layout/NavigationSidebar'
-import { RewardsStatus } from 'features/liquidity/components/RewardsStatus'
 import { UnbondingLiquidityStatusList } from 'features/liquidity/components/UnbondingLiquidityStatusList'
 import { LiquidityHeader } from 'features/liquidity/components/LiquidityHeader'
 import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreakdown'
+import { LiquidityRewardsCard } from 'features/liquidity/components/LiquidityRewardsCard'
 import { BondLiquidityDialog } from 'features/liquidity'
 import {
   ManageBondedLiquidityCard,
@@ -31,7 +31,11 @@ import {
   useGetPoolTokensDollarValue,
   useStakedTokenBalance,
 } from 'features/liquidity/hooks'
-import { LiquidityRewardsCard } from 'features/liquidity/components/LiquidityRewardsCard'
+import { useRewardContractsList } from '../../hooks/useRewardContractsList'
+import {
+  usePendingRewardsBalance,
+  useRewardsInfo,
+} from '../../hooks/useRewards'
 
 export default function Pool() {
   const {
@@ -50,7 +54,7 @@ export default function Pool() {
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(pool as string)
 
-  const [stakedBalanceCoins] = useStakedTokenBalance({
+  const [stakedBalanceCoins, isStakingBalanceLoading] = useStakedTokenBalance({
     poolId: pool,
   })
 
@@ -69,7 +73,13 @@ export default function Pool() {
     isLoading,
   ] = usePoolLiquidity({ poolId: pool })
 
-  const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
+  const [pendingRewardsAmount] = usePendingRewardsBalance({
+    swapAddress: tokenB?.swap_address,
+  })
+
+  const [rewardsInfo] = useRewardsInfo({ swapAddress: tokenB?.swap_address })
+
+  const isLoadingInitial = isLoading || isStakingBalanceLoading
   const supportsIncentives = Boolean(
     __POOL_STAKING_ENABLED__ && tokenB?.staking_address
   )
@@ -137,6 +147,7 @@ export default function Pool() {
         {!isLoadingInitial && (
           <>
             <LiquidityBreakdown
+              poolId={pool}
               tokenA={tokenA}
               tokenB={tokenB}
               totalLiquidity={totalLiquidity}
@@ -168,6 +179,7 @@ export default function Pool() {
                   onClick={() => console.log('Test')}
                   hasBondedLiquidity={stakedBalance.coins > 0}
                   hasProvidedLiquidity={myLiquidity?.coins > 0}
+                  pendingRewardsAmount={pendingRewardsAmount}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
                 />
@@ -175,27 +187,11 @@ export default function Pool() {
             </>
             <>
               {supportsIncentives && (
-                <>
-                  <RewardsStatus
-                    tokenA={tokenA}
-                    tokenB={tokenB}
-                    size={isMobile ? 'small' : 'large'}
-                    disabled={!__POOL_REWARDS_ENABLED__}
-                  />
-                  <UnbondingLiquidityStatusList
-                    poolId={pool as string}
-                    tokenA={tokenA}
-                    tokenB={tokenB}
-                    size={isMobile ? 'small' : 'large'}
-                  />
-                </>
-              )}
-              {/* disabled state */}
-              {!supportsIncentives && (
-                <RewardsStatus
-                  disabled={true}
+                <UnbondingLiquidityStatusList
+                  poolId={pool as string}
                   tokenA={tokenA}
                   tokenB={tokenB}
+                  size={isMobile ? 'small' : 'large'}
                 />
               )}
             </>

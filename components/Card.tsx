@@ -12,6 +12,7 @@ const StyledDivForOverlay = styled('div', {
 const StyledDivForContent = styled('div', {
   position: 'relative',
   zIndex: '$2',
+  width: '100%',
 })
 
 const StyledDivForCardWrapper = styled('div', {
@@ -156,6 +157,7 @@ const CardComponent = (
 export const Card = forwardRef(CardComponent)
 
 export const CardContent = styled('div', {
+  width: '100%',
   variants: {
     size: {
       medium: {

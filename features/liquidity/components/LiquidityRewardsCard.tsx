@@ -12,6 +12,7 @@ import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
 import { dollarValueFormatterWithDecimals } from 'util/conversion'
 
 export const LiquidityRewardsCard = ({
+  pendingRewardsAmount,
   hasProvidedLiquidity,
   hasBondedLiquidity,
   onClick,
@@ -43,9 +44,12 @@ export const LiquidityRewardsCard = ({
     )
   }
 
-  const rewardsDollarValue = dollarValueFormatterWithDecimals(0, {
-    includeCommaSeparation: true,
-  })
+  const rewardsDollarValue = dollarValueFormatterWithDecimals(
+    pendingRewardsAmount,
+    {
+      includeCommaSeparation: true,
+    }
+  )
 
   const receivedRewards = rewardsDollarValue > 0
 

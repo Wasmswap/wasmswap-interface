@@ -26,18 +26,18 @@ export const ManageBondedLiquidityCard = ({
 
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const bondedLiquidity = supportsIncentives && stakedBalance.coins > 0
-  const providedLiquidity = myLiquidity.coins > 0
+  const bondedLiquidity = supportsIncentives && stakedBalance?.coins > 0
+  const providedLiquidity = myLiquidity?.coins > 0
 
   const unstakedLiquidityDollarValue = dollarValueFormatterWithDecimals(
-    myLiquidity.dollarValue,
+    myLiquidity?.dollarValue,
     {
       includeCommaSeparation: true,
     }
   )
 
   const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(
-    stakedBalance.dollarValue,
+    stakedBalance?.dollarValue,
     {
       includeCommaSeparation: true,
     }
@@ -47,7 +47,7 @@ export const ManageBondedLiquidityCard = ({
     return (
       <BaseCardForEmptyState>
         <Column align="center">
-          <AprPill value="158%" />
+          <AprPill value="158" />
           <Text
             align="center"
             variant="body"
@@ -85,7 +85,7 @@ export const ManageBondedLiquidityCard = ({
           Currently reward incentive
         </Text>
         <Inline gap={12}>
-          <AprPill value="158%" />
+          <AprPill value="158" />
 
           <Inline gap={6}>
             <StyledDivForTokenLogos>

@@ -38,7 +38,7 @@ export const usePendingRewardsBalance = ({ swapAddress }) => {
               client
             )
 
-            console.log({
+            console.log('getPendingRewards', {
               pending_rewards,
               ...rest,
             })

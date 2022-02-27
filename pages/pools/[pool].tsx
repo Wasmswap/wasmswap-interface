@@ -78,6 +78,7 @@ export default function Pool() {
   })
 
   const [rewardsInfo] = useRewardsInfo({ swapAddress: tokenB?.swap_address })
+  console.log('rewardsInfo', rewardsInfo)
 
   const isLoadingInitial = isLoading || isStakingBalanceLoading
   const supportsIncentives = Boolean(

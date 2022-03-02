@@ -77,16 +77,16 @@ export const getStakedBalance = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<string> => {
-  const msg = { staked_balance_at_height: { address: address } }
+  const msg = { staked_value: { address: address } }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
-  return result.balance
+  return result.value
 }
 
 export const getTotalStakedBalance = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<string> => {
-  const msg = { total_staked_at_height: {} }
+  const msg = { total_value: {} }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.total
 }

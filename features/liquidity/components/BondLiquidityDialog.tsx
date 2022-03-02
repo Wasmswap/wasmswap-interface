@@ -289,7 +289,11 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <Button variant="secondary" onClick={onRequestClose}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={handleAction} disabled={isLoading}>
+        <Button
+          variant="primary"
+          onClick={handleAction}
+          disabled={isLoading || !tokenAmount}
+        >
           {isLoading ? (
             <Spinner instant />
           ) : dialogState === 'stake' ? (

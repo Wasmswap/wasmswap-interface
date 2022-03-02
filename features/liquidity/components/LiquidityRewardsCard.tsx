@@ -10,6 +10,7 @@ import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
 import { dollarValueFormatterWithDecimals } from 'util/conversion'
+import { Spinner } from '../../../components/Spinner'
 
 export const LiquidityRewardsCard = ({
   pendingRewardsAmount,
@@ -18,6 +19,7 @@ export const LiquidityRewardsCard = ({
   onClick,
   tokenASymbol,
   tokenBSymbol,
+  loading,
 }) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
@@ -113,6 +115,7 @@ export const LiquidityRewardsCard = ({
             size="large"
             css={{ width: '100%' }}
             disabled={!receivedRewards}
+            iconRight={loading && <Spinner />}
           >
             Claim your rewards
           </Button>

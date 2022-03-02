@@ -12,10 +12,11 @@ type RewardsContractInfo = {
       | 'denom'
       | 'decimals'
       | 'token_address'
+      | 'swap_address'
       | 'symbol'
       | 'name'
     > & {
-      rewards_address: 'juno1ahg0erc2fs6xx3j5m8sfx3ryuzdjh6kf6qm9plsf865fltekyrfsaxd7rj'
+      rewards_address: string
     }
   >
 }

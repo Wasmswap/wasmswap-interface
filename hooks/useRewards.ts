@@ -1,13 +1,17 @@
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { getPendingRewards, getRewardsInfo } from 'services/rewards'
+import {
+  claimRewards,
+  getPendingRewards,
+  getRewardsInfo,
+} from 'services/rewards'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 import { convertMicroDenomToDenom } from 'util/conversion'
 import { useChainInfo } from './useChainInfo'
 import { useRewardContractsList } from './useRewardContractsList'
 import { useMemo } from 'react'
+import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 
 const useSelectRewardsContractBySwapAddress = ({ swapAddress }) => {
   const [rewardsContracts] = useRewardContractsList()
@@ -73,7 +77,7 @@ export const useRewardsInfo = ({ swapAddress }) => {
   const { data: info = [], isLoading } = useQuery(
     `rewardsInfo/${rewardsContract}`,
     async () => {
-      const client = await CosmWasmClient.connect(chainInfo.rpc)
+      const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
       return Promise.all(
         rewardsContract.rewards_tokens.map(({ rewards_address }) =>
           getRewardsInfo(rewards_address, client)
@@ -88,4 +92,32 @@ export const useRewardsInfo = ({ swapAddress }) => {
   )
 
   return [info, isLoading]
+}
+
+type UseClaimRewardsArgs = {
+  swapAddress: string
+} & Parameters<typeof useMutation>[2]
+
+export const useClaimRewards = ({
+  swapAddress,
+  ...options
+}: UseClaimRewardsArgs) => {
+  const { address, client } = useRecoilValue(walletState)
+  const rewardsContract = useSelectRewardsContractBySwapAddress({ swapAddress })
+
+  return useMutation(
+    `@claim-rewards/${swapAddress}`,
+    async () => {
+      const rewardsAddresses = rewardsContract.rewards_tokens.map(
+        ({ rewards_address }) => rewards_address
+      )
+      return await claimRewards(address, rewardsAddresses, client)
+    },
+    {
+      ...options,
+      onSuccess(...args) {
+        options.onSuccess?.(...args)
+      },
+    }
+  )
 }

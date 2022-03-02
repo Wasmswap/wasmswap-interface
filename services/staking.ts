@@ -4,6 +4,7 @@ import {
 } from '@cosmjs/cosmwasm-stargate'
 import { toBase64, toUtf8 } from '@cosmjs/encoding'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
+import { StdFee } from '@cosmjs/stargate'
 
 export const stakeTokens = async (
   senderAddress: string,
@@ -22,18 +23,17 @@ export const stakeTokens = async (
     },
   }
 
-  console.log({
-    senderAddress,
-    lpTokenAddress,
-    msg,
-    fee: unsafelyGetDefaultExecuteFee(),
-  })
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+  const fee: StdFee = {
+    amount: defaultExecuteFee.amount,
+    gas: (Number(defaultExecuteFee.gas) * 2.6).toString(),
+  }
 
   return await client.execute(
     senderAddress,
     lpTokenAddress,
     msg,
-    unsafelyGetDefaultExecuteFee(),
+    fee,
     undefined,
     []
   )

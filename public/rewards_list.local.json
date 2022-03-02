@@ -8,6 +8,7 @@
         {
           "rewards_address": "juno1ahg0erc2fs6xx3j5m8sfx3ryuzdjh6kf6qm9plsf865fltekyrfsaxd7rj",
           "token_address": "",
+          "swap_address": "",
           "symbol": "JUNO",
           "name": "Juno",
           "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
@@ -18,6 +19,7 @@
         {
           "rewards_address": "juno1ahg0erc2fs6xx3j5m8sfx3ryuzdjh6kf6qm9plsf865fltekyrfsaxd7rj",
           "token_address": "juno14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skjuwg8",
+          "swap_address": "juno1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrq68ev2p",
           "symbol": "CRAB",
           "name": "Crab",
           "logoURI": "https://cryptologos.cc/logos/irisnet-iris-logo.svg?v=022",

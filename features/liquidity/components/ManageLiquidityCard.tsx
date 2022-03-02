@@ -17,6 +17,7 @@ type ManageLiquidityCardProps = Pick<
   LiquidityInfoType,
   'myReserve' | 'tokenDollarValue'
 > & {
+  stakedBalance: number
   onClick: () => void
   tokenASymbol: string
   tokenBSymbol: string
@@ -28,6 +29,7 @@ export const ManageLiquidityCard = ({
   tokenDollarValue,
   tokenASymbol,
   tokenBSymbol,
+  stakedBalance,
 }: ManageLiquidityCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
@@ -35,6 +37,7 @@ export const ManageLiquidityCard = ({
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
   const providedLiquidity = myReserve?.[0] > 0
+  const bondedLiquidity = stakedBalance > 0
 
   const tokenAReserve = formatTokenBalance(
     convertMicroDenomToDenom(myReserve?.[0], tokenA.decimals),
@@ -57,7 +60,7 @@ export const ManageLiquidityCard = ({
       ref={refForCard}
       tabIndex={-1}
       role="button"
-      variant={providedLiquidity ? 'primary' : 'secondary'}
+      variant={providedLiquidity || bondedLiquidity ? 'primary' : 'secondary'}
       onClick={onClick}
     >
       <CardContent>

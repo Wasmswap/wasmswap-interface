@@ -1,9 +1,9 @@
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { useChainInfo } from 'hooks/useChainInfo'
 import { useQuery } from 'react-query'
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { getUnstakingDuration } from 'services/staking'
 import { WalletStatusType } from 'state/atoms/walletAtoms'
+import { cosmWasmClientRouter } from '../../../util/cosmWasmClientRouter'
 
 export const useUnstakingDuration = ({ poolId }) => {
   const token = useTokenInfo(poolId)
@@ -12,7 +12,7 @@ export const useUnstakingDuration = ({ poolId }) => {
   const { data = 0, isLoading } = useQuery(
     `unstakingDuration/${poolId}`,
     async () => {
-      const client = await CosmWasmClient.connect(chainInfo.rpc)
+      const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
       return getUnstakingDuration(token?.staking_address, client)
     },
     {

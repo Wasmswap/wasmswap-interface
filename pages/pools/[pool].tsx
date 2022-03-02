@@ -22,20 +22,22 @@ import {
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
-import {
-  __POOL_REWARDS_ENABLED__,
-  __POOL_STAKING_ENABLED__,
-  APP_NAME,
-} from 'util/constants'
+import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
 import {
   useGetPoolTokensDollarValue,
   useStakedTokenBalance,
 } from 'features/liquidity/hooks'
-import { useRewardContractsList } from '../../hooks/useRewardContractsList'
 import {
+  useClaimRewards,
   usePendingRewardsBalance,
-  useRewardsInfo,
 } from '../../hooks/useRewards'
+import { useRefetchQueries } from '../../hooks/useRefetchQueries'
+import { toast } from 'react-hot-toast'
+import { Toast } from '../../components/Toast'
+import { IconWrapper } from '../../components/IconWrapper'
+import { Error } from '../../icons/Error'
+import { formatSdkErrorMessage } from '../../util/formatSdkErrorMessage'
+import { UpRightArrow } from '../../icons/UpRightArrow'
 
 export default function Pool() {
   const {
@@ -77,13 +79,42 @@ export default function Pool() {
     swapAddress: tokenB?.swap_address,
   })
 
-  const [rewardsInfo] = useRewardsInfo({ swapAddress: tokenB?.swap_address })
-  console.log('rewardsInfo', rewardsInfo)
-
   const isLoadingInitial = isLoading || isStakingBalanceLoading
   const supportsIncentives = Boolean(
     __POOL_STAKING_ENABLED__ && tokenB?.staking_address
   )
+
+  const refetchQueries = useRefetchQueries(['myLiquidity', 'pendingRewards'])
+  const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
+    useClaimRewards({
+      swapAddress: tokenB?.swap_address,
+      onSuccess() {
+        refetchQueries()
+      },
+      onError(e) {
+        console.error(e)
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Error />} color="error" />}
+            title={"Couldn't claim your rewards"}
+            body={formatSdkErrorMessage(e)}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+      },
+    })
 
   if (!tokenB || !pool) return null
 
@@ -161,6 +192,7 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
+                  stakedBalance={stakedBalance.coins}
                   onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
@@ -177,12 +209,13 @@ export default function Pool() {
                   supportsIncentives={supportsIncentives}
                 />
                 <LiquidityRewardsCard
-                  onClick={() => console.log('Test')}
+                  onClick={mutateClaimRewards}
                   hasBondedLiquidity={stakedBalance.coins > 0}
                   hasProvidedLiquidity={myLiquidity?.coins > 0}
                   pendingRewardsAmount={pendingRewardsAmount}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
+                  loading={isClaimingRewards}
                 />
               </StyledDivForCards>
             </>

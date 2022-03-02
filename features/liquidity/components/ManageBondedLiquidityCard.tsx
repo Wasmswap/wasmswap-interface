@@ -43,7 +43,7 @@ export const ManageBondedLiquidityCard = ({
     }
   )
 
-  if (!providedLiquidity) {
+  if (!providedLiquidity && !bondedLiquidity) {
     return (
       <BaseCardForEmptyState>
         <Column align="center">

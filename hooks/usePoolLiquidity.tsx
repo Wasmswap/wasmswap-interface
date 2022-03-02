@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQueries } from 'react-query'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
@@ -8,6 +8,7 @@ import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 import { useMultipleSwapInfo } from './useSwapInfo'
+import { useMemo } from 'react'
 
 export type LiquidityType = {
   coins: number
@@ -37,91 +38,103 @@ export const useMultiplePoolsLiquidity = ({
   refetchInBackground = false,
 }): readonly [LiquidityInfoType[] | undefined, boolean] => {
   const { address } = useRecoilValue(walletState)
-  const [chainInfo] = useChainInfo()
+
+  const tokenA = useBaseTokenInfo()
+  const [chainInfo, fetchingChainInfo] = useChainInfo()
+
+  const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
+    tokenA?.symbol
+  )
 
   const [swaps, fetchingSwaps] = useMultipleSwapInfo({
     poolIds,
     refetchInBackground,
   })
 
-  const { data: myLiquidityCoins, isLoading: fetchingMyLiquidity } = useQuery(
-    [
-      `myLiquidity/${swaps
-        ?.map(({ lp_token_address }) => lp_token_address)
-        .join('+')}`,
-      address,
-    ],
-    async () => {
-      const balances = await Promise.all(
-        swaps.map(({ lp_token_address }) =>
-          getLiquidityBalance({
-            address: address,
+  const queriesResult = useQueries(
+    swaps?.map(
+      ({
+        lp_token_address,
+        token1_reserve,
+        token2_reserve,
+        lp_token_supply,
+        // swap_address: swapAddress,
+      }) => ({
+        queryKey: ['myLiquidity', lp_token_address, address],
+        async queryFn() {
+          const balance = await getLiquidityBalance({
             tokenAddress: lp_token_address,
             rpcEndpoint: chainInfo.rpc,
+            address,
           })
-        )
-      )
 
-      return balances.map((balance) => Number(balance))
-    },
-    {
-      enabled: Boolean(swaps?.length && address && chainInfo.rpc),
-      refetchOnMount: 'always',
-      refetchInterval: refetchInBackground
-        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
-        : undefined,
-      refetchIntervalInBackground: refetchInBackground,
-    }
+          /* provide dollar value for reserves as well */
+          const reserve: [number, number] = [
+            protectAgainstNaN(token1_reserve),
+            protectAgainstNaN(token2_reserve),
+          ]
+
+          const myReserve: [number, number] = [
+            protectAgainstNaN(reserve[0] * (balance / lp_token_supply)),
+            protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
+          ]
+
+          const tokenADecimals = tokenA.decimals
+
+          const totalLiquidity = {
+            coins: lp_token_supply,
+            dollarValue:
+              convertMicroDenomToDenom(reserve[0], tokenADecimals) *
+              tokenADollarPrice *
+              2,
+          }
+
+          const myLiquidity = {
+            coins: balance,
+            dollarValue:
+              convertMicroDenomToDenom(myReserve[0], tokenADecimals) *
+              tokenADollarPrice *
+              2,
+          }
+
+          // const rewardsContract = rewardsContracts.find(
+          //   ({ swap_address }) => swapAddress === swap_address
+          // )
+
+          return {
+            reserve,
+            myReserve,
+            totalLiquidity,
+            myLiquidity,
+            tokenDollarValue: tokenADollarPrice,
+          }
+        },
+        enabled: Boolean(chainInfo?.rpc),
+        refetchOnMount: 'always' as const,
+        refetchInterval: refetchInBackground
+          ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+          : undefined,
+        refetchIntervalInBackground: refetchInBackground,
+      })
+    )
   )
 
-  const tokenA = useBaseTokenInfo()
-  const [tokenADollarPrice] = useTokenDollarValue(tokenA?.symbol)
+  const loading = fetchingSwaps || fetchingChainInfo || fetchingDollarPrice
 
-  const liquidity = swaps?.map(
-    (
-      { token1_reserve, token2_reserve, lp_token_supply },
-      idx
-    ): LiquidityInfoType => {
-      const balance = myLiquidityCoins?.[idx] ?? 0
+  return useMemo(() => {
+    const pools = []
+    let hasLoadingPool
 
-      /* provide dollar value for reserves as well */
-      const reserve: [number, number] = [
-        protectAgainstNaN(token1_reserve),
-        protectAgainstNaN(token2_reserve),
-      ]
-
-      const myReserve: [number, number] = [
-        protectAgainstNaN(reserve[0] * (balance / lp_token_supply)),
-        protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
-      ]
-
-      const tokenADecimals = tokenA.decimals
-
-      const totalLiquidity = {
-        coins: lp_token_supply,
-        dollarValue:
-          convertMicroDenomToDenom(reserve[0], tokenADecimals) *
-          tokenADollarPrice *
-          2,
+    queriesResult.forEach(({ data, isLoading }) => {
+      if (isLoading) {
+        hasLoadingPool = isLoading
       }
 
-      const myLiquidity = {
-        coins: balance,
-        dollarValue:
-          convertMicroDenomToDenom(myReserve[0], tokenADecimals) *
-          tokenADollarPrice *
-          2,
+      if (data) {
+        pools.push(data)
       }
+    })
 
-      return {
-        reserve,
-        myReserve,
-        totalLiquidity,
-        myLiquidity,
-        tokenDollarValue: tokenADollarPrice,
-      }
-    }
-  )
-
-  return [liquidity, fetchingMyLiquidity || fetchingSwaps] as const
+    return [pools, hasLoadingPool || loading]
+  }, [loading, queriesResult])
 }

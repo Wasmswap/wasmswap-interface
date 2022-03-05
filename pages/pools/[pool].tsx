@@ -84,7 +84,12 @@ export default function Pool() {
     __POOL_STAKING_ENABLED__ && tokenB?.staking_address
   )
 
-  const refetchQueries = useRefetchQueries(['myLiquidity', 'pendingRewards'])
+  const refetchQueries = useRefetchQueries([
+    'myLiquidity',
+    'stakedTokenBalance',
+    'pendingRewards',
+  ])
+
   const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
     useClaimRewards({
       swapAddress: tokenB?.swap_address,

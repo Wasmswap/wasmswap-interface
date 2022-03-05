@@ -21,7 +21,7 @@ export const claimRewards = async (
   rewardsAddresses: Array<string>,
   client: SigningCosmWasmClient
 ) => {
-  const messageBody = { claim: {} }
+  const messageBody = toUtf8(JSON.stringify({ claim: {} }))
 
   const messages = rewardsAddresses.map(
     (rewardsAddress): MsgExecuteContractEncodeObject => ({
@@ -29,7 +29,7 @@ export const claimRewards = async (
       value: MsgExecuteContract.fromPartial({
         sender: senderAddress,
         contract: rewardsAddress,
-        msg: toUtf8(JSON.stringify(messageBody)),
+        msg: messageBody,
         funds: [],
       }),
     })
@@ -38,7 +38,7 @@ export const claimRewards = async (
   const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
   const fee: StdFee = {
     amount: defaultExecuteFee.amount,
-    gas: String(Number(defaultExecuteFee.gas) * 2),
+    gas: String(Number(defaultExecuteFee.gas) * 2.5),
   }
 
   const result = await client.signAndBroadcast(senderAddress, messages, fee)

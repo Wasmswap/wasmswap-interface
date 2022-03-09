@@ -146,7 +146,7 @@ const useMutateLiquidity = ({
             convertDenomToMicroDenom(tokenAAmount, tokenA.decimals)
           ),
           nativeDenom: tokenA.denom,
-          maxToken: Math.floor(
+          maxToken: Math.ceil(
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
           minLiquidity: 0,

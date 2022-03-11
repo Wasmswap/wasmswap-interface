@@ -35,7 +35,7 @@ export const ExtensionSidebar = () => {
 const StyledDivForWrapper = styled('div', {
   zIndex: '$2',
   position: 'sticky',
-  backgroundColor: '$colors$light50',
+  backgroundColor: '$colors$light',
   top: 0,
   right: 0,
   width: '100%',

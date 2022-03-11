@@ -91,7 +91,7 @@ const StyledButton = styled('button', {
         $$iconColor: '$iconColors$primary',
 
         $$backgroundColor: '$colors$brand0',
-        $$backgroundColorOnHover: '$colors$brand10',
+        $$backgroundColorOnHover: '$colors$brand25',
         $$backgroundColorOnActive: '$colors$brand15',
 
         $$borderColorOnFocus: '$borderColors$selected',

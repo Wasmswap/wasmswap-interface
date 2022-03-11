@@ -62,7 +62,7 @@ export function NavigationSidebar({
       walletName={key?.name}
       onConnect={() => connectWallet(null)}
       onDisconnect={resetWalletConnection}
-      css={{ marginBottom: '$6' }}
+      css={{ marginBottom: '$8' }}
     />
   )
 

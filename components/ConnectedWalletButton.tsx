@@ -11,6 +11,7 @@ import { Logout } from '../icons/Logout'
 import { Copy } from '../icons/Copy'
 import { CSS } from '@stitches/react'
 import { useRecoilValue } from 'recoil'
+import { Column } from './Column'
 import { walletState } from '../state/atoms/walletAtoms'
 import { Valid } from '../icons/Valid'
 import React from 'react'
@@ -35,9 +36,11 @@ export const ConnectedWalletButton = ({
 
   if (!connected) {
     return (
-      <Button onClick={onConnect} size="large" variant="primary" {...props}>
-        Connect Keplr
-      </Button>
+      <Column css={{ paddingBottom: '$6' }}>
+        <Button onClick={onConnect} size="large" variant="primary" {...props}>
+          Connect Keplr
+        </Button>
+      </Column>
     )
   }
 
@@ -128,13 +131,13 @@ const StyledWalletButton = styled('div', {
   textAlign: 'left',
   border: '1px solid $borderColors$default',
   '&:hover': {
-    border: '1px solid $borderColors$focus',
+    border: '1px solid $borderColors$selected',
     [`${StyledDivForActions}`]: {
       opacity: 1,
     },
   },
   [media.sm]: {
-    border: '1px solid $borderColors$focus',
+    border: '1px solid $borderColors$selected',
     [`${StyledDivForActions}`]: {
       opacity: 1,
     },

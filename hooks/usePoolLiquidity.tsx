@@ -159,16 +159,21 @@ export const useMultiplePoolsLiquidity = ({
           const shouldQueryStakedBalance =
             providedLiquidityBalance > 0 && poolInfo.staking_address
 
-          const stakedBalance = shouldQueryStakedBalance
+          const stakedBalanceInMicroDenom = shouldQueryStakedBalance
             ? await getStakedBalance(address, poolInfo.staking_address, client)
+            : undefined
+
+          const stakedBalance = stakedBalanceInMicroDenom
+            ? convertMicroDenomToDenom(
+                stakedBalanceInMicroDenom,
+                tokenADecimals
+              )
             : undefined
 
           const myStakedLiquidity = {
             tokenAmount: stakedBalance,
             dollarValue: stakedBalance
-              ? convertMicroDenomToDenom(stakedBalance, tokenADecimals) *
-                tokenADollarPrice *
-                2
+              ? stakedBalance * tokenADollarPrice * 2
               : undefined,
           }
 

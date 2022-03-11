@@ -3,14 +3,14 @@ import { Column } from 'components/Column'
 import { Text } from 'components/Text'
 import { CardContent, Card } from 'components/Card'
 import { Inline } from 'components/Inline'
-import { StyledDivForTokenLogos } from './PoolCard'
 import { Button } from 'components/Button'
 import { Divider } from 'components/Divider'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { useTokenInfo } from 'hooks/useTokenInfo'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
-import { dollarValueFormatterWithDecimals } from 'util/conversion'
-import { Spinner } from '../../../components/Spinner'
+import {
+  dollarValueFormatterWithDecimals,
+  formatTokenBalance,
+} from 'util/conversion'
 import { useMemo } from 'react'
 
 export const LiquidityRewardsCard = ({
@@ -18,13 +18,8 @@ export const LiquidityRewardsCard = ({
   hasProvidedLiquidity,
   hasBondedLiquidity,
   onClick,
-  tokenASymbol,
-  tokenBSymbol,
   loading,
 }) => {
-  const tokenA = useTokenInfo(tokenASymbol)
-  const tokenB = useTokenInfo(tokenBSymbol)
-
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
   const pendingRewardsDollarValue = useMemo(() => {
@@ -81,7 +76,9 @@ export const LiquidityRewardsCard = ({
           ${rewardsDollarValue}
         </Text>
         <Text variant="link" color="brand" css={{ paddingTop: '$4' }}>
-          Spread in 4 tokens
+          {pendingRewards?.length
+            ? `Spread in ${pendingRewards.length} tokens`
+            : ''}
         </Text>
       </CardContent>
       <Divider offsetTop="$8" offsetBottom="$12" />
@@ -90,29 +87,18 @@ export const LiquidityRewardsCard = ({
           Rewards breakdown
         </Text>
         <Inline gap={6}>
-          <StyledDivForTokenLogos>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenA.logoURI}
-              alt={tokenA.symbol}
-            />
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenB.logoURI}
-              alt={tokenB.symbol}
-            />
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenA.logoURI}
-              alt={tokenA.symbol}
-            />
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenB.logoURI}
-              alt={tokenB.symbol}
-            />
-          </StyledDivForTokenLogos>
-          <Text variant="link">$105/days</Text>
+          {pendingRewards?.map(({ tokenInfo, tokenAmount }) => (
+            <Inline gap={2}>
+              <ImageForTokenLogo
+                size="large"
+                logoURI={tokenInfo.logoURI}
+                alt={tokenInfo.symbol}
+              />
+              <Text variant="link">
+                {formatTokenBalance(tokenAmount)} {tokenInfo.symbol}
+              </Text>
+            </Inline>
+          ))}
         </Inline>
         <Inline css={{ padding: '$19 0 $13' }}>
           <Button
@@ -124,10 +110,9 @@ export const LiquidityRewardsCard = ({
             variant="primary"
             size="large"
             css={{ width: '100%' }}
-            disabled={!receivedRewards}
-            iconRight={loading && <Spinner />}
+            disabled={!receivedRewards || loading}
           >
-            Claim your rewards
+            {loading ? 'Pending...' : 'Claim your rewards'}
           </Button>
         </Inline>
       </CardContent>

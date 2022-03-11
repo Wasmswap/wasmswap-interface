@@ -77,10 +77,10 @@ export const getStakedBalance = async (
   address: string,
   stakingContractAddress: string,
   client: SigningCosmWasmClient
-): Promise<string> => {
+) => {
   const msg = { staked_value: { address: address } }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
-  return result.value
+  return Number(result.value)
 }
 
 export const getTotalStakedBalance = async (

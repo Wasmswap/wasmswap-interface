@@ -10,7 +10,6 @@ import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
 } from 'util/conversion'
-import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { Column } from 'components/Column'
 import { Inline } from 'components/Inline'
 
@@ -20,6 +19,7 @@ type PoolCardProps = {
   tokenBSymbol: string
   totalLiquidity: LiquidityType
   myLiquidity: LiquidityType
+  myStakedLiquidity: LiquidityType
   rewardsInfo?: any
 }
 
@@ -28,24 +28,17 @@ export const PoolCard = ({
   tokenASymbol,
   tokenBSymbol,
   totalLiquidity,
+  myStakedLiquidity,
   rewardsInfo,
   myLiquidity,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const [stakedTokenBalance] = useStakedTokenBalance({
-    poolId,
-    enabled: Boolean(myLiquidity?.coins),
-  })
-
-  const [stakedTokenBalanceDollarValue] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: stakedTokenBalance,
-  })
+  const stakedTokenBalanceDollarValue = myStakedLiquidity.dollarValue
 
   const hasProvidedLiquidity =
-    typeof myLiquidity.coins === 'number' && myLiquidity.coins > 0
+    typeof myLiquidity.tokenAmount === 'number' && myLiquidity.tokenAmount > 0
 
   return (
     <Link href={`/pools/${poolId}`} passHref>

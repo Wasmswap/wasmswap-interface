@@ -42,8 +42,8 @@ export default function Pools() {
     ),
   })
 
-  const shouldShowFetchingState = isLoading || !liquidity?.length
-  const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
+  const shouldShowFetchingState = isLoading && !liquidity?.length
+  const shouldRenderPools = Boolean(liquidity?.length)
 
   return (
     <AppLayout>
@@ -81,6 +81,7 @@ export default function Pools() {
                     poolId={tokenB.pool_id}
                     tokenBSymbol={tokenB.symbol}
                     myLiquidity={liquidityInfo.myLiquidity}
+                    myStakedLiquidity={liquidityInfo.myStakedLiquidity}
                     totalLiquidity={liquidityInfo.totalLiquidity}
                     rewardsInfo={liquidityInfo.rewardsInfo}
                   />
@@ -114,6 +115,7 @@ export default function Pools() {
                 tokenBSymbol={tokenB.symbol}
                 myLiquidity={liquidityInfo.myLiquidity}
                 totalLiquidity={liquidityInfo.totalLiquidity}
+                myStakedLiquidity={liquidityInfo.myStakedLiquidity}
                 rewardsInfo={liquidityInfo?.rewardsInfo}
               />
             ))}

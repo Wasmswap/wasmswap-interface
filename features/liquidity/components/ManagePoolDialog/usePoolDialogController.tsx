@@ -159,7 +159,7 @@ const useMutateLiquidity = ({
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor(percentage * myLiquidity.coins),
+          amount: Math.floor(percentage * myLiquidity.tokenAmount),
           minToken1: 0,
           minToken2: 0,
           swapAddress: tokenB.swap_address,

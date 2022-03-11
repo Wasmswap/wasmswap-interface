@@ -81,7 +81,9 @@ export const ManageLiquidityCard = ({
               logoURI={tokenA.logoURI}
               alt={tokenA.symbol}
             />
-            <Text variant="body">{tokenAReserve}</Text>
+            <Text variant="body">
+              {tokenAReserve} {tokenA.symbol}
+            </Text>
           </Inline>
           <Inline gap={3}>
             <ImageForTokenLogo
@@ -89,7 +91,9 @@ export const ManageLiquidityCard = ({
               logoURI={tokenB.logoURI}
               alt={tokenB.symbol}
             />
-            <Text variant="body">{tokenBReserve}</Text>
+            <Text variant="body">
+              {tokenBReserve} {tokenB.symbol}
+            </Text>
           </Inline>
         </Inline>
         <Inline css={{ paddingBottom: '$13' }}>

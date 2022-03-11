@@ -43,7 +43,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [stakedAmount] = useStakedTokenBalance({ poolId })
 
   const maxLiquidityTokenAmount =
-    dialogState === 'stake' ? myLiquidity?.coins ?? 0 : stakedAmount ?? 0
+    dialogState === 'stake' ? myLiquidity?.tokenAmount ?? 0 : stakedAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
 

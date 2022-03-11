@@ -24,10 +24,6 @@ import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
 import {
-  usePoolTokensDollarValue,
-  useStakedTokenBalance,
-} from 'features/liquidity/hooks'
-import {
   useClaimRewards,
   usePendingRewards,
   useRewardsInfo,
@@ -57,26 +53,13 @@ export default function Pool() {
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(pool as string)
 
-  const [stakedBalanceCoins, isStakingBalanceLoading] = useStakedTokenBalance({
-    poolId: pool,
-  })
-
-  const [stakedBalanceInDollarValue] = usePoolTokensDollarValue({
-    poolId: pool,
-    tokenAmountInMicroDenom: stakedBalanceCoins,
-  })
-
-  const stakedBalance = {
-    coins: stakedBalanceCoins,
-    dollarValue: stakedBalanceInDollarValue,
-  }
-
   const [
     {
       totalLiquidity,
       myLiquidity,
       myReserve,
       tokenDollarValue,
+      myStakedLiquidity,
       rewardsInfo,
     } = {} as any,
     isLoading,
@@ -90,7 +73,8 @@ export default function Pool() {
     swapAddress: tokenB?.swap_address,
   })
 
-  const isLoadingInitial = isLoading || isStakingBalanceLoading
+  const isLoadingInitial = isLoading && !totalLiquidity
+
   const supportsIncentives = Boolean(
     __POOL_STAKING_ENABLED__ && tokenB?.staking_address
   )
@@ -210,7 +194,7 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
-                  stakedBalance={stakedBalance.coins}
+                  stakedBalance={myStakedLiquidity.tokenAmount}
                   onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
@@ -222,17 +206,15 @@ export default function Pool() {
                   onClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
                   rewardsContracts={rewardsContracts}
-                  stakedBalance={stakedBalance}
+                  stakedBalance={myStakedLiquidity}
                   rewardsInfo={rewardsInfo}
                   supportsIncentives={supportsIncentives}
                 />
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
-                  hasBondedLiquidity={stakedBalance.coins > 0}
-                  hasProvidedLiquidity={myLiquidity?.coins > 0}
+                  hasBondedLiquidity={myStakedLiquidity.tokenAmount > 0}
+                  hasProvidedLiquidity={myLiquidity?.tokenAmount > 0}
                   pendingRewards={pendingRewards}
-                  tokenASymbol={tokenA.symbol}
-                  tokenBSymbol={tokenB.symbol}
                   loading={isClaimingRewards}
                 />
               </StyledDivForCards>

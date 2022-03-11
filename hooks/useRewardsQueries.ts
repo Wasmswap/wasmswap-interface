@@ -47,6 +47,7 @@ export const usePendingRewards = ({ swapAddress }) => {
 
             return {
               tokenAmount,
+              tokenInfo,
               dollarValue: await getTokenDollarValue({
                 tokenInfo,
                 tokenAmountInDenom: tokenAmount,

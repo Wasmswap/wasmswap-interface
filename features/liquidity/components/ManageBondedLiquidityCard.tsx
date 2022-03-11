@@ -25,8 +25,8 @@ export const ManageBondedLiquidityCard = ({
 }) => {
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const bondedLiquidity = supportsIncentives && stakedBalance?.coins > 0
-  const providedLiquidity = myLiquidity?.coins > 0
+  const bondedLiquidity = supportsIncentives && stakedBalance?.tokenAmount > 0
+  const providedLiquidity = myLiquidity?.tokenAmount > 0
 
   const unstakedLiquidityDollarValue = dollarValueFormatterWithDecimals(
     myLiquidity?.dollarValue,

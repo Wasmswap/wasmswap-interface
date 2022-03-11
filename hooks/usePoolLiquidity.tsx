@@ -9,12 +9,13 @@ import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 import { useMultipleSwapInfo } from './useSwapInfo'
-import { getTotalStakedBalance } from '../services/staking'
+import { getStakedBalance, getTotalStakedBalance } from '../services/staking'
 import { useMultipleRewardsInfo } from './useRewardsQueries'
 import { useGetPoolTokensDollarValue } from '../features/liquidity/hooks/usePoolTokensDollarValue'
+import { usePersistance } from './usePersistance'
 
 export type LiquidityType = {
-  coins: number
+  tokenAmount: number
   dollarValue: number
 }
 
@@ -23,6 +24,7 @@ export type LiquidityInfoType = {
   myReserve: [number, number]
   totalLiquidity: LiquidityType
   myLiquidity: LiquidityType
+  myStakedLiquidity: LiquidityType
   /* pretty hacky - refactor when implementing decimals support */
   tokenDollarValue: number
   rewardsInfo: {
@@ -44,8 +46,8 @@ export const usePoolLiquidity = ({ poolId }) => {
 export const useMultiplePoolsLiquidity = ({
   poolIds,
   refetchInBackground = false,
-}): readonly [LiquidityInfoType[] | undefined, boolean] => {
-  const { address } = useRecoilValue(walletState)
+}) => {
+  const { address, client } = useRecoilValue(walletState)
 
   const tokenA = useBaseTokenInfo()
   const [chainInfo, fetchingChainInfo] = useChainInfo()
@@ -107,7 +109,7 @@ export const useMultiplePoolsLiquidity = ({
           serializedQueriesData.loadingRewardsContracts,
           address,
         ],
-        async queryFn() {
+        async queryFn(): Promise<LiquidityInfoType> {
           const {
             lp_token_address,
             token1_reserve,
@@ -115,7 +117,7 @@ export const useMultiplePoolsLiquidity = ({
             lp_token_supply,
           } = swap
 
-          const balance = await getLiquidityBalance({
+          const providedLiquidityBalance = await getLiquidityBalance({
             tokenAddress: lp_token_address,
             rpcEndpoint: chainInfo.rpc,
             address,
@@ -128,14 +130,18 @@ export const useMultiplePoolsLiquidity = ({
           ]
 
           const myReserve: [number, number] = [
-            protectAgainstNaN(reserve[0] * (balance / lp_token_supply)),
-            protectAgainstNaN(reserve[1] * (balance / lp_token_supply)),
+            protectAgainstNaN(
+              reserve[0] * (providedLiquidityBalance / lp_token_supply)
+            ),
+            protectAgainstNaN(
+              reserve[1] * (providedLiquidityBalance / lp_token_supply)
+            ),
           ]
 
           const tokenADecimals = tokenA.decimals
 
           const totalLiquidity = {
-            coins: lp_token_supply,
+            tokenAmount: lp_token_supply,
             dollarValue:
               convertMicroDenomToDenom(reserve[0], tokenADecimals) *
               tokenADollarPrice *
@@ -143,11 +149,27 @@ export const useMultiplePoolsLiquidity = ({
           }
 
           const myLiquidity = {
-            coins: balance,
+            tokenAmount: providedLiquidityBalance,
             dollarValue:
               convertMicroDenomToDenom(myReserve[0], tokenADecimals) *
               tokenADollarPrice *
               2,
+          }
+
+          const shouldQueryStakedBalance =
+            providedLiquidityBalance > 0 && poolInfo.staking_address
+
+          const stakedBalance = shouldQueryStakedBalance
+            ? await getStakedBalance(address, poolInfo.staking_address, client)
+            : undefined
+
+          const myStakedLiquidity = {
+            tokenAmount: stakedBalance,
+            dollarValue: stakedBalance
+              ? convertMicroDenomToDenom(stakedBalance, tokenADecimals) *
+                tokenADollarPrice *
+                2
+              : undefined,
           }
 
           const rewardsInfo = {
@@ -185,6 +207,7 @@ export const useMultiplePoolsLiquidity = ({
             reserve,
             myReserve,
             totalLiquidity,
+            myStakedLiquidity,
             myLiquidity,
             rewardsInfo,
             tokenDollarValue: tokenADollarPrice,
@@ -202,17 +225,20 @@ export const useMultiplePoolsLiquidity = ({
 
   const loading = fetchingSwaps || fetchingChainInfo || fetchingDollarPrice
 
-  return useMemo(() => {
-    let loadingPools
-    const pools = queriesResult.reduce((result, { data, isLoading }) => {
-      if (data) result.push(data)
+  const [data, isLoading] = useMemo(() => {
+    const loadingPools = queriesResult.some(({ isLoading }) => isLoading)
 
-      /* if any of the queries are being fetched we're still loading. */
-      if (!loadingPools) loadingPools = isLoading
+    if (loadingPools) {
+      return [[], loadingPools || loading]
+    }
 
-      return result
-    }, [])
-
-    return [pools, loadingPools || loading]
+    const pools = queriesResult.map(({ data }) => data)
+    return [pools, loadingPools || loading] as const
   }, [loading, queriesResult])
+
+  const persistData = usePersistance(
+    data[0]?.reserve?.length ? data : undefined
+  )
+
+  return [persistData, isLoading] as const
 }

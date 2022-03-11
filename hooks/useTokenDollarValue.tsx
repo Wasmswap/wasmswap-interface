@@ -31,6 +31,11 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
     }
   )
 
+  console.log({
+    fetchingTokenDollarPrice,
+    fetchingTokenToTokenPrice,
+  })
+
   /* if the token has an id or it's the baseToken then let's return pure price from the api */
   const shouldRenderPureDollarPrice =
     tokenSymbol === baseTokenSymbol || Boolean(tokenInfo?.id)
@@ -50,7 +55,7 @@ export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
   const getMultipleIBCAssetInfo = useGetMultipleIBCAssetInfo()
 
   const { data, isLoading } = useQuery(
-    `coinDollarValue/${tokenSymbols?.join('/')}`,
+    `tokenDollarValue/${tokenSymbols?.join('/')}`,
     async (): Promise<Array<number>> => {
       const tokenIds = tokenSymbols.map(
         (tokenSymbol) =>

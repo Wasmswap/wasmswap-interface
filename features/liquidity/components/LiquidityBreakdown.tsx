@@ -21,6 +21,7 @@ export const LiquidityBreakdown = ({
   poolId,
   totalLiquidity,
   rewardsInfo,
+  rewardsContracts,
   size = 'large',
 }) => {
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
@@ -95,12 +96,12 @@ export const LiquidityBreakdown = ({
               Token reward distribution
             </Text>
             <Inline gap={8}>
-              {[tokenA, tokenB, tokenA, tokenB].map((token, key) => (
+              {rewardsContracts?.contracts?.map(({ tokenInfo }, key) => (
                 <Inline gap={3} key={key}>
                   <ImageForTokenLogo
                     size="large"
-                    logoURI={token.logoURI}
-                    alt={token.symbol}
+                    logoURI={tokenInfo.logoURI}
+                    alt={tokenInfo.symbol}
                   />
                   <Text variant="link">33%</Text>
                 </Inline>
@@ -181,26 +182,14 @@ export const LiquidityBreakdown = ({
                 Token reward
               </Text>
               <StyledDivForTokenLogos>
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
+                {rewardsContracts?.contracts.map(({ tokenInfo }) => (
+                  <ImageForTokenLogo
+                    size="large"
+                    key={tokenInfo.symbol}
+                    logoURI={tokenInfo.logoURI}
+                    alt={tokenInfo.symbol}
+                  />
+                ))}
               </StyledDivForTokenLogos>
             </Column>
           )}

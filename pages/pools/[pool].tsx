@@ -30,6 +30,7 @@ import {
 import {
   useClaimRewards,
   usePendingRewards,
+  useRewardsInfo,
 } from '../../hooks/useRewardsQueries'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import { toast } from 'react-hot-toast'
@@ -81,6 +82,10 @@ export default function Pool() {
     isLoading,
   ] = usePoolLiquidity({ poolId: pool })
 
+  const [rewardsContracts] = useRewardsInfo({
+    swapAddress: tokenB?.swap_address,
+  })
+
   const [pendingRewards] = usePendingRewards({
     swapAddress: tokenB?.swap_address,
   })
@@ -95,8 +100,6 @@ export default function Pool() {
     'stakedTokenBalance',
     'pendingRewards',
   ])
-
-  console.log({ pendingRewards })
 
   const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
     useClaimRewards({
@@ -197,6 +200,7 @@ export default function Pool() {
               tokenB={tokenB}
               totalLiquidity={totalLiquidity}
               rewardsInfo={rewardsInfo}
+              rewardsContracts={rewardsContracts}
               size={isMobile ? 'small' : 'large'}
             />
             <>
@@ -217,8 +221,7 @@ export default function Pool() {
                 <ManageBondedLiquidityCard
                   onClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
-                  tokenASymbol={tokenA.symbol}
-                  tokenBSymbol={tokenB.symbol}
+                  rewardsContracts={rewardsContracts}
                   stakedBalance={stakedBalance}
                   rewardsInfo={rewardsInfo}
                   supportsIncentives={supportsIncentives}

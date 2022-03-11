@@ -1,10 +1,10 @@
 import { Text } from 'components/Text'
 import { Button } from 'components/Button'
-import { useTokenInfo } from 'hooks/useTokenInfo'
 import { Divider } from 'components/Divider'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
+  protectAgainstNaN,
 } from 'util/conversion'
 import { CardContent, Card } from 'components/Card'
 import { Inline } from 'components/Inline'
@@ -17,16 +17,12 @@ import { useSubscribeInteractions } from '../../../hooks/useSubscribeInteraction
 
 export const ManageBondedLiquidityCard = ({
   onClick,
-  tokenASymbol,
-  tokenBSymbol,
-  myLiquidity,
+  rewardsContracts,
   rewardsInfo,
+  myLiquidity,
   stakedBalance,
   supportsIncentives,
 }) => {
-  const tokenA = useTokenInfo(tokenASymbol)
-  const tokenB = useTokenInfo(tokenBSymbol)
-
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
   const bondedLiquidity = supportsIncentives && stakedBalance?.coins > 0
@@ -48,6 +44,11 @@ export const ManageBondedLiquidityCard = ({
 
   const formattedYieldPercentageReturn = dollarValueFormatter(
     rewardsInfo?.yieldPercentageReturn ?? 0
+  )
+  const interestOnStakedBalance =
+    (rewardsInfo?.yieldPercentageReturn ?? 0) / 100
+  const rewardsOnStakedTokensPerWeek = protectAgainstNaN(
+    (stakedBalance?.dollarValue * interestOnStakedBalance) / 52.1429
   )
 
   if (!providedLiquidity && !bondedLiquidity) {
@@ -96,28 +97,22 @@ export const ManageBondedLiquidityCard = ({
 
           <Inline gap={6}>
             <StyledDivForTokenLogos>
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenA.logoURI}
-                alt={tokenA.symbol}
-              />
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenB.logoURI}
-                alt={tokenB.symbol}
-              />
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenA.logoURI}
-                alt={tokenA.symbol}
-              />
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenB.logoURI}
-                alt={tokenB.symbol}
-              />
+              {rewardsContracts?.contracts.map(({ tokenInfo }) => (
+                <ImageForTokenLogo
+                  size="large"
+                  key={tokenInfo.symbol}
+                  logoURI={tokenInfo.logoURI}
+                  alt={tokenInfo.symbol}
+                />
+              ))}
             </StyledDivForTokenLogos>
-            <Text variant="link">$105/days</Text>
+            <Text variant="link">
+              $
+              {dollarValueFormatter(rewardsOnStakedTokensPerWeek, {
+                includeCommaSeparation: true,
+              })}
+              /week
+            </Text>
           </Inline>
         </Inline>
         <Inline css={{ padding: '$18 0 $13' }}>

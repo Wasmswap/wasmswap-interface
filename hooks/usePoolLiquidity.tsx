@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useQueries } from 'react-query'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
@@ -8,7 +9,6 @@ import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 import { useMultipleSwapInfo } from './useSwapInfo'
-import { useMemo } from 'react'
 import { getTotalStakedBalance } from '../services/staking'
 import { useMultipleRewardsInfo } from './useRewardsQueries'
 import { useGetPoolTokensDollarValue } from '../features/liquidity/hooks/usePoolTokensDollarValue'
@@ -25,6 +25,11 @@ export type LiquidityInfoType = {
   myLiquidity: LiquidityType
   /* pretty hacky - refactor when implementing decimals support */
   tokenDollarValue: number
+  rewardsInfo: {
+    totalStakedInMicroDenom: number | undefined
+    totalStakedDollarValue: number | undefined
+    yieldPercentageReturn: number | undefined
+  }
 }
 
 export const usePoolLiquidity = ({ poolId }) => {
@@ -156,6 +161,7 @@ export const useMultiplePoolsLiquidity = ({
               poolInfo.staking_address,
               chainInfo.rpc
             )
+
             rewardsInfo.totalStakedDollarValue =
               getPoolTokensDollarValue({
                 swapInfo: swap,
@@ -184,7 +190,7 @@ export const useMultiplePoolsLiquidity = ({
             tokenDollarValue: tokenADollarPrice,
           }
         },
-        enabled: Boolean(chainInfo?.rpc),
+        enabled: Boolean(chainInfo?.rpc && tokenA),
         refetchOnMount: 'always' as const,
         refetchInterval: refetchInBackground
           ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
@@ -197,19 +203,16 @@ export const useMultiplePoolsLiquidity = ({
   const loading = fetchingSwaps || fetchingChainInfo || fetchingDollarPrice
 
   return useMemo(() => {
-    const pools = []
-    let hasLoadingPool
+    let loadingPools
+    const pools = queriesResult.reduce((result, { data, isLoading }) => {
+      if (data) result.push(data)
 
-    queriesResult.forEach(({ data, isLoading }) => {
-      if (isLoading) {
-        hasLoadingPool = isLoading
-      }
+      /* if any of the queries are being fetched we're still loading. */
+      if (!loadingPools) loadingPools = isLoading
 
-      if (data) {
-        pools.push(data)
-      }
-    })
+      return result
+    }, [])
 
-    return [pools, hasLoadingPool || loading]
+    return [pools, loadingPools || loading]
   }, [loading, queriesResult])
 }

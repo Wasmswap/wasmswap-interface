@@ -15,5 +15,9 @@ async function fetchTokensPrice(tokenIds: Array<string>) {
     }
   )
 
+  if (!response.ok) {
+    throw new Error('Cannot fetch dollar price from the API.')
+  }
+
   return response.json()
 }

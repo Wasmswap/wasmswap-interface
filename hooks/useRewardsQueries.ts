@@ -17,62 +17,6 @@ import { useBaseTokenInfo } from './useTokenInfo'
 import { tokenToTokenPriceQuery } from '../queries/tokenToTokenPriceQuery'
 import { useTokenDollarValue } from './useTokenDollarValue'
 
-const useGetRewardsContractBySwapAddress = () => {
-  const [rewardsContracts] = useRewardContractsList()
-
-  return [
-    useCallback(
-      function selectRewardsContract({ swapAddress }) {
-        return rewardsContracts?.find(
-          ({ swap_address }) => swap_address === swapAddress
-        )
-      },
-      [rewardsContracts]
-    ),
-    Boolean(rewardsContracts?.length),
-  ] as const
-}
-
-const useGetTokenInfoByDenom = () => {
-  const [tokenList, fetching] = useTokenList()
-  return [
-    function getTokenInfoByDenom({ denom: tokenDenom }) {
-      return tokenList.tokens.find(({ denom, token_address }) => {
-        if ('native' in tokenDenom) {
-          return tokenDenom.native === denom
-        }
-        if ('cw20' in tokenDenom) {
-          return tokenDenom.cw20 === token_address
-        }
-      })
-    },
-    !fetching,
-  ] as const
-}
-
-const useGetTokenDollarValue = () => {
-  const tokenA = useBaseTokenInfo()
-  const [chainInfo, fetchingChainInfo] = useChainInfo()
-  const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
-    tokenA?.symbol
-  )
-
-  return [
-    async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
-      const priceForOneToken = await tokenToTokenPriceQuery({
-        baseToken: tokenA,
-        fromTokenInfo: tokenA,
-        toTokenInfo: tokenInfo,
-        chainInfo,
-        amount: 1,
-      })
-
-      return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
-    },
-    Boolean(tokenA && !fetchingChainInfo && !fetchingDollarPrice),
-  ] as const
-}
-
 export const usePendingRewards = ({ swapAddress }) => {
   const { address, status, client } = useRecoilValue(walletState)
 
@@ -247,11 +191,62 @@ export const useClaimRewards = ({
       )
       return await claimRewards(address, rewardsAddresses, client)
     },
-    {
-      ...options,
-      onSuccess(...args) {
-        options.onSuccess?.(...args)
-      },
-    }
+    options
   )
+}
+
+const useGetRewardsContractBySwapAddress = () => {
+  const [rewardsContracts] = useRewardContractsList()
+
+  return [
+    useCallback(
+      function selectRewardsContract({ swapAddress }) {
+        return rewardsContracts?.find(
+          ({ swap_address }) => swap_address === swapAddress
+        )
+      },
+      [rewardsContracts]
+    ),
+    Boolean(rewardsContracts?.length),
+  ] as const
+}
+
+const useGetTokenInfoByDenom = () => {
+  const [tokenList, fetching] = useTokenList()
+  return [
+    function getTokenInfoByDenom({ denom: tokenDenom }) {
+      return tokenList.tokens.find(({ denom, token_address }) => {
+        if ('native' in tokenDenom) {
+          return tokenDenom.native === denom
+        }
+        if ('cw20' in tokenDenom) {
+          return tokenDenom.cw20 === token_address
+        }
+      })
+    },
+    !fetching,
+  ] as const
+}
+
+const useGetTokenDollarValue = () => {
+  const tokenA = useBaseTokenInfo()
+  const [chainInfo, fetchingChainInfo] = useChainInfo()
+  const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
+    tokenA?.symbol
+  )
+
+  return [
+    async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
+      const priceForOneToken = await tokenToTokenPriceQuery({
+        baseToken: tokenA,
+        fromTokenInfo: tokenA,
+        toTokenInfo: tokenInfo,
+        chainInfo,
+        amount: 1,
+      })
+
+      return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
+    },
+    Boolean(tokenA && !fetchingChainInfo && !fetchingDollarPrice),
+  ] as const
 }

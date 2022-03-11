@@ -24,13 +24,13 @@ import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
 import {
-  useGetPoolTokensDollarValue,
+  usePoolTokensDollarValue,
   useStakedTokenBalance,
 } from 'features/liquidity/hooks'
 import {
   useClaimRewards,
-  usePendingRewardsBalance,
-} from '../../hooks/useRewards'
+  usePendingRewards,
+} from '../../hooks/useRewardsQueries'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import { toast } from 'react-hot-toast'
 import { Toast } from '../../components/Toast'
@@ -60,7 +60,7 @@ export default function Pool() {
     poolId: pool,
   })
 
-  const [stakedBalanceInDollarValue] = useGetPoolTokensDollarValue({
+  const [stakedBalanceInDollarValue] = usePoolTokensDollarValue({
     poolId: pool,
     tokenAmountInMicroDenom: stakedBalanceCoins,
   })
@@ -71,11 +71,17 @@ export default function Pool() {
   }
 
   const [
-    { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } = {} as any,
+    {
+      totalLiquidity,
+      myLiquidity,
+      myReserve,
+      tokenDollarValue,
+      rewardsInfo,
+    } = {} as any,
     isLoading,
   ] = usePoolLiquidity({ poolId: pool })
 
-  const [pendingRewardsAmount] = usePendingRewardsBalance({
+  const [pendingRewards] = usePendingRewards({
     swapAddress: tokenB?.swap_address,
   })
 
@@ -89,6 +95,8 @@ export default function Pool() {
     'stakedTokenBalance',
     'pendingRewards',
   ])
+
+  console.log({ pendingRewards })
 
   const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
     useClaimRewards({
@@ -188,6 +196,7 @@ export default function Pool() {
               tokenA={tokenA}
               tokenB={tokenB}
               totalLiquidity={totalLiquidity}
+              rewardsInfo={rewardsInfo}
               size={isMobile ? 'small' : 'large'}
             />
             <>
@@ -211,13 +220,14 @@ export default function Pool() {
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
                   stakedBalance={stakedBalance}
+                  rewardsInfo={rewardsInfo}
                   supportsIncentives={supportsIncentives}
                 />
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
                   hasBondedLiquidity={stakedBalance.coins > 0}
                   hasProvidedLiquidity={myLiquidity?.coins > 0}
-                  pendingRewardsAmount={pendingRewardsAmount}
+                  pendingRewards={pendingRewards}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
                   loading={isClaimingRewards}

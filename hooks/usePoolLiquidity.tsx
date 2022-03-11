@@ -2,13 +2,16 @@ import { useQueries } from 'react-query'
 import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
 import { walletState } from '../state/atoms/walletAtoms'
-import { useBaseTokenInfo } from './useTokenInfo'
+import { useBaseTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 import { useMultipleSwapInfo } from './useSwapInfo'
 import { useMemo } from 'react'
+import { getTotalStakedBalance } from '../services/staking'
+import { useMultipleRewardsInfo } from './useRewardsQueries'
+import { useGetPoolTokensDollarValue } from '../features/liquidity/hooks/usePoolTokensDollarValue'
 
 export type LiquidityType = {
   coins: number
@@ -46,22 +49,67 @@ export const useMultiplePoolsLiquidity = ({
     tokenA?.symbol
   )
 
+  const poolsInfo = useTokenInfoByPoolIds(poolIds)
+
   const [swaps, fetchingSwaps] = useMultipleSwapInfo({
     poolIds,
     refetchInBackground,
   })
 
+  const rewardsContractsInfo = useMultipleRewardsInfo({
+    swapAddresses: useMemo(
+      () => poolsInfo?.map((poolInfo) => poolInfo?.swap_address),
+      [poolsInfo]
+    ),
+  })
+
+  const serializedQueriesData = useMemo(() => {
+    const queriesData = swaps?.map((swap) => {
+      const poolInfoForSwap = poolsInfo?.find(
+        ({ swap_address }) => swap.swap_address === swap_address
+      )
+      /*
+       * note: this works only if we're assuming the first token pair is always one token
+       * */
+      const rewardsContractResponse = rewardsContractsInfo.find(
+        ({ data }) => data && data?.swap_address === swap.swap_address
+      )
+      return {
+        swap,
+        poolInfo: poolInfoForSwap,
+        rewardsContracts: rewardsContractResponse?.data,
+      }
+    })
+    const loadingRewardsContracts =
+      !rewardsContractsInfo ||
+      rewardsContractsInfo.some(({ isLoading }) => isLoading)
+    return {
+      queriesData,
+      loadingRewardsContracts,
+    }
+  }, [swaps, poolsInfo, rewardsContractsInfo])
+
+  const [getPoolTokensDollarValue, getPoolTokensDollarValueEnabled] =
+    useGetPoolTokensDollarValue()
+
   const queriesResult = useQueries(
-    swaps?.map(
-      ({
-        lp_token_address,
-        token1_reserve,
-        token2_reserve,
-        lp_token_supply,
-        // swap_address: swapAddress,
-      }) => ({
-        queryKey: ['myLiquidity', lp_token_address, address],
+    (serializedQueriesData.queriesData ?? []).map(
+      ({ swap, poolInfo, rewardsContracts }) => ({
+        queryKey: [
+          'myLiquidity',
+          getPoolTokensDollarValueEnabled,
+          swap.lp_token_address,
+          serializedQueriesData.loadingRewardsContracts,
+          address,
+        ],
         async queryFn() {
+          const {
+            lp_token_address,
+            token1_reserve,
+            token2_reserve,
+            lp_token_supply,
+          } = swap
+
           const balance = await getLiquidityBalance({
             tokenAddress: lp_token_address,
             rpcEndpoint: chainInfo.rpc,
@@ -97,15 +145,42 @@ export const useMultiplePoolsLiquidity = ({
               2,
           }
 
-          // const rewardsContract = rewardsContracts.find(
-          //   ({ swap_address }) => swapAddress === swap_address
-          // )
+          const rewardsInfo = {
+            totalStakedInMicroDenom: undefined,
+            totalStakedDollarValue: undefined,
+            yieldPercentageReturn: undefined,
+          }
+
+          if (rewardsContracts) {
+            rewardsInfo.totalStakedInMicroDenom = await getTotalStakedBalance(
+              poolInfo.staking_address,
+              chainInfo.rpc
+            )
+            rewardsInfo.totalStakedDollarValue =
+              getPoolTokensDollarValue({
+                swapInfo: swap,
+                tokenAmountInMicroDenom: rewardsInfo.totalStakedInMicroDenom,
+              }) || 1
+
+            rewardsInfo.yieldPercentageReturn =
+              rewardsContracts.contracts.reduce(
+                (yieldReturnValue, rewardsContract) => {
+                  return (
+                    yieldReturnValue +
+                    rewardsContract.rewardRate.ratePerYear.dollarValue /
+                      rewardsInfo.totalStakedDollarValue
+                  )
+                },
+                0
+              )
+          }
 
           return {
             reserve,
             myReserve,
             totalLiquidity,
             myLiquidity,
+            rewardsInfo,
             tokenDollarValue: tokenADollarPrice,
           }
         },

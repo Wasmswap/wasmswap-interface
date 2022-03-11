@@ -82,6 +82,7 @@ export default function Pools() {
                     tokenBSymbol={tokenB.symbol}
                     myLiquidity={liquidityInfo.myLiquidity}
                     totalLiquidity={liquidityInfo.totalLiquidity}
+                    rewardsInfo={liquidityInfo?.rewardsInfo}
                   />
                 ))}
               </StyledDivForPoolsGrid>
@@ -113,6 +114,7 @@ export default function Pools() {
                 tokenBSymbol={tokenB.symbol}
                 myLiquidity={liquidityInfo.myLiquidity}
                 totalLiquidity={liquidityInfo.totalLiquidity}
+                rewardsInfo={liquidityInfo?.rewardsInfo}
               />
             ))}
           </StyledDivForPoolsGrid>

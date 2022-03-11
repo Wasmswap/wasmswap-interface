@@ -3,6 +3,7 @@ import { __POOL_STAKING_ENABLED__ } from '../../../util/constants'
 import { Column } from '../../../components/Column'
 import { Text } from '../../../components/Text'
 import {
+  dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from '../../../util/conversion'
@@ -19,6 +20,7 @@ export const LiquidityBreakdown = ({
   tokenB,
   poolId,
   totalLiquidity,
+  rewardsInfo,
   size = 'large',
 }) => {
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
@@ -38,6 +40,10 @@ export const LiquidityBreakdown = ({
     tokenPairIndex: 1,
     poolId,
   })
+
+  const formattedYieldPercentageReturn = dollarValueFormatter(
+    rewardsInfo?.yieldPercentageReturn ?? 0
+  )
 
   const priceBreakdown = isPriceLoading
     ? ''
@@ -80,7 +86,7 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="right">
               APR reward
             </Text>
-            <Text variant="header">0%</Text>
+            <Text variant="header">{formattedYieldPercentageReturn}%</Text>
           </Column>
         </Inline>
         {__POOL_STAKING_ENABLED__ && (
@@ -203,7 +209,7 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="right">
               APR reward
             </Text>
-            <AprPill value="0" />
+            <AprPill value={formattedYieldPercentageReturn} />
           </Column>
         </Inline>
       </>

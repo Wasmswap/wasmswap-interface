@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTokenList, getCachedTokenList, TokenInfo } from './useTokenList'
 
 /* token selector functions */
@@ -17,21 +17,24 @@ export const unsafelyGetTokenInfoByPoolId = (
 ): TokenInfo | undefined => tokensList?.find((x) => x.pool_id === poolId)
 /* /token selector functions */
 
-/* hook for base token info retrieval */
-export const useBaseTokenInfo = () => {
+/* returns a selector for getting multiple tokens info at once */
+export const useGetMultipleTokenInfo = () => {
   const [tokenList] = useTokenList()
-  return useMemo(() => unsafelyGetBaseToken(tokenList), [tokenList])
+  return useCallback(
+    (tokenSymbols: Array<string>) =>
+      tokenSymbols?.map((tokenSymbol) =>
+        unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens)
+      ),
+    [tokenList]
+  )
 }
 
 /* hook for token info retrieval based on multiple `tokenSymbol` */
 export const useMultipleTokenInfo = (tokenSymbols: Array<string>) => {
-  const [tokenList] = useTokenList()
+  const getMultipleTokenInfo = useGetMultipleTokenInfo()
   return useMemo(
-    () =>
-      tokenSymbols?.map((tokenSymbol) =>
-        unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens)
-      ),
-    [tokenSymbols, tokenList]
+    () => getMultipleTokenInfo(tokenSymbols),
+    [tokenSymbols, getMultipleTokenInfo]
   )
 }
 
@@ -55,4 +58,10 @@ export const useTokenInfoByPoolIds = (poolIds: Array<string>) => {
 /* hook for token info retrieval based on `poolId` */
 export const useTokenInfoByPoolId = (poolId: string) => {
   return useTokenInfoByPoolIds(useMemo(() => [poolId], [poolId]))?.[0]
+}
+
+/* hook for base token info retrieval */
+export const useBaseTokenInfo = () => {
+  const [tokenList] = useTokenList()
+  return useMemo(() => unsafelyGetBaseToken(tokenList), [tokenList])
 }

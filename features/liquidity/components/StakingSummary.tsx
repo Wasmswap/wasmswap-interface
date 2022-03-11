@@ -5,7 +5,7 @@ import { BasicNumberInput } from 'components/BasicNumberInput'
 import { TokenInfo } from 'hooks/useTokenList'
 import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
 import {
-  useGetPoolTokensDollarValue,
+  usePoolTokensDollarValue,
   usePoolPairTokenAmount,
 } from 'features/liquidity/hooks'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
@@ -46,12 +46,12 @@ export const StakingSummary = ({
     poolId,
   })
 
-  const [maxLiquidityInDollarValue] = useGetPoolTokensDollarValue({
+  const [maxLiquidityInDollarValue] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: maxLiquidity,
   })
 
-  const [liquidityInDollarValue] = useGetPoolTokensDollarValue({
+  const [liquidityInDollarValue] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: liquidityAmount,
   })

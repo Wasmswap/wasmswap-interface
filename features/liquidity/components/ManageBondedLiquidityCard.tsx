@@ -2,7 +2,10 @@ import { Text } from 'components/Text'
 import { Button } from 'components/Button'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { Divider } from 'components/Divider'
-import { dollarValueFormatterWithDecimals } from 'util/conversion'
+import {
+  dollarValueFormatter,
+  dollarValueFormatterWithDecimals,
+} from 'util/conversion'
 import { CardContent, Card } from 'components/Card'
 import { Inline } from 'components/Inline'
 import { Column } from 'components/Column'
@@ -15,9 +18,9 @@ import { useSubscribeInteractions } from '../../../hooks/useSubscribeInteraction
 export const ManageBondedLiquidityCard = ({
   onClick,
   tokenASymbol,
-
   tokenBSymbol,
   myLiquidity,
+  rewardsInfo,
   stakedBalance,
   supportsIncentives,
 }) => {
@@ -41,6 +44,10 @@ export const ManageBondedLiquidityCard = ({
     {
       includeCommaSeparation: true,
     }
+  )
+
+  const formattedYieldPercentageReturn = dollarValueFormatter(
+    rewardsInfo?.yieldPercentageReturn ?? 0
   )
 
   if (!providedLiquidity && !bondedLiquidity) {
@@ -85,7 +92,7 @@ export const ManageBondedLiquidityCard = ({
           Currently reward incentive
         </Text>
         <Inline gap={12}>
-          <AprPill value="158" />
+          <AprPill value={formattedYieldPercentageReturn} />
 
           <Inline gap={6}>
             <StyledDivForTokenLogos>

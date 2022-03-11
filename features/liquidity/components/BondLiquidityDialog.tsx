@@ -22,7 +22,7 @@ import {
 } from 'components/Dialog'
 import { Button } from 'components/Button'
 import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
-import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { Spinner } from 'components/Spinner'
 import { toast } from 'react-hot-toast'
 import { Toast } from 'components/Toast'
@@ -47,12 +47,12 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
   const [tokenAmount, setTokenAmount] = useState(0)
 
-  const [maxDollarValueLiquidity] = useGetPoolTokensDollarValue({
+  const [maxDollarValueLiquidity] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: maxLiquidityTokenAmount,
   })
 
-  const [liquidityDollarAmount] = useGetPoolTokensDollarValue({
+  const [liquidityDollarAmount] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: tokenAmount,
   })

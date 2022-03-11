@@ -5,7 +5,7 @@ import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 import { useChainInfo } from './useChainInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
-type SwapInfo = Pick<
+export type SwapInfo = Pick<
   InfoResponse,
   'token1_denom' | 'token2_denom' | 'lp_token_address'
 > & {

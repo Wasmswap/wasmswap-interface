@@ -13,6 +13,7 @@ type Denom =
       native: string
     }
   | {
+      /* cw20 token_address */
       cw20: string
     }
 
@@ -65,14 +66,14 @@ export const getPendingRewards = async (
   return await client.queryContractSmart(rewardsAddress, msg)
 }
 
-type RewardsInfoResponse = {
+export type RewardsInfoResponse = {
   config: {
     owner?: string
     manager?: string
     staking_contract: string
     reward_token: Denom
   }
-  reward_config: {
+  reward: {
     periodFinish: number
     rewardRate: number
     rewardDuration: number

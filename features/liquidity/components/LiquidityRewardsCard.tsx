@@ -11,9 +11,10 @@ import { useTokenInfo } from 'hooks/useTokenInfo'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
 import { dollarValueFormatterWithDecimals } from 'util/conversion'
 import { Spinner } from '../../../components/Spinner'
+import { useMemo } from 'react'
 
 export const LiquidityRewardsCard = ({
-  pendingRewardsAmount,
+  pendingRewards,
   hasProvidedLiquidity,
   hasBondedLiquidity,
   onClick,
@@ -25,6 +26,15 @@ export const LiquidityRewardsCard = ({
   const tokenB = useTokenInfo(tokenBSymbol)
 
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
+
+  const pendingRewardsDollarValue = useMemo(() => {
+    return (
+      pendingRewards?.reduce(
+        (value, item) => item?.dollarValue ?? 0 + value,
+        0
+      ) ?? 0
+    )
+  }, [pendingRewards])
 
   if (!hasBondedLiquidity) {
     return (
@@ -47,13 +57,13 @@ export const LiquidityRewardsCard = ({
   }
 
   const rewardsDollarValue = dollarValueFormatterWithDecimals(
-    pendingRewardsAmount,
+    pendingRewardsDollarValue,
     {
       includeCommaSeparation: true,
     }
   )
 
-  const receivedRewards = rewardsDollarValue > 0
+  const receivedRewards = pendingRewardsDollarValue > 0
 
   return (
     <Card

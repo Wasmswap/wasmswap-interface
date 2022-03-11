@@ -6,8 +6,11 @@ import { LiquidityType } from 'hooks/usePoolLiquidity'
 import { Card, CardContent } from 'components/Card'
 import { Divider } from 'components/Divider'
 import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { dollarValueFormatterWithDecimals } from 'util/conversion'
-import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import {
+  dollarValueFormatter,
+  dollarValueFormatterWithDecimals,
+} from 'util/conversion'
+import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { Column } from 'components/Column'
 import { Inline } from 'components/Inline'
 
@@ -17,6 +20,7 @@ type PoolCardProps = {
   tokenBSymbol: string
   totalLiquidity: LiquidityType
   myLiquidity: LiquidityType
+  rewardsInfo?: any
 }
 
 export const PoolCard = ({
@@ -24,6 +28,7 @@ export const PoolCard = ({
   tokenASymbol,
   tokenBSymbol,
   totalLiquidity,
+  rewardsInfo,
   myLiquidity,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
@@ -33,7 +38,8 @@ export const PoolCard = ({
     poolId,
     enabled: Boolean(myLiquidity?.coins),
   })
-  const [stakedTokenBalanceDollarValue] = useGetPoolTokensDollarValue({
+
+  const [stakedTokenBalanceDollarValue] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: stakedTokenBalance,
   })
@@ -120,7 +126,7 @@ export const PoolCard = ({
               </Text>
 
               <Text variant="primary" align="right">
-                0%
+                {dollarValueFormatter(rewardsInfo?.yieldPercentageReturn ?? 0)}%
               </Text>
             </StyledDivForStatsColumn>
           </Inline>

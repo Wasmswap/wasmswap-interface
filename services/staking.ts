@@ -5,6 +5,7 @@ import {
 import { toBase64, toUtf8 } from '@cosmjs/encoding'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 import { StdFee } from '@cosmjs/stargate'
+import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 
 export const stakeTokens = async (
   senderAddress: string,
@@ -75,7 +76,7 @@ export const claimTokens = async (
 export const getStakedBalance = async (
   address: string,
   stakingContractAddress: string,
-  client: CosmWasmClient
+  client: SigningCosmWasmClient
 ): Promise<string> => {
   const msg = { staked_value: { address: address } }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
@@ -84,9 +85,10 @@ export const getStakedBalance = async (
 
 export const getTotalStakedBalance = async (
   stakingContractAddress: string,
-  client: CosmWasmClient
+  rpcEndpoint: string
 ): Promise<string> => {
   const msg = { total_value: {} }
+  const client = await cosmWasmClientRouter.connect(rpcEndpoint)
   const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.total
 }

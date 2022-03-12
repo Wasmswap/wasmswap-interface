@@ -142,7 +142,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
               liquidityDollarAmount as number,
               { includeCommaSeparation: true }
             )}`}
-            body={(error as any)?.message ?? error?.toString()}
+            body={formatSdkErrorMessage(error)}
             buttons={
               <Button
                 as="a"

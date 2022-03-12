@@ -171,10 +171,10 @@ export const useMultiplePoolsLiquidity = ({
             : undefined
 
           const myStakedLiquidity = {
-            tokenAmount: stakedBalance,
+            tokenAmount: stakedBalance || 0,
             dollarValue: stakedBalance
               ? stakedBalance * tokenADollarPrice * 2
-              : undefined,
+              : 0,
           }
 
           const rewardsInfo = {
@@ -231,7 +231,9 @@ export const useMultiplePoolsLiquidity = ({
   const loading = fetchingSwaps || fetchingChainInfo || fetchingDollarPrice
 
   const [data, isLoading] = useMemo(() => {
-    const loadingPools = queriesResult.some(({ isLoading }) => isLoading)
+    const loadingPools = queriesResult.some(
+      ({ isLoading, data }) => isLoading && !data
+    )
 
     if (loadingPools) {
       return [[], loadingPools || loading]

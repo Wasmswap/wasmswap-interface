@@ -47,11 +47,16 @@ export const unstakeTokens = async (
   client: SigningCosmWasmClient
 ) => {
   const msg = { unstake: { amount: amount.toString() } }
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+  const fee: StdFee = {
+    amount: defaultExecuteFee.amount,
+    gas: (Number(defaultExecuteFee.gas) * 2.6).toString(),
+  }
   return await client.execute(
     senderAddress,
     stakingContractAddress,
     msg,
-    unsafelyGetDefaultExecuteFee(),
+    fee,
     undefined,
     []
   )

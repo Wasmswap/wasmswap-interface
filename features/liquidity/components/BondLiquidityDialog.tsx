@@ -196,7 +196,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       <DialogHeader>
         {canManageStaking ? (
           <Text variant="header" css={{ paddingBottom: '$8' }}>
-            Manage staking
+            Manage Staking
           </Text>
         ) : (
           <>
@@ -214,10 +214,10 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <>
           <DialogContent css={{ paddingBottom: '$8' }}>
             <StateSwitchButtons
-              activeValue={dialogState === 'stake' ? 'staking' : 'unstaking'}
-              values={['staking', 'unstaking']}
+              activeValue={dialogState === 'stake' ? 'stake' : 'unstake'}
+              values={['stake', 'unstake']}
               onStateChange={(value) => {
-                setDialogState(value === 'staking' ? 'stake' : 'unstake')
+                setDialogState(value === 'stake' ? 'stake' : 'unstake')
               }}
             />
           </DialogContent>
@@ -237,8 +237,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
-          Max available for {dialogState === 'stake' ? 'staking' : 'unstaking'}{' '}
-          is worth $
+          Max available to {dialogState === 'stake' ? 'stake' : 'unstake'} is $
           {typeof maxDollarValueLiquidity === 'number' &&
             dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
               includeCommaSeparation: true,

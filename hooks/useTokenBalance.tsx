@@ -6,7 +6,7 @@ import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
+import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
 import { IBCAssetInfo } from './useIbcAssetList'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
@@ -73,7 +73,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
           address,
           token:
             unsafelyGetTokenInfo(symbol) ||
-            mapIbcTokenToNative(getIBCAssetInfo(symbol)) ||
+            mapIbcTokenToNative(unsafelyGetIBCAssetInfo(symbol)) ||
             {},
         })
       }
@@ -107,7 +107,7 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
             address,
             token:
               unsafelyGetTokenInfo(tokenSymbol) ||
-              mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
+              mapIbcTokenToNative(unsafelyGetIBCAssetInfo(tokenSymbol)) ||
               {},
           })
         )

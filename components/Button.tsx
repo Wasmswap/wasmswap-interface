@@ -53,6 +53,18 @@ const StyledButton = styled('button', {
   },
 
   variants: {
+    state: {
+      hovered: {
+        backgroundColor: '$$backgroundColorOnHover',
+      },
+      active: {
+        backgroundColor: '$$backgroundColorOnActive',
+      },
+      focused: {
+        boxShadow: '0 0 0 $space$1 $$borderColorOnFocus',
+      },
+    },
+
     variant: {
       primary: {
         $$textColor: '$colors$white',

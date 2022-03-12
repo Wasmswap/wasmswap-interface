@@ -42,8 +42,8 @@ export default function Pools() {
     ),
   })
 
-  const shouldShowFetchingState = isLoading || !liquidity?.length
-  const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
+  const shouldShowFetchingState = isLoading && !liquidity?.length
+  const shouldRenderPools = Boolean(liquidity?.length)
 
   return (
     <AppLayout>
@@ -81,7 +81,9 @@ export default function Pools() {
                     poolId={tokenB.pool_id}
                     tokenBSymbol={tokenB.symbol}
                     myLiquidity={liquidityInfo.myLiquidity}
+                    myStakedLiquidity={liquidityInfo.myStakedLiquidity}
                     totalLiquidity={liquidityInfo.totalLiquidity}
+                    rewardsInfo={liquidityInfo.rewardsInfo}
                   />
                 ))}
               </StyledDivForPoolsGrid>
@@ -113,6 +115,8 @@ export default function Pools() {
                 tokenBSymbol={tokenB.symbol}
                 myLiquidity={liquidityInfo.myLiquidity}
                 totalLiquidity={liquidityInfo.totalLiquidity}
+                myStakedLiquidity={liquidityInfo.myStakedLiquidity}
+                rewardsInfo={liquidityInfo?.rewardsInfo}
               />
             ))}
           </StyledDivForPoolsGrid>
@@ -170,9 +174,13 @@ const useSortControllers = () => {
 
 const StyledDivForPoolsGrid = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
   columnGap: '$8',
   rowGap: '$8',
+
+  '@media (max-width: 1550px)': {
+    gridTemplateColumns: '1fr 1fr 1fr',
+  },
 
   '@media (max-width: 1360px)': {
     gridTemplateColumns: '1fr 1fr',

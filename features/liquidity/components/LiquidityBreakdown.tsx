@@ -2,17 +2,26 @@ import { Inline } from '../../../components/Inline'
 import { __POOL_STAKING_ENABLED__ } from '../../../util/constants'
 import { Column } from '../../../components/Column'
 import { Text } from '../../../components/Text'
-import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
+import {
+  dollarValueFormatter,
+  dollarValueFormatterWithDecimals,
+  formatTokenBalance,
+} from '../../../util/conversion'
 import { StyledDivForTokenLogos } from './PoolCard'
 import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
 import React from 'react'
 import { Divider } from '../../../components/Divider'
 import { useTokenToTokenPrice } from '../../swap/hooks/useTokenToTokenPrice'
+import { AprPill } from './AprPill'
+import { usePoolPairTokenAmount } from '../hooks'
 
 export const LiquidityBreakdown = ({
   tokenA,
   tokenB,
+  poolId,
   totalLiquidity,
+  rewardsInfo,
+  rewardsContracts,
   size = 'large',
 }) => {
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
@@ -20,6 +29,22 @@ export const LiquidityBreakdown = ({
     tokenBSymbol: tokenB?.symbol,
     tokenAmount: 1,
   })
+
+  const [tokenAAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: (totalLiquidity?.tokenAmount ?? 0) / 2,
+    tokenPairIndex: 0,
+    poolId,
+  })
+
+  const [tokenBAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: (totalLiquidity?.tokenAmount ?? 0) / 2,
+    tokenPairIndex: 1,
+    poolId,
+  })
+
+  const formattedYieldPercentageReturn = dollarValueFormatter(
+    rewardsInfo?.yieldPercentageReturn ?? 0
+  )
 
   const priceBreakdown = isPriceLoading
     ? ''
@@ -62,7 +87,7 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="right">
               APR reward
             </Text>
-            <Text variant="header">0%</Text>
+            <Text variant="header">{formattedYieldPercentageReturn}%</Text>
           </Column>
         </Inline>
         {__POOL_STAKING_ENABLED__ && (
@@ -71,12 +96,12 @@ export const LiquidityBreakdown = ({
               Token reward distribution
             </Text>
             <Inline gap={8}>
-              {[tokenA, tokenB, tokenA, tokenB].map((token, key) => (
+              {rewardsContracts?.contracts?.map(({ tokenInfo }, key) => (
                 <Inline gap={3} key={key}>
                   <ImageForTokenLogo
                     size="large"
-                    logoURI={token.logoURI}
-                    alt={token.symbol}
+                    logoURI={tokenInfo.logoURI}
+                    alt={tokenInfo.symbol}
                   />
                   <Text variant="link">33%</Text>
                 </Inline>
@@ -120,9 +145,9 @@ export const LiquidityBreakdown = ({
           css={{
             display: 'grid',
             gridTemplateColumns: __POOL_STAKING_ENABLED__
-              ? '1fr 1fr 1fr'
+              ? '1fr 1fr 1fr 0.75fr 0.75fr'
               : '1fr 1fr',
-            padding: '$12 0 $16',
+            padding: '$15 0 $18',
           }}
         >
           <Column gap={6} align="flex-start" justifyContent="flex-start">
@@ -137,32 +162,34 @@ export const LiquidityBreakdown = ({
             </Text>
           </Column>
 
+          <Column gap={6} align="flex-start" justifyContent="flex-start">
+            <Text variant="legend" color="secondary" align="left">
+              {tokenA?.symbol}
+            </Text>
+            <Text variant="header">{formatTokenBalance(tokenAAmount)}</Text>
+          </Column>
+
+          <Column gap={6} align="flex-start" justifyContent="flex-start">
+            <Text variant="legend" color="secondary" align="left">
+              {tokenB?.symbol}
+            </Text>
+            <Text variant="header">{formatTokenBalance(tokenBAmount)}</Text>
+          </Column>
+
           {__POOL_STAKING_ENABLED__ && (
             <Column gap={6} align="center" justifyContent="center">
               <Text variant="legend" color="secondary" align="center">
                 Token reward
               </Text>
               <StyledDivForTokenLogos>
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
+                {rewardsContracts?.contracts.map(({ tokenInfo }) => (
+                  <ImageForTokenLogo
+                    size="large"
+                    key={tokenInfo.symbol}
+                    logoURI={tokenInfo.logoURI}
+                    alt={tokenInfo.symbol}
+                  />
+                ))}
               </StyledDivForTokenLogos>
             </Column>
           )}
@@ -171,7 +198,7 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="right">
               APR reward
             </Text>
-            <Text variant="header">0%</Text>
+            <AprPill value={formattedYieldPercentageReturn} />
           </Column>
         </Inline>
       </>

@@ -3,7 +3,7 @@ import { lightThemeColorTokens, darkThemeColorTokens } from './colors'
 import { createSpacing } from './utils/createSpacing'
 
 export const space = createSpacing({
-  steps: 22,
+  steps: 30,
   multiplier: 2,
   baseSize: 16,
 })

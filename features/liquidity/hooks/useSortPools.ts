@@ -7,7 +7,7 @@ export type SortParameters = 'liquidity' | 'rewards' | 'alphabetical'
 export type SortDirections = 'asc' | 'desc'
 
 type UseSortPoolsArgs = {
-  liquidity?: Array<LiquidityInfoType>
+  liquidity?: Array<LiquidityInfoType> | undefined
   supportedTokens?: Array<TokenInfo>
   filter?: {
     tokenSymbol: string
@@ -42,7 +42,7 @@ export const useSortPools = ({
     /* split up liquidity in my liquidity pools and other pools buckets */
     liquidity.forEach((liquidityInfo, index) => {
       const poolsBucket =
-        liquidityInfo.myLiquidity.coins > 0 ? myPools : otherPools
+        liquidityInfo.myLiquidity.tokenAmount > 0 ? myPools : otherPools
 
       poolsBucket.push({
         tokenA,
@@ -70,13 +70,13 @@ function sortPools(
     /* sort by total liquidity */
     if (sortBy.parameter === 'liquidity') {
       if (
-        poolA.liquidityInfo.totalLiquidity.coins >
-        poolB.liquidityInfo.totalLiquidity.coins
+        poolA.liquidityInfo.totalLiquidity.tokenAmount >
+        poolB.liquidityInfo.totalLiquidity.tokenAmount
       ) {
         comparisonResult = 1
       } else if (
-        poolA.liquidityInfo.totalLiquidity.coins <
-        poolB.liquidityInfo.totalLiquidity.coins
+        poolA.liquidityInfo.totalLiquidity.tokenAmount <
+        poolB.liquidityInfo.totalLiquidity.tokenAmount
       ) {
         comparisonResult = -1
       }

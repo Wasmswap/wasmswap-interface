@@ -45,7 +45,7 @@ function createWalletState<TClient = any, TState = {}>({
     dangerouslyAllowMutability: true,
     effects_UNSTABLE: [
       ({ onSet, setSelf }) => {
-        const CACHE_KEY = `@junoswap/wallet-state/type-${key}`
+        const CACHE_KEY = `@wasmswap/wallet-state/type-${key}`
 
         const savedValue = localStorage.getItem(CACHE_KEY)
 

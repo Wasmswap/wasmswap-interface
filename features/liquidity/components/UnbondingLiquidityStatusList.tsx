@@ -7,7 +7,7 @@ import { Divider } from 'components/Divider'
 import { Column } from 'components/Column'
 import {
   useStakingClaims,
-  useGetPoolTokensDollarValue,
+  usePoolTokensDollarValue,
   usePoolPairTokenAmount,
 } from 'features/liquidity/hooks'
 import {
@@ -64,7 +64,7 @@ export const UnbondingLiquidityStatusList = ({
     includeCommaSeparation: true,
   })
 
-  const [redeemableTokenDollarValue] = useGetPoolTokensDollarValue({
+  const [redeemableTokenDollarValue] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: amount,
   })

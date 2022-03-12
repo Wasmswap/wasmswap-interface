@@ -61,6 +61,7 @@ export const themeColorTokens = {
   borderColors: {
     inactive: '$colors$dark10',
     default: '$colors$dark20',
+    hover: '$colors$dark25',
     focus: '$colors$dark60',
     selected: '$colors$dark30',
     error: '$colors$error60',

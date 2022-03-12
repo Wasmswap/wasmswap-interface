@@ -1,6 +1,5 @@
 import {
   SigningCosmWasmClient,
-  CosmWasmClient,
   MsgExecuteContractEncodeObject,
 } from '@cosmjs/cosmwasm-stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
@@ -8,8 +7,9 @@ import { toUtf8 } from '@cosmjs/encoding'
 import { StdFee, coin, isDeliverTxFailure } from '@cosmjs/stargate'
 import { unsafelyGetBaseToken } from 'hooks/useTokenInfo'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
+import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 
-export interface swapToken1ForToken2Input {
+export interface SwapToken1ForToken2Input {
   nativeAmount: number
   price: number
   slippage: number
@@ -18,7 +18,7 @@ export interface swapToken1ForToken2Input {
   client: SigningCosmWasmClient
 }
 
-export const swapToken1ForToken2 = async (input: swapToken1ForToken2Input) => {
+export const swapToken1ForToken2 = async (input: SwapToken1ForToken2Input) => {
   const minToken = Math.floor(input.price * (1 - input.slippage))
   const msg = {
     swap: {
@@ -116,7 +116,7 @@ export const swapToken2ForToken1 = async (
   }
 }
 
-export interface swapTokenForTokenInput {
+export interface SwapTokenForTokenInput {
   tokenAmount: number
   price: number
   slippage: number
@@ -130,7 +130,7 @@ export interface swapTokenForTokenInput {
 }
 
 export const swapTokenForToken = async (
-  input: swapTokenForTokenInput
+  input: SwapTokenForTokenInput
 ): Promise<any> => {
   const minOutputToken = Math.floor(input.price * (1 - input.slippage))
   const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
@@ -208,7 +208,7 @@ export const getToken1ForToken2Price = async (
   input: getToken1ForToken2PriceInput
 ) => {
   try {
-    const client = await CosmWasmClient.connect(input.rpcEndpoint)
+    const client = await cosmWasmClientRouter.connect(input.rpcEndpoint)
     const query = await client.queryContractSmart(input.swapAddress, {
       token1_for_token2_price: {
         token1_amount: `${input.nativeAmount}`,
@@ -220,17 +220,17 @@ export const getToken1ForToken2Price = async (
   }
 }
 
-export interface getToken2ForToken1PriceInput {
+export interface GetToken2ForToken1PriceInput {
   tokenAmount: number
   swapAddress: string
   rpcEndpoint: string
 }
 
 export const getToken2ForToken1Price = async (
-  input: getToken2ForToken1PriceInput
+  input: GetToken2ForToken1PriceInput
 ) => {
   try {
-    const client = await CosmWasmClient.connect(input.rpcEndpoint)
+    const client = await cosmWasmClientRouter.connect(input.rpcEndpoint)
     const query = await client.queryContractSmart(input.swapAddress, {
       token2_for_token1_price: {
         token2_amount: `${input.tokenAmount}`,
@@ -242,7 +242,7 @@ export const getToken2ForToken1Price = async (
   }
 }
 
-export interface getTokenForTokenPriceInput {
+export interface GetTokenForTokenPriceInput {
   tokenAmount: number
   swapAddress: string
   outputSwapAddress: string
@@ -250,7 +250,7 @@ export interface getTokenForTokenPriceInput {
 }
 
 export const getTokenForTokenPrice = async (
-  input: getTokenForTokenPriceInput
+  input: GetTokenForTokenPriceInput
 ) => {
   try {
     const nativePrice = await getToken2ForToken1Price({
@@ -291,7 +291,7 @@ export const getSwapInfo = async (
       )
     }
 
-    const client = await CosmWasmClient.connect(rpcEndpoint)
+    const client = await cosmWasmClientRouter.connect(rpcEndpoint)
     return await client.queryContractSmart(swapAddress, {
       info: {},
     })

@@ -22,7 +22,7 @@ import {
 } from 'components/Dialog'
 import { Button } from 'components/Button'
 import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
-import { useGetPoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { Spinner } from 'components/Spinner'
 import { toast } from 'react-hot-toast'
 import { Toast } from 'components/Toast'
@@ -31,6 +31,7 @@ import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { UpRightArrow } from 'icons/UpRightArrow'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { formatSdkErrorMessage } from '../../../util/formatSdkErrorMessage'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
@@ -42,16 +43,16 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [stakedAmount] = useStakedTokenBalance({ poolId })
 
   const maxLiquidityTokenAmount =
-    dialogState === 'stake' ? myLiquidity?.coins ?? 0 : stakedAmount ?? 0
+    dialogState === 'stake' ? myLiquidity?.tokenAmount ?? 0 : stakedAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
 
-  const [maxDollarValueLiquidity] = useGetPoolTokensDollarValue({
+  const [maxDollarValueLiquidity] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: maxLiquidityTokenAmount,
   })
 
-  const [liquidityDollarAmount] = useGetPoolTokensDollarValue({
+  const [liquidityDollarAmount] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: tokenAmount,
   })
@@ -92,7 +93,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
             liquidityDollarAmount as number,
             { includeCommaSeparation: true }
           )}`}
-          body={(error as any)?.message ?? error?.toString()}
+          body={formatSdkErrorMessage(error)}
           buttons={
             <Button
               as="a"
@@ -141,7 +142,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
               liquidityDollarAmount as number,
               { includeCommaSeparation: true }
             )}`}
-            body={(error as any)?.message ?? error?.toString()}
+            body={formatSdkErrorMessage(error)}
             buttons={
               <Button
                 as="a"
@@ -195,7 +196,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       <DialogHeader>
         {canManageStaking ? (
           <Text variant="header" css={{ paddingBottom: '$8' }}>
-            Manage staking
+            Manage Staking
           </Text>
         ) : (
           <>
@@ -213,10 +214,10 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <>
           <DialogContent css={{ paddingBottom: '$8' }}>
             <StateSwitchButtons
-              activeValue={dialogState === 'stake' ? 'staking' : 'unstaking'}
-              values={['staking', 'unstaking']}
+              activeValue={dialogState === 'stake' ? 'stake' : 'unstake'}
+              values={['stake', 'unstake']}
               onStateChange={(value) => {
-                setDialogState(value === 'staking' ? 'stake' : 'unstake')
+                setDialogState(value === 'stake' ? 'stake' : 'unstake')
               }}
             />
           </DialogContent>
@@ -236,8 +237,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
-          Max available for {dialogState === 'stake' ? 'staking' : 'unstaking'}{' '}
-          is worth $
+          Max available to {dialogState === 'stake' ? 'stake' : 'unstake'} is $
           {typeof maxDollarValueLiquidity === 'number' &&
             dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
               includeCommaSeparation: true,
@@ -288,7 +288,11 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <Button variant="secondary" onClick={onRequestClose}>
           Cancel
         </Button>
-        <Button variant="primary" onClick={handleAction} disabled={isLoading}>
+        <Button
+          variant="primary"
+          onClick={handleAction}
+          disabled={isLoading || !tokenAmount}
+        >
           {isLoading ? (
             <Spinner instant />
           ) : dialogState === 'stake' ? (

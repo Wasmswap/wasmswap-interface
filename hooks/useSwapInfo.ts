@@ -5,10 +5,11 @@ import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 import { useChainInfo } from './useChainInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 
-type SwapInfo = Pick<
+export type SwapInfo = Pick<
   InfoResponse,
   'token1_denom' | 'token2_denom' | 'lp_token_address'
 > & {
+  swap_address: string
   lp_token_supply: number
   token1_reserve: number
   token2_reserve: number
@@ -35,14 +36,19 @@ export const useMultipleSwapInfo = ({
     async () => {
       const tokens = tokensByPoolIds || tokensByTokenSymbols
 
-      const swaps: Array<InfoResponse> = await Promise.all(
-        tokens.map(({ swap_address }) =>
-          getSwapInfo(swap_address, chainInfo.rpc)
+      const swaps: Array<{ swap: InfoResponse; swap_address: string }> =
+        await Promise.all(
+          tokens.map(async ({ swap_address }) => {
+            return {
+              swap: await getSwapInfo(swap_address, chainInfo.rpc),
+              swap_address,
+            }
+          })
         )
-      )
 
-      return swaps.map((swap) => ({
+      return swaps.map(({ swap, swap_address }) => ({
         ...swap,
+        swap_address,
         token1_reserve: Number(swap.token1_reserve),
         token2_reserve: Number(swap.token2_reserve),
         lp_token_supply: Number(swap.lp_token_supply),

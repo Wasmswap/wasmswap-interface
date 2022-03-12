@@ -128,7 +128,7 @@ export const TokenSelector = ({
           <TokenOptionsList
             activeTokenSymbol={tokenSymbol}
             onSelect={handleSelectToken}
-            css={{ padding: '$1 $6 $12' }}
+            css={{ padding: '$4 $6 $12' }}
             queryFilter={tokenSearchQuery}
             emptyStateLabel={`No result for “${tokenSearchQuery}”`}
             visibleNumberOfTokensInViewport={4.5}
@@ -222,7 +222,7 @@ export const TokenSelector = ({
           activeTokenSymbol={tokenSymbol}
           onSelect={handleSelectToken}
           queryFilter={tokenSearchQuery}
-          css={{ padding: '$1 $6 $12' }}
+          css={{ padding: '$4 $6 $12' }}
           emptyStateLabel={`No result for “${tokenSearchQuery}”`}
         />
       )}

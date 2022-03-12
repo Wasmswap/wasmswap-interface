@@ -7,7 +7,7 @@ import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { ErrorIcon } from 'icons/Error'
 import { TokenInfo } from 'hooks/useTokenList'
 import {
-  useGetPoolTokensDollarValue,
+  usePoolTokensDollarValue,
   usePoolPairTokenAmount,
 } from 'features/liquidity/hooks'
 import {
@@ -33,7 +33,7 @@ export const UnbondingLiquidityCard = ({
   amount,
   poolId,
 }: UnbondingLiquidityCardProps) => {
-  const [dollarValue] = useGetPoolTokensDollarValue({
+  const [dollarValue] = usePoolTokensDollarValue({
     poolId,
     tokenAmountInMicroDenom: amount,
   })

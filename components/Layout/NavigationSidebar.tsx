@@ -27,7 +27,7 @@ import { Divider } from '../Divider'
 import { ToggleSwitch } from '../ToggleSwitch'
 import { FeedbackIcon } from '../../icons/Feedback'
 import { AppTheme } from '../theme/themeAtom'
-import { useControlTheme } from '../theme/hooks/useTheme'
+import { useControlTheme } from '../theme'
 import { UpRightArrow } from '../../icons/UpRightArrow'
 
 type NavigationSidebarProps = {
@@ -62,7 +62,7 @@ export function NavigationSidebar({
       walletName={key?.name}
       onConnect={() => connectWallet(null)}
       onDisconnect={resetWalletConnection}
-      css={{ marginBottom: '$6' }}
+      css={{ marginBottom: '$8' }}
     />
   )
 

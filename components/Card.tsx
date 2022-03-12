@@ -12,16 +12,17 @@ const StyledDivForOverlay = styled('div', {
 const StyledDivForContent = styled('div', {
   position: 'relative',
   zIndex: '$2',
+  width: '100%',
 })
 
 const StyledDivForCardWrapper = styled('div', {
-  $$backgroundColor: '$colors$light',
-  $$backgroundColorOnHover: '$colors$light',
-  $$backgroundColorOnActive: '$colors$light50',
+  $$backgroundColor: '$colors$white',
+  $$backgroundColorOnHover: '$colors$white',
+  $$backgroundColorOnActive: '$colors$white',
 
   $$overlayColor: '$colors$brand0',
-  $$overlayColorOnHover: '$colors$brand10',
-  $$overlayColorOnActive: '$colors$brand5',
+  $$overlayColorOnHover: '$colors$brand0',
+  $$overlayColorOnActive: '$colors$brand0',
 
   position: 'relative',
   zIndex: '$1',
@@ -46,25 +47,95 @@ const StyledDivForCardWrapper = styled('div', {
     $$overlayColor: '$$overlayColorOnActive',
   },
 
-  boxShadow: '0 0 0 0 $colors$dark0',
+  boxShadow: '0 0 0 0 $$boxShadowColor',
   '&:focus': {
     boxShadow: '0 0 0 2px $borderColors$default',
   },
 
   variants: {
-    disabled: {
-      true: {
-        $$backgroundColor: '$colors$light60',
-        $$backgroundColorOnHover: '$colors$light60',
-        $$backgroundColorOnActive: '$colors$light60',
+    variant: {
+      primary: {
+        $$borderSize: '1px',
+        $$borderColor: '$borderColors$default',
+        $$boxShadowColor: '$colors$black10',
 
-        $$overlayColor: '$colors$brand0',
-        $$overlayColorOnHover: '$colors$brand0',
-        $$overlayColorOnActive: '$colors$brand0',
+        boxShadow:
+          '0px 2px 6px $$boxShadowColor, 0 0 0 $$borderSize $$borderColor',
 
+        '&:hover': {
+          $$borderColor: '$borderColors$hover',
+        },
+
+        '&:active': {
+          $$borderSize: '2px',
+          $$borderColor: '$borderColors$default',
+          $$boxShadowColor: '$colors$black0',
+        },
+
+        '&:focus': {
+          $$borderSize: '1px',
+          $$borderColor: '$borderColors$default',
+          $$boxShadowColor: '$colors$black10',
+        },
+      },
+      secondary: {
+        $$backgroundColor: '$colors$dark10',
+        $$backgroundColorOnHover: '$colors$dark15',
+        $$backgroundColorOnActive: '$colors$dark5',
+      },
+      ghost: {
         cursor: 'auto',
+        border: '1px dashed $borderColors$default',
+        $$backgroundColor: '$colors$white',
+        $$backgroundColorOnHover: '$$backgroundColor',
+        $$backgroundColorOnActive: '$$backgroundColor',
+        '&:focus': {
+          boxShadow: '0 0 0 0 $colors$dark0',
+        },
       },
     },
+
+    active: {
+      true: {},
+    },
+
+    disabled: {
+      true: {},
+    },
+  },
+
+  compoundVariants: [
+    {
+      disabled: true,
+      variant: 'secondary',
+      css: {
+        $$backgroundColor: '$colors$dark5',
+        $$backgroundColorOnHover: '$colors$dark5',
+        $$backgroundColorOnActive: '$colors$dark5',
+      },
+    },
+    {
+      active: true,
+      variant: 'secondary',
+      css: {
+        $$backgroundColor: '$colors$brand20',
+        $$backgroundColorOnHover: '$colors$brand30',
+        $$backgroundColorOnActive: '$colors$brand10',
+      },
+    },
+    {
+      active: true,
+      variant: 'secondary',
+      disabled: true,
+      css: {
+        $$backgroundColor: '$colors$brand10',
+        $$backgroundColorOnHover: '$colors$brand10',
+        $$backgroundColorOnActive: '$colors$brand10',
+      },
+    },
+  ],
+  defaultVariants: {
+    variant: 'primary',
   },
 })
 
@@ -83,9 +154,10 @@ const CardComponent = (
   )
 }
 
-export const Card = forwardRef(CardComponent) as typeof CardComponent
+export const Card = forwardRef(CardComponent)
 
 export const CardContent = styled('div', {
+  width: '100%',
   variants: {
     size: {
       medium: {

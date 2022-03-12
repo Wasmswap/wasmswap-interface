@@ -104,7 +104,7 @@ export const ManagePoolDialog = ({
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader paddingBottom={canManageLiquidity ? '$8' : '$12'}>
-        <Text variant="header">Manage liquidity</Text>
+        <Text variant="header">Manage Liquidity</Text>
       </DialogHeader>
 
       {canManageLiquidity && (

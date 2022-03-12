@@ -90,7 +90,7 @@ export const ManageBondedLiquidityCard = ({
       <Divider offsetTop="$8" offsetBottom="$12" />
       <CardContent>
         <Text variant="legend" color="secondary" css={{ paddingBottom: '$6' }}>
-          Currently reward incentive
+          Liquidity incentives
         </Text>
         <Inline gap={12}>
           <AprPill value={formattedYieldPercentageReturn} />
@@ -129,7 +129,7 @@ export const ManageBondedLiquidityCard = ({
               css={{ width: '100%' }}
             >
               {supportsIncentives
-                ? 'Manage staking'
+                ? 'Manage Staking'
                 : 'Does not support staking'}
             </Button>
           )}

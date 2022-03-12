@@ -77,7 +77,7 @@ export const LiquidityRewardsCard = ({
         </Text>
         <Text variant="link" color="brand" css={{ paddingTop: '$4' }}>
           {pendingRewards?.length
-            ? `Spread in ${pendingRewards.length} tokens`
+            ? `Receive ${pendingRewards.length} tokens`
             : ''}
         </Text>
       </CardContent>

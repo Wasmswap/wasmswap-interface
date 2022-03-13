@@ -1,4 +1,4 @@
-import { styled } from './theme'
+import { styled } from '../theme'
 import { VariantProps } from '@stitches/react'
 import { ComponentPropsWithoutRef } from 'react'
 

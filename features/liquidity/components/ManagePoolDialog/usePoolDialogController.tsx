@@ -12,14 +12,12 @@ import {
 import { toast } from 'react-hot-toast'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { TokenInfo } from 'hooks/useTokenList'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
 import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
-import { Button } from 'components/Button'
+import { Button, Toast, IconWrapper } from 'components'
 import { UpRightArrow } from 'icons/UpRightArrow'
-import { useSwapInfo } from '../../../../hooks/useSwapInfo'
-import { formatSdkErrorMessage } from '../../../../util/formatSdkErrorMessage'
+import { useSwapInfo } from 'hooks/useSwapInfo'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */

@@ -1,11 +1,8 @@
-import Link from 'next/link'
-import { Button } from '../../../components/Button'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { ArrowUp } from '../../../icons'
-import { Text } from '../../../components/Text'
 import React from 'react'
-import { styled } from '../../../components/theme'
-import { Inline } from '../../../components/Inline'
+import Link from 'next/link'
+import { Button, IconWrapper, Text, Inline } from 'components'
+import { ArrowUp } from 'icons'
+import { styled } from 'theme'
 
 export const LiquidityHeader = ({ tokenA, tokenB, size = 'large' }) => {
   if (size === 'small') {

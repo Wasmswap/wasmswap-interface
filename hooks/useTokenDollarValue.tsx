@@ -6,7 +6,7 @@ import {
 } from './useTokenInfo'
 import { useGetMultipleIBCAssetInfo } from './useIBCAssetInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { usePriceForOneToken } from '../features/swap/hooks/usePriceForOneToken'
+import { usePriceForOneToken } from 'features/swap'
 import { tokenDollarValueQuery } from '../queries/tokenDollarValueQuery'
 
 export const useTokenDollarValue = (tokenSymbol?: string) => {

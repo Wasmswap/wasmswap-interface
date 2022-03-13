@@ -1,9 +1,6 @@
 import dayjs from 'dayjs'
 import { useQuery } from 'react-query'
-import { Card, CardContent } from 'components/Card'
-import { Inline } from 'components/Inline'
-import { Text } from 'components/Text'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { Inline, Text, Card, CardContent, ImageForTokenLogo } from 'components'
 import { ErrorIcon } from 'icons/Error'
 import { TokenInfo } from 'hooks/useTokenList'
 import {

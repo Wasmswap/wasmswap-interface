@@ -15,7 +15,7 @@ import {
   useThemeClassName,
   useSubscribeDefaultAppTheme,
   globalCss,
-} from '../components/theme'
+} from '../theme'
 import { useEffect } from 'react'
 
 const applyGlobalStyles = globalCss({

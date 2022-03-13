@@ -1,20 +1,24 @@
 import React, { useState } from 'react'
-import { media, styled } from 'components/theme'
+import { media, styled } from 'theme'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { AppLayout } from 'components/Layout/AppLayout'
-import { Button } from 'components/Button'
-import { Spinner } from 'components/Spinner'
-import { ChevronIcon } from 'icons/Chevron'
-import { Divider } from 'components/Divider'
-import { NavigationSidebar } from 'components/Layout/NavigationSidebar'
-import { UnbondingLiquidityStatusList } from 'features/liquidity/components/UnbondingLiquidityStatusList'
-import { LiquidityHeader } from 'features/liquidity/components/LiquidityHeader'
-import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreakdown'
-import { LiquidityRewardsCard } from 'features/liquidity/components/LiquidityRewardsCard'
-import { BondLiquidityDialog } from 'features/liquidity'
 import {
+  Button,
+  Spinner,
+  Divider,
+  AppLayout,
+  NavigationSidebar,
+  IconWrapper,
+  Toast,
+} from 'components'
+import { ChevronIcon } from 'icons/Chevron'
+import {
+  UnbondingLiquidityStatusList,
+  LiquidityHeader,
+  LiquidityBreakdown,
+  LiquidityRewardsCard,
+  BondLiquidityDialog,
   ManageBondedLiquidityCard,
   ManagePoolDialog,
   ManageLiquidityCard,
@@ -30,8 +34,6 @@ import {
 } from '../../hooks/useRewardsQueries'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import { toast } from 'react-hot-toast'
-import { Toast } from '../../components/Toast'
-import { IconWrapper } from '../../components/IconWrapper'
 import { Error } from '../../icons/Error'
 import { formatSdkErrorMessage } from '../../util/formatSdkErrorMessage'
 import { UpRightArrow } from '../../icons/UpRightArrow'

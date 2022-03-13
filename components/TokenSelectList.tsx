@@ -1,5 +1,5 @@
 import { ComponentPropsWithoutRef, useMemo } from 'react'
-import { styled } from 'components/theme'
+import { styled } from 'theme'
 import { TokenInfo } from 'hooks/useTokenList'
 import { Text } from 'components/Text'
 import { formatTokenBalance } from 'util/conversion'

@@ -1,7 +1,7 @@
 import { Button, ButtonProps } from './Button'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Portal } from '@reach/portal'
-import { styled } from './theme'
+import { styled } from 'theme'
 import { useOnClickOutside } from '../hooks/useOnClickOutside'
 
 type Props = ButtonProps & {

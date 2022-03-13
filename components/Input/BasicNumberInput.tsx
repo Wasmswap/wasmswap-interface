@@ -1,5 +1,5 @@
 import { ForwardedRef, forwardRef, HTMLProps, useRef, useState } from 'react'
-import { useAmountChangeController } from '../hooks/useAmountChangeController'
+import { useAmountChangeController } from '../../hooks/useAmountChangeController'
 
 type Props = Omit<
   HTMLProps<HTMLInputElement>,

@@ -1,5 +1,4 @@
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Text } from 'components/Text'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import React, { useEffect, useRef, useState } from 'react'
 import {
@@ -8,30 +7,31 @@ import {
 } from 'util/conversion'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
-import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
 import { useUpdateEffect } from '@reach/utils'
 import dayjs from 'dayjs'
 import {
+  Text,
+  Divider,
+  Column,
   DialogHeader,
   Dialog,
   DialogContent,
   DialogButtons,
-} from 'components/Dialog'
-import { Button } from 'components/Button'
+  Toast,
+  Button,
+  IconWrapper,
+  Spinner,
+} from 'components'
 import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
 import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
-import { Spinner } from 'components/Spinner'
 import { toast } from 'react-hot-toast'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
 import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { UpRightArrow } from 'icons/UpRightArrow'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { formatSdkErrorMessage } from '../../../util/formatSdkErrorMessage'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')

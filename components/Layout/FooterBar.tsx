@@ -1,9 +1,7 @@
-import { Text } from '../Text'
-import { styled } from '../theme'
-import { Button } from '../Button'
-import { UpRightArrow } from '../../icons/UpRightArrow'
-import { IconWrapper } from '../IconWrapper'
-import { APP_NAME } from '../../util/constants'
+import { styled } from 'theme'
+import { Text, Button, IconWrapper } from 'components'
+import { UpRightArrow } from 'icons/UpRightArrow'
+import { APP_NAME } from 'util/constants'
 
 export const FooterBar = () => {
   return (

@@ -1,4 +1,4 @@
-import { styled } from './theme'
+import { styled } from '../theme'
 import { CSS } from '@stitches/react'
 
 type DividerProps = {

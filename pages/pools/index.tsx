@@ -1,21 +1,17 @@
 import React, { useMemo, useState } from 'react'
-import { media, styled } from 'components/theme'
-import { AppLayout } from 'components/Layout/AppLayout'
+import { media, styled } from 'theme'
+import { AppLayout, PageHeader } from 'components'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { PoolCard } from 'features/liquidity/components/PoolCard'
-import { ButtonWithDropdownForSorting } from 'features/liquidity/components/ButtonWithDropdownForSorting'
-import { PageHeader } from 'components/Layout/PageHeader'
-import { Inline } from 'components/Inline'
-import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
-import { Text } from 'components/Text'
-import { Spinner } from 'components/Spinner'
-import { useTokenList } from 'hooks/useTokenList'
-import { Column } from 'components/Column'
 import {
+  PoolCard,
+  ButtonWithDropdownForSorting,
   SortDirections,
   SortParameters,
   useSortPools,
-} from 'features/liquidity/hooks/useSortPools'
+} from 'features/liquidity'
+import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
+import { Text, Inline, Column, Spinner } from 'components'
+import { useTokenList } from 'hooks/useTokenList'
 import { useUpdateEffect } from '@reach/utils'
 
 export default function Pools() {

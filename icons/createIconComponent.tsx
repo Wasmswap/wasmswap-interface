@@ -1,4 +1,4 @@
-import { IconWrapper, IconWrapperProps } from '../components/IconWrapper'
+import { IconWrapper, IconWrapperProps } from 'components'
 import { ComponentType } from 'react'
 
 export function createIconComponent<T extends ComponentType = any>(icon: T) {

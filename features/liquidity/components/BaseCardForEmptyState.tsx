@@ -1,7 +1,5 @@
-import { Column } from 'components/Column'
-import { CardContent } from 'components/Card'
+import { Column, CardContent, Card } from 'components'
 import { ArrowUpIcon } from 'icons/ArrowUp'
-import { Card } from 'components/Card'
 
 export const BaseCardForEmptyState = ({
   children,

@@ -11,7 +11,7 @@ import { useChainInfo } from './useChainInfo'
 import { useMultipleSwapInfo } from './useSwapInfo'
 import { getStakedBalance, getTotalStakedBalance } from '../services/staking'
 import { useMultipleRewardsInfo } from './useRewardsQueries'
-import { useGetPoolTokensDollarValue } from '../features/liquidity/hooks/usePoolTokensDollarValue'
+import { useGetPoolTokensDollarValue } from '../features/liquidity'
 import { usePersistance } from './usePersistance'
 
 export type LiquidityType = {

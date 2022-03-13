@@ -1,4 +1,4 @@
-import { media, styled } from './theme'
+import { media, styled } from '../theme'
 import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 
 const StyledDivForOverlay = styled('div', {

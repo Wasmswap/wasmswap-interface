@@ -1,14 +1,12 @@
 import { useRef, useState } from 'react'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { BasicNumberInput } from 'components/BasicNumberInput'
+import { styled } from 'theme'
 import { TokenInfo } from 'hooks/useTokenList'
 import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
 import {
   usePoolTokensDollarValue,
   usePoolPairTokenAmount,
 } from 'features/liquidity/hooks'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { ImageForTokenLogo, BasicNumberInput, Text } from 'components'
 
 type StakingSummaryProps = {
   label: string

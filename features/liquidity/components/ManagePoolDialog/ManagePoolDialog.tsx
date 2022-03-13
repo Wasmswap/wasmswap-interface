@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { LiquidityInput } from 'components/LiquidityInput'
-import { IconWrapper } from 'components/IconWrapper'
+import { styled } from 'theme'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
@@ -17,17 +14,20 @@ import { TokenToTokenRates } from './TokenToTokenRates'
 import { StateSwitchButtons } from '../StateSwitchButtons'
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
-import { Button } from 'components/Button'
 import {
+  Text,
+  Button,
+  Spinner,
   DialogHeader,
   DialogContent,
   Dialog,
   DialogDivider,
   DialogButtons,
-} from 'components/Dialog'
-import { Spinner } from 'components/Spinner'
+  IconWrapper,
+  LiquidityInput,
+  ImageForTokenLogo,
+} from 'components'
 import { usePrevious } from '@reach/utils'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 
 type ManagePoolDialogProps = {
   isShowing: boolean

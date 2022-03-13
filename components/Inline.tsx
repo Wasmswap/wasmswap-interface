@@ -1,4 +1,4 @@
-import { lightTheme, space, styled } from './theme'
+import { lightTheme, space, styled } from '../theme'
 
 export const Inline = styled('div', {
   display: 'flex',

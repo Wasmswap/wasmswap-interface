@@ -1,17 +1,20 @@
+import { useMemo } from 'react'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
-import { Column } from 'components/Column'
-import { Text } from 'components/Text'
-import { CardContent, Card } from 'components/Card'
-import { Inline } from 'components/Inline'
-import { Button } from 'components/Button'
-import { Divider } from 'components/Divider'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import {
+  Button,
+  Divider,
+  Inline,
+  CardContent,
+  Card,
+  Text,
+  Column,
+  ImageForTokenLogo,
+} from 'components'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { useMemo } from 'react'
+import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
 
 export const LiquidityRewardsCard = ({
   pendingRewards,
@@ -88,7 +91,7 @@ export const LiquidityRewardsCard = ({
         </Text>
         <Inline gap={6}>
           {pendingRewards?.map(({ tokenInfo, tokenAmount }) => (
-            <Inline gap={2}>
+            <Inline gap={2} key={tokenInfo?.symbol}>
               <ImageForTokenLogo
                 size="large"
                 logoURI={tokenInfo.logoURI}

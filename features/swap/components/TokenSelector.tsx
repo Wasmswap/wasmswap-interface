@@ -1,15 +1,13 @@
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { styled } from 'components/theme'
-import { IconWrapper } from 'components/IconWrapper'
+import { styled } from 'theme'
 import React, { useRef, useState } from 'react'
 import { TokenOptionsList } from './TokenOptionsList'
 import { Union } from 'icons/Union'
-import { Inline } from '../../../components/Inline'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { SelectorToggle } from './SelectorToggle'
 import { SelectorInput } from './SelectorInput'
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
-import { Button } from 'components/Button'
+import { Button, Inline, IconWrapper } from 'components'
 import { QueryInput } from './QueryInput'
 
 type TokenSelectorProps = {

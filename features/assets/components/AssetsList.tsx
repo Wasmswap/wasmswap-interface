@@ -1,6 +1,6 @@
 import { AssetCard, AssetCardState } from './AssetCard'
-import { Text } from 'components/Text'
-import { styled } from 'components/theme'
+import { Text } from 'components'
+import { styled } from 'theme'
 import { walletState } from 'state/atoms/walletAtoms'
 import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
 import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'

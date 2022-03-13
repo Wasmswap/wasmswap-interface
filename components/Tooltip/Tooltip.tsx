@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react'
 import { Text } from '../Text'
-import { styled } from '../theme'
+import { styled } from '../../theme'
 
 type TooltipProps = Omit<ComponentProps<typeof TooltipPopup>, 'triggerRect'> & {
   delayHidingOnClick?: boolean

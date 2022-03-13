@@ -1,6 +1,6 @@
 import { atom } from 'recoil'
-import { __DARK_MODE_ENABLED_BY_DEFAULT__ } from '../../util/constants'
-import { localStorageEffect } from '../../util/localStorageEffect'
+import { __DARK_MODE_ENABLED_BY_DEFAULT__ } from '../util/constants'
+import { localStorageEffect } from '../util/localStorageEffect'
 
 export enum AppTheme {
   dark = 'dark',

@@ -1,4 +1,4 @@
-import { lightTheme } from 'components/theme'
+import { lightTheme } from 'theme'
 import { useEffect, useState } from 'react'
 
 const mediaQueries = lightTheme.media

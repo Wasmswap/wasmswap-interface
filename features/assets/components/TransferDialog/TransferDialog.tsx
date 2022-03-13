@@ -1,29 +1,29 @@
-import { toast } from 'react-hot-toast'
-import { Text } from 'components/Text'
-import { Button } from 'components/Button'
-import { Spinner } from 'components/Spinner'
 import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useTransferAssetMutation } from './useTransferAssetMutation'
 import { TransactionKind } from './types'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
 import { Valid } from 'icons/Valid'
 import { Error } from 'icons/Error'
 import { UpRightArrow } from 'icons/UpRightArrow'
 import {
+  Button,
+  Text,
+  Spinner,
+  IconWrapper,
   DialogButtons,
   DialogContent,
   DialogDivider,
   DialogHeader,
   Dialog,
-} from 'components/Dialog'
+  Toast,
+} from 'components'
 import { AppWalletInfo, KeplrWalletInfo } from './WalletInfo'
 import { AssetSelector } from './AssetSelector'
 import { AmountInput } from './AmountInput'
-import { useIBCTokenBalance } from '../../../../hooks/useIBCTokenBalance'
-import { useTokenBalance } from '../../../../hooks/useTokenBalance'
-import { useRefetchQueries } from '../../../../hooks/useRefetchQueries'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
 
 type TransferDialogProps = {
   tokenSymbol: string

@@ -1,4 +1,4 @@
-import { media, styled } from '../theme'
+import { media, styled } from '../../theme'
 import { NavigationSidebar } from './NavigationSidebar'
 import { FooterBar } from './FooterBar'
 import { APP_MAX_WIDTH } from 'util/constants'

@@ -1,5 +1,5 @@
 import Portal from '@reach/portal'
-import { styled, useThemeClassName } from 'components/theme'
+import { styled, useThemeClassName } from 'theme'
 import gsap from 'gsap'
 import { useEffect, useState, useRef, ReactNode } from 'react'
 import { DialogContextProvider } from './DialogContext'

@@ -1,8 +1,7 @@
-import { styled } from '../theme'
+import { styled } from '../../theme'
 import { ErrorIcon } from 'icons/Error'
-import { Text } from 'components/Text'
 import { __TEST_MODE__ } from '../../util/constants'
-import { Button } from 'components/Button'
+import { Button, Text } from 'components'
 import { UpRightArrowIcon } from '../../icons/UpRightArrow'
 
 export const ExtensionSidebar = () => {

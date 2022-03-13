@@ -1,4 +1,4 @@
-import { styled } from '../theme'
+import { styled } from '../../theme'
 import { IconWrapper } from '../IconWrapper'
 import { Union } from '../../icons/Union'
 import { Button } from '../Button'

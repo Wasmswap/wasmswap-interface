@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
-import { useTheme } from './theme'
-import { lightThemeColorTokens } from './theme/colors'
+import { useTheme } from '../theme'
+import { lightThemeColorTokens } from '../theme/colors'
 
 export type IconWrapperProps = Omit<
   HTMLProps<HTMLDivElement>,

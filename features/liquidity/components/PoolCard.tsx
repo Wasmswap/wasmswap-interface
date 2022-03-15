@@ -1,16 +1,16 @@
-import Link from 'next/link'
-import { styled } from 'theme'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import { LiquidityType } from 'hooks/usePoolLiquidity'
 import {
-  Divider,
   Card,
   CardContent,
-  Text,
-  ImageForTokenLogo,
   Column,
+  Divider,
+  ImageForTokenLogo,
   Inline,
+  Text,
 } from 'components'
+import { LiquidityType } from 'hooks/usePoolLiquidity'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import Link from 'next/link'
+import { styled } from 'theme'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,

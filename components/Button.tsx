@@ -1,13 +1,14 @@
+import type { CSS, VariantProps } from '@stitches/react'
 import {
-  ForwardedRef,
-  ReactNode,
-  forwardRef,
-  cloneElement,
   Children,
+  cloneElement,
+  ForwardedRef,
+  forwardRef,
   ReactElement,
+  ReactNode,
 } from 'react'
-import type { VariantProps, CSS } from '@stitches/react'
-import { styled, createColorVariants } from 'theme'
+import { createColorVariants, styled } from 'theme'
+
 import { GetRenderAsProps, RenderAsType } from './types'
 
 const StyledButton = styled('button', {

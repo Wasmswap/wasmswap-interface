@@ -1,7 +1,7 @@
+import { calculateCharactersLength,Text } from 'components'
+import { useAmountChangeController } from 'hooks/useAmountChangeController'
 import React, { HTMLProps, Ref } from 'react'
 import { styled } from 'theme'
-import { useAmountChangeController } from 'hooks/useAmountChangeController'
-import { Text, calculateCharactersLength } from 'components'
 
 type SelectorInputProps = {
   amount: number

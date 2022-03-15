@@ -1,8 +1,9 @@
-import { useTokenInfo } from 'hooks/useTokenInfo'
 import { useChainInfo } from 'hooks/useChainInfo'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import { useQuery } from 'react-query'
 import { getUnstakingDuration } from 'services/staking'
 import { WalletStatusType } from 'state/atoms/walletAtoms'
+
 import { cosmWasmClientRouter } from '../../../util/cosmWasmClientRouter'
 
 export const useUnstakingDuration = ({ poolId }) => {

@@ -1,8 +1,8 @@
-import { Children, cloneElement, ReactElement, ReactNode } from 'react'
 import { animated, useSpring } from '@react-spring/web'
-import { darkTheme, lightTheme, styled, useTheme } from 'theme'
 import { Button, IconWrapper, Text } from 'components'
 import { Union } from 'icons'
+import { Children, cloneElement,ReactElement, ReactNode } from 'react'
+import { darkTheme, lightTheme, styled, useTheme } from 'theme'
 
 type ToastProps = {
   icon: ReactElement

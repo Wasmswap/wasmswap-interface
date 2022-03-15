@@ -1,5 +1,5 @@
-import { useQueryClient } from 'react-query'
 import { useCallback, useRef } from 'react'
+import { useQueryClient } from 'react-query'
 
 const sleep = (delayMs: number) =>
   new Promise((resolve) => setTimeout(resolve, delayMs))

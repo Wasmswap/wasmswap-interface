@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
 import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
-import { TokenInfo } from 'hooks/useTokenList'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { TokenInfo } from 'hooks/useTokenList'
+import { useMemo } from 'react'
 
 export type SortParameters = 'liquidity' | 'rewards' | 'alphabetical'
 export type SortDirections = 'asc' | 'desc'

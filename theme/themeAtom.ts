@@ -1,4 +1,5 @@
 import { atom } from 'recoil'
+
 import { __DARK_MODE_ENABLED_BY_DEFAULT__ } from '../util/constants'
 import { localStorageEffect } from '../util/localStorageEffect'
 

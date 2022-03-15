@@ -1,6 +1,6 @@
-import React from 'react'
 import { Button } from 'components'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import React from 'react'
 
 type ConvenienceBalanceButtonsProps = {
   disabled?: boolean

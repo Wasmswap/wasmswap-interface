@@ -1,6 +1,6 @@
+import { Inline, Text } from 'components'
 import { ArrowUpIcon } from 'icons'
 import { styled } from 'theme'
-import { Inline, Text } from 'components'
 
 export const AprPill = ({ value, ...props }) => (
   <StyledDivForPill {...props}>

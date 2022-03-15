@@ -1,29 +1,28 @@
 import {
   Button,
-  Text,
-  Inline,
   Column,
   Divider,
-  ImageForTokenLogo,
-  Toast,
   IconWrapper,
+  ImageForTokenLogo,
+  Inline,
+  Text,
+  Toast,
 } from 'components'
-import React, { useMemo } from 'react'
 import {
-  useStakingClaims,
+ useClaimTokens,  usePoolPairTokenAmount,
   usePoolTokensDollarValue,
-  usePoolPairTokenAmount,
-} from 'features/liquidity/hooks'
+  useStakingClaims } from 'features/liquidity/hooks'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { TokenInfo } from 'hooks/useTokenList'
+import { Error, UpRightArrow,Valid } from 'icons'
+import React, { useMemo } from 'react'
+import { toast } from 'react-hot-toast'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { useClaimTokens } from '../hooks'
-import { toast } from 'react-hot-toast'
-import { Valid, Error, UpRightArrow } from 'icons'
+
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
-import { TokenInfo } from 'hooks/useTokenList'
-import { useRefetchQueries } from 'hooks/useRefetchQueries'
 
 type Props = {
   poolId: string

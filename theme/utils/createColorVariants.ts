@@ -1,4 +1,5 @@
 import { CSS } from '@stitches/react'
+
 import { themeColorTokens } from '../colors'
 
 export function createColorVariants<T extends keyof typeof themeColorTokens>(

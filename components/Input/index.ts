@@ -1,6 +1,6 @@
 export {
   BasicNumberInput,
-  useTriggerInputFocus,
   calculateCharactersLength,
+  useTriggerInputFocus,
 } from './BasicNumberInput'
 export { LiquidityInput } from './LiquidityInput'

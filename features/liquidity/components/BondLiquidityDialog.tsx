@@ -1,35 +1,36 @@
+import { useUpdateEffect } from '@reach/utils'
+import {
+  Button,
+  Column,
+  Dialog,
+  DialogButtons,
+  DialogContent,
+  DialogHeader,
+  Divider,
+  IconWrapper,
+  Spinner,
+  Text,
+  Toast,
+} from 'components'
+import dayjs from 'dayjs'
+import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { LiquidityInputSelector } from './LiquidityInputSelector'
+import { Error, UpRightArrow,Valid } from 'icons'
 import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
 } from 'util/conversion'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
+
+import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
-import { useUpdateEffect } from '@reach/utils'
-import dayjs from 'dayjs'
-import {
-  Text,
-  Divider,
-  Column,
-  DialogHeader,
-  Dialog,
-  DialogContent,
-  DialogButtons,
-  Toast,
-  Button,
-  IconWrapper,
-  Spinner,
-} from 'components'
-import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
-import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
-import { toast } from 'react-hot-toast'
-import { Error, Valid, UpRightArrow } from 'icons'
-import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')

@@ -1,7 +1,8 @@
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { AppTheme, themeAtom } from '../themeAtom'
-import { darkTheme, lightTheme } from '../theme'
 import { useEffect } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+
+import { darkTheme, lightTheme } from '../theme'
+import { AppTheme, themeAtom } from '../themeAtom'
 
 export const useTheme = () => {
   const { theme } = useRecoilValue(themeAtom)

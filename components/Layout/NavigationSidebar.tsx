@@ -1,38 +1,38 @@
-import React, { ReactNode, useState } from 'react'
-import Link from 'next/link'
-import { Button } from '../Button'
-import { Text } from '../Text'
-import { useConnectWallet } from 'hooks/useConnectWallet'
-import { useRecoilState } from 'recoil'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { useRouter } from 'next/router'
-import { IconWrapper } from '../IconWrapper'
-import { Inline } from 'components/Inline'
 import { Column } from 'components/Column'
-import { ConnectedWalletButton } from '../ConnectedWalletButton'
+import { Inline } from 'components/Inline'
+import { useConnectWallet } from 'hooks/useConnectWallet'
+import { useMedia } from 'hooks/useMedia'
 import {
+  Address,
+  ArrowUp,
+  ChevronIcon,
+  Discord,
+  FeedbackIcon,
+  Github,
   Logo,
   LogoText,
-  Github,
-  Discord,
+  MoonIcon,
+  Open,
   Telegram,
   Twitter,
   UnionIcon,
-  ChevronIcon,
-  MoonIcon,
-  FeedbackIcon,
   UpRightArrow,
-  Address,
-  ArrowUp,
-  Open,
 } from 'icons'
-import { media, styled } from '../../theme'
-import { __TEST_MODE__, APP_NAME } from 'util/constants'
-import { useMedia } from 'hooks/useMedia'
-import { Divider } from '../Divider'
-import { ToggleSwitch } from '../ToggleSwitch'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { ReactNode, useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { walletState,WalletStatusType } from 'state/atoms/walletAtoms'
+import { __TEST_MODE__,APP_NAME } from 'util/constants'
+
+import { media, styled , useControlTheme } from '../../theme'
 import { AppTheme } from '../../theme/themeAtom'
-import { useControlTheme } from '../../theme'
+import { Button } from '../Button'
+import { ConnectedWalletButton } from '../ConnectedWalletButton'
+import { Divider } from '../Divider'
+import { IconWrapper } from '../IconWrapper'
+import { Text } from '../Text'
+import { ToggleSwitch } from '../ToggleSwitch'
 
 type NavigationSidebarProps = {
   shouldRenderBackButton?: boolean

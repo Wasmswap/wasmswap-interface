@@ -1,15 +1,16 @@
+import { Column, Divider,ImageForTokenLogo, Inline, Text } from 'components'
+import { useTokenToTokenPrice } from 'features/swap'
 import React from 'react'
-import { Inline, Column, Text, ImageForTokenLogo, Divider } from 'components'
+import { __POOL_STAKING_ENABLED__ } from 'util/constants'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { StyledDivForTokenLogos } from './PoolCard'
-import { useTokenToTokenPrice } from 'features/swap'
-import { AprPill } from './AprPill'
+
 import { usePoolPairTokenAmount } from '../hooks'
-import { __POOL_STAKING_ENABLED__ } from 'util/constants'
+import { AprPill } from './AprPill'
+import { StyledDivForTokenLogos } from './PoolCard'
 
 export const LiquidityBreakdown = ({
   tokenA,

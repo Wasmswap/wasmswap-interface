@@ -1,7 +1,8 @@
-import { usePriceForOneToken } from './usePriceForOneToken'
 import { usePersistance } from 'hooks/usePersistance'
-import { protectAgainstNaN } from 'util/conversion'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { protectAgainstNaN } from 'util/conversion'
+
+import { usePriceForOneToken } from './usePriceForOneToken'
 
 function calculateTokenToTokenConversionRate({
   tokenAAmount,

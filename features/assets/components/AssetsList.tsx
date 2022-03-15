@@ -1,11 +1,12 @@
-import { AssetCard, AssetCardState } from './AssetCard'
 import { Text } from 'components'
-import { styled } from 'theme'
-import { walletState } from 'state/atoms/walletAtoms'
-import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
-import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'
 import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
+import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
+import { walletState } from 'state/atoms/walletAtoms'
+import { styled } from 'theme'
 import { __TRANSFERS_ENABLED__ } from 'util/constants'
+
+import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'
+import { AssetCard, AssetCardState } from './AssetCard'
 
 export const AssetsList = ({ onActionClick }) => {
   const [loadingBalances, [myTokens, allTokens]] =

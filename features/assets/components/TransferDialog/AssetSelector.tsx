@@ -1,19 +1,20 @@
-import { useState } from 'react'
-import { styled } from 'theme'
-import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { formatTokenBalance } from 'util/conversion'
 import {
   Button,
   ButtonForWrapper,
-  Text,
   IconWrapper,
   ImageForTokenLogo,
   Spinner,
+  Text,
 } from 'components'
-import { Union, Chevron } from 'icons'
-import { TokenOptionsList } from './TokenOptionsList'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useTokenBalance } from 'hooks/useTokenBalance'
+import { Chevron,Union } from 'icons'
+import { useState } from 'react'
+import { styled } from 'theme'
+import { formatTokenBalance } from 'util/conversion'
+
+import { TokenOptionsList } from './TokenOptionsList'
 
 type AssetSelectorProps = {
   activeTokenSymbol: string

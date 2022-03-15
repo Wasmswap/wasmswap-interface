@@ -1,20 +1,21 @@
-import { useMemo } from 'react'
-import { BaseCardForEmptyState } from './BaseCardForEmptyState'
 import {
   Button,
-  Divider,
-  Inline,
-  CardContent,
   Card,
-  Text,
+  CardContent,
   Column,
+  Divider,
   ImageForTokenLogo,
+  Inline,
+  Text,
 } from 'components'
+import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { useMemo } from 'react'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+
+import { BaseCardForEmptyState } from './BaseCardForEmptyState'
 
 export const LiquidityRewardsCard = ({
   pendingRewards,

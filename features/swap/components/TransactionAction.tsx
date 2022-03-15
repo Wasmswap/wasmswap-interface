@@ -1,14 +1,15 @@
-import { styled } from 'theme'
-import { Button, Text, Spinner, Inline } from 'components'
+import { Button, Inline,Spinner, Text } from 'components'
+import { useConnectWallet } from 'hooks/useConnectWallet'
+import { useTokenBalance } from 'hooks/useTokenBalance'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { useConnectWallet } from 'hooks/useConnectWallet'
-import { useTokenSwap } from '../hooks'
-import { SlippageSelector } from './SlippageSelector'
+import { styled } from 'theme'
 import { NETWORK_FEE } from 'util/constants'
-import { useTokenBalance } from 'hooks/useTokenBalance'
+
+import { useTokenSwap } from '../hooks'
+import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
+import { SlippageSelector } from './SlippageSelector'
 
 type TransactionTipsProps = {
   isPriceLoading?: boolean

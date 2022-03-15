@@ -1,3 +1,3 @@
-import { Divider } from 'components'
+import { Divider } from '../Divider'
 
 export const DialogDivider = Divider

@@ -1,7 +1,8 @@
-import React, { ForwardedRef, forwardRef, ReactNode } from 'react'
-import { styled, createColorVariants } from '../theme'
-import type { GetRenderAsProps, RenderAsType } from './types'
 import { CSS, VariantProps } from '@stitches/react'
+import React, { ForwardedRef, forwardRef,ReactNode } from 'react'
+
+import { createColorVariants, styled } from '../theme'
+import type { GetRenderAsProps, RenderAsType } from './types'
 
 const StyledText = styled('p', {
   fontFamily: '$primary',

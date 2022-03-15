@@ -1,13 +1,13 @@
-import React, { useEffect, useReducer } from 'react'
-import styled from 'styled-components'
-import { TransferDialog, AssetsList } from 'features/assets'
+import { AppLayout, Button,IconWrapper, PageHeader, Toast } from 'components'
+import { AssetsList,TransferDialog } from 'features/assets'
 import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
-import { toast } from 'react-hot-toast'
-import { AppLayout, PageHeader, Toast, IconWrapper, Button } from 'components'
 import { useConnectWallet } from 'hooks/useConnectWallet'
+import { Error, UpRightArrow } from 'icons'
+import React, { useEffect, useReducer } from 'react'
+import { toast } from 'react-hot-toast'
 import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { Error, UpRightArrow } from 'icons'
+import styled from 'styled-components'
 
 export default function Transfer() {
   const [

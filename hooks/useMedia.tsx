@@ -1,11 +1,11 @@
-import { lightTheme } from 'theme'
 import {
-  ReactNode,
   createContext,
+  ReactNode,
   useContext,
   useEffect,
   useState,
 } from 'react'
+import { lightTheme } from 'theme'
 
 type MediaQueryType = keyof typeof lightTheme.media
 

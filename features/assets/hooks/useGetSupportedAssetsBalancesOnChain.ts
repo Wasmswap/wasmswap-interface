@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
-import { useMultipleTokenBalance } from 'hooks/useTokenBalance'
 import { useIBCAssetList } from 'hooks/useIbcAssetList'
+import { useMultipleTokenBalance } from 'hooks/useTokenBalance'
+import { useMemo } from 'react'
 
 export const useGetSupportedAssetsBalancesOnChain = () => {
   const [ibcAssetList] = useIBCAssetList()

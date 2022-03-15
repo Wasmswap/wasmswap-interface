@@ -3,10 +3,10 @@ import {
   MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
-import { unsafelyGetDefaultExecuteFee } from 'util/fees'
 import { toUtf8 } from '@cosmjs/encoding'
 import { isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
+import { unsafelyGetDefaultExecuteFee } from 'util/fees'
 
 type Denom =
   | {

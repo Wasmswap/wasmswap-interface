@@ -1,5 +1,6 @@
-import { styled } from '../../theme'
 import { ReactNode } from 'react'
+
+import { styled } from '../../theme'
 import { DialogContent } from './DialogContent'
 
 type DialogButtonsProps = {

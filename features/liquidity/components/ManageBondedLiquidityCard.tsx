@@ -1,22 +1,23 @@
 import {
-  Text,
-  Divider,
   Button,
-  CardContent,
   Card,
-  Inline,
+  CardContent,
   Column,
+  Divider,
   ImageForTokenLogo,
+  Inline,
+  Text,
 } from 'components'
+import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   protectAgainstNaN,
 } from 'util/conversion'
-import { StyledDivForTokenLogos } from './PoolCard'
+
 import { AprPill } from './AprPill'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
-import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { StyledDivForTokenLogos } from './PoolCard'
 
 export const ManageBondedLiquidityCard = ({
   onClick,

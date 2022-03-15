@@ -1,27 +1,28 @@
-import React, { useState } from 'react'
-import { toast } from 'react-hot-toast'
-import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useTransferAssetMutation } from './useTransferAssetMutation'
-import { TransactionKind } from './types'
-import { Valid, UpRightArrow, Error } from 'icons'
 import {
   Button,
-  Text,
-  Spinner,
-  IconWrapper,
+  Dialog,
   DialogButtons,
   DialogContent,
   DialogDivider,
   DialogHeader,
-  Dialog,
+  IconWrapper,
+  Spinner,
+  Text,
   Toast,
 } from 'components'
-import { AppWalletInfo, KeplrWalletInfo } from './WalletInfo'
-import { AssetSelector } from './AssetSelector'
-import { AmountInput } from './AmountInput'
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { Error,UpRightArrow, Valid } from 'icons'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+
+import { AmountInput } from './AmountInput'
+import { AssetSelector } from './AssetSelector'
+import { TransactionKind } from './types'
+import { useTransferAssetMutation } from './useTransferAssetMutation'
+import { AppWalletInfo, KeplrWalletInfo } from './WalletInfo'
 
 type TransferDialogProps = {
   tokenSymbol: string

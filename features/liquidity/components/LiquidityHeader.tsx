@@ -1,7 +1,7 @@
-import React from 'react'
-import Link from 'next/link'
-import { Button, IconWrapper, Text, Inline } from 'components'
+import { Button, IconWrapper, Inline,Text } from 'components'
 import { ArrowUp } from 'icons'
+import Link from 'next/link'
+import React from 'react'
 import { styled } from 'theme'
 
 export const LiquidityHeader = ({ tokenA, tokenB, size = 'large' }) => {

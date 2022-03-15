@@ -1,10 +1,11 @@
 import React, { FC, useRef, useState } from 'react'
 import { styled } from 'theme'
-import { Text } from '../Text'
-import { formatTokenBalance } from '../../util/conversion'
+
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import { BasicNumberInput } from './BasicNumberInput'
+import { formatTokenBalance } from '../../util/conversion'
 import { ImageForTokenLogo } from '../ImageForTokenLogo'
+import { Text } from '../Text'
+import { BasicNumberInput } from './BasicNumberInput'
 
 type LiquidityInputProps = {
   tokenSymbol: string

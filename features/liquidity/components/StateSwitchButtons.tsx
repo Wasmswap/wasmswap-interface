@@ -1,5 +1,5 @@
-import { styled } from 'theme'
 import { Button } from 'components'
+import { styled } from 'theme'
 
 type StateSwitchButtonsProps = {
   activeValue: string

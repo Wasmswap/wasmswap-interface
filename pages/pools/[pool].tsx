@@ -1,39 +1,40 @@
-import React, { useState } from 'react'
-import { media, styled } from 'theme'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import {
-  Button,
-  Spinner,
-  Divider,
   AppLayout,
-  NavigationSidebar,
+  Button,
+  Divider,
   IconWrapper,
+  NavigationSidebar,
+  Spinner,
   Toast,
 } from 'components'
-import { ChevronIcon, Error, UpRightArrow } from 'icons'
 import {
-  UnbondingLiquidityStatusList,
-  LiquidityHeader,
-  LiquidityBreakdown,
-  LiquidityRewardsCard,
   BondLiquidityDialog,
+  LiquidityBreakdown,
+  LiquidityHeader,
+  LiquidityRewardsCard,
   ManageBondedLiquidityCard,
-  ManagePoolDialog,
   ManageLiquidityCard,
+  ManagePoolDialog,
+  UnbondingLiquidityStatusList,
 } from 'features/liquidity'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { ChevronIcon, Error, UpRightArrow } from 'icons'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { media, styled } from 'theme'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
+
+import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import {
   useClaimRewards,
   usePendingRewards,
   useRewardsInfo,
 } from '../../hooks/useRewardsQueries'
-import { useRefetchQueries } from '../../hooks/useRefetchQueries'
-import { toast } from 'react-hot-toast'
 import { formatSdkErrorMessage } from '../../util/formatSdkErrorMessage'
 
 export default function Pool() {

@@ -1,10 +1,10 @@
-import { styled } from 'theme'
 import { CSS } from '@stitches/react'
 import { IconWrapper, Text } from 'components'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Chevron } from 'icons'
 import { useRef, useState } from 'react'
+import { styled } from 'theme'
 import { SLIPPAGE_OPTIONS } from 'util/constants'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 type SlippageSelectorProps = {
   slippage: number

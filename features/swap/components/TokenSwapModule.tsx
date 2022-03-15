@@ -1,18 +1,19 @@
-import { useEffect } from 'react'
+import { useMedia } from 'hooks/useMedia'
+import { usePersistance } from 'hooks/usePersistance'
 import { useTokenList } from 'hooks/useTokenList'
-import { styled } from 'theme'
+import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   TransactionStatus,
   transactionStatusState,
 } from 'state/atoms/transactionAtoms'
-import { usePersistance } from 'hooks/usePersistance'
-import { TokenSelector } from './TokenSelector'
-import { TransactionTips } from './TransactionTips'
-import { TransactionAction } from './TransactionAction'
+import { styled } from 'theme'
+
 import { useTokenToTokenPrice } from '../hooks'
 import { tokenSwapAtom } from '../swapAtoms'
-import { useMedia } from 'hooks/useMedia'
+import { TokenSelector } from './TokenSelector'
+import { TransactionAction } from './TransactionAction'
+import { TransactionTips } from './TransactionTips'
 
 export const TokenSwapModule = () => {
   /* connect to recoil */

@@ -1,8 +1,9 @@
-import { Button, ButtonProps } from './Button'
-import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Portal } from '@reach/portal'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { styled } from 'theme'
+
 import { useOnClickOutside } from '../hooks/useOnClickOutside'
+import { Button, ButtonProps } from './Button'
 
 type Props = ButtonProps & {
   dropdown: ReactNode

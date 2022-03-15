@@ -1,10 +1,10 @@
+import { Text } from 'components'
+import { usePriceForOneToken,useTxRates } from 'features/swap'
 import { styled } from 'theme'
-import { useTxRates, usePriceForOneToken } from 'features/swap'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { Text } from 'components'
 
 export const TokenToTokenRates = ({
   tokenASymbol,

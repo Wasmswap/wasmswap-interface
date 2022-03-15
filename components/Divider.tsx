@@ -1,5 +1,6 @@
-import { styled } from '../theme'
 import { CSS } from '@stitches/react'
+
+import { styled } from '../theme'
 
 type DividerProps = {
   offsetY?: string

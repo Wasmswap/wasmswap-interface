@@ -1,5 +1,5 @@
-import { useTooltip, TooltipPopup, Position } from '@reach/tooltip'
-import { useTransition, animated } from '@react-spring/web'
+import { Position, TooltipPopup, useTooltip } from '@reach/tooltip'
+import { animated, useTransition } from '@react-spring/web'
 import {
   cloneElement,
   ComponentProps,
@@ -7,8 +7,9 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { Text } from '../Text'
+
 import { styled } from '../../theme'
+import { Text } from '../Text'
 
 type TooltipProps = Omit<ComponentProps<typeof TooltipPopup>, 'triggerRect'> & {
   delayHidingOnClick?: boolean

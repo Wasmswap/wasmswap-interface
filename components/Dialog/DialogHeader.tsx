@@ -1,9 +1,10 @@
-import { styled } from '../../theme'
-import { IconWrapper } from '../IconWrapper'
 import { Union } from 'icons'
-import { Button } from '../Button'
-import { useDialogContext } from './DialogContext'
 import { ReactNode } from 'react'
+
+import { styled } from '../../theme'
+import { Button } from '../Button'
+import { IconWrapper } from '../IconWrapper'
+import { useDialogContext } from './DialogContext'
 
 type DialogHeaderProps = {
   children: ReactNode

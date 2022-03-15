@@ -1,6 +1,7 @@
-import { styled } from '../theme'
 import { VariantProps } from '@stitches/react'
 import { ComponentPropsWithoutRef } from 'react'
+
+import { styled } from '../theme'
 
 const StyledImageForLogo = styled('img', {
   borderRadius: '50%',

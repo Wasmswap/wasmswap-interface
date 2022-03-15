@@ -1,18 +1,17 @@
-import React, { useMemo, useState } from 'react'
-import { media, styled } from 'theme'
-import { AppLayout, PageHeader } from 'components'
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { useUpdateEffect } from '@reach/utils'
+import { AppLayout, Column, Inline, PageHeader , Spinner,Text } from 'components'
 import {
-  PoolCard,
   ButtonWithDropdownForSorting,
+  PoolCard,
   SortDirections,
   SortParameters,
   useSortPools,
 } from 'features/liquidity'
 import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
-import { Text, Inline, Column, Spinner } from 'components'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useTokenList } from 'hooks/useTokenList'
-import { useUpdateEffect } from '@reach/utils'
+import React, { useMemo, useState } from 'react'
+import { media, styled } from 'theme'
 
 export default function Pools() {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}

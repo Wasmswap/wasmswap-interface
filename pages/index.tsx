@@ -1,6 +1,6 @@
-import React from 'react'
 import { AppLayout, PageHeader } from 'components'
 import { TokenSwapModule } from 'features/swap'
+import React from 'react'
 import { styled } from 'theme'
 
 export default function Home() {

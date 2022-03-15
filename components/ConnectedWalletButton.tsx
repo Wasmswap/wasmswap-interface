@@ -1,14 +1,15 @@
-import { media, styled } from 'theme'
-import { Wallet, Logout, Copy, Valid } from 'icons'
-import { CopyTextTooltip, Tooltip, Button, IconWrapper, Text } from 'components'
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { useTokenBalance } from 'hooks/useTokenBalance'
-import { formatTokenBalance } from 'util/conversion'
 import { CSS } from '@stitches/react'
-import { useRecoilValue } from 'recoil'
-import { Column } from './Column'
-import { walletState } from 'state/atoms/walletAtoms'
+import { Button, CopyTextTooltip, IconWrapper, Text, Tooltip } from 'components'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { Copy, Logout, Valid, Wallet } from 'icons'
 import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { walletState } from 'state/atoms/walletAtoms'
+import { media, styled } from 'theme'
+import { formatTokenBalance } from 'util/conversion'
+
+import { Column } from './Column'
 
 type ConnectedWalletButtonProps = { css?: CSS } & {
   walletName?: string

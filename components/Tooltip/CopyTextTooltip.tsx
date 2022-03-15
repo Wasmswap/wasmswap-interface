@@ -1,8 +1,9 @@
-import { Tooltip } from './Tooltip'
-import { ReactElement, useEffect, useState } from 'react'
-import { IconWrapper } from '../IconWrapper'
 import { Valid } from 'icons'
+import { ReactElement, useEffect, useState } from 'react'
 import { styled } from 'theme'
+
+import { IconWrapper } from '../IconWrapper'
+import { Tooltip } from './Tooltip'
 
 type CopyTextTooltipProps = {
   label: string

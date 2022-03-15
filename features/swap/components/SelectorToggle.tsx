@@ -1,14 +1,14 @@
-import React from 'react'
-import { Chevron } from 'icons'
-import { formatTokenBalance } from 'util/conversion'
-import { styled } from 'theme'
-import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
-  Text,
   ButtonForWrapper,
-  ImageForTokenLogo,
   IconWrapper,
+  ImageForTokenLogo,
+  Text,
 } from 'components'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { Chevron } from 'icons'
+import React from 'react'
+import { styled } from 'theme'
+import { formatTokenBalance } from 'util/conversion'
 import { getPropsForInteractiveElement } from 'util/getPropsForInteractiveElement'
 
 type SelectorToggleProps = {

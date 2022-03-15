@@ -1,5 +1,6 @@
-import { createIcon } from './createIconComponent'
 import { SVGProps } from 'react'
+
+import { createIcon } from './createIconComponent'
 
 export const [Multisig, MultisigIcon] = createIcon(
   (props: SVGProps<SVGSVGElement>) => (

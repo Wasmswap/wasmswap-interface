@@ -1,9 +1,9 @@
-import { styled } from 'theme'
-import { Text, IconWrapper } from 'components'
+import { CSS } from '@stitches/react'
+import { IconWrapper,Text } from 'components'
+import { ConnectIcon,Logo } from 'icons'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
-import { Logo, ConnectIcon } from 'icons'
-import { CSS } from '@stitches/react'
+import { styled } from 'theme'
 import { APP_NAME } from 'util/constants'
 
 export const WalletInfo = ({ label, icon, address, css }) => {

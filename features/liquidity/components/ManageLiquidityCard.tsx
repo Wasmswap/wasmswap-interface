@@ -1,17 +1,20 @@
-import { Text } from 'components/Text'
-import { Button } from 'components/Button'
-import { CardContent, Card } from 'components/Card'
+import {
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  ImageForTokenLogo,
+  Inline,
+  Text,
+} from 'components'
+import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
+import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   convertMicroDenomToDenom,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import { Inline } from '../../../components/Inline'
-import { Divider } from '../../../components/Divider'
-import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
-import { useSubscribeInteractions } from '../../../hooks/useSubscribeInteractions'
 
 type ManageLiquidityCardProps = Pick<
   LiquidityInfoType,

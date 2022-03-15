@@ -1,5 +1,5 @@
-import { styled } from 'components/theme'
-import { Button } from 'components/Button'
+import { Button } from 'components'
+import { styled } from 'theme'
 
 type PercentageSelectionProps = {
   maxLiquidity: number

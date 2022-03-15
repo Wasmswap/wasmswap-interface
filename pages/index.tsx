@@ -1,8 +1,7 @@
+import { AppLayout, PageHeader } from 'components'
+import { TokenSwapModule } from 'features/swap'
 import React from 'react'
-import { AppLayout } from '../components/Layout/AppLayout'
-import { TokenSwap } from '../features/swap'
-import { PageHeader } from '../components/Layout/PageHeader'
-import { styled } from 'components/theme'
+import { styled } from 'theme'
 
 export default function Home() {
   return (
@@ -12,7 +11,7 @@ export default function Home() {
           title="Swap"
           subtitle="Swap between your favorite assets on Juno."
         />
-        <TokenSwap />
+        <TokenSwapModule />
       </StyledContainer>
     </AppLayout>
   )

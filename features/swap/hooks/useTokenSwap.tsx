@@ -1,26 +1,23 @@
+import { Button, IconWrapper,Toast } from 'components'
+import { unsafelyGetTokenInfo, useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { Error, UpRightArrow,Valid } from 'icons'
+import { toast } from 'react-hot-toast'
+import { useMutation } from 'react-query'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   swapToken1ForToken2,
   swapToken2ForToken1,
   swapTokenForToken,
 } from 'services/swap'
-import { unsafelyGetTokenInfo, useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { toast } from 'react-hot-toast'
 import {
   TransactionStatus,
   transactionStatusState,
 } from 'state/atoms/transactionAtoms'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
-import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
-import { useMutation } from 'react-query'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
-import { Error } from 'icons/Error'
-import { Button } from 'components/Button'
-import { UpRightArrow } from 'icons/UpRightArrow'
-import { Valid } from 'icons/Valid'
+
 import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
+import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 
 type UseTokenSwapArgs = {
   tokenASymbol: string

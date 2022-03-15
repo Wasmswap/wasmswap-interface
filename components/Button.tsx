@@ -1,16 +1,15 @@
+import type { CSS, VariantProps } from '@stitches/react'
 import {
-  ForwardedRef,
-  ReactNode,
-  forwardRef,
-  cloneElement,
   Children,
+  cloneElement,
+  ForwardedRef,
+  forwardRef,
   ReactElement,
+  ReactNode,
 } from 'react'
-import type { VariantProps, CSS } from '@stitches/react'
-import { styled } from './theme'
+import { createColorVariants, styled } from 'theme'
+
 import { GetRenderAsProps, RenderAsType } from './types'
-import { createColorVariants } from './theme/utils/createColorVariants'
-import { themeColorTokens } from './theme/colors'
 
 const StyledButton = styled('button', {
   $$textColor: '$textColors$primary',
@@ -172,18 +171,12 @@ const StyledButton = styled('button', {
       false: {},
     },
 
-    iconColor: createColorVariants(
-      themeColorTokens.iconColors,
-      (colorToken) => ({
-        $$iconColor: `$iconColors$${colorToken}`,
-      })
-    ),
-    textColor: createColorVariants(
-      themeColorTokens.textColors,
-      (colorToken) => ({
-        $$textColor: `$textColors$${colorToken}`,
-      })
-    ),
+    iconColor: createColorVariants('iconColors', (colorToken) => ({
+      $$iconColor: `$iconColors$${colorToken}`,
+    })),
+    textColor: createColorVariants('textColors', (colorToken) => ({
+      $$textColor: `$textColors$${colorToken}`,
+    })),
   },
 
   compoundVariants: [

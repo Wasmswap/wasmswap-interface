@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
+
 import { getSwapInfo, InfoResponse } from '../services/swap'
-import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
-import { useChainInfo } from './useChainInfo'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { useChainInfo } from './useChainInfo'
+import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 
 export type SwapInfo = Pick<
   InfoResponse,

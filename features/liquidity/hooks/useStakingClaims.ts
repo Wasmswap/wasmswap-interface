@@ -1,9 +1,9 @@
-import { Claim, getClaims } from 'services/staking'
-import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { useRecoilValue } from 'recoil'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { useQuery } from 'react-query'
 import dayjs from 'dayjs'
+import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
+import { Claim, getClaims } from 'services/staking'
+import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
 type StakingClaimsType = {

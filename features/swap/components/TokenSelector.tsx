@@ -1,16 +1,15 @@
-import { useTokenBalance } from 'hooks/useTokenBalance'
-import { styled } from 'components/theme'
-import { IconWrapper } from 'components/IconWrapper'
-import React, { useRef, useState } from 'react'
-import { TokenOptionsList } from './TokenOptionsList'
-import { Union } from 'icons/Union'
-import { Inline } from '../../../components/Inline'
+import { Button, IconWrapper,Inline } from 'components'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { SelectorToggle } from './SelectorToggle'
-import { SelectorInput } from './SelectorInput'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { Union } from 'icons'
+import React, { useRef, useState } from 'react'
+import { styled } from 'theme'
+
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
-import { Button } from 'components/Button'
 import { QueryInput } from './QueryInput'
+import { SelectorInput } from './SelectorInput'
+import { SelectorToggle } from './SelectorToggle'
+import { TokenOptionsList } from './TokenOptionsList'
 
 type TokenSelectorProps = {
   readOnly?: boolean

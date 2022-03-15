@@ -1,8 +1,9 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
-import { useRecoilState } from 'recoil'
-import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
-import { useMutation } from 'react-query'
 import { useEffect } from 'react'
+import { useMutation } from 'react-query'
+import { useRecoilState } from 'recoil'
+
+import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useChainInfo } from './useChainInfo'
 
 export const useConnectWallet = (

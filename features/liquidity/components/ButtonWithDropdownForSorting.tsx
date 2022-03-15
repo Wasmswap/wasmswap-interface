@@ -1,12 +1,7 @@
-import { Column } from 'components/Column'
-import { Button } from 'components/Button'
-import { ValidIcon } from 'icons/Valid'
-import { Divider } from 'components/Divider'
-import { Text } from 'components/Text'
-import { ChevronIcon } from 'icons/Chevron'
-import { ButtonWithDropdown } from 'components/ButtonWithDropdown'
-import { SortDirections, SortParameters } from '../hooks/useSortPools'
+import { Button, ButtonWithDropdown,Column, Divider, Text } from 'components'
+import { ChevronIcon,ValidIcon } from 'icons'
 
+import { SortDirections, SortParameters } from '../hooks/useSortPools'
 type Props = {
   sortParameter: SortParameters
   sortDirection: SortDirections

@@ -1,17 +1,20 @@
-import Link from 'next/link'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { useTokenInfo } from 'hooks/useTokenInfo'
+import {
+  Card,
+  CardContent,
+  Column,
+  Divider,
+  ImageForTokenLogo,
+  Inline,
+  Text,
+} from 'components'
 import { LiquidityType } from 'hooks/usePoolLiquidity'
-import { Card, CardContent } from 'components/Card'
-import { Divider } from 'components/Divider'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import Link from 'next/link'
+import { styled } from 'theme'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
 } from 'util/conversion'
-import { Column } from 'components/Column'
-import { Inline } from 'components/Inline'
 
 type PoolCardProps = {
   poolId: string

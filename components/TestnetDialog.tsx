@@ -1,7 +1,8 @@
-import { Text } from './Text'
+import { Dialog, DialogContent, DialogHeader } from 'components'
 import { useState } from 'react'
+
 import { Button } from './Button'
-import { DialogContent, DialogHeader, Dialog } from './Dialog'
+import { Text } from './Text'
 
 export const TestnetDialog = () => {
   const [isShowing, setShowing] = useState(true)

@@ -1,9 +1,8 @@
-import { styled } from 'components/theme'
-import { Text } from '../../../components/Text'
-import { dollarValueFormatter } from '../../../util/conversion'
-import { MouseEvent, Ref, useRef, useState } from 'react'
+import { calculateCharactersLength,Text } from 'components'
 import { useAmountChangeController } from 'hooks/useAmountChangeController'
-import { calculateCharactersLength } from 'components/BasicNumberInput'
+import { MouseEvent, Ref, useRef, useState } from 'react'
+import { styled } from 'theme'
+import { dollarValueFormatter } from 'util/conversion'
 
 type LiquiditySelectorProps = {
   inputRef?: Ref<HTMLInputElement>

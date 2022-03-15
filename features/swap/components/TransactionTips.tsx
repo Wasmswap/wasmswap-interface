@@ -1,18 +1,15 @@
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Exchange } from '../../../icons/Exchange'
-import { Text } from '../../../components/Text'
+import { Button, Column, IconWrapper,Inline, Text } from 'components'
+import { Exchange } from 'icons'
 import React, { useState } from 'react'
-import { styled } from 'components/theme'
+import { useRecoilValue } from 'recoil'
+import { styled } from 'theme'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
-} from '../../../util/conversion'
-import { useRecoilValue } from 'recoil'
+} from 'util/conversion'
+
+import { useTxRates } from '../hooks'
 import { tokenSwapAtom } from '../swapAtoms'
-import { useTxRates } from '../hooks/useTxRates'
-import { Button } from 'components/Button'
-import { Inline } from '../../../components/Inline'
-import { Column } from '../../../components/Column'
 
 type TransactionTipsProps = {
   isPriceLoading: boolean

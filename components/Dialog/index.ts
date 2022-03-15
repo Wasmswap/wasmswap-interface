@@ -1,5 +1,5 @@
 export { Dialog } from './Dialog'
-export { DialogHeader } from './DialogHeader'
+export { DialogButtons } from './DialogButtons'
 export { DialogContent } from './DialogContent'
 export { DialogDivider } from './DialogDivider'
-export { DialogButtons } from './DialogButtons'
+export { DialogHeader } from './DialogHeader'

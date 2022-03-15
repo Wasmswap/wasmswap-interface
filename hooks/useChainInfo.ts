@@ -1,5 +1,6 @@
-import { useQuery } from 'react-query'
 import { ChainInfo } from '@keplr-wallet/types'
+import { useQuery } from 'react-query'
+
 import { queryClient } from '../services/queryClient'
 
 const chainInfoQueryKey = '@chain-info'

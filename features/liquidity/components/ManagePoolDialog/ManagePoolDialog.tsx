@@ -1,33 +1,34 @@
-import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { LiquidityInput } from 'components/LiquidityInput'
-import { IconWrapper } from 'components/IconWrapper'
+import { usePrevious } from '@reach/utils'
+import {
+  Button,
+  Dialog,
+  DialogButtons,
+  DialogContent,
+  DialogDivider,
+  DialogHeader,
+  IconWrapper,
+  ImageForTokenLogo,
+  LiquidityInput,
+  Spinner,
+  Text,
+} from 'components'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useEffect, useRef, useState } from 'react'
+import { styled } from 'theme'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
   protectAgainstNaN,
 } from 'util/conversion'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { usePoolDialogController } from './usePoolDialogController'
-import { TokenToTokenRates } from './TokenToTokenRates'
-import { StateSwitchButtons } from '../StateSwitchButtons'
+
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
-import { Button } from 'components/Button'
-import {
-  DialogHeader,
-  DialogContent,
-  Dialog,
-  DialogDivider,
-  DialogButtons,
-} from 'components/Dialog'
-import { Spinner } from 'components/Spinner'
-import { usePrevious } from '@reach/utils'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { StateSwitchButtons } from '../StateSwitchButtons'
+import { TokenToTokenRates } from './TokenToTokenRates'
+import { usePoolDialogController } from './usePoolDialogController'
 
 type ManagePoolDialogProps = {
   isShowing: boolean

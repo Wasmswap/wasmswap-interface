@@ -1,37 +1,36 @@
+import { useUpdateEffect } from '@reach/utils'
+import {
+  Button,
+  Column,
+  Dialog,
+  DialogButtons,
+  DialogContent,
+  DialogHeader,
+  Divider,
+  IconWrapper,
+  Spinner,
+  Text,
+  Toast,
+} from 'components'
+import dayjs from 'dayjs'
+import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Text } from 'components/Text'
-import { LiquidityInputSelector } from './LiquidityInputSelector'
+import { Error, UpRightArrow,Valid } from 'icons'
 import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-hot-toast'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
 } from 'util/conversion'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
+
+import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
-import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
-import { useUpdateEffect } from '@reach/utils'
-import dayjs from 'dayjs'
-import {
-  DialogHeader,
-  Dialog,
-  DialogContent,
-  DialogButtons,
-} from 'components/Dialog'
-import { Button } from 'components/Button'
-import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
-import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
-import { Spinner } from 'components/Spinner'
-import { toast } from 'react-hot-toast'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
-import { Valid } from 'icons/Valid'
-import { Error } from 'icons/Error'
-import { UpRightArrow } from 'icons/UpRightArrow'
-import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { formatSdkErrorMessage } from '../../../util/formatSdkErrorMessage'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')

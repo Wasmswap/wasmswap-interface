@@ -1,29 +1,28 @@
-import { Inline } from 'components/Inline'
-import { Text } from 'components/Text'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { Button } from 'components/Button'
-import React, { useMemo } from 'react'
-import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
 import {
-  useStakingClaims,
+  Button,
+  Column,
+  Divider,
+  IconWrapper,
+  ImageForTokenLogo,
+  Inline,
+  Text,
+  Toast,
+} from 'components'
+import {
+ useClaimTokens,  usePoolPairTokenAmount,
   usePoolTokensDollarValue,
-  usePoolPairTokenAmount,
-} from 'features/liquidity/hooks'
+  useStakingClaims } from 'features/liquidity/hooks'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { TokenInfo } from 'hooks/useTokenList'
+import { Error, UpRightArrow,Valid } from 'icons'
+import React, { useMemo } from 'react'
+import { toast } from 'react-hot-toast'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
 } from 'util/conversion'
-import { useClaimTokens } from '../hooks'
-import { toast } from 'react-hot-toast'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
-import { Valid } from 'icons/Valid'
-import { Error } from 'icons/Error'
-import { UpRightArrow } from 'icons/UpRightArrow'
+
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
-import { TokenInfo } from '../../../hooks/useTokenList'
-import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
 
 type Props = {
   poolId: string

@@ -1,8 +1,5 @@
+import { TokenSelectList, TokenSelectListProps } from 'components'
 import { useTokenList } from 'hooks/useTokenList'
-import {
-  TokenSelectList,
-  TokenSelectListProps,
-} from 'components/TokenSelectList'
 
 export const TokenOptionsList = ({
   activeTokenSymbol,

@@ -1,19 +1,16 @@
-import { Inline } from '../../../components/Inline'
-import { __POOL_STAKING_ENABLED__ } from '../../../util/constants'
-import { Column } from '../../../components/Column'
-import { Text } from '../../../components/Text'
+import { Column, Divider,ImageForTokenLogo, Inline, Text } from 'components'
+import { useTokenToTokenPrice } from 'features/swap'
+import React from 'react'
+import { __POOL_STAKING_ENABLED__ } from 'util/constants'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
-} from '../../../util/conversion'
-import { StyledDivForTokenLogos } from './PoolCard'
-import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
-import React from 'react'
-import { Divider } from '../../../components/Divider'
-import { useTokenToTokenPrice } from '../../swap/hooks/useTokenToTokenPrice'
-import { AprPill } from './AprPill'
+} from 'util/conversion'
+
 import { usePoolPairTokenAmount } from '../hooks'
+import { AprPill } from './AprPill'
+import { StyledDivForTokenLogos } from './PoolCard'
 
 export const LiquidityBreakdown = ({
   tokenA,

@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query'
+
 import { TokenInfo } from './useTokenList'
 
 type RewardsContractInfo = {

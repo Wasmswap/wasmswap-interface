@@ -1,9 +1,10 @@
 import Portal from '@reach/portal'
-import { styled, useThemeClassName } from 'components/theme'
-import gsap from 'gsap'
-import { useEffect, useState, useRef, ReactNode } from 'react'
-import { DialogContextProvider } from './DialogContext'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import gsap from 'gsap'
+import { ReactNode, useEffect, useRef, useState } from 'react'
+import { styled, useThemeClassName } from 'theme'
+
+import { DialogContextProvider } from './DialogContext'
 
 type DialogProps = {
   children: ReactNode

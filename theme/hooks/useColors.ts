@@ -1,6 +1,7 @@
 import { useRecoilValue } from 'recoil'
-import { AppTheme, themeAtom } from '../themeAtom'
+
 import { darkThemeColorPalette, lightThemeColorPalette } from '../colors'
+import { AppTheme, themeAtom } from '../themeAtom'
 
 export const useColors = () => {
   const { theme } = useRecoilValue(themeAtom)

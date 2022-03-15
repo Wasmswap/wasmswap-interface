@@ -1,18 +1,19 @@
 import { useMemo } from 'react'
 import { useQueries } from 'react-query'
-import { getLiquidityBalance } from '../services/liquidity'
 import { useRecoilValue } from 'recoil'
-import { walletState } from '../state/atoms/walletAtoms'
-import { useBaseTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
-import { useTokenDollarValue } from './useTokenDollarValue'
 import { convertMicroDenomToDenom, protectAgainstNaN } from 'util/conversion'
+
+import { useGetPoolTokensDollarValue } from '../features/liquidity'
+import { getLiquidityBalance } from '../services/liquidity'
+import { getStakedBalance, getTotalStakedBalance } from '../services/staking'
+import { walletState } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
-import { useMultipleSwapInfo } from './useSwapInfo'
-import { getStakedBalance, getTotalStakedBalance } from '../services/staking'
-import { useMultipleRewardsInfo } from './useRewardsQueries'
-import { useGetPoolTokensDollarValue } from '../features/liquidity/hooks/usePoolTokensDollarValue'
 import { usePersistance } from './usePersistance'
+import { useMultipleRewardsInfo } from './useRewardsQueries'
+import { useMultipleSwapInfo } from './useSwapInfo'
+import { useTokenDollarValue } from './useTokenDollarValue'
+import { useBaseTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 
 export type LiquidityType = {
   tokenAmount: number

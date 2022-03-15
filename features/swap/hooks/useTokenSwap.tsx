@@ -15,9 +15,7 @@ import { convertDenomToMicroDenom } from 'util/conversion'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { useMutation } from 'react-query'
 import { Toast, Button, IconWrapper } from 'components'
-import { Error } from 'icons/Error'
-import { UpRightArrow } from 'icons/UpRightArrow'
-import { Valid } from 'icons/Valid'
+import { Error, Valid, UpRightArrow } from 'icons'
 import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
 
 type UseTokenSwapArgs = {

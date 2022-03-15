@@ -1,4 +1,4 @@
-import { Exchange } from 'icons/Exchange'
+import { Exchange } from 'icons'
 import React, { useState } from 'react'
 import { styled } from 'theme'
 import {

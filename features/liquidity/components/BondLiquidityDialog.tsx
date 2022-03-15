@@ -27,9 +27,7 @@ import {
 import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
 import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { toast } from 'react-hot-toast'
-import { Valid } from 'icons/Valid'
-import { Error } from 'icons/Error'
-import { UpRightArrow } from 'icons/UpRightArrow'
+import { Error, Valid, UpRightArrow } from 'icons'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 

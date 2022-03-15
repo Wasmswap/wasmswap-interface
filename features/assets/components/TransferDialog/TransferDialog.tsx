@@ -3,9 +3,7 @@ import { toast } from 'react-hot-toast'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useTransferAssetMutation } from './useTransferAssetMutation'
 import { TransactionKind } from './types'
-import { Valid } from 'icons/Valid'
-import { Error } from 'icons/Error'
-import { UpRightArrow } from 'icons/UpRightArrow'
+import { Valid, UpRightArrow, Error } from 'icons'
 import {
   Button,
   Text,

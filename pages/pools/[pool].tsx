@@ -12,7 +12,7 @@ import {
   IconWrapper,
   Toast,
 } from 'components'
-import { ChevronIcon } from 'icons/Chevron'
+import { ChevronIcon, Error, UpRightArrow } from 'icons'
 import {
   UnbondingLiquidityStatusList,
   LiquidityHeader,
@@ -34,9 +34,7 @@ import {
 } from '../../hooks/useRewardsQueries'
 import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import { toast } from 'react-hot-toast'
-import { Error } from '../../icons/Error'
 import { formatSdkErrorMessage } from '../../util/formatSdkErrorMessage'
-import { UpRightArrow } from '../../icons/UpRightArrow'
 
 export default function Pool() {
   const {

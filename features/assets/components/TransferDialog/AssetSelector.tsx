@@ -11,8 +11,7 @@ import {
   ImageForTokenLogo,
   Spinner,
 } from 'components'
-import { Union } from 'icons/Union'
-import { Chevron } from 'icons/Chevron'
+import { Union, Chevron } from 'icons'
 import { TokenOptionsList } from './TokenOptionsList'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 

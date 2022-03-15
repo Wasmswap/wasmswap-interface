@@ -1,7 +1,7 @@
 import { styled } from 'theme'
 import { CSS } from '@stitches/react'
 import { IconWrapper, Text } from 'components'
-import { Chevron } from 'icons/Chevron'
+import { Chevron } from 'icons'
 import { useRef, useState } from 'react'
 import { SLIPPAGE_OPTIONS } from 'util/constants'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'

@@ -1,9 +1,8 @@
 import { styled } from 'theme'
 import { Text, IconWrapper } from 'components'
-import { ConnectIcon } from 'icons/Connect'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
-import { Logo } from 'icons/Logo'
+import { Logo, ConnectIcon } from 'icons'
 import { CSS } from '@stitches/react'
 import { APP_NAME } from 'util/constants'
 

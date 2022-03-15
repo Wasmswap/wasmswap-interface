@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useQuery } from 'react-query'
 import { Inline, Text, Card, CardContent, ImageForTokenLogo } from 'components'
-import { ErrorIcon } from 'icons/Error'
+import { ErrorIcon } from 'icons'
 import { TokenInfo } from 'hooks/useTokenList'
 import {
   usePoolTokensDollarValue,

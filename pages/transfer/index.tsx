@@ -7,8 +7,7 @@ import { AppLayout, PageHeader, Toast, IconWrapper, Button } from 'components'
 import { useConnectWallet } from 'hooks/useConnectWallet'
 import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { Error } from 'icons/Error'
-import { UpRightArrow } from 'icons/UpRightArrow'
+import { Error, UpRightArrow } from 'icons'
 
 export default function Transfer() {
   const [

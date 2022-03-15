@@ -1,5 +1,5 @@
 import React from 'react'
-import { Chevron } from 'icons/Chevron'
+import { Chevron } from 'icons'
 import { formatTokenBalance } from 'util/conversion'
 import { styled } from 'theme'
 import { useTokenInfo } from 'hooks/useTokenInfo'

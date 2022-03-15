@@ -12,10 +12,8 @@ import {
 import { toast } from 'react-hot-toast'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { TokenInfo } from 'hooks/useTokenList'
-import { Valid } from 'icons/Valid'
-import { Error } from 'icons/Error'
+import { Valid, Error, UpRightArrow } from 'icons'
 import { Button, Toast, IconWrapper } from 'components'
-import { UpRightArrow } from 'icons/UpRightArrow'
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 

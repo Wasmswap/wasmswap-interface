@@ -6,29 +6,33 @@ import { useConnectWallet } from 'hooks/useConnectWallet'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { useRouter } from 'next/router'
-import { Address, ArrowUp, Open } from 'icons'
 import { IconWrapper } from '../IconWrapper'
 import { Inline } from 'components/Inline'
 import { Column } from 'components/Column'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
-import { Logo } from 'icons/Logo'
-import { LogoText } from 'icons/LogoText'
-import { Github } from 'icons/Github'
-import { Discord } from 'icons/Discord'
-import { Telegram } from 'icons/Telegram'
-import { Twitter } from 'icons/Twitter'
-import { UnionIcon } from 'icons/Union'
-import { ChevronIcon } from 'icons/Chevron'
-import { MoonIcon } from 'icons/Moon'
+import {
+  Logo,
+  LogoText,
+  Github,
+  Discord,
+  Telegram,
+  Twitter,
+  UnionIcon,
+  ChevronIcon,
+  MoonIcon,
+  FeedbackIcon,
+  UpRightArrow,
+  Address,
+  ArrowUp,
+  Open,
+} from 'icons'
 import { media, styled } from '../../theme'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
 import { useMedia } from 'hooks/useMedia'
 import { Divider } from '../Divider'
 import { ToggleSwitch } from '../ToggleSwitch'
-import { FeedbackIcon } from '../../icons/Feedback'
 import { AppTheme } from '../../theme/themeAtom'
 import { useControlTheme } from '../../theme'
-import { UpRightArrow } from '../../icons/UpRightArrow'
 
 type NavigationSidebarProps = {
   shouldRenderBackButton?: boolean

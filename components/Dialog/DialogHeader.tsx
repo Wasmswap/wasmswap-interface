@@ -1,6 +1,6 @@
 import { styled } from '../../theme'
 import { IconWrapper } from '../IconWrapper'
-import { Union } from '../../icons/Union'
+import { Union } from 'icons'
 import { Button } from '../Button'
 import { useDialogContext } from './DialogContext'
 import { ReactNode } from 'react'

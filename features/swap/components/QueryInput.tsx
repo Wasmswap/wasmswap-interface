@@ -1,4 +1,4 @@
-import { SearchIcon } from 'icons/Search'
+import { SearchIcon } from 'icons'
 import { Inline, Text } from 'components'
 import React, { HTMLProps, useEffect, useRef } from 'react'
 

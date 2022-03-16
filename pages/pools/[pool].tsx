@@ -195,7 +195,7 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
-                  stakedBalance={myStakedLiquidity.tokenAmount}
+                  myStakedLiquidity={myStakedLiquidity}
                   onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
@@ -206,14 +206,13 @@ export default function Pool() {
                 <ManageBondedLiquidityCard
                   onClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
-                  rewardsContracts={rewardsContracts}
                   stakedBalance={myStakedLiquidity}
                   rewardsInfo={rewardsInfo}
                   supportsIncentives={supportsIncentives}
                 />
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
-                  hasBondedLiquidity={myStakedLiquidity.tokenAmount > 0}
+                  hasBondedLiquidity={myStakedLiquidity?.tokenAmount > 0}
                   hasProvidedLiquidity={myLiquidity?.tokenAmount > 0}
                   pendingRewards={pendingRewards}
                   loading={isClaimingRewards}

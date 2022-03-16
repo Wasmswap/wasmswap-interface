@@ -1,10 +1,10 @@
 import { createStitches, createTheme } from '@stitches/react'
 
-import { darkThemeColorTokens,lightThemeColorTokens } from './colors'
+import { darkThemeColorTokens, lightThemeColorTokens } from './colors'
 import { createSpacing } from './utils/createSpacing'
 
 export const space = createSpacing({
-  steps: 30,
+  steps: 34,
   multiplier: 2,
   baseSize: 16,
 })

@@ -1,27 +1,16 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  Column,
-  Divider,
-  ImageForTokenLogo,
-  Inline,
-  Text,
-} from 'components'
+import { Button, Card, CardContent, Column, Inline, Text } from 'components'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-  protectAgainstNaN,
 } from 'util/conversion'
 
 import { AprPill } from './AprPill'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
-import { StyledDivForTokenLogos } from './PoolCard'
+import { SegmentedRewardsSimulator } from './SegmentedRewardsSimulator'
 
 export const ManageBondedLiquidityCard = ({
   onClick,
-  rewardsContracts,
   rewardsInfo,
   myLiquidity,
   stakedBalance,
@@ -31,13 +20,6 @@ export const ManageBondedLiquidityCard = ({
 
   const bondedLiquidity = supportsIncentives && stakedBalance?.tokenAmount > 0
   const providedLiquidity = myLiquidity?.tokenAmount > 0
-
-  const unstakedLiquidityDollarValue = dollarValueFormatterWithDecimals(
-    myLiquidity?.dollarValue,
-    {
-      includeCommaSeparation: true,
-    }
-  )
 
   const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(
     stakedBalance?.dollarValue,
@@ -51,9 +33,6 @@ export const ManageBondedLiquidityCard = ({
   )
   const interestOnStakedBalance =
     (rewardsInfo?.yieldPercentageReturn ?? 0) / 100
-  const rewardsOnStakedTokensPerWeek = protectAgainstNaN(
-    (stakedBalance?.dollarValue * interestOnStakedBalance) / 52.1429
-  )
 
   if (!providedLiquidity && !bondedLiquidity) {
     return (
@@ -83,43 +62,20 @@ export const ManageBondedLiquidityCard = ({
       variant={bondedLiquidity ? 'primary' : 'secondary'}
     >
       <CardContent>
-        <Text variant="legend" color="brand" css={{ padding: '$16 0 $6' }}>
+        <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
           Staked liquidity
         </Text>
         <Text variant="hero">${bondedLiquidityDollarValue}</Text>
-        <Text variant="link" color="brand" css={{ paddingTop: '$4' }}>
-          ${unstakedLiquidityDollarValue} unstaked
+        <Text variant="link" color="tertiary" css={{ padding: '$2 0 $14' }}>
+          Expected interest with {formattedYieldPercentageReturn}% APR
         </Text>
-      </CardContent>
-      <Divider offsetTop="$8" offsetBottom="$12" />
-      <CardContent>
-        <Text variant="legend" color="secondary" css={{ paddingBottom: '$6' }}>
-          Liquidity incentives
-        </Text>
-        <Inline gap={12}>
-          <AprPill value={formattedYieldPercentageReturn} />
 
-          <Inline gap={6}>
-            <StyledDivForTokenLogos>
-              {rewardsContracts?.contracts.map(({ tokenInfo }) => (
-                <ImageForTokenLogo
-                  size="large"
-                  key={tokenInfo.symbol}
-                  logoURI={tokenInfo.logoURI}
-                  alt={tokenInfo.symbol}
-                />
-              ))}
-            </StyledDivForTokenLogos>
-            <Text variant="link">
-              $
-              {dollarValueFormatter(rewardsOnStakedTokensPerWeek, {
-                includeCommaSeparation: true,
-              })}
-              /week
-            </Text>
-          </Inline>
-        </Inline>
-        <Inline css={{ padding: '$18 0 $13' }}>
+        <SegmentedRewardsSimulator
+          interestOnStakedBalance={interestOnStakedBalance}
+          stakedBalanceDollarValue={stakedBalance?.dollarValue}
+        />
+
+        <Inline css={{ paddingBottom: '$12' }}>
           {bondedLiquidity && (
             <Button
               onClick={(e) => {

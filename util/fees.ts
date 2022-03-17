@@ -6,8 +6,8 @@ import { unsafelyReadChainInfoCache } from '../hooks/useChainInfo'
 export const getDefaultExecuteFee = (
   feeCurrency: ChainInfo['feeCurrencies']
 ) => ({
-  amount: coins(2500000, feeCurrency[0].coinDenom),
-  gas: '2500000',
+  amount: coins(400000, feeCurrency[0].coinDenom),
+  gas: '400000',
 })
 
 export const unsafelyGetDefaultExecuteFee = () => {

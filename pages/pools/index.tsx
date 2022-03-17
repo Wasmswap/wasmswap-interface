@@ -1,5 +1,12 @@
 import { useUpdateEffect } from '@reach/utils'
-import { AppLayout, Column, Inline, PageHeader , Spinner,Text } from 'components'
+import {
+  AppLayout,
+  Column,
+  Inline,
+  PageHeader,
+  Spinner,
+  Text,
+} from 'components'
 import {
   ButtonWithDropdownForSorting,
   PoolCard,

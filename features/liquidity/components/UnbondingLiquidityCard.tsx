@@ -1,4 +1,4 @@
-import { Card, CardContent, ImageForTokenLogo,Inline, Text } from 'components'
+import { Card, CardContent, ImageForTokenLogo, Inline, Text } from 'components'
 import dayjs from 'dayjs'
 import {
   usePoolPairTokenAmount,

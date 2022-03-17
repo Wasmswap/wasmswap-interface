@@ -1,6 +1,6 @@
 import { CSS } from '@stitches/react'
-import { IconWrapper,Text } from 'components'
-import { ConnectIcon,Logo } from 'icons'
+import { IconWrapper, Text } from 'components'
+import { ConnectIcon, Logo } from 'icons'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { styled } from 'theme'

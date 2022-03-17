@@ -18,6 +18,7 @@ const StyledButton = styled('button', {
   $$backgroundColor: '$colors$dark10',
   $$backgroundColorOnHover: '$colors$dark20',
   $$backgroundColorOnActive: '$colors$dark5',
+  $$backgroundColorOnSelected: '$$backgroundColorOnHover',
 
   $$borderColorOnFocus: '$borderColors$selected',
 
@@ -92,6 +93,7 @@ const StyledButton = styled('button', {
         $$backgroundColor: '$colors$dark0',
         $$backgroundColorOnHover: '$colors$dark10',
         $$backgroundColorOnActive: '$colors$dark5',
+        $$backgroundColorOnSelected: '$colors$dark10',
 
         $$borderColorOnFocus: '$borderColors$selected',
       },
@@ -166,7 +168,7 @@ const StyledButton = styled('button', {
     },
     selected: {
       true: {
-        backgroundColor: '$$backgroundColorOnActive',
+        backgroundColor: '$$backgroundColorOnSelected',
       },
       false: {},
     },

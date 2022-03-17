@@ -1,5 +1,5 @@
 import { styled } from '@stitches/react'
-import { Button, IconWrapper, ImageForTokenLogo,Text } from 'components'
+import { Button, IconWrapper, ImageForTokenLogo, Text } from 'components'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { ArrowUp } from 'icons'

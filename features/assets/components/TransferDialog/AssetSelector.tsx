@@ -9,7 +9,7 @@ import {
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { Chevron,Union } from 'icons'
+import { Chevron, Union } from 'icons'
 import { useState } from 'react'
 import { styled } from 'theme'
 import { formatTokenBalance } from 'util/conversion'

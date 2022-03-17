@@ -1,22 +1,27 @@
-import { Card,CardContent, Column } from 'components'
-import { ArrowUpIcon } from 'icons'
+import { Card, CardContent, Column } from 'components'
 
-export const BaseCardForEmptyState = ({
-  children,
-  pointerVisible = true,
-  ...props
-}) => {
+export const BaseCardForEmptyState = ({ content, footer, ...props }) => {
   return (
     <Card
-      {...props}
       variant="ghost"
-      css={{ display: 'flex', padding: '$30 0 $18', ...(props.css ?? {}) }}
+      css={{ display: 'flex', padding: '$17 0', ...(props.css ?? {}) }}
+      {...props}
     >
       <Column align="center" justifyContent="space-between" css={{ flex: 1 }}>
-        <CardContent css={{ paddingBottom: '$16' }}>{children}</CardContent>
-        <Column css={{ paddingTop: '$16' }} align="center">
-          <ArrowUpIcon visible={pointerVisible} rotation="-90deg" />
-        </Column>
+        <CardContent
+          css={{
+            paddingBottom: '$16',
+            display: 'flex',
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            maxWidth: '18rem',
+          }}
+        >
+          {content}
+        </CardContent>
+        {footer}
       </Column>
     </Card>
   )

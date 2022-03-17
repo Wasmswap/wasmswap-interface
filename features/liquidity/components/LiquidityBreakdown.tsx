@@ -1,4 +1,4 @@
-import { Column, Divider,ImageForTokenLogo, Inline, Text } from 'components'
+import { Column, Divider, ImageForTokenLogo, Inline, Text } from 'components'
 import { useTokenToTokenPrice } from 'features/swap'
 import React from 'react'
 import { __POOL_STAKING_ENABLED__ } from 'util/constants'

@@ -157,8 +157,7 @@ export const useMultiplePoolsLiquidity = ({
               2,
           }
 
-          const shouldQueryStakedBalance =
-            providedLiquidityBalance > 0 && poolInfo.staking_address
+          const shouldQueryStakedBalance = address && poolInfo.staking_address
 
           const stakedBalanceInMicroDenom = shouldQueryStakedBalance
             ? await getStakedBalance(address, poolInfo.staking_address, client)

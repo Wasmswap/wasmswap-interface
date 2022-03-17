@@ -9,12 +9,14 @@ import {
   Toast,
 } from 'components'
 import {
- useClaimTokens,  usePoolPairTokenAmount,
+  useClaimTokens,
+  usePoolPairTokenAmount,
   usePoolTokensDollarValue,
-  useStakingClaims } from 'features/liquidity/hooks'
+  useStakingClaims,
+} from 'features/liquidity/hooks'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { TokenInfo } from 'hooks/useTokenList'
-import { Error, UpRightArrow,Valid } from 'icons'
+import { Error, UpRightArrow, Valid } from 'icons'
 import React, { useMemo } from 'react'
 import { toast } from 'react-hot-toast'
 import {

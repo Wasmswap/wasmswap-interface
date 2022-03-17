@@ -1,6 +1,6 @@
-import { Button, IconWrapper,Toast } from 'components'
+import { Button, IconWrapper, Toast } from 'components'
 import { unsafelyGetTokenInfo, useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { Error, UpRightArrow,Valid } from 'icons'
+import { Error, UpRightArrow, Valid } from 'icons'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'

@@ -6,10 +6,15 @@ import {
   Text,
   Tooltip,
 } from 'components'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { TokenInfo } from 'hooks/useTokenList'
 import { InfoIcon } from 'icons'
 import { useMemo } from 'react'
-import { formatTokenBalance } from 'util/conversion'
+import {
+  dollarValueFormatterWithDecimals,
+  formatTokenBalance,
+  protectAgainstNaN,
+} from 'util/conversion'
 
 type AdditionalUnderlyingAssetsRowProps = {
   assets: Array<{
@@ -27,7 +32,12 @@ export const AdditionalUnderlyingAssetsRow = ({
         {assets.map(({ tokenInfo, tokenAmount }) => (
           <Text key={tokenInfo.symbol} variant="link" color="white">
             {formatTokenBalance(tokenAmount, { includeCommaSeparation: true })}{' '}
-            {tokenInfo.symbol}
+            {tokenInfo.symbol} (
+            <DisplayTokenPrice
+              tokenSymbol={tokenInfo.symbol}
+              tokenAmount={tokenAmount}
+            />
+            )
           </Text>
         ))}
       </Column>
@@ -60,4 +70,13 @@ export const AdditionalUnderlyingAssetsRow = ({
       </Tooltip>
     </Inline>
   )
+}
+
+const DisplayTokenPrice = ({ tokenSymbol, tokenAmount }) => {
+  const [dollarPrice] = useTokenDollarValue(tokenSymbol)
+  const formattedDollarPrice = dollarValueFormatterWithDecimals(
+    protectAgainstNaN(tokenAmount * dollarPrice),
+    { includeCommaSeparation: true }
+  )
+  return <>${formattedDollarPrice}</>
 }

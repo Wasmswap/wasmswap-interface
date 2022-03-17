@@ -196,6 +196,7 @@ export default function Pool() {
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
                   myStakedLiquidity={myStakedLiquidity}
+                  supportsIncentives={supportsIncentives}
                   onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
@@ -216,6 +217,7 @@ export default function Pool() {
                   hasProvidedLiquidity={myLiquidity?.tokenAmount > 0}
                   pendingRewards={pendingRewards}
                   loading={isClaimingRewards}
+                  supportsIncentives={supportsIncentives}
                 />
               </StyledDivForCards>
             </>

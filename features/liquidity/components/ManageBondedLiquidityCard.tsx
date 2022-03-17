@@ -1,13 +1,14 @@
 import { Button, Card, CardContent, Column, Inline, Text } from 'components'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { ArrowUpIcon, UnionIcon } from 'icons'
 import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
 } from 'util/conversion'
 
-import { AprPill } from './AprPill'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
 import { SegmentedRewardsSimulator } from './SegmentedRewardsSimulator'
+import { StepIcon } from './StepIcon'
 
 export const ManageBondedLiquidityCard = ({
   onClick,
@@ -34,24 +35,59 @@ export const ManageBondedLiquidityCard = ({
   const interestOnStakedBalance =
     (rewardsInfo?.yieldPercentageReturn ?? 0) / 100
 
+  if (!supportsIncentives) {
+    return (
+      <BaseCardForEmptyState
+        variant="secondary"
+        content={
+          <Column align="center">
+            <UnionIcon color="error" />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Incentives are not supported for this token, yet.
+            </Text>
+          </Column>
+        }
+        footer={
+          <Text align="center" variant="link" color="disabled">
+            Come back later
+          </Text>
+        }
+      />
+    )
+  }
+
   if (!providedLiquidity && !bondedLiquidity) {
     return (
-      <BaseCardForEmptyState>
-        <Column align="center">
-          <AprPill value="158" />
-          <Text
-            align="center"
-            variant="body"
-            color="tertiary"
-            css={{ padding: '$15 0 $6' }}
-          >
-            No staked liquidity yet
-          </Text>
-          <Text align="center" variant="primary">
-            Add liquidity to the pool so you can stake it
-          </Text>
-        </Column>
-      </BaseCardForEmptyState>
+      <BaseCardForEmptyState
+        variant="ghost"
+        content={
+          <Column align="center">
+            <StepIcon step={1} />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Add liquidity to the pool so you can bond your tokens and enjoy
+              the {formattedYieldPercentageReturn}% APR
+            </Text>
+          </Column>
+        }
+        footer={
+          <Inline gap={3}>
+            <ArrowUpIcon color="brand" rotation="-90deg" />
+            <Text align="center" variant="link" color="brand">
+              First, add the liquidity
+            </Text>
+          </Inline>
+        }
+      />
     )
   }
 

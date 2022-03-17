@@ -25,6 +25,7 @@ type ManageLiquidityCardProps = Pick<
   onClick: () => void
   tokenASymbol: string
   tokenBSymbol: string
+  supportsIncentives?: boolean
 }
 
 export const ManageLiquidityCard = ({
@@ -34,6 +35,7 @@ export const ManageLiquidityCard = ({
   tokenASymbol,
   tokenBSymbol,
   myStakedLiquidity,
+  supportsIncentives,
 }: ManageLiquidityCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
@@ -84,7 +86,8 @@ export const ManageLiquidityCard = ({
           {dollarValueFormatterWithDecimals(availableLiquidityInDollarValue, {
             includeCommaSeparation: true,
           })}{' '}
-          available to stake
+          available
+          {supportsIncentives ? ' to stake' : ''}
         </Text>
       </CardContent>
       <Divider offsetTop="$14" offsetBottom="$12" />

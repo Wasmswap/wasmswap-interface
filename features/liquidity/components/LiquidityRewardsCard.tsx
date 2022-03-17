@@ -1,10 +1,12 @@
 import { Button, Card, CardContent, Column, Inline, Text } from 'components'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { ArrowUpIcon, UnionIcon } from 'icons'
 import { useMemo } from 'react'
 import { dollarValueFormatterWithDecimals } from 'util/conversion'
 
 import { AdditionalUnderlyingAssetsRow } from './AdditionalUnderlyingAssetsRow'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
+import { StepIcon } from './StepIcon'
 import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 
 export const LiquidityRewardsCard = ({
@@ -13,6 +15,7 @@ export const LiquidityRewardsCard = ({
   hasBondedLiquidity,
   onClick,
   loading,
+  supportsIncentives,
 }) => {
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
@@ -27,29 +30,65 @@ export const LiquidityRewardsCard = ({
 
   const [pendingRewardsRenderedInline, pendingRewardsRenderedInTooltip] =
     useMemo(() => {
-      if (!pendingRewards || pendingRewards.length <= 4) {
-        return [pendingRewards, undefined]
+      if (!pendingRewards || pendingRewards?.length <= 4) {
+        return [pendingRewards || [], undefined]
       }
       return [pendingRewards.slice(0, 3), pendingRewards.slice(3)]
     }, [pendingRewards])
 
+  if (!supportsIncentives) {
+    return (
+      <BaseCardForEmptyState
+        variant="secondary"
+        content={
+          <Column align="center">
+            <UnionIcon color="error" />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Rewards are not supported for this token, yet.
+            </Text>
+          </Column>
+        }
+        footer={
+          <Text align="center" variant="link" color="disabled">
+            Come back later
+          </Text>
+        }
+      />
+    )
+  }
+
   if (!hasBondedLiquidity) {
     return (
-      <BaseCardForEmptyState pointerVisible={hasProvidedLiquidity}>
-        <Column align="center" css={{ paddingTop: '$16' }}>
-          <Text
-            align="center"
-            variant="body"
-            color="tertiary"
-            css={{ padding: '$15 0 $6' }}
-          >
-            No rewards rendered yet
-          </Text>
-          <Text align="center" variant="primary">
-            Stake your token to start earning 158% APR
-          </Text>
-        </Column>
-      </BaseCardForEmptyState>
+      <BaseCardForEmptyState
+        variant="ghost"
+        content={
+          <Column align="center">
+            <StepIcon step={hasProvidedLiquidity ? 1 : 2} />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Bond your tokens and start collecting some pooling rewards.
+              Rewards every 6 seconds.
+            </Text>
+          </Column>
+        }
+        footer={
+          <Inline gap={3}>
+            <ArrowUpIcon color="brand" rotation="-90deg" />
+            <Text align="center" variant="link" color="brand">
+              Then, stake your liquidity
+            </Text>
+          </Inline>
+        }
+      />
     )
   }
 

@@ -14,7 +14,7 @@ import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { Error,UpRightArrow, Valid } from 'icons'
+import { Error, UpRightArrow, Valid } from 'icons'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { getCachedTokenList, TokenInfo,useTokenList } from './useTokenList'
+import { getCachedTokenList, TokenInfo, useTokenList } from './useTokenList'
 
 /* token selector functions */
 export const unsafelyGetBaseToken = (

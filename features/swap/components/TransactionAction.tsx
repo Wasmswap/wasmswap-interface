@@ -1,4 +1,4 @@
-import { Button, Inline,Spinner, Text } from 'components'
+import { Button, Inline, Spinner, Text } from 'components'
 import { useConnectWallet } from 'hooks/useConnectWallet'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import React, { useEffect, useState } from 'react'

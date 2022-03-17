@@ -40,8 +40,9 @@ export const PoolCard = ({
 
   const stakedTokenBalanceDollarValue = myStakedLiquidity.dollarValue
 
-  const hasProvidedLiquidity =
-    typeof myLiquidity.tokenAmount === 'number' && myLiquidity.tokenAmount > 0
+  const hasProvidedLiquidity = Boolean(
+    myLiquidity.tokenAmount || stakedTokenBalanceDollarValue
+  )
 
   return (
     <Link href={`/pools/${poolId}`} passHref>

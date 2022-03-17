@@ -1,5 +1,5 @@
 import { Text } from 'components'
-import { usePriceForOneToken,useTxRates } from 'features/swap'
+import { usePriceForOneToken, useTxRates } from 'features/swap'
 import { styled } from 'theme'
 import {
   dollarValueFormatterWithDecimals,

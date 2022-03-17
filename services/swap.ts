@@ -3,7 +3,7 @@ import {
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
 import { toUtf8 } from '@cosmjs/encoding'
-import { coin, isDeliverTxFailure,StdFee } from '@cosmjs/stargate'
+import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { unsafelyGetBaseToken } from 'hooks/useTokenInfo'
 

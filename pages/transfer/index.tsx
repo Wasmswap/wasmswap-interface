@@ -1,5 +1,5 @@
-import { AppLayout, Button,IconWrapper, PageHeader, Toast } from 'components'
-import { AssetsList,TransferDialog } from 'features/assets'
+import { AppLayout, Button, IconWrapper, PageHeader, Toast } from 'components'
+import { AssetsList, TransferDialog } from 'features/assets'
 import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
 import { useConnectWallet } from 'hooks/useConnectWallet'
 import { Error, UpRightArrow } from 'icons'

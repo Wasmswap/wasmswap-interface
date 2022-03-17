@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef,HTMLProps, ReactNode } from 'react'
+import { ForwardedRef, forwardRef, HTMLProps, ReactNode } from 'react'
 import styled, { css } from 'styled-components'
 
 import { useTheme } from '../theme'
@@ -85,7 +85,7 @@ const StyledIcon = styled.span`
   ${(p) => (p.$isButton ? buttonStyles : undefined)}
   ${(p) =>
     typeof p.$visible === 'boolean'
-      ? `opacity: ${p.$visible ? 1 : 0}`
+      ? `opacity: ${p.$visible ? 1 : 0};`
       : undefined}
 `
 

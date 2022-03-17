@@ -33,13 +33,13 @@ export const StakingSummary = ({
   const refForInput = useRef<HTMLInputElement>()
 
   const [tokenAAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: liquidityAmount / 2,
+    tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 0,
     poolId,
   })
 
   const [tokenBAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: liquidityAmount / 2,
+    tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 1,
     poolId,
   })

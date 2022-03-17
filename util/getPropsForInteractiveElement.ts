@@ -1,4 +1,4 @@
-import { KeyboardEvent,MouseEvent } from 'react'
+import { KeyboardEvent, MouseEvent } from 'react'
 
 type Args = {
   onClick: (event: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => void

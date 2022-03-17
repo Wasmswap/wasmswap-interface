@@ -2,28 +2,10 @@ import { ComponentPropsWithoutRef, ForwardedRef, forwardRef } from 'react'
 
 import { media, styled } from '../theme'
 
-const StyledDivForOverlay = styled('div', {
-  position: 'absolute',
-  inset: 0,
-  width: '100%',
-  height: '100%',
-  zIndex: '$1',
-})
-
-const StyledDivForContent = styled('div', {
-  position: 'relative',
-  zIndex: '$2',
-  width: '100%',
-})
-
 const StyledDivForCardWrapper = styled('div', {
   $$backgroundColor: '$colors$white',
   $$backgroundColorOnHover: '$colors$white',
   $$backgroundColorOnActive: '$colors$white',
-
-  $$overlayColor: '$colors$brand0',
-  $$overlayColorOnHover: '$colors$brand0',
-  $$overlayColorOnActive: '$colors$brand0',
 
   position: 'relative',
   zIndex: '$1',
@@ -32,20 +14,12 @@ const StyledDivForCardWrapper = styled('div', {
   transition: 'background-color 0.1s ease-out, box-shadow 0.1s ease-out',
   backgroundColor: '$$backgroundColor',
 
-  [`${StyledDivForOverlay}`]: {
-    transition: 'background-color 0.1s ease-out',
-    backgroundColor: '$$overlayColor',
-    borderRadius: '$2',
-  },
-
   '&:hover': {
     $$backgroundColor: '$$backgroundColorOnHover',
-    $$overlayColor: '$$overlayColorOnHover',
   },
 
   '&:active': {
     $$backgroundColor: '$$backgroundColorOnActive',
-    $$overlayColor: '$$overlayColorOnActive',
   },
 
   boxShadow: '0 0 0 0 $$boxShadowColor',
@@ -149,8 +123,7 @@ const CardComponent = (
 ) => {
   return (
     <StyledDivForCardWrapper {...props} ref={ref} role="button" tabIndex={-1}>
-      <StyledDivForOverlay />
-      <StyledDivForContent>{children}</StyledDivForContent>
+      {children}
     </StyledDivForCardWrapper>
   )
 }

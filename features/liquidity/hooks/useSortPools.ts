@@ -42,7 +42,10 @@ export const useSortPools = ({
     /* split up liquidity in my liquidity pools and other pools buckets */
     liquidity.forEach((liquidityInfo, index) => {
       const poolsBucket =
-        liquidityInfo.myLiquidity.tokenAmount > 0 ? myPools : otherPools
+        liquidityInfo.myLiquidity.tokenAmount > 0 ||
+        liquidityInfo.myStakedLiquidity.tokenAmount > 0
+          ? myPools
+          : otherPools
 
       poolsBucket.push({
         tokenA,

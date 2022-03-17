@@ -1,4 +1,4 @@
-import { Button, IconWrapper,Inline } from 'components'
+import { Button, IconWrapper, Inline } from 'components'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { Union } from 'icons'

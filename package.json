@@ -21,6 +21,7 @@
     "@cosmjs/stargate": "0.27.0-rc2",
     "@headlessui/react": "^1.4.0",
     "@heroicons/react": "^1.0.3",
+    "@next/bundle-analyzer": "^12.1.0",
     "@reach/portal": "^0.16.0",
     "@reach/tooltip": "^0.16.2",
     "@react-spring/web": "^9.4.2",

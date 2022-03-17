@@ -1,21 +1,13 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  Column,
-  Divider,
-  ImageForTokenLogo,
-  Inline,
-  Text,
-} from 'components'
+import { Button, Card, CardContent, Column, Inline, Text } from 'components'
 import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { ArrowUpIcon, UnionIcon } from 'icons'
 import { useMemo } from 'react'
-import {
-  dollarValueFormatterWithDecimals,
-  formatTokenBalance,
-} from 'util/conversion'
+import { dollarValueFormatterWithDecimals } from 'util/conversion'
 
+import { AdditionalUnderlyingAssetsRow } from './AdditionalUnderlyingAssetsRow'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
+import { StepIcon } from './StepIcon'
+import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 
 export const LiquidityRewardsCard = ({
   pendingRewards,
@@ -23,37 +15,84 @@ export const LiquidityRewardsCard = ({
   hasBondedLiquidity,
   onClick,
   loading,
+  supportsIncentives,
 }) => {
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
   const pendingRewardsDollarValue = useMemo(() => {
     return (
       pendingRewards?.reduce(
-        (value, item) => item?.dollarValue ?? 0 + value,
+        (value, item) => (item?.dollarValue ?? 0) + value,
         0
       ) ?? 0
     )
   }, [pendingRewards])
 
-  if (!hasBondedLiquidity) {
+  const [pendingRewardsRenderedInline, pendingRewardsRenderedInTooltip] =
+    useMemo(() => {
+      if (!pendingRewards || pendingRewards?.length <= 4) {
+        return [pendingRewards || [], undefined]
+      }
+      return [pendingRewards.slice(0, 3), pendingRewards.slice(3)]
+    }, [pendingRewards])
+
+  if (!supportsIncentives) {
     return (
-      <BaseCardForEmptyState pointerVisible={hasProvidedLiquidity}>
-        <Column align="center" css={{ paddingTop: '$16' }}>
-          <Text
-            align="center"
-            variant="body"
-            color="tertiary"
-            css={{ padding: '$15 0 $6' }}
-          >
-            No rewards rendered yet
+      <BaseCardForEmptyState
+        variant="secondary"
+        content={
+          <Column align="center">
+            <UnionIcon color="error" />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Rewards are not supported for this token, yet.
+            </Text>
+          </Column>
+        }
+        footer={
+          <Text align="center" variant="link" color="disabled">
+            Come back later
           </Text>
-          <Text align="center" variant="primary">
-            Stake your token to start earning 158% APR
-          </Text>
-        </Column>
-      </BaseCardForEmptyState>
+        }
+      />
     )
   }
+
+  if (!hasBondedLiquidity && !pendingRewardsDollarValue) {
+    return (
+      <BaseCardForEmptyState
+        variant="ghost"
+        content={
+          <Column align="center">
+            <StepIcon step={hasProvidedLiquidity ? 1 : 2} />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Bond your tokens and start collecting some pooling rewards.
+              Rewards every 6 seconds.
+            </Text>
+          </Column>
+        }
+        footer={
+          <Inline gap={3}>
+            <ArrowUpIcon color="brand" rotation="-90deg" />
+            <Text align="center" variant="link" color="brand">
+              Then, stake your liquidity
+            </Text>
+          </Inline>
+        }
+      />
+    )
+  }
+
+  const receivedRewards = pendingRewardsDollarValue > 0
 
   const rewardsDollarValue = dollarValueFormatterWithDecimals(
     pendingRewardsDollarValue,
@@ -62,8 +101,6 @@ export const LiquidityRewardsCard = ({
     }
   )
 
-  const receivedRewards = pendingRewardsDollarValue > 0
-
   return (
     <Card
       ref={refForCard}
@@ -71,6 +108,11 @@ export const LiquidityRewardsCard = ({
       role="button"
       onClick={receivedRewards ? onClick : undefined}
       variant="primary"
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+      }}
     >
       <CardContent>
         <Text variant="legend" color="brand" css={{ padding: '$16 0 $6' }}>
@@ -79,32 +121,33 @@ export const LiquidityRewardsCard = ({
         <Text variant="hero" color="brand">
           ${rewardsDollarValue}
         </Text>
-        <Text variant="link" color="brand" css={{ paddingTop: '$4' }}>
+        <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>
           {pendingRewards?.length
             ? `Receive ${pendingRewards.length} tokens`
             : ''}
         </Text>
       </CardContent>
-      <Divider offsetTop="$8" offsetBottom="$12" />
-      <CardContent>
-        <Text variant="legend" color="secondary" css={{ paddingBottom: '$8' }}>
-          Rewards breakdown
-        </Text>
-        <Inline gap={6}>
-          {pendingRewards?.map(({ tokenInfo, tokenAmount }) => (
-            <Inline gap={2} key={tokenInfo?.symbol}>
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenInfo.logoURI}
-                alt={tokenInfo.symbol}
-              />
-              <Text variant="link">
-                {formatTokenBalance(tokenAmount)} {tokenInfo.symbol}
-              </Text>
-            </Inline>
+      <CardContent css={{ paddingTop: '$10' }}>
+        <Column gap={6}>
+          {new Array(4 - pendingRewardsRenderedInline.length)
+            .fill(0)
+            .map((_, index) => (
+              <UnderlyingAssetRow visible={false} key={index} />
+            ))}
+          {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
+            <UnderlyingAssetRow
+              key={tokenInfo.symbol}
+              tokenSymbol={tokenInfo.symbol}
+              tokenAmount={tokenAmount}
+            />
           ))}
-        </Inline>
-        <Inline css={{ padding: '$19 0 $13' }}>
+          {Boolean(pendingRewardsRenderedInTooltip?.length) && (
+            <AdditionalUnderlyingAssetsRow
+              assets={pendingRewardsRenderedInTooltip}
+            />
+          )}
+        </Column>
+        <Inline css={{ padding: '$16 0 $12' }}>
           <Button
             onClick={(e) => {
               e.stopPropagation()

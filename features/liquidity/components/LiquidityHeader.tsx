@@ -1,4 +1,4 @@
-import { Button, IconWrapper, Inline,Text } from 'components'
+import { Button, IconWrapper, Inline, Text } from 'components'
 import { ArrowUp } from 'icons'
 import Link from 'next/link'
 import React from 'react'

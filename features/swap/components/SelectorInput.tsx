@@ -1,4 +1,4 @@
-import { calculateCharactersLength,Text } from 'components'
+import { calculateCharactersLength, Text } from 'components'
 import { useAmountChangeController } from 'hooks/useAmountChangeController'
 import React, { HTMLProps, Ref } from 'react'
 import { styled } from 'theme'

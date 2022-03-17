@@ -1,4 +1,4 @@
-import { Button, Column, IconWrapper,Inline, Text } from 'components'
+import { Button, Column, IconWrapper, Inline, Text } from 'components'
 import { Exchange } from 'icons'
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'

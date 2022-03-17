@@ -33,11 +33,14 @@ export const Dialog = ({
 
   /* animate the dialog */
   useEffect(() => {
-    function getShouldCenterDialog() {
-      return (
+    function positionDialog() {
+      const getShouldCenterDialog = () =>
         modalRef.current.getBoundingClientRect().height <=
         window.innerHeight * 0.95
-      )
+
+      gsap.set(modalRef.current, {
+        alignSelf: getShouldCenterDialog() ? 'center' : 'flex-start',
+      })
     }
 
     const shouldAnimateCloseOut = !isShowing && isRenderingDialog
@@ -63,17 +66,14 @@ export const Dialog = ({
     }
 
     if (isShowing && isRenderingDialog) {
-      tl.set(
-        modalRef.current,
-        {
-          alignSelf: getShouldCenterDialog() ? 'center' : 'flex-start',
-        },
-        0
-      )
-
+      positionDialog()
       tl.to(overlayRef.current, { opacity: 0.75 }, 0)
       tl.to(modalRef.current, { opacity: 1 }, 0.1)
-      return
+
+      window.addEventListener('resize', positionDialog)
+      return () => {
+        window.removeEventListener('resize', positionDialog)
+      }
     }
   }, [isRenderingDialog, isShowing])
 

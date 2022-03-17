@@ -17,7 +17,7 @@ import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Error, UpRightArrow,Valid } from 'icons'
+import { Error, UpRightArrow, Valid } from 'icons'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import {
@@ -169,6 +169,22 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     }
   }
 
+  const getIsFormSubmissionDisabled = () => {
+    if (dialogState === 'stake') {
+      if (maxLiquidityTokenAmount <= 0) {
+        return true
+      }
+    }
+
+    if (dialogState === 'unstake') {
+      if (maxLiquidityTokenAmount <= 0) {
+        return true
+      }
+    }
+
+    return isLoading || !tokenAmount
+  }
+
   const canManageStaking = Boolean(stakedAmount > 0)
 
   useEffect(() => {
@@ -290,7 +306,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <Button
           variant="primary"
           onClick={handleAction}
-          disabled={isLoading || !tokenAmount}
+          disabled={getIsFormSubmissionDisabled()}
         >
           {isLoading ? (
             <Spinner instant />

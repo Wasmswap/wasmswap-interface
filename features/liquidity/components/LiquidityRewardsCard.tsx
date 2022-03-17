@@ -62,7 +62,7 @@ export const LiquidityRewardsCard = ({
     )
   }
 
-  if (!hasBondedLiquidity) {
+  if (!hasBondedLiquidity && !pendingRewardsDollarValue) {
     return (
       <BaseCardForEmptyState
         variant="ghost"

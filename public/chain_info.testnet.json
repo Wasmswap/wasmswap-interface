@@ -1,5 +1,5 @@
 {
-  "chainId": "uni",
+  "chainId": "uni-2",
   "chainName": "Juno Uni Testnet",
   "rpc": "https://rpc.uni.juno.deuslabs.fi:443/",
   "rest": "https://lcd.uni.juno.deuslabs.fi:443/",

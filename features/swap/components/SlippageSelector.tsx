@@ -1,11 +1,10 @@
-import { styled } from 'components/theme'
-import { Text } from '../../../components/Text'
 import { CSS } from '@stitches/react'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Chevron } from '../../../icons/Chevron'
+import { IconWrapper, Text } from 'components'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { Chevron } from 'icons'
 import { useRef, useState } from 'react'
-import { SLIPPAGE_OPTIONS } from '../../../util/constants'
-import { useOnClickOutside } from '../../../hooks/useOnClickOutside'
+import { styled } from 'theme'
+import { SLIPPAGE_OPTIONS } from 'util/constants'
 
 type SlippageSelectorProps = {
   slippage: number

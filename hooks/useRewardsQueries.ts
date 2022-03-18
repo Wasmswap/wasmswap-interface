@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useMutation, useQueries, useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import {
@@ -8,14 +9,14 @@ import {
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 import { convertMicroDenomToDenom } from 'util/conversion'
+
+import { tokenToTokenPriceQuery } from '../queries/tokenToTokenPriceQuery'
+import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { useChainInfo } from './useChainInfo'
 import { useRewardContractsList } from './useRewardContractsList'
-import { useCallback } from 'react'
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
-import { useTokenList } from './useTokenList'
-import { useBaseTokenInfo } from './useTokenInfo'
-import { tokenToTokenPriceQuery } from '../queries/tokenToTokenPriceQuery'
 import { useTokenDollarValue } from './useTokenDollarValue'
+import { useBaseTokenInfo } from './useTokenInfo'
+import { useTokenList } from './useTokenList'
 
 export const usePendingRewards = ({ swapAddress }) => {
   const { address, status, client } = useRecoilValue(walletState)

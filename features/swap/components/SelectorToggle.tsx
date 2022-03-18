@@ -1,13 +1,15 @@
-import React from 'react'
-import { Text } from 'components/Text'
-import { IconWrapper } from 'components/IconWrapper'
-import { Chevron } from 'icons/Chevron'
-import { formatTokenBalance } from 'util/conversion'
-import { styled } from 'components/theme'
+import {
+  ButtonForWrapper,
+  IconWrapper,
+  ImageForTokenLogo,
+  Text,
+} from 'components'
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { ButtonForWrapper } from 'components/Button'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { getPropsForInteractiveElement } from '../../../util/getPropsForInteractiveElement'
+import { Chevron } from 'icons'
+import React from 'react'
+import { styled } from 'theme'
+import { formatTokenBalance } from 'util/conversion'
+import { getPropsForInteractiveElement } from 'util/getPropsForInteractiveElement'
 
 type SelectorToggleProps = {
   isSelecting: boolean

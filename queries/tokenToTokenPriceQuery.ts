@@ -1,12 +1,12 @@
 import {
-  convertDenomToMicroDenom,
-  convertMicroDenomToDenom,
-} from '../util/conversion'
-import {
   getToken1ForToken2Price,
   getToken2ForToken1Price,
   getTokenForTokenPrice,
 } from '../services/swap'
+import {
+  convertDenomToMicroDenom,
+  convertMicroDenomToDenom,
+} from '../util/conversion'
 
 export async function tokenToTokenPriceQuery({
   baseToken,

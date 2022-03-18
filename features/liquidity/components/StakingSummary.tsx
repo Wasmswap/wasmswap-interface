@@ -1,14 +1,12 @@
-import { useRef, useState } from 'react'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { BasicNumberInput } from 'components/BasicNumberInput'
-import { TokenInfo } from 'hooks/useTokenList'
-import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
+import { BasicNumberInput, ImageForTokenLogo, Text } from 'components'
 import {
-  usePoolTokensDollarValue,
   usePoolPairTokenAmount,
+  usePoolTokensDollarValue,
 } from 'features/liquidity/hooks'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
+import { TokenInfo } from 'hooks/useTokenList'
+import { useRef, useState } from 'react'
+import { styled } from 'theme'
+import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
 
 type StakingSummaryProps = {
   label: string
@@ -35,13 +33,13 @@ export const StakingSummary = ({
   const refForInput = useRef<HTMLInputElement>()
 
   const [tokenAAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: liquidityAmount / 2,
+    tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 0,
     poolId,
   })
 
   const [tokenBAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: liquidityAmount / 2,
+    tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 1,
     poolId,
   })

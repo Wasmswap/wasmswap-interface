@@ -1,5 +1,5 @@
-import { convertMicroDenomToDenom } from './conversion'
 import { POOL_TOKENS_DECIMALS } from '../constants'
+import { convertMicroDenomToDenom } from './conversion'
 
 export const calcPoolTokenValue = ({
   tokenAmountInMicroDenom,

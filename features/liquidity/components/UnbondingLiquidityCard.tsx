@@ -1,15 +1,12 @@
+import { Card, CardContent, ImageForTokenLogo, Inline, Text } from 'components'
 import dayjs from 'dayjs'
-import { useQuery } from 'react-query'
-import { Card, CardContent } from 'components/Card'
-import { Inline } from 'components/Inline'
-import { Text } from 'components/Text'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { ErrorIcon } from 'icons/Error'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
-  usePoolTokensDollarValue,
   usePoolPairTokenAmount,
+  usePoolTokensDollarValue,
 } from 'features/liquidity/hooks'
+import { TokenInfo } from 'hooks/useTokenList'
+import { ErrorIcon } from 'icons'
+import { useQuery } from 'react-query'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,

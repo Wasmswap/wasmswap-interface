@@ -1,4 +1,5 @@
 import { SVGProps } from 'react'
+
 import { createIcon } from './createIconComponent'
 
 export const [Union, UnionIcon] = createIcon(

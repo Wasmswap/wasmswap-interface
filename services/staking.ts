@@ -3,9 +3,10 @@ import {
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
 import { toBase64, toUtf8 } from '@cosmjs/encoding'
-import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 import { StdFee } from '@cosmjs/stargate'
+
 import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
+import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const stakeTokens = async (
   senderAddress: string,

@@ -1,6 +1,5 @@
-import { SearchIcon } from '../../../icons/Search'
-import { Text } from '../../../components/Text'
-import { Inline } from '../../../components/Inline'
+import { Inline, Text } from 'components'
+import { SearchIcon } from 'icons'
 import React, { HTMLProps, useEffect, useRef } from 'react'
 
 type QueryInputProps = {

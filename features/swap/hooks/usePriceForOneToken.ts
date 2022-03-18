@@ -1,5 +1,6 @@
-import { useTokenToTokenPrice } from './useTokenToTokenPrice'
 import { usePersistance } from 'hooks/usePersistance'
+
+import { useTokenToTokenPrice } from './useTokenToTokenPrice'
 
 export const usePriceForOneToken = ({ tokenASymbol, tokenBSymbol }) => {
   const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({

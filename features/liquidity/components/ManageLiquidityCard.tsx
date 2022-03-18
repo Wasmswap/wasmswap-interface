@@ -1,26 +1,31 @@
-import { Text } from 'components/Text'
-import { Button } from 'components/Button'
-import { CardContent, Card } from 'components/Card'
+import {
+  Button,
+  Card,
+  CardContent,
+  Column,
+  Divider,
+  Inline,
+  Text,
+} from 'components'
+import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
+import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   convertMicroDenomToDenom,
   dollarValueFormatterWithDecimals,
-  formatTokenBalance,
+  protectAgainstNaN,
 } from 'util/conversion'
-import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import { Inline } from '../../../components/Inline'
-import { Divider } from '../../../components/Divider'
-import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
-import { useSubscribeInteractions } from '../../../hooks/useSubscribeInteractions'
+
+import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 
 type ManageLiquidityCardProps = Pick<
   LiquidityInfoType,
-  'myReserve' | 'tokenDollarValue'
+  'myReserve' | 'tokenDollarValue' | 'myStakedLiquidity'
 > & {
-  stakedBalance: number
   onClick: () => void
   tokenASymbol: string
   tokenBSymbol: string
+  supportsIncentives?: boolean
 }
 
 export const ManageLiquidityCard = ({
@@ -29,7 +34,8 @@ export const ManageLiquidityCard = ({
   tokenDollarValue,
   tokenASymbol,
   tokenBSymbol,
-  stakedBalance,
+  myStakedLiquidity,
+  supportsIncentives,
 }: ManageLiquidityCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
@@ -37,21 +43,28 @@ export const ManageLiquidityCard = ({
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
   const providedLiquidity = myReserve?.[0] > 0
-  const bondedLiquidity = stakedBalance > 0
+  const bondedLiquidity = myStakedLiquidity?.tokenAmount > 0
 
-  const tokenAReserve = formatTokenBalance(
-    convertMicroDenomToDenom(myReserve?.[0], tokenA.decimals),
-    { includeCommaSeparation: true }
+  const tokenAReserve = convertMicroDenomToDenom(
+    myReserve?.[0],
+    tokenA.decimals
   )
-  const tokenBReserve = formatTokenBalance(
-    convertMicroDenomToDenom(myReserve?.[1], tokenB.decimals),
-    { includeCommaSeparation: true }
+  const tokenBReserve = convertMicroDenomToDenom(
+    myReserve?.[1],
+    tokenB.decimals
   )
+
+  const availableLiquidityInDollarValue =
+    convertMicroDenomToDenom(myReserve?.[0], tokenA.decimals) *
+    tokenDollarValue *
+    2
+
+  const stakedLiquidityInDollarValue = myStakedLiquidity?.dollarValue ?? 0
 
   const providedLiquidityDollarValue = dollarValueFormatterWithDecimals(
-    convertMicroDenomToDenom(myReserve?.[0], tokenA.decimals) *
-      tokenDollarValue *
-      2 || '0.00',
+    protectAgainstNaN(
+      stakedLiquidityInDollarValue + availableLiquidityInDollarValue
+    ) || '0.00',
     { includeCommaSeparation: true }
   )
 
@@ -65,38 +78,34 @@ export const ManageLiquidityCard = ({
     >
       <CardContent>
         <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
-          Available liquidity
+          Your liquidity
         </Text>
         <Text variant="hero">${providedLiquidityDollarValue}</Text>
+        <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>
+          $
+          {dollarValueFormatterWithDecimals(availableLiquidityInDollarValue, {
+            includeCommaSeparation: true,
+          })}{' '}
+          available
+          {supportsIncentives ? ' to stake' : ''}
+        </Text>
       </CardContent>
-      <Divider offsetTop="$22" offsetBottom="$12" />
+      <Divider offsetTop="$14" offsetBottom="$12" />
       <CardContent>
-        <Text variant="legend" color="secondary">
+        <Text variant="legend" color="secondary" css={{ paddingBottom: '$12' }}>
           Underlying assets
         </Text>
-        <Inline gap={12} css={{ padding: '$6 0 $22' }}>
-          <Inline gap={3}>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenA.logoURI}
-              alt={tokenA.symbol}
-            />
-            <Text variant="body">
-              {tokenAReserve} {tokenA.symbol}
-            </Text>
-          </Inline>
-          <Inline gap={3}>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenB.logoURI}
-              alt={tokenB.symbol}
-            />
-            <Text variant="body">
-              {tokenBReserve} {tokenB.symbol}
-            </Text>
-          </Inline>
-        </Inline>
-        <Inline css={{ paddingBottom: '$13' }}>
+        <Column gap={6} css={{ paddingBottom: '$16' }}>
+          <UnderlyingAssetRow
+            tokenSymbol={tokenA.symbol}
+            tokenAmount={tokenAReserve}
+          />
+          <UnderlyingAssetRow
+            tokenSymbol={tokenB.symbol}
+            tokenAmount={tokenBReserve}
+          />
+        </Column>
+        <Inline css={{ paddingBottom: '$12' }}>
           {providedLiquidity && (
             <Button
               variant="secondary"

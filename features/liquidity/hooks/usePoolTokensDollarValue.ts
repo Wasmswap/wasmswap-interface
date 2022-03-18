@@ -1,8 +1,8 @@
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { calcPoolTokenValue } from 'util/conversion'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useCallback } from 'react'
+import { calcPoolTokenValue } from 'util/conversion'
 
 export const useGetPoolTokensDollarValue = () => {
   const tokenA = useBaseTokenInfo()

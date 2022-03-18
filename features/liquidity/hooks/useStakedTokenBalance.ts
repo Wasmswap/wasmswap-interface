@@ -1,8 +1,8 @@
-import { useRecoilValue } from 'recoil'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
 import { getStakedBalance } from 'services/staking'
+import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
 export const useStakedTokenBalance = ({ poolId, enabled = true }) => {

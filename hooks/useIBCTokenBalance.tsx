@@ -1,10 +1,11 @@
-import { useRecoilValue } from 'recoil'
-import { walletState } from '../state/atoms/walletAtoms'
-import { useQuery } from 'react-query'
-import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { convertMicroDenomToDenom } from 'util/conversion'
 import { SigningStargateClient } from '@cosmjs/stargate'
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
+import { convertMicroDenomToDenom } from 'util/conversion'
+
+import { walletState } from '../state/atoms/walletAtoms'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
 
 export const useIBCTokenBalance = (tokenSymbol) => {
   const { address: nativeWalletAddress } = useRecoilValue(walletState)

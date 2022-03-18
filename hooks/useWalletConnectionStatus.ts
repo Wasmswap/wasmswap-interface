@@ -1,7 +1,8 @@
 import { useRecoilValue } from 'recoil'
+
 import {
-  walletState,
   ibcWalletState,
+  walletState,
   WalletStatusType,
 } from '../state/atoms/walletAtoms'
 

@@ -1,10 +1,11 @@
-import { useQueries } from 'react-query'
-import { useBaseTokenInfo, useGetMultipleTokenInfo } from 'hooks/useTokenInfo'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 import { useChainInfo } from 'hooks/useChainInfo'
-import { tokenToTokenPriceQuery } from '../../../queries/tokenToTokenPriceQuery'
-import { TokenInfo } from '../../../hooks/useTokenList'
+import { useBaseTokenInfo, useGetMultipleTokenInfo } from 'hooks/useTokenInfo'
 import { useMemo } from 'react'
+import { useQueries } from 'react-query'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
+
+import { TokenInfo } from '../../../hooks/useTokenList'
+import { tokenToTokenPriceQuery } from '../../../queries/tokenToTokenPriceQuery'
 
 type UseTokenPairsPricesArgs = {
   tokenPairs: Array<{

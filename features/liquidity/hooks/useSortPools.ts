@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
 import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
-import { TokenInfo } from 'hooks/useTokenList'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { TokenInfo } from 'hooks/useTokenList'
+import { useMemo } from 'react'
 
 export type SortParameters = 'liquidity' | 'rewards' | 'alphabetical'
 export type SortDirections = 'asc' | 'desc'
@@ -42,7 +42,10 @@ export const useSortPools = ({
     /* split up liquidity in my liquidity pools and other pools buckets */
     liquidity.forEach((liquidityInfo, index) => {
       const poolsBucket =
-        liquidityInfo.myLiquidity.tokenAmount > 0 ? myPools : otherPools
+        liquidityInfo.myLiquidity.tokenAmount > 0 ||
+        liquidityInfo.myStakedLiquidity.tokenAmount > 0
+          ? myPools
+          : otherPools
 
       poolsBucket.push({
         tokenA,

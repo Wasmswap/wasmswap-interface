@@ -1,8 +1,8 @@
+import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { walletState } from 'state/atoms/walletAtoms'
 import { claimTokens } from 'services/staking'
-import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { walletState } from 'state/atoms/walletAtoms'
 
 type UseClaimTokensMutationArgs = {
   poolId: string

@@ -1,40 +1,41 @@
-import React, { useState } from 'react'
-import { media, styled } from 'components/theme'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { AppLayout } from 'components/Layout/AppLayout'
-import { Button } from 'components/Button'
-import { Spinner } from 'components/Spinner'
-import { ChevronIcon } from 'icons/Chevron'
-import { Divider } from 'components/Divider'
-import { NavigationSidebar } from 'components/Layout/NavigationSidebar'
-import { UnbondingLiquidityStatusList } from 'features/liquidity/components/UnbondingLiquidityStatusList'
-import { LiquidityHeader } from 'features/liquidity/components/LiquidityHeader'
-import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreakdown'
-import { LiquidityRewardsCard } from 'features/liquidity/components/LiquidityRewardsCard'
-import { BondLiquidityDialog } from 'features/liquidity'
 import {
+  AppLayout,
+  Button,
+  Divider,
+  IconWrapper,
+  NavigationSidebar,
+  Spinner,
+  Toast,
+} from 'components'
+import {
+  BondLiquidityDialog,
+  LiquidityBreakdown,
+  LiquidityHeader,
+  LiquidityRewardsCard,
   ManageBondedLiquidityCard,
-  ManagePoolDialog,
   ManageLiquidityCard,
+  ManagePoolDialog,
+  UnbondingLiquidityStatusList,
 } from 'features/liquidity'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useMedia } from 'hooks/useMedia'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { ChevronIcon, Error, UpRightArrow } from 'icons'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { media, styled } from 'theme'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
+
+import { useRefetchQueries } from '../../hooks/useRefetchQueries'
 import {
   useClaimRewards,
   usePendingRewards,
   useRewardsInfo,
 } from '../../hooks/useRewardsQueries'
-import { useRefetchQueries } from '../../hooks/useRefetchQueries'
-import { toast } from 'react-hot-toast'
-import { Toast } from '../../components/Toast'
-import { IconWrapper } from '../../components/IconWrapper'
-import { Error } from '../../icons/Error'
 import { formatSdkErrorMessage } from '../../util/formatSdkErrorMessage'
-import { UpRightArrow } from '../../icons/UpRightArrow'
 
 export default function Pool() {
   const {
@@ -194,7 +195,8 @@ export default function Pool() {
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
-                  stakedBalance={myStakedLiquidity.tokenAmount}
+                  myStakedLiquidity={myStakedLiquidity}
+                  supportsIncentives={supportsIncentives}
                   onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
@@ -205,17 +207,17 @@ export default function Pool() {
                 <ManageBondedLiquidityCard
                   onClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
-                  rewardsContracts={rewardsContracts}
                   stakedBalance={myStakedLiquidity}
                   rewardsInfo={rewardsInfo}
                   supportsIncentives={supportsIncentives}
                 />
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
-                  hasBondedLiquidity={myStakedLiquidity.tokenAmount > 0}
+                  hasBondedLiquidity={myStakedLiquidity?.tokenAmount > 0}
                   hasProvidedLiquidity={myLiquidity?.tokenAmount > 0}
                   pendingRewards={pendingRewards}
                   loading={isClaimingRewards}
+                  supportsIncentives={supportsIncentives}
                 />
               </StyledDivForCards>
             </>

@@ -1,17 +1,18 @@
-import { ComponentPropsWithoutRef, useMemo } from 'react'
-import { styled } from 'components/theme'
-import { TokenInfo } from 'hooks/useTokenList'
 import { Text } from 'components/Text'
-import { formatTokenBalance } from 'util/conversion'
-import { RejectIcon } from 'icons/Reject'
-import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { TokenInfo } from 'hooks/useTokenList'
+import { RejectIcon } from 'icons'
+import { ComponentPropsWithoutRef, useMemo } from 'react'
+import { styled } from 'theme'
+import { formatTokenBalance } from 'util/conversion'
+
+import { getPropsForInteractiveElement } from '../util/getPropsForInteractiveElement'
 import { ButtonForWrapper } from './Button'
-import { Spinner } from './Spinner'
-import { Inline } from './Inline'
 import { Divider } from './Divider'
 import { ImageForTokenLogo } from './ImageForTokenLogo'
-import { getPropsForInteractiveElement } from '../util/getPropsForInteractiveElement'
+import { Inline } from './Inline'
+import { Spinner } from './Spinner'
 
 const StyledDivForScrollContainer = styled('div', {
   overflowY: 'scroll',

@@ -1,14 +1,15 @@
-import { useRecoilValue } from 'recoil'
-import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
-import { CW20 } from '../services/cw20'
-import { unsafelyGetTokenInfo } from './useTokenInfo'
-import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
+import { convertMicroDenomToDenom } from 'util/conversion'
+
+import { CW20 } from '../services/cw20'
+import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
 import { IBCAssetInfo } from './useIbcAssetList'
-import { convertMicroDenomToDenom } from 'util/conversion'
+import { unsafelyGetTokenInfo } from './useTokenInfo'
 
 async function fetchTokenBalance({
   client,

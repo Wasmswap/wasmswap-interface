@@ -1,9 +1,10 @@
 import { useMutation } from 'react-query'
+import { useRecoilValue } from 'recoil'
+
 import { stakeTokens, unstakeTokens } from '../services/staking'
+import { walletState } from '../state/atoms/walletAtoms'
 import { useSwapInfo } from './useSwapInfo'
 import { useTokenInfoByPoolId } from './useTokenInfo'
-import { useRecoilValue } from 'recoil'
-import { walletState } from '../state/atoms/walletAtoms'
 
 type UseBondTokensArgs = {
   poolId: string

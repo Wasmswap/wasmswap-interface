@@ -1,9 +1,10 @@
-import { media, styled } from '../theme'
-import { NavigationSidebar } from './NavigationSidebar'
-import { FooterBar } from './FooterBar'
-import { APP_MAX_WIDTH } from 'util/constants'
-import { ExtensionSidebar } from './ExtensionSidebar'
 import { useMedia } from 'hooks/useMedia'
+import { APP_MAX_WIDTH } from 'util/constants'
+
+import { media, styled } from '../../theme'
+import { ExtensionSidebar } from './ExtensionSidebar'
+import { FooterBar } from './FooterBar'
+import { NavigationSidebar } from './NavigationSidebar'
 
 export const AppLayout = ({
   navigationSidebar = <NavigationSidebar />,

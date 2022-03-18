@@ -1,10 +1,11 @@
-import { styled } from 'components/theme'
-import { ButtonForWrapper, Button } from 'components/Button'
-import { Text } from 'components/Text'
 import {
   BasicNumberInput,
+  Button,
+  ButtonForWrapper,
+  Text,
   useTriggerInputFocus,
-} from 'components/BasicNumberInput'
+} from 'components'
+import { styled } from 'theme'
 import { formatTokenBalance } from 'util/conversion'
 
 type AmountInputProps = {

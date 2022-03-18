@@ -39,6 +39,7 @@ export const ManageBondedLiquidityCard = ({
     return (
       <BaseCardForEmptyState
         variant="secondary"
+        disabled={true}
         content={
           <Column align="center">
             <UnionIcon color="error" />
@@ -65,6 +66,7 @@ export const ManageBondedLiquidityCard = ({
     return (
       <BaseCardForEmptyState
         variant="ghost"
+        disabled={true}
         content={
           <Column align="center">
             <StepIcon step={1} />

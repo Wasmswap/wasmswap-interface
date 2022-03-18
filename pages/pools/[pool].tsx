@@ -19,8 +19,14 @@ import {
 } from 'features/liquidity'
 import { useMedia } from 'hooks/useMedia'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import {
+  useClaimRewards,
+  usePendingRewards,
+  useRewardsInfo,
+} from 'hooks/useRewardsQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { ChevronIcon, Error, UpRightArrow } from 'icons'
+import { ChevronIcon, Error, UpRightArrow, Valid } from 'icons'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -28,14 +34,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { media, styled } from 'theme'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
-
-import { useRefetchQueries } from '../../hooks/useRefetchQueries'
-import {
-  useClaimRewards,
-  usePendingRewards,
-  useRewardsInfo,
-} from '../../hooks/useRewardsQueries'
-import { formatSdkErrorMessage } from '../../util/formatSdkErrorMessage'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 export default function Pool() {
   const {
@@ -58,7 +57,8 @@ export default function Pool() {
     {
       totalLiquidity,
       myLiquidity,
-      myReserve,
+      myLiquidityReserve,
+      myStakedLiquidityReserve,
       tokenDollarValue,
       myStakedLiquidity,
       rewardsInfo,
@@ -91,6 +91,14 @@ export default function Pool() {
       swapAddress: tokenB?.swap_address,
       onSuccess() {
         refetchQueries()
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Valid />} color="valid" />}
+            title="Rewards were successfully claimed!"
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
       },
       onError(e) {
         console.error(e)
@@ -191,11 +199,12 @@ export default function Pool() {
             <>
               <StyledDivForCards>
                 <ManageLiquidityCard
-                  myReserve={myReserve}
+                  myLiquidityReserve={myLiquidityReserve}
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
                   myStakedLiquidity={myStakedLiquidity}
+                  myStakedLiquidityReserve={myStakedLiquidityReserve}
                   supportsIncentives={supportsIncentives}
                   onClick={() =>
                     setManageLiquidityDialogState({

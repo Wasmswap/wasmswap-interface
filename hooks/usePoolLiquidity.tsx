@@ -22,8 +22,9 @@ export type LiquidityType = {
 
 export type LiquidityInfoType = {
   reserve: [number, number]
-  myReserve: [number, number]
   totalLiquidity: LiquidityType
+  myLiquidityReserve: [number, number]
+  myStakedLiquidityReserve: [number, number]
   myLiquidity: LiquidityType
   myStakedLiquidity: LiquidityType
   /* pretty hacky - refactor when implementing decimals support */
@@ -103,14 +104,9 @@ export const useMultiplePoolsLiquidity = ({
   const queriesResult = useQueries(
     (serializedQueriesData.queriesData ?? []).map(
       ({ swap, poolInfo, rewardsContracts }) => ({
-        queryKey: [
-          'myLiquidity',
-          getPoolTokensDollarValueEnabled,
-          swap.lp_token_address,
-          serializedQueriesData.loadingRewardsContracts,
-          address,
-        ],
         async queryFn(): Promise<LiquidityInfoType> {
+          const tokenADecimals = tokenA.decimals
+
           const {
             lp_token_address,
             token1_reserve,
@@ -118,6 +114,7 @@ export const useMultiplePoolsLiquidity = ({
             lp_token_supply,
           } = swap
 
+          /* my liquidity math */
           const providedLiquidityBalance = await getLiquidityBalance({
             tokenAddress: lp_token_address,
             rpcEndpoint: chainInfo.rpc,
@@ -130,7 +127,7 @@ export const useMultiplePoolsLiquidity = ({
             protectAgainstNaN(token2_reserve),
           ]
 
-          const myReserve: [number, number] = [
+          const myLiquidityReserve: [number, number] = [
             protectAgainstNaN(
               reserve[0] * (providedLiquidityBalance / lp_token_supply)
             ),
@@ -138,8 +135,6 @@ export const useMultiplePoolsLiquidity = ({
               reserve[1] * (providedLiquidityBalance / lp_token_supply)
             ),
           ]
-
-          const tokenADecimals = tokenA.decimals
 
           const totalLiquidity = {
             tokenAmount: lp_token_supply,
@@ -152,13 +147,13 @@ export const useMultiplePoolsLiquidity = ({
           const myLiquidity = {
             tokenAmount: providedLiquidityBalance,
             dollarValue:
-              convertMicroDenomToDenom(myReserve[0], tokenADecimals) *
+              convertMicroDenomToDenom(myLiquidityReserve[0], tokenADecimals) *
               tokenADollarPrice *
               2,
           }
 
+          /* staked liquidity math */
           const shouldQueryStakedBalance = address && poolInfo.staking_address
-
           const stakedBalanceInMicroDenom = shouldQueryStakedBalance
             ? await getStakedBalance(address, poolInfo.staking_address, client)
             : undefined
@@ -170,6 +165,15 @@ export const useMultiplePoolsLiquidity = ({
               )
             : undefined
 
+          const myStakedLiquidityReserve: [number, number] = [
+            protectAgainstNaN(
+              reserve[0] * (stakedBalanceInMicroDenom / lp_token_supply)
+            ),
+            protectAgainstNaN(
+              reserve[1] * (stakedBalanceInMicroDenom / lp_token_supply)
+            ),
+          ]
+
           const myStakedLiquidity = {
             tokenAmount: stakedBalance || 0,
             dollarValue: stakedBalance
@@ -177,6 +181,7 @@ export const useMultiplePoolsLiquidity = ({
               : 0,
           }
 
+          /* rewards math */
           const rewardsInfo = {
             totalStakedInMicroDenom: undefined,
             totalStakedDollarValue: undefined,
@@ -210,14 +215,22 @@ export const useMultiplePoolsLiquidity = ({
 
           return {
             reserve,
-            myReserve,
             totalLiquidity,
+            myLiquidityReserve,
             myStakedLiquidity,
+            myStakedLiquidityReserve,
             myLiquidity,
             rewardsInfo,
             tokenDollarValue: tokenADollarPrice,
           }
         },
+        queryKey: [
+          'myLiquidity',
+          getPoolTokensDollarValueEnabled,
+          swap.lp_token_address,
+          serializedQueriesData.loadingRewardsContracts,
+          address,
+        ],
         enabled: Boolean(chainInfo?.rpc && tokenA),
         refetchOnMount: 'always' as const,
         refetchInterval: refetchInBackground

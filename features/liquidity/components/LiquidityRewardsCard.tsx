@@ -40,6 +40,7 @@ export const LiquidityRewardsCard = ({
     return (
       <BaseCardForEmptyState
         variant="secondary"
+        disabled={true}
         content={
           <Column align="center">
             <UnionIcon color="error" />
@@ -66,6 +67,7 @@ export const LiquidityRewardsCard = ({
     return (
       <BaseCardForEmptyState
         variant="ghost"
+        disabled={true}
         content={
           <Column align="center">
             <StepIcon step={hasProvidedLiquidity ? 1 : 2} />

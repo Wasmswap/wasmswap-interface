@@ -6,6 +6,8 @@ const StyledDivForCardWrapper = styled('div', {
   $$backgroundColor: '$colors$white',
   $$backgroundColorOnHover: '$colors$white',
   $$backgroundColorOnActive: '$colors$white',
+  $$boxShadowColor: '$colors$dark0',
+  $$boxShadowColorOnFocus: '$borderColors$default',
 
   position: 'relative',
   zIndex: '$1',
@@ -24,7 +26,7 @@ const StyledDivForCardWrapper = styled('div', {
 
   boxShadow: '0 0 0 0 $$boxShadowColor',
   '&:focus': {
-    boxShadow: '0 0 0 2px $borderColors$default',
+    boxShadow: '0 0 0 2px $$boxShadowColorOnFocus',
   },
 
   variants: {
@@ -75,7 +77,9 @@ const StyledDivForCardWrapper = styled('div', {
     },
 
     disabled: {
-      true: {},
+      true: {
+        $$boxShadowColorOnFocus: '$colors$dark0',
+      },
     },
   },
 

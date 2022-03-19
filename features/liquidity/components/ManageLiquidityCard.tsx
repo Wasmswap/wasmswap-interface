@@ -20,7 +20,10 @@ import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 
 type ManageLiquidityCardProps = Pick<
   LiquidityInfoType,
-  'myReserve' | 'tokenDollarValue' | 'myStakedLiquidity'
+  | 'myLiquidityReserve'
+  | 'myStakedLiquidityReserve'
+  | 'tokenDollarValue'
+  | 'myStakedLiquidity'
 > & {
   onClick: () => void
   tokenASymbol: string
@@ -30,7 +33,8 @@ type ManageLiquidityCardProps = Pick<
 
 export const ManageLiquidityCard = ({
   onClick,
-  myReserve,
+  myLiquidityReserve,
+  myStakedLiquidityReserve,
   tokenDollarValue,
   tokenASymbol,
   tokenBSymbol,
@@ -42,20 +46,21 @@ export const ManageLiquidityCard = ({
 
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const providedLiquidity = myReserve?.[0] > 0
   const bondedLiquidity = myStakedLiquidity?.tokenAmount > 0
+  const providedLiquidity = myLiquidityReserve?.[0] > 0 || bondedLiquidity
 
   const tokenAReserve = convertMicroDenomToDenom(
-    myReserve?.[0],
+    myLiquidityReserve?.[0] + myStakedLiquidityReserve?.[0],
     tokenA.decimals
   )
+
   const tokenBReserve = convertMicroDenomToDenom(
-    myReserve?.[1],
+    myLiquidityReserve?.[1] + myStakedLiquidityReserve?.[1],
     tokenB.decimals
   )
 
   const availableLiquidityInDollarValue =
-    convertMicroDenomToDenom(myReserve?.[0], tokenA.decimals) *
+    convertMicroDenomToDenom(myLiquidityReserve?.[0], tokenA.decimals) *
     tokenDollarValue *
     2
 

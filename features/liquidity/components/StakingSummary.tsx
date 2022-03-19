@@ -32,6 +32,10 @@ export const StakingSummary = ({
 
   const refForInput = useRef<HTMLInputElement>()
 
+  console.log({
+    liquidityAmount,
+  })
+
   const [tokenAAmount] = usePoolPairTokenAmount({
     tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 0,
@@ -55,7 +59,11 @@ export const StakingSummary = ({
   })
 
   const handleChangeDollarValue = (amount: number) => {
-    const multiplier = liquidityAmount / Number(liquidityInDollarValue)
+    const multiplier =
+      liquidityInDollarValue > 0
+        ? liquidityAmount / Number(liquidityInDollarValue)
+        : 1
+
     const liquidityValue = amount * multiplier
 
     onChangeLiquidity(protectAgainstNaN(liquidityValue))

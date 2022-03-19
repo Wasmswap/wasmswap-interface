@@ -33,9 +33,10 @@ export const usePoolDialogController = ({
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
 
-  const [{ myLiquidity, myReserve, reserve } = {} as any] = usePoolLiquidity({
-    poolId: tokenB.pool_id,
-  })
+  const [{ myLiquidity, myLiquidityReserve, reserve } = {} as any] =
+    usePoolLiquidity({
+      poolId: tokenB.pool_id,
+    })
 
   function calculateMaxApplicableBalances() {
     // Decimal converted reserves
@@ -77,11 +78,11 @@ export const usePoolDialogController = ({
     tokenB: maxApplicableBalanceForTokenB,
   } = calculateMaxApplicableBalances()
 
-  const tokenAReserve = myReserve?.[0]
-    ? convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
+  const tokenAReserve = myLiquidityReserve?.[0]
+    ? convertMicroDenomToDenom(myLiquidityReserve[0], tokenA.decimals)
     : 0
-  const tokenBReserve = myReserve?.[1]
-    ? convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
+  const tokenBReserve = myLiquidityReserve?.[1]
+    ? convertMicroDenomToDenom(myLiquidityReserve[1], tokenB.decimals)
     : 0
 
   const { isLoading, mutate: mutateAddLiquidity } = useMutateLiquidity({
@@ -97,7 +98,7 @@ export const usePoolDialogController = ({
   return {
     state: {
       myLiquidity,
-      myReserve,
+      myLiquidityReserve,
       tokenAReserve,
       tokenBReserve,
       isLoading,

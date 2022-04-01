@@ -29,9 +29,9 @@ const StyledButton = styled('button', {
   justifyContent: 'center',
 
   color: '$$textColor',
-  fontSize: '$6',
-  lineHeight: '$3',
-  fontWeight: '$normal',
+  fontSize: '$fontSizes$product$link',
+  lineHeight: '$lineHeight$product$link',
+  fontWeight: '$fontWeight$product$link',
   borderRadius: '$1',
 
   backgroundColor: '$$backgroundColor',
@@ -98,7 +98,8 @@ const StyledButton = styled('button', {
         $$borderColorOnFocus: '$borderColors$selected',
       },
       menu: {
-        fontSize: '$4',
+        fontSize: '$fontSizes$product$body',
+        lineHeight: '$lineHeight$product$body',
 
         $$textColor: '$textColors$body',
         $$iconColor: '$iconColors$primary',

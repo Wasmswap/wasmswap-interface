@@ -1,6 +1,8 @@
 import { createStitches, createTheme } from '@stitches/react'
 
 import { darkThemeColorTokens, lightThemeColorTokens } from './colors'
+import { typography } from './typography'
+import { createFontVariants } from './utils/createFontVariants'
 import { createSpacing } from './utils/createSpacing'
 
 export const space = createSpacing({
@@ -9,8 +11,12 @@ export const space = createSpacing({
   baseSize: 16,
 })
 
+export const fontVariants = createFontVariants(typography)
+
 /* build the base theme */
 const baseTheme = {
+  ...fontVariants,
+
   space,
 
   fonts: {
@@ -18,27 +24,7 @@ const baseTheme = {
       '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     mono: '"JetBrains Mono", monospace, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
   },
-  fontSizes: {
-    1: '1.625rem',
-    2: '1.25rem',
-    3: '1rem',
-    4: '0.9375rem',
-    5: '0.875rem',
-    6: '0.8125rem',
-    7: '0.75rem',
-  },
-  fontWeights: {
-    bold: 700,
-    medium: 600,
-    normal: 500,
-    light: 400,
-  },
-  lineHeights: {
-    1: '1.75rem',
-    2: '1.5rem',
-    3: '1.25rem',
-    4: '1rem',
-  },
+
   letterSpacings: {},
   sizes: {},
   borderWidths: {},
@@ -55,6 +41,7 @@ const baseTheme = {
     2: 1,
     3: 2,
   },
+
   transitions: {},
 
   breakpoints: {

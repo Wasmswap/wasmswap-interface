@@ -86,7 +86,7 @@ export const PoolCard = ({
           <Inline justifyContent="space-between" css={{ padding: '$14 0' }}>
             <StyledDivForStatsColumn align="left">
               <Text variant="legend" color="secondary" align="left">
-                Staked
+                Bonded
               </Text>
               <Text variant="primary">
                 $

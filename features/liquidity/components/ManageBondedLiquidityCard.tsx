@@ -144,8 +144,8 @@ export const ManageBondedLiquidityCard = ({
               disabled={!supportsIncentives}
             >
               {supportsIncentives
-                ? 'Stake liquidity'
-                : 'Does not support staking'}
+                ? 'Bond liquidity'
+                : 'Does not support bonding'}
             </Button>
           )}
         </Inline>

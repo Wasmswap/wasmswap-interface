@@ -92,7 +92,7 @@ export const ManageLiquidityCard = ({
             includeCommaSeparation: true,
           })}{' '}
           available
-          {supportsIncentives ? ' to stake' : ''}
+          {supportsIncentives ? ' to bond' : ''}
         </Text>
       </CardContent>
       <Divider offsetTop="$14" offsetBottom="$12" />

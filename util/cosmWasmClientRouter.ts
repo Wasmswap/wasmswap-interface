@@ -8,14 +8,9 @@ class CosmWasmClientRouter {
   clients: CosmWasmClients = {}
 
   async connect(rpcEndpoint) {
-    if (this.getClientInstance(rpcEndpoint)) {
-      return this.getClientInstance(rpcEndpoint)
+    if (!this.getClientInstance(rpcEndpoint)) {
+      this.setClientInstance(rpcEndpoint, CosmWasmClient.connect(rpcEndpoint))
     }
-
-    this.setClientInstance(
-      rpcEndpoint,
-      await CosmWasmClient.connect(rpcEndpoint)
-    )
 
     return this.getClientInstance(rpcEndpoint)
   }

@@ -1,18 +1,19 @@
-import {
-  Button,
-  ButtonForWrapper,
-  IconWrapper,
-  ImageForTokenLogo,
-  Spinner,
-  Text,
-} from 'components'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { Chevron, Union } from 'icons'
+import {
+  Button,
+  ButtonForWrapper,
+  Chevron,
+  formatTokenBalance,
+  IconWrapper,
+  ImageForTokenLogo,
+  Spinner,
+  styled,
+  Text,
+  Union,
+} from 'junoblocks'
 import { useState } from 'react'
-import { styled } from 'theme'
-import { formatTokenBalance } from 'util/conversion'
 
 import { TokenOptionsList } from './TokenOptionsList'
 
@@ -74,7 +75,7 @@ export const AssetSelector = ({
           onClick={handleToggleList}
           icon={
             <IconWrapper
-              size="16px"
+              size="medium"
               rotation="-90deg"
               color="tertiary"
               icon={

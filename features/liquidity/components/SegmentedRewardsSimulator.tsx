@@ -1,9 +1,10 @@
-import { SegmentedControl, Text } from 'components'
-import { useRef, useState } from 'react'
 import {
   dollarValueFormatterWithDecimals,
   protectAgainstNaN,
-} from 'util/conversion'
+  SegmentedControl,
+  Text,
+} from 'junoblocks'
+import { useRef, useState } from 'react'
 
 export const SegmentedRewardsSimulator = ({
   interestOnStakedBalance,

@@ -1,12 +1,16 @@
-import { Button, ImageForTokenLogo, Inline, Text, Tooltip } from 'components'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { InfoIcon } from 'icons'
 import {
+  Button,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
+  ImageForTokenLogo,
+  InfoIcon,
+  Inline,
   protectAgainstNaN,
-} from 'util/conversion'
+  Text,
+  Tooltip,
+} from 'junoblocks'
 
 type UnderlyingAssetRowProps = {
   tokenSymbol?: string

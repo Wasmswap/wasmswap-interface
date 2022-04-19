@@ -1,5 +1,8 @@
 import { PlusIcon } from '@heroicons/react/solid'
 import { usePrevious } from '@reach/utils'
+import { LiquidityInput } from 'components'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
   Button,
   Dialog,
@@ -7,22 +10,17 @@ import {
   DialogContent,
   DialogDivider,
   DialogHeader,
-  IconWrapper,
-  ImageForTokenLogo,
-  LiquidityInput,
-  Spinner,
-  Text,
-} from 'components'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { useEffect, useRef, useState } from 'react'
-import { styled } from 'theme'
-import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
+  IconWrapper,
+  ImageForTokenLogo,
   protectAgainstNaN,
-} from 'util/conversion'
+  Spinner,
+  styled,
+  Text,
+} from 'junoblocks'
+import { useEffect, useRef, useState } from 'react'
 
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'

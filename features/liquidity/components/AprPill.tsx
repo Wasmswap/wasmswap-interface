@@ -1,6 +1,4 @@
-import { Inline, Text } from 'components'
-import { ArrowUpIcon } from 'icons'
-import { styled } from 'theme'
+import { ArrowUpIcon, Inline, styled, Text } from 'junoblocks'
 
 export const AprPill = ({ value, ...props }) => (
   <StyledDivForPill {...props}>

@@ -1,12 +1,16 @@
-import { Column, Divider, ImageForTokenLogo, Inline, Text } from 'components'
 import { useTokenToTokenPrice } from 'features/swap'
-import React from 'react'
-import { __POOL_STAKING_ENABLED__ } from 'util/constants'
 import {
+  Column,
+  Divider,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
-} from 'util/conversion'
+  ImageForTokenLogo,
+  Inline,
+  Text,
+} from 'junoblocks'
+import React from 'react'
+import { __POOL_STAKING_ENABLED__ } from 'util/constants'
 
 import { usePoolPairTokenAmount } from '../hooks'
 import { AprPill } from './AprPill'

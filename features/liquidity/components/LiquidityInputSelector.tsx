@@ -1,8 +1,11 @@
-import { calculateCharactersLength, Text } from 'components'
-import { useAmountChangeController } from 'hooks/useAmountChangeController'
+import {
+  calculateCharactersLength,
+  dollarValueFormatter,
+  styled,
+  Text,
+  useAmountChangeController,
+} from 'junoblocks'
 import { MouseEvent, Ref, useRef, useState } from 'react'
-import { styled } from 'theme'
-import { dollarValueFormatter } from 'util/conversion'
 
 type LiquiditySelectorProps = {
   inputRef?: Ref<HTMLInputElement>

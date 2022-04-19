@@ -1,5 +1,5 @@
-import { usePersistance } from 'hooks/usePersistance'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { usePersistance } from 'junoblocks'
 import { protectAgainstNaN } from 'util/conversion'
 
 import { usePriceForOneToken } from './usePriceForOneToken'

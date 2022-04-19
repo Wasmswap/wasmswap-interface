@@ -1,14 +1,14 @@
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   ButtonForWrapper,
+  Chevron,
+  formatTokenBalance,
   IconWrapper,
   ImageForTokenLogo,
+  styled,
   Text,
-} from 'components'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import { Chevron } from 'icons'
+} from 'junoblocks'
 import React from 'react'
-import { styled } from 'theme'
-import { formatTokenBalance } from 'util/conversion'
 import { getPropsForInteractiveElement } from 'util/getPropsForInteractiveElement'
 
 type SelectorToggleProps = {
@@ -42,7 +42,7 @@ export const SelectorToggle = ({
         <>
           <Text variant="body">Select a token</Text>
           <IconWrapper
-            size="24px"
+            size="large"
             rotation={tokenSymbol ? '90deg' : '-90deg'}
             color="tertiary"
             icon={<Chevron />}
@@ -59,7 +59,7 @@ export const SelectorToggle = ({
             </Text>
           </div>
           <IconWrapper
-            size="16px"
+            size="medium"
             rotation="-90deg"
             color="tertiary"
             icon={<Chevron />}

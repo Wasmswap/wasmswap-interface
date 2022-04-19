@@ -1,12 +1,17 @@
-import { BasicNumberInput, ImageForTokenLogo, Text } from 'components'
 import {
   usePoolPairTokenAmount,
   usePoolTokensDollarValue,
 } from 'features/liquidity/hooks'
 import { TokenInfo } from 'hooks/useTokenList'
+import {
+  BasicNumberInput,
+  formatTokenBalance,
+  ImageForTokenLogo,
+  protectAgainstNaN,
+  styled,
+  Text,
+} from 'junoblocks'
 import { useRef, useState } from 'react'
-import { styled } from 'theme'
-import { formatTokenBalance, protectAgainstNaN } from 'util/conversion'
 
 type StakingSummaryProps = {
   label: string

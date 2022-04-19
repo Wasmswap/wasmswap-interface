@@ -1,18 +1,20 @@
-import { Text } from 'components/Text'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { TokenInfo } from 'hooks/useTokenList'
-import { RejectIcon } from 'icons'
+import {
+  ButtonForWrapper,
+  Divider,
+  formatTokenBalance,
+  ImageForTokenLogo,
+  Inline,
+  RejectIcon,
+  Spinner,
+  styled,
+  Text,
+} from 'junoblocks'
 import { ComponentPropsWithoutRef, useMemo } from 'react'
-import { styled } from 'theme'
-import { formatTokenBalance } from 'util/conversion'
 
 import { getPropsForInteractiveElement } from '../util/getPropsForInteractiveElement'
-import { ButtonForWrapper } from './Button'
-import { Divider } from './Divider'
-import { ImageForTokenLogo } from './ImageForTokenLogo'
-import { Inline } from './Inline'
-import { Spinner } from './Spinner'
 
 const StyledDivForScrollContainer = styled('div', {
   overflowY: 'scroll',

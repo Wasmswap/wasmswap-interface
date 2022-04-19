@@ -1,20 +1,18 @@
+import { LiquidityType } from 'hooks/usePoolLiquidity'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Card,
   CardContent,
   Column,
   Divider,
-  ImageForTokenLogo,
-  Inline,
-  Text,
-} from 'components'
-import { LiquidityType } from 'hooks/usePoolLiquidity'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import Link from 'next/link'
-import { styled } from 'theme'
-import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-} from 'util/conversion'
+  ImageForTokenLogo,
+  Inline,
+  styled,
+  Text,
+} from 'junoblocks'
+import Link from 'next/link'
 
 type PoolCardProps = {
   poolId: string

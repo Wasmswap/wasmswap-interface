@@ -1,8 +1,5 @@
-import { Dialog, DialogContent, DialogHeader } from 'components'
+import { Button, Dialog, DialogContent, DialogHeader, Text } from 'junoblocks'
 import { useState } from 'react'
-
-import { Button } from './Button'
-import { Text } from './Text'
 
 export const TestnetDialog = () => {
   const [isShowing, setShowing] = useState(true)

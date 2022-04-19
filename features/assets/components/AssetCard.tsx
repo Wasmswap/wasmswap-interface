@@ -1,11 +1,16 @@
-import { styled } from '@stitches/react'
-import { Button, IconWrapper, ImageForTokenLogo, Text } from 'components'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { ArrowUp } from 'icons'
+import {
+  ArrowUp,
+  Button,
+  dollarValueFormatterWithDecimals,
+  IconWrapper,
+  ImageForTokenLogo,
+  styled,
+  Text,
+} from 'junoblocks'
 import { HTMLProps } from 'react'
 import { __TRANSFERS_ENABLED__ } from 'util/constants'
-import { dollarValueFormatterWithDecimals } from 'util/conversion'
 
 export enum AssetCardState {
   fetching = 'FETCHING',

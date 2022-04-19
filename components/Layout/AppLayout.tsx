@@ -1,7 +1,6 @@
-import { useMedia } from 'hooks/useMedia'
+import { media, styled, useMedia } from 'junoblocks'
 import { APP_MAX_WIDTH } from 'util/constants'
 
-import { media, styled } from '../../theme'
 import { ExtensionSidebar } from './ExtensionSidebar'
 import { FooterBar } from './FooterBar'
 import { NavigationSidebar } from './NavigationSidebar'

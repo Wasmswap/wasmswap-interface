@@ -1,11 +1,13 @@
+import {
+  BasicNumberInput,
+  formatTokenBalance,
+  ImageForTokenLogo,
+  styled,
+  Text,
+} from 'junoblocks'
 import React, { FC, useRef, useState } from 'react'
-import { styled } from 'theme'
 
 import { useTokenInfo } from '../../hooks/useTokenInfo'
-import { formatTokenBalance } from '../../util/conversion'
-import { ImageForTokenLogo } from '../ImageForTokenLogo'
-import { Text } from '../Text'
-import { BasicNumberInput } from './BasicNumberInput'
 
 type LiquidityInputProps = {
   tokenSymbol: string

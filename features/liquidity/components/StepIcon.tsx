@@ -1,4 +1,4 @@
-import { Inline, Text } from 'components'
+import { Inline, Text } from 'junoblocks'
 
 export const StepIcon = ({ step }) => {
   return (

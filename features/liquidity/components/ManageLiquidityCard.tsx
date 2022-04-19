@@ -1,20 +1,18 @@
+import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Button,
   Card,
   CardContent,
   Column,
-  Divider,
-  Inline,
-  Text,
-} from 'components'
-import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
-import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import {
   convertMicroDenomToDenom,
+  Divider,
   dollarValueFormatterWithDecimals,
+  Inline,
   protectAgainstNaN,
-} from 'util/conversion'
+  Text,
+  useSubscribeInteractions,
+} from 'junoblocks'
 
 import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 

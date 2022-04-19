@@ -1,10 +1,10 @@
-import { Text } from 'components'
 import { usePriceForOneToken, useTxRates } from 'features/swap'
-import { styled } from 'theme'
 import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
-} from 'util/conversion'
+  styled,
+  Text,
+} from 'junoblocks'
 
 export const TokenToTokenRates = ({
   tokenASymbol,

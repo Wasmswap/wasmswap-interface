@@ -1,12 +1,16 @@
-import { Button, Column, IconWrapper, Inline, Text } from 'components'
-import { Exchange } from 'icons'
+import {
+  Button,
+  Column,
+  dollarValueFormatterWithDecimals,
+  Exchange,
+  formatTokenBalance,
+  IconWrapper,
+  Inline,
+  styled,
+  Text,
+} from 'junoblocks'
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { styled } from 'theme'
-import {
-  dollarValueFormatterWithDecimals,
-  formatTokenBalance,
-} from 'util/conversion'
 
 import { useTxRates } from '../hooks'
 import { tokenSwapAtom } from '../swapAtoms'

@@ -1,4 +1,4 @@
-import { usePersistance } from 'hooks/usePersistance'
+import { usePersistance } from 'junoblocks'
 
 import { useTokenToTokenPrice } from './useTokenToTokenPrice'
 

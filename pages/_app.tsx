@@ -4,6 +4,12 @@ import 'focus-visible'
 
 import { ErrorBoundary } from 'components/ErrorBoundary'
 import { TestnetDialog } from 'components/TestnetDialog'
+import {
+  globalCss,
+  styled,
+  useSubscribeDefaultAppTheme,
+  useThemeClassName,
+} from 'junoblocks'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
@@ -11,12 +17,6 @@ import { QueryClientProvider } from 'react-query'
 import { RecoilRoot } from 'recoil'
 import { queryClient } from 'services/queryClient'
 
-import {
-  globalCss,
-  styled,
-  useSubscribeDefaultAppTheme,
-  useThemeClassName,
-} from '../theme'
 import { __TEST_MODE__ } from '../util/constants'
 
 const applyGlobalStyles = globalCss({

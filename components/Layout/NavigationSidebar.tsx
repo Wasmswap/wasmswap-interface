@@ -18,7 +18,6 @@ import {
   styled,
   Telegram,
   Text,
-  ThemeTokens,
   ToggleSwitch,
   Twitter,
   UnionIcon,
@@ -233,7 +232,7 @@ export function NavigationSidebar({
                 id="theme-toggle"
                 name="dark-theme"
                 onChange={themeController.setDarkTheme}
-                checked={themeController.theme === ThemeTokens.dark}
+                checked={themeController.theme.name === 'dark'}
                 optionLabels={['Dark theme', 'Light theme']}
               />
             }

@@ -76,9 +76,9 @@ export type RewardsInfoResponse = {
     reward_token: Denom
   }
   reward: {
-    periodFinish: number
-    rewardRate: number
-    rewardDuration: number
+    period_finish: number
+    reward_rate: number
+    reward_duration: number
   }
 }
 

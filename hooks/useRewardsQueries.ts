@@ -111,7 +111,7 @@ export const useMultipleRewardsInfo = ({
               })
 
               const rewardRatePerBlockInTokens = convertMicroDenomToDenom(
-                contractInfo.reward.rewardRate,
+                contractInfo.reward.reward_rate,
                 tokenInfo.decimals
               )
 

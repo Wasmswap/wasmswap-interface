@@ -41,11 +41,10 @@ export const useSortPools = ({
 
     /* split up liquidity in my liquidity pools and other pools buckets */
     liquidity.forEach((liquidityInfo, index) => {
-      const poolsBucket =
-        liquidityInfo.myLiquidity.tokenAmount > 0 ||
-        liquidityInfo.myStakedLiquidity.tokenAmount > 0
-          ? myPools
-          : otherPools
+      const providedLiquidityAmount =
+        liquidityInfo.myLiquidity.tokenAmount +
+        liquidityInfo.myStakedLiquidity.tokenAmount
+      const poolsBucket = providedLiquidityAmount > 0 ? myPools : otherPools
 
       poolsBucket.push({
         tokenA,
@@ -67,35 +66,36 @@ function sortPools(
   sortBy?: UseSortPoolsArgs['sortBy']
 ) {
   if (!sortBy) return pools
-  return pools.sort((poolA, poolB) => {
-    let comparisonResult = 0
-
+  const result = pools.sort((poolA, poolB) => {
     /* sort by total liquidity */
     if (sortBy.parameter === 'liquidity') {
-      if (
-        poolA.liquidityInfo.totalLiquidity.tokenAmount >
-        poolB.liquidityInfo.totalLiquidity.tokenAmount
-      ) {
-        comparisonResult = 1
-      } else if (
-        poolA.liquidityInfo.totalLiquidity.tokenAmount <
-        poolB.liquidityInfo.totalLiquidity.tokenAmount
-      ) {
-        comparisonResult = -1
+      const poolATotalLiquidity = poolA.liquidityInfo.totalLiquidity.dollarValue
+      const poolBTotalLiquidity = poolB.liquidityInfo.totalLiquidity.dollarValue
+
+      if (poolATotalLiquidity > poolBTotalLiquidity) {
+        return 1
+      } else if (poolATotalLiquidity < poolBTotalLiquidity) {
+        return -1
       }
     }
 
     /* sort by tokenB names */
     if (sortBy.parameter === 'alphabetical') {
       if (poolA.tokenB.symbol > poolB.tokenB.symbol) {
-        comparisonResult = 1
+        return 1
       } else if (poolA.tokenB.symbol < poolB.tokenB.symbol) {
-        comparisonResult = -1
+        return -1
       }
     }
 
-    return comparisonResult * (sortBy.direction === 'asc' ? 1 : -1)
+    return 0
   })
+
+  if (sortBy.direction === 'desc') {
+    return result.reverse()
+  }
+
+  return result
 }
 
 function filterPools(

@@ -24,6 +24,7 @@ export const ExtensionSidebar = () => {
       >
         Report an issue
       </Button>
+      <StyledSpringBottom src="/springs-bg.png" />
     </StyledDivForWrapper>
   )
 }
@@ -44,4 +45,15 @@ const StyledDivForTitleWrapper = styled('div', {
   display: 'flex',
   alignItems: 'center',
   columnGap: '$4',
+})
+
+const StyledSpringBottom = styled('img', {
+  position: 'absolute',
+  right: 0,
+  bottom: 0,
+  width: '125%',
+  maxWidth: '500px',
+  zIndex: '$1',
+  userSelect: 'none',
+  userDrag: 'none',
 })

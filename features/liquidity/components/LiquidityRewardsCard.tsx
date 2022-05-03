@@ -94,7 +94,7 @@ export const LiquidityRewardsCard = ({
           <Inline gap={3}>
             <ArrowUpIcon color="brand" rotation="-90deg" />
             <Text align="center" variant="link" color="brand">
-              Then, stake your liquidity
+              Then, bond your liquidity
             </Text>
           </Inline>
         }

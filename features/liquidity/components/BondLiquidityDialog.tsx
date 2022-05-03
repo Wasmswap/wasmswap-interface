@@ -211,15 +211,15 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       <DialogHeader>
         {canManageStaking ? (
           <Text variant="header" css={{ paddingBottom: '$8' }}>
-            Manage Staking
+            Manage Bonding
           </Text>
         ) : (
           <>
             <Text variant="header" css={{ paddingBottom: '$2' }}>
-              Staking tokens
+              Bonding tokens
             </Text>
             <Text variant="body" css={{ paddingBottom: '$10' }}>
-              Choose how many tokens to stake
+              Choose how many tokens to bond
             </Text>
           </>
         )}
@@ -252,7 +252,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
-          Max available to {dialogState === 'stake' ? 'stake' : 'unstake'} is $
+          Max available to {dialogState === 'stake' ? 'bond' : 'unbond'} is $
           {typeof maxDollarValueLiquidity === 'number' &&
             dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
               includeCommaSeparation: true,
@@ -267,7 +267,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       <Divider />
       <DialogContent>
         <StakingSummary
-          label={dialogState === 'stake' ? 'Staking' : 'Unstaking'}
+          label={dialogState === 'stake' ? 'Bonding' : 'Unbonding'}
           poolId={poolId}
           tokenA={tokenA}
           tokenB={tokenB}
@@ -287,13 +287,13 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
           <Text variant="secondary" css={{ paddingBottom: '$12' }}>
             {dialogState === 'stake'
-              ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous stake."
-              : `Because of the 14 days unstaking period, you will be able to redeem your $${
+              ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous unbond."
+              : `Because of the 14 days unbonding period, you will be able to redeem your $${
                   typeof liquidityDollarAmount === 'number' &&
                   dollarValueFormatter(liquidityDollarAmount, {
                     includeCommaSeparation: true,
                   })
-                } worth of staked token on ${dayjs()
+                } worth of bonded token on ${dayjs()
                   .add(14, 'day')
                   .format('MMM D')}.`}
           </Text>
@@ -311,9 +311,9 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           {isLoading ? (
             <Spinner instant />
           ) : dialogState === 'stake' ? (
-            'Stake'
+            'Bond'
           ) : (
-            'Unstake'
+            'Unbond'
           )}
         </Button>
       </DialogButtons>

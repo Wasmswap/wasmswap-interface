@@ -1,5 +1,4 @@
-import { Inline, Text } from 'components'
-import { SearchIcon } from 'icons'
+import { Inline, SearchIcon, Text } from 'junoblocks'
 import React, { HTMLProps, useEffect, useRef } from 'react'
 
 type QueryInputProps = {

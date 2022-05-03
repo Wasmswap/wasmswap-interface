@@ -1,4 +1,9 @@
 import { useUpdateEffect } from '@reach/utils'
+import dayjs from 'dayjs'
+import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
   Button,
   Column,
@@ -7,23 +12,18 @@ import {
   DialogContent,
   DialogHeader,
   Divider,
+  dollarValueFormatter,
+  dollarValueFormatterWithDecimals,
+  Error,
   IconWrapper,
   Spinner,
   Text,
   Toast,
-} from 'components'
-import dayjs from 'dayjs'
-import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
-import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Error, UpRightArrow, Valid } from 'icons'
+  UpRightArrow,
+  Valid,
+} from 'junoblocks'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import {
-  dollarValueFormatter,
-  dollarValueFormatterWithDecimals,
-} from 'util/conversion'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'

@@ -1,8 +1,6 @@
-import { Text } from 'components'
-import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
 import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
+import { styled, Text, useDelayedAppearanceFlag } from 'junoblocks'
 import { walletState } from 'state/atoms/walletAtoms'
-import { styled } from 'theme'
 import { __TRANSFERS_ENABLED__ } from 'util/constants'
 
 import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'

@@ -1,20 +1,19 @@
+import { LiquidityType } from 'hooks/usePoolLiquidity'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Card,
   CardContent,
   Column,
   Divider,
-  ImageForTokenLogo,
-  Inline,
-  Text,
-} from 'components'
-import { LiquidityType } from 'hooks/usePoolLiquidity'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import Link from 'next/link'
-import { styled } from 'theme'
-import {
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-} from 'util/conversion'
+  ImageForTokenLogo,
+  Inline,
+  styled,
+  Text,
+} from 'junoblocks'
+import Link from 'next/link'
+import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
 
 type PoolCardProps = {
   poolId: string
@@ -24,6 +23,19 @@ type PoolCardProps = {
   myLiquidity: LiquidityType
   myStakedLiquidity: LiquidityType
   rewardsInfo?: any
+}
+
+const compactNumberFormatter = Intl.NumberFormat('en', {
+  notation: 'compact',
+})
+
+const formatToCompactDollarValue = (value: number) => {
+  if (value < 10000) {
+    return dollarValueFormatterWithDecimals(value, {
+      includeCommaSeparation: true,
+    })
+  }
+  return compactNumberFormatter.format(value)
 }
 
 export const PoolCard = ({
@@ -38,16 +50,29 @@ export const PoolCard = ({
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
+  const hasProvidedLiquidity = Boolean(
+    myLiquidity.tokenAmount || myStakedLiquidity.dollarValue
+  )
+
   const stakedTokenBalanceDollarValue = myStakedLiquidity.dollarValue
 
-  const hasProvidedLiquidity = Boolean(
-    myLiquidity.tokenAmount || stakedTokenBalanceDollarValue
+  const providedLiquidityDollarValueFormatted = hasProvidedLiquidity
+    ? formatToCompactDollarValue(
+        myLiquidity.dollarValue + stakedTokenBalanceDollarValue
+      )
+    : 0
+
+  const totalDollarValueLiquidityFormatted = dollarValueFormatterWithDecimals(
+    totalLiquidity.dollarValue,
+    {
+      includeCommaSeparation: true,
+    }
   )
 
   return (
     <Link href={`/pools/${poolId}`} passHref>
       <Card variant="secondary" active={hasProvidedLiquidity}>
-        <CardContent>
+        <CardContent size="medium">
           <Column align="center">
             <StyledDivForTokenLogos css={{ paddingTop: '$20' }}>
               <ImageForTokenLogo
@@ -71,52 +96,72 @@ export const PoolCard = ({
           </Column>
         </CardContent>
         <Divider offsetTop="$16" offsetBottom="$12" />
-        <CardContent>
+        <CardContent size="medium">
           <Column gap={3}>
             <Text variant="legend" color="secondary">
               Total liquidity
             </Text>
             <Text variant="primary">
-              $
-              {dollarValueFormatterWithDecimals(totalLiquidity.dollarValue, {
-                includeCommaSeparation: true,
-              })}
+              {hasProvidedLiquidity ? (
+                <>
+                  <StyledSpanForHighlight>
+                    ${providedLiquidityDollarValueFormatted}{' '}
+                  </StyledSpanForHighlight>
+                  of ${totalDollarValueLiquidityFormatted}
+                </>
+              ) : (
+                <>${totalDollarValueLiquidityFormatted}</>
+              )}
             </Text>
           </Column>
           <Inline justifyContent="space-between" css={{ padding: '$14 0' }}>
             <StyledDivForStatsColumn align="left">
-              <Text variant="legend" color="secondary" align="left">
+              <Text
+                variant="legend"
+                color={hasProvidedLiquidity ? 'brand' : 'primary'}
+                align="left"
+              >
                 Bonded
               </Text>
-              <Text variant="primary">
-                $
-                {dollarValueFormatterWithDecimals(
-                  typeof stakedTokenBalanceDollarValue === 'number'
-                    ? stakedTokenBalanceDollarValue
-                    : 0,
-                  {
-                    includeCommaSeparation: true,
-                  }
+              <Text
+                variant="primary"
+                color={hasProvidedLiquidity ? 'brand' : 'primary'}
+              >
+                {hasProvidedLiquidity &&
+                typeof stakedTokenBalanceDollarValue === 'number' ? (
+                  <>
+                    $
+                    {dollarValueFormatterWithDecimals(
+                      stakedTokenBalanceDollarValue,
+                      {
+                        includeCommaSeparation: true,
+                      }
+                    )}
+                  </>
+                ) : (
+                  '--'
                 )}
               </Text>
             </StyledDivForStatsColumn>
-            <StyledDivForStatsColumn align="center">
-              <Text variant="legend" color="secondary" align="center">
-                Rewards
-              </Text>
-              <StyledDivForTokenLogos css={{ paddingTop: '0' }}>
-                <ImageForTokenLogo
-                  size="medium"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="medium"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-              </StyledDivForTokenLogos>
-            </StyledDivForStatsColumn>
+            {__POOL_REWARDS_ENABLED__ && (
+              <StyledDivForStatsColumn align="center">
+                <Text variant="legend" color="secondary" align="center">
+                  Rewards
+                </Text>
+                <StyledDivForTokenLogos css={{ paddingTop: '0' }}>
+                  <ImageForTokenLogo
+                    size="medium"
+                    logoURI={tokenA.logoURI}
+                    alt={tokenA.symbol}
+                  />
+                  <ImageForTokenLogo
+                    size="medium"
+                    logoURI={tokenB.logoURI}
+                    alt={tokenB.symbol}
+                  />
+                </StyledDivForTokenLogos>
+              </StyledDivForStatsColumn>
+            )}
             <StyledDivForStatsColumn align="right">
               <Text variant="legend" color="secondary" align="right">
                 APR
@@ -184,4 +229,9 @@ const StyledDivForStatsColumn = styled('div', {
       },
     },
   },
+})
+
+const StyledSpanForHighlight = styled('span', {
+  display: 'inline',
+  color: '$textColors$brand',
 })

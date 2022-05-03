@@ -1,13 +1,11 @@
-import { useMedia } from 'hooks/useMedia'
-import { usePersistance } from 'hooks/usePersistance'
 import { useTokenList } from 'hooks/useTokenList'
+import { styled, useMedia, usePersistance } from 'junoblocks'
 import { useEffect } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   TransactionStatus,
   transactionStatusState,
 } from 'state/atoms/transactionAtoms'
-import { styled } from 'theme'
 
 import { useTokenToTokenPrice } from '../hooks'
 import { tokenSwapAtom } from '../swapAtoms'

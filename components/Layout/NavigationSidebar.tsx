@@ -1,23 +1,30 @@
-import { Column } from 'components/Column'
-import { Inline } from 'components/Inline'
 import { useConnectWallet } from 'hooks/useConnectWallet'
-import { useMedia } from 'hooks/useMedia'
+import { Logo, LogoText } from 'icons'
 import {
-  Address,
-  ArrowUp,
+  AddressIcon,
+  ArrowUpIcon,
+  Button,
   ChevronIcon,
+  Column,
   Discord,
+  Divider,
   FeedbackIcon,
   Github,
-  Logo,
-  LogoText,
+  IconWrapper,
+  Inline,
+  media,
   MoonIcon,
   Open,
+  styled,
   Telegram,
+  Text,
+  ToggleSwitch,
   Twitter,
   UnionIcon,
   UpRightArrow,
-} from 'icons'
+  useControlTheme,
+  useMedia,
+} from 'junoblocks'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
@@ -25,14 +32,7 @@ import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
 
-import { media, styled, useControlTheme } from '../../theme'
-import { AppTheme } from '../../theme/themeAtom'
-import { Button } from '../Button'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
-import { Divider } from '../Divider'
-import { IconWrapper } from '../IconWrapper'
-import { Text } from '../Text'
-import { ToggleSwitch } from '../ToggleSwitch'
 
 type NavigationSidebarProps = {
   shouldRenderBackButton?: boolean
@@ -80,7 +80,7 @@ export function NavigationSidebar({
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<IconWrapper icon={<Address />} />}
+          iconLeft={<AddressIcon />}
           selected={getIsLinkActive('/')}
         >
           Swap
@@ -91,7 +91,7 @@ export function NavigationSidebar({
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<IconWrapper icon={<ArrowUp />} />}
+          iconLeft={<ArrowUpIcon />}
           selected={getIsLinkActive('/transfer')}
         >
           Transfer
@@ -232,7 +232,7 @@ export function NavigationSidebar({
                 id="theme-toggle"
                 name="dark-theme"
                 onChange={themeController.setDarkTheme}
-                checked={themeController.theme === AppTheme.dark}
+                checked={themeController.theme.name === 'dark'}
                 optionLabels={['Dark theme', 'Light theme']}
               />
             }

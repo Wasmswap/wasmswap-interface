@@ -1,3 +1,7 @@
+import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
+import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { useTokenBalance } from 'hooks/useTokenBalance'
 import {
   Button,
   Dialog,
@@ -5,16 +9,14 @@ import {
   DialogContent,
   DialogDivider,
   DialogHeader,
+  Error,
   IconWrapper,
   Spinner,
   Text,
   Toast,
-} from 'components'
-import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { useTokenBalance } from 'hooks/useTokenBalance'
-import { Error, UpRightArrow, Valid } from 'icons'
+  UpRightArrow,
+  Valid,
+} from 'junoblocks'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 

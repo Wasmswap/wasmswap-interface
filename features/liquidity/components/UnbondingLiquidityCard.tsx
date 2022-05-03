@@ -1,16 +1,20 @@
-import { Card, CardContent, ImageForTokenLogo, Inline, Text } from 'components'
 import dayjs from 'dayjs'
 import {
   usePoolPairTokenAmount,
   usePoolTokensDollarValue,
 } from 'features/liquidity/hooks'
 import { TokenInfo } from 'hooks/useTokenList'
-import { ErrorIcon } from 'icons'
-import { useQuery } from 'react-query'
 import {
+  Card,
+  CardContent,
   dollarValueFormatterWithDecimals,
+  ErrorIcon,
   formatTokenBalance,
-} from 'util/conversion'
+  ImageForTokenLogo,
+  Inline,
+  Text,
+} from 'junoblocks'
+import { useQuery } from 'react-query'
 import { maybePluralize } from 'util/maybePluralize'
 
 type UnbondingLiquidityCardProps = {

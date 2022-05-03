@@ -1,20 +1,18 @@
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { TokenInfo } from 'hooks/useTokenList'
 import {
   Button,
   Column,
-  ImageForTokenLogo,
-  Inline,
-  Text,
-  Tooltip,
-} from 'components'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { TokenInfo } from 'hooks/useTokenList'
-import { InfoIcon } from 'icons'
-import { useMemo } from 'react'
-import {
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
+  ImageForTokenLogo,
+  InfoIcon,
+  Inline,
   protectAgainstNaN,
-} from 'util/conversion'
+  Text,
+  Tooltip,
+} from 'junoblocks'
+import { useMemo } from 'react'
 
 type AdditionalUnderlyingAssetsRowProps = {
   assets: Array<{

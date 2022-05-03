@@ -1,14 +1,12 @@
-import { Button, Text } from 'components'
-import { ErrorIcon, UpRightArrowIcon } from 'icons'
+import { Button, ErrorIcon, styled, Text, UpRightArrowIcon } from 'junoblocks'
 
-import { styled } from '../../theme'
 import { __TEST_MODE__ } from '../../util/constants'
 
 export const ExtensionSidebar = () => {
   return (
     <StyledDivForWrapper>
       <StyledDivForTitleWrapper>
-        <ErrorIcon color="primary" size="24px" />
+        <ErrorIcon color="primary" size="large" />
         <Text>This is a {__TEST_MODE__ ? 'testnet' : 'beta'} version</Text>
       </StyledDivForTitleWrapper>
       <Text css={{ padding: '$9 0 $11' }}>
@@ -34,7 +32,7 @@ export const ExtensionSidebar = () => {
 const StyledDivForWrapper = styled('div', {
   zIndex: '$2',
   position: 'sticky',
-  backgroundColor: '$colors$light',
+  borderLeft: '1px solid $borderColors$inactive',
   top: 0,
   right: 0,
   width: '100%',

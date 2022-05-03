@@ -1,5 +1,4 @@
-import { Button } from 'components'
-import { styled } from 'theme'
+import { Button, styled } from 'junoblocks'
 
 type StateSwitchButtonsProps = {
   activeValue: string

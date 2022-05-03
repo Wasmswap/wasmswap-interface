@@ -1,4 +1,4 @@
-import { Card, CardContent, Column } from 'components'
+import { Card, CardContent, Column } from 'junoblocks'
 
 export const BaseCardForEmptyState = ({ content, footer, ...props }) => {
   return (

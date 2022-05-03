@@ -1,15 +1,24 @@
 import { CSS } from '@stitches/react'
-import { Button, CopyTextTooltip, IconWrapper, Text, Tooltip } from 'components'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { Copy, Logout, Valid, Wallet } from 'icons'
+import {
+  Button,
+  Column,
+  Copy,
+  CopyTextTooltip,
+  formatTokenBalance,
+  IconWrapper,
+  Logout,
+  media,
+  styled,
+  Text,
+  Tooltip,
+  Valid,
+  Wallet,
+} from 'junoblocks'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import { walletState } from 'state/atoms/walletAtoms'
-import { media, styled } from 'theme'
-import { formatTokenBalance } from 'util/conversion'
-
-import { Column } from './Column'
 
 type ConnectedWalletButtonProps = { css?: CSS } & {
   walletName?: string
@@ -41,7 +50,7 @@ export const ConnectedWalletButton = ({
 
   return (
     <StyledWalletButton {...props} role="button">
-      <IconWrapper size="16px" color="#FE8D9E" icon={<Wallet />} />
+      <IconWrapper size="medium" css={{ color: '#FE8D9E' }} icon={<Wallet />} />
       <div data-content="">
         <Text variant="link" color="body">
           {walletName}

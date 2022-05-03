@@ -1,11 +1,17 @@
-import { Button, IconWrapper, Toast } from 'components'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { TokenInfo } from 'hooks/useTokenList'
-import { Error, UpRightArrow, Valid } from 'icons'
+import {
+  Button,
+  Error,
+  IconWrapper,
+  Toast,
+  UpRightArrow,
+  Valid,
+} from 'junoblocks'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'

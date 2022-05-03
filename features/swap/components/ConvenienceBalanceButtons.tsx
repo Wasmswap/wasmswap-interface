@@ -1,5 +1,5 @@
-import { Button } from 'components'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { Button } from 'junoblocks'
 import React from 'react'
 
 type ConvenienceBalanceButtonsProps = {

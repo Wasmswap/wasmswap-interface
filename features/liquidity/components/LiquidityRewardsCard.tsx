@@ -1,8 +1,16 @@
-import { Button, Card, CardContent, Column, Inline, Text } from 'components'
-import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
-import { ArrowUpIcon, UnionIcon } from 'icons'
+import {
+  ArrowUpIcon,
+  Button,
+  Card,
+  CardContent,
+  Column,
+  dollarValueFormatterWithDecimals,
+  Inline,
+  Text,
+  UnionIcon,
+  useSubscribeInteractions,
+} from 'junoblocks'
 import { useMemo } from 'react'
-import { dollarValueFormatterWithDecimals } from 'util/conversion'
 
 import { AdditionalUnderlyingAssetsRow } from './AdditionalUnderlyingAssetsRow'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'

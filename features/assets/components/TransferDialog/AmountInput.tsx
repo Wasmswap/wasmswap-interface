@@ -2,11 +2,11 @@ import {
   BasicNumberInput,
   Button,
   ButtonForWrapper,
+  formatTokenBalance,
+  styled,
   Text,
   useTriggerInputFocus,
-} from 'components'
-import { styled } from 'theme'
-import { formatTokenBalance } from 'util/conversion'
+} from 'junoblocks'
 
 type AmountInputProps = {
   amount: number

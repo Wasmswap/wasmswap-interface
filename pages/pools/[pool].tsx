@@ -1,12 +1,4 @@
-import {
-  AppLayout,
-  Button,
-  Divider,
-  IconWrapper,
-  NavigationSidebar,
-  Spinner,
-  Toast,
-} from 'components'
+import { AppLayout, NavigationSidebar } from 'components'
 import {
   BondLiquidityDialog,
   LiquidityBreakdown,
@@ -17,7 +9,6 @@ import {
   ManagePoolDialog,
   UnbondingLiquidityStatusList,
 } from 'features/liquidity'
-import { useMedia } from 'hooks/useMedia'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import {
@@ -26,13 +17,25 @@ import {
   useRewardsInfo,
 } from 'hooks/useRewardsQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { ChevronIcon, Error, UpRightArrow, Valid } from 'icons'
+import {
+  Button,
+  ChevronIcon,
+  Divider,
+  Error,
+  IconWrapper,
+  media,
+  Spinner,
+  styled,
+  Toast,
+  UpRightArrow,
+  useMedia,
+  Valid,
+} from 'junoblocks'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { media, styled } from 'theme'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
@@ -181,7 +184,7 @@ export default function Pool() {
 
         {isLoadingInitial && (
           <StyledDivForSpinner>
-            <Spinner color="black" size={32} />
+            <Spinner color="primary" size={32} />
           </StyledDivForSpinner>
         )}
 

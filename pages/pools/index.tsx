@@ -1,12 +1,5 @@
 import { useUpdateEffect } from '@reach/utils'
-import {
-  AppLayout,
-  Column,
-  Inline,
-  PageHeader,
-  Spinner,
-  Text,
-} from 'components'
+import { AppLayout, PageHeader } from 'components'
 import {
   ButtonWithDropdownForSorting,
   PoolCard,
@@ -17,8 +10,8 @@ import {
 import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useTokenList } from 'hooks/useTokenList'
+import { Column, Inline, media, Spinner, styled, Text } from 'junoblocks'
 import React, { useMemo, useState } from 'react'
-import { media, styled } from 'theme'
 
 export default function Pools() {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
@@ -62,7 +55,7 @@ export default function Pools() {
             align="center"
             css={{ paddingTop: '$24' }}
           >
-            <Spinner size={32} color="black" />
+            <Spinner size={32} color="primary" />
           </Column>
         </>
       )}

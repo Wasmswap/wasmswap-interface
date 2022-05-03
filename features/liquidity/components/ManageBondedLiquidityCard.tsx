@@ -1,10 +1,16 @@
-import { Button, Card, CardContent, Column, Inline, Text } from 'components'
-import { useSubscribeInteractions } from 'hooks/useSubscribeInteractions'
-import { ArrowUpIcon, UnionIcon } from 'icons'
 import {
+  ArrowUpIcon,
+  Button,
+  Card,
+  CardContent,
+  Column,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-} from 'util/conversion'
+  Inline,
+  Text,
+  UnionIcon,
+  useSubscribeInteractions,
+} from 'junoblocks'
 
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
 import { SegmentedRewardsSimulator } from './SegmentedRewardsSimulator'

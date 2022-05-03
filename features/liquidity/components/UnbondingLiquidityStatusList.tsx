@@ -1,14 +1,4 @@
 import {
-  Button,
-  Column,
-  Divider,
-  IconWrapper,
-  ImageForTokenLogo,
-  Inline,
-  Text,
-  Toast,
-} from 'components'
-import {
   useClaimTokens,
   usePoolPairTokenAmount,
   usePoolTokensDollarValue,
@@ -16,13 +6,23 @@ import {
 } from 'features/liquidity/hooks'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { TokenInfo } from 'hooks/useTokenList'
-import { Error, UpRightArrow, Valid } from 'icons'
+import {
+  Button,
+  Column,
+  Divider,
+  dollarValueFormatterWithDecimals,
+  Error,
+  formatTokenBalance,
+  IconWrapper,
+  ImageForTokenLogo,
+  Inline,
+  Text,
+  Toast,
+  UpRightArrow,
+  Valid,
+} from 'junoblocks'
 import React, { useMemo } from 'react'
 import { toast } from 'react-hot-toast'
-import {
-  dollarValueFormatterWithDecimals,
-  formatTokenBalance,
-} from 'util/conversion'
 
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
 

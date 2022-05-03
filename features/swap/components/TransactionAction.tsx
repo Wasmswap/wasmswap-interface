@@ -1,10 +1,9 @@
-import { Button, Inline, Spinner, Text } from 'components'
 import { useConnectWallet } from 'hooks/useConnectWallet'
 import { useTokenBalance } from 'hooks/useTokenBalance'
+import { Button, Inline, Spinner, styled, Text } from 'junoblocks'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { styled } from 'theme'
 import { NETWORK_FEE } from 'util/constants'
 
 import { useTokenSwap } from '../hooks'

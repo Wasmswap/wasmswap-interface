@@ -78,7 +78,7 @@ export const useMultiplePoolsLiquidity = ({
         ({ swap_address }) => swap.swap_address === swap_address
       )
       /*
-       * note: this works only if we're assuming the first token pair is always one token
+       * note: this works only if we're assuming the first token pair is always the same token
        * */
       const rewardsContractResponse = rewardsContractsInfo.find(
         ({ data }) => data && data?.swap_address === swap.swap_address

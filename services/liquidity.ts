@@ -5,6 +5,7 @@ import {
 import { toUtf8 } from '@cosmjs/encoding'
 import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
+import { protectAgainstNaN } from 'junoblocks'
 
 import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
@@ -173,7 +174,7 @@ export const getLiquidityBalance = async ({
       balance: { address },
     })
 
-    return query.balance
+    return protectAgainstNaN(Number(query.balance))
   } catch (e) {
     console.error('Cannot get liquidity balance:', e)
   }

@@ -7,7 +7,10 @@ import {
   getRewardsInfo,
 } from 'services/rewards'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+} from 'util/constants'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { tokenToTokenPriceQuery } from '../queries/tokenToTokenPriceQuery'
@@ -60,7 +63,8 @@ export const usePendingRewards = ({ swapAddress }) => {
     },
     {
       enabled: Boolean(
-        enabled &&
+        __POOL_REWARDS_ENABLED__ &&
+          enabled &&
           enabledTokenInfoByDenomSearch &&
           swapAddress &&
           enabledTokenDollarValueQuery &&
@@ -152,11 +156,13 @@ export const useMultipleRewardsInfo = ({
 
         return undefined
       },
-      enabled:
-        Boolean(chainInfo?.rpc) &&
-        enabledRewardsContractsQuery &&
-        enabledTokenInfoSearch &&
-        enabledTokenDollarValueQuery,
+      enabled: Boolean(
+        __POOL_REWARDS_ENABLED__ &&
+          Boolean(chainInfo?.rpc) &&
+          enabledRewardsContractsQuery &&
+          enabledTokenInfoSearch &&
+          enabledTokenDollarValueQuery
+      ),
       refetchInterval: refetchInBackground
         ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
         : undefined,

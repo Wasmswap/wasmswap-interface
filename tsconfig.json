@@ -22,7 +22,10 @@
     "incremental": false, // Enable incremental compilation by reading/writing information from prior compilations to a file on disk
     "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statement
     "baseUrl": ".",
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "paths": {
+      "": ["./*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"] // *** The files to not type check ***

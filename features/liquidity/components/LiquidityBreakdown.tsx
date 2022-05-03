@@ -10,7 +10,10 @@ import {
   Text,
 } from 'junoblocks'
 import React from 'react'
-import { __POOL_STAKING_ENABLED__ } from 'util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  __POOL_STAKING_ENABLED__,
+} from 'util/constants'
 
 import { usePoolPairTokenAmount } from '../hooks'
 import { AprPill } from './AprPill'
@@ -91,7 +94,7 @@ export const LiquidityBreakdown = ({
             <Text variant="header">{formattedYieldPercentageReturn}%</Text>
           </Column>
         </Inline>
-        {__POOL_STAKING_ENABLED__ && (
+        {__POOL_REWARDS_ENABLED__ && (
           <Column gap={6} css={{ paddingBottom: '$20' }}>
             <Text variant="legend" color="secondary">
               Token reward distribution
@@ -142,15 +145,7 @@ export const LiquidityBreakdown = ({
       <Divider />
 
       <>
-        <Inline
-          css={{
-            display: 'grid',
-            gridTemplateColumns: __POOL_STAKING_ENABLED__
-              ? '1fr 1fr 1fr 0.75fr 0.75fr'
-              : '1fr 1fr',
-            padding: '$15 0 $18',
-          }}
-        >
+        <TotalInfoRow>
           <Column gap={6} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">
               Total liquidity
@@ -177,7 +172,7 @@ export const LiquidityBreakdown = ({
             <Text variant="header">{formatTokenBalance(tokenBAmount)}</Text>
           </Column>
 
-          {__POOL_STAKING_ENABLED__ && (
+          {__POOL_REWARDS_ENABLED__ && (
             <Column gap={6} align="center" justifyContent="center">
               <Text variant="legend" color="secondary" align="center">
                 Token reward
@@ -201,8 +196,32 @@ export const LiquidityBreakdown = ({
             </Text>
             <AprPill value={formattedYieldPercentageReturn} />
           </Column>
-        </Inline>
+        </TotalInfoRow>
       </>
     </>
+  )
+}
+
+function TotalInfoRow({ children }) {
+  const baseCss = { padding: '$15 0 $18' }
+
+  if (__POOL_STAKING_ENABLED__ && __POOL_REWARDS_ENABLED__) {
+    return (
+      <Inline
+        css={{
+          ...baseCss,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr 0.75fr 0.75fr',
+        }}
+      >
+        {children}
+      </Inline>
+    )
+  }
+
+  return (
+    <Inline gap={8} justifyContent="space-between" css={baseCss}>
+      {children}
+    </Inline>
   )
 }

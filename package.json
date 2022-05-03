@@ -1,7 +1,6 @@
 {
-  "name": "cosmwasm-nextjs-example",
-  "version": "0.1.0",
-  "private": true,
+  "name": "wasmswap-interface",
+  "version": "1.2.5",
   "scripts": {
     "dev": "next dev",
     "dev:w-blocks": "BUNDLE_JUNOBLOCKS=true next dev",

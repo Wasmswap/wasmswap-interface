@@ -121,7 +121,7 @@ export const PoolCard = ({
                 color={hasProvidedLiquidity ? 'brand' : 'primary'}
                 align="left"
               >
-                Staked
+                Bonded
               </Text>
               <Text
                 variant="primary"

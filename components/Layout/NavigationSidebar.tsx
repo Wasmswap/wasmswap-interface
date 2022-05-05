@@ -19,6 +19,7 @@ import {
   Telegram,
   Text,
   ToggleSwitch,
+  TreasuryIcon,
   Twitter,
   UnionIcon,
   UpRightArrow,
@@ -241,17 +242,30 @@ export function NavigationSidebar({
           </Button>
         </Inline>
         <Divider offsetY="$6" />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
-          target="__blank"
-          variant="ghost"
-          size="large"
-          iconLeft={<FeedbackIcon />}
-          iconRight={<IconWrapper icon={<UpRightArrow />} />}
-        >
-          Provide feedback
-        </Button>
+        <Column gap={4}>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+            target="__blank"
+            variant="ghost"
+            size="large"
+            iconLeft={<FeedbackIcon />}
+            iconRight={<IconWrapper icon={<UpRightArrow />} />}
+          >
+            Provide feedback
+          </Button>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_GOVERNANCE_LINK_URL}
+            target="__blank"
+            variant="ghost"
+            size="large"
+            iconLeft={<TreasuryIcon />}
+            iconRight={<IconWrapper icon={<UpRightArrow />} />}
+          >
+            {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
+          </Button>
+        </Column>
         <Inline gap={2} css={{ padding: '$20 0 $13' }}>
           <Button
             as="a"

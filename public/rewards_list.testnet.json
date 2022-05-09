@@ -2,11 +2,11 @@
   "name": "Rewards list",
   "list": [
     {
-      "token_address": "juno1tjmxqppmerlt4xyusqrmd6k77fn3x4t3kw70jnuge0pswjevm2cs2jgl2v",
-      "swap_address": "juno1a7dm5x7e4mdysd4wrnyx9lr6udltuuv5mtz6rkc7c5gy3pv7z3tsd3fwdf",
+      "token_address": "juno1z55lqwvhhu4fgce86saryk7gdq6hqerxzyt32wee68d6vrax86gqshk5w2",
+      "swap_address": "juno1lwph7uwk5fvjcvlc2kwtnac0ua9cffd7h78xw4kajg95rdw2qmfqem5kf6",
       "rewards_tokens": [
         {
-          "rewards_address": "juno1h5wenexac38vguahkcpaejmznqa3k9apx2uvwfzqtvlms7q77atsnd4xcw",
+          "rewards_address": "juno175xe97w8z5py28fxmjs2t6t9wmwdcrfu463qhu8wluvn5dpsj68q6fr5k2",
           "token_address": "",
           "swap_address": "",
           "symbol": "JUNOX",
@@ -17,9 +17,9 @@
           "decimals": 6
         },
         {
-          "rewards_address": "juno1q3ep8crvavzqmhghn3ujp29zmqsrvs4muzs97h7a867fr0pjns9snyqn7u",
-          "token_address": "juno1tjmxqppmerlt4xyusqrmd6k77fn3x4t3kw70jnuge0pswjevm2cs2jgl2v",
-          "swap_address": "juno1tjmxqppmerlt4xyusqrmd6k77fn3x4t3kw70jnuge0pswjevm2cs2jgl2v",
+          "rewards_address": "juno1ncs2jqmwn0w4l33njxxxdu70k2lqnv4hfraeexw8cv9dx78yv4sqxyej0h",
+          "token_address": "juno1z55lqwvhhu4fgce86saryk7gdq6hqerxzyt32wee68d6vrax86gqshk5w2",
+          "swap_address": "juno1lwph7uwk5fvjcvlc2kwtnac0ua9cffd7h78xw4kajg95rdw2qmfqem5kf6",
           "symbol": "CRAB",
           "name": "Crab",
           "logoURI": "https://cryptologos.cc/logos/irisnet-iris-logo.svg?v=022",

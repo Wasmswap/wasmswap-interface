@@ -6,6 +6,7 @@ import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
 import { TokenInfo } from '../../../hooks/useTokenList'
 import { tokenToTokenPriceQuery } from '../../../queries/tokenToTokenPriceQuery'
+import { cosmWasmClientRouter } from '../../../util/cosmWasmClientRouter'
 
 type UseTokenPairsPricesArgs = {
   tokenPairs: Array<{
@@ -34,6 +35,8 @@ export const useTokenPairsPrices = ({
         tokenAmount,
       ],
       async queryFn() {
+        const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
+
         const [fromTokenInfo, toTokenInfo] = getMultipleTokenInfo([
           tokenASymbol,
           tokenBSymbol,
@@ -43,7 +46,7 @@ export const useTokenPairsPrices = ({
           baseToken,
           fromTokenInfo,
           toTokenInfo,
-          chainInfo,
+          client,
           amount: tokenAmount,
         })
 

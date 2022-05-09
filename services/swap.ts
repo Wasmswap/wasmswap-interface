@@ -1,4 +1,5 @@
 import {
+  CosmWasmClient,
   MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
@@ -199,20 +200,21 @@ export const swapTokenForToken = async (
   )
 }
 
-export interface getToken1ForToken2PriceInput {
+export interface GetToken1ForToken2PriceInput {
   nativeAmount: number
   swapAddress: string
-  rpcEndpoint: string
+  client: CosmWasmClient
 }
 
-export const getToken1ForToken2Price = async (
-  input: getToken1ForToken2PriceInput
-) => {
+export const getToken1ForToken2Price = async ({
+  nativeAmount,
+  swapAddress,
+  client,
+}: GetToken1ForToken2PriceInput) => {
   try {
-    const client = await cosmWasmClientRouter.connect(input.rpcEndpoint)
-    const query = await client.queryContractSmart(input.swapAddress, {
+    const query = await client.queryContractSmart(swapAddress, {
       token1_for_token2_price: {
-        token1_amount: `${input.nativeAmount}`,
+        token1_amount: `${nativeAmount}`,
       },
     })
     return query.token2_amount
@@ -224,17 +226,18 @@ export const getToken1ForToken2Price = async (
 export interface GetToken2ForToken1PriceInput {
   tokenAmount: number
   swapAddress: string
-  rpcEndpoint: string
+  client: CosmWasmClient
 }
 
-export const getToken2ForToken1Price = async (
-  input: GetToken2ForToken1PriceInput
-) => {
+export const getToken2ForToken1Price = async ({
+  tokenAmount,
+  swapAddress,
+  client,
+}: GetToken2ForToken1PriceInput) => {
   try {
-    const client = await cosmWasmClientRouter.connect(input.rpcEndpoint)
-    const query = await client.queryContractSmart(input.swapAddress, {
+    const query = await client.queryContractSmart(swapAddress, {
       token2_for_token1_price: {
-        token2_amount: `${input.tokenAmount}`,
+        token2_amount: `${tokenAmount}`,
       },
     })
     return query.token1_amount
@@ -280,19 +283,18 @@ export type InfoResponse = {
 
 export const getSwapInfo = async (
   swapAddress: string,
-  rpcEndpoint: string
+  client: CosmWasmClient
 ): Promise<InfoResponse> => {
   try {
-    if (!swapAddress || !rpcEndpoint) {
+    if (!swapAddress || !client) {
       throw new Error(
         `No swapAddress or rpcEndpoint was provided: ${JSON.stringify({
           swapAddress,
-          rpcEndpoint,
+          client,
         })}`
       )
     }
 
-    const client = await cosmWasmClientRouter.connect(rpcEndpoint)
     return await client.queryContractSmart(swapAddress, {
       info: {},
     })

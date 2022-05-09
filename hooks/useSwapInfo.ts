@@ -4,6 +4,7 @@ import { useQuery } from 'react-query'
 import { getSwapInfo, InfoResponse } from '../services/swap'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
+import { useCosmWasmClient } from './useCosmWasmClient'
 import { useMultipleTokenInfo, useTokenInfoByPoolIds } from './useTokenInfo'
 
 export type SwapInfo = Pick<
@@ -31,6 +32,7 @@ export const useMultipleSwapInfo = ({
 
   const tokensByPoolIds = useTokenInfoByPoolIds(poolIds)
   const tokensByTokenSymbols = useMultipleTokenInfo(tokenSymbols)
+  const client = useCosmWasmClient()
 
   const { data = [], isLoading } = useQuery<Array<SwapInfo>>(
     `swapInfo/${(tokenSymbols || poolIds)?.join('+')}`,
@@ -41,7 +43,7 @@ export const useMultipleSwapInfo = ({
         await Promise.all(
           tokens.map(async ({ swap_address }) => {
             return {
-              swap: await getSwapInfo(swap_address, chainInfo.rpc),
+              swap: await getSwapInfo(swap_address, client),
               swap_address,
             }
           })

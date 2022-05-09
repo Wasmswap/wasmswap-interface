@@ -1,7 +1,7 @@
 import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { getStakedBalance } from 'services/staking'
+import { getProvidedStakedAmount } from 'services/staking'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
@@ -14,7 +14,7 @@ export const useStakedTokenBalance = ({ poolId, enabled = true }) => {
     `stakedTokenBalance/${poolId}/${address}`,
     async () => {
       return Number(
-        await getStakedBalance(address, token.staking_address, client)
+        await getProvidedStakedAmount(address, token.staking_address, client)
       )
     },
     {

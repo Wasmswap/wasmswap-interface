@@ -1,4 +1,3 @@
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { useTokenBalance } from 'hooks/useTokenBalance'
@@ -12,6 +11,7 @@ import {
   UpRightArrow,
   Valid,
 } from 'junoblocks'
+import { useQueryPoolLiquidity } from 'queries/useQueryPools'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
@@ -39,19 +39,20 @@ export const usePoolDialogController = ({
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
 
-  const [{ myLiquidity, myLiquidityReserve, reserve } = {} as any] =
-    usePoolLiquidity({
-      poolId: tokenB.pool_id,
-    })
+  const [pool] = useQueryPoolLiquidity({
+    poolId: tokenB.pool_id,
+  })
+
+  const { fluid, reserves } = pool || {}
 
   function calculateMaxApplicableBalances() {
     // Decimal converted reserves
     const tokenAReserve = convertMicroDenomToDenom(
-      reserve?.[0],
+      reserves?.total[0],
       tokenA.decimals
     )
     const tokenBReserve = convertMicroDenomToDenom(
-      reserve?.[1],
+      reserves?.total[1],
       tokenB.decimals
     )
 
@@ -84,11 +85,11 @@ export const usePoolDialogController = ({
     tokenB: maxApplicableBalanceForTokenB,
   } = calculateMaxApplicableBalances()
 
-  const tokenAReserve = myLiquidityReserve?.[0]
-    ? convertMicroDenomToDenom(myLiquidityReserve[0], tokenA.decimals)
+  const tokenAReserve = reserves?.provided[0]
+    ? convertMicroDenomToDenom(reserves?.provided[0], tokenA.decimals)
     : 0
-  const tokenBReserve = myLiquidityReserve?.[1]
-    ? convertMicroDenomToDenom(myLiquidityReserve[1], tokenB.decimals)
+  const tokenBReserve = reserves?.provided[1]
+    ? convertMicroDenomToDenom(reserves?.provided[1], tokenB.decimals)
     : 0
 
   const { isLoading, mutate: mutateAddLiquidity } = useMutateLiquidity({
@@ -98,13 +99,13 @@ export const usePoolDialogController = ({
     tokenB,
     maxApplicableBalanceForTokenA,
     maxApplicableBalanceForTokenB,
-    myLiquidity,
+    providedLiquidity: fluid?.provided,
   })
 
   return {
     state: {
-      myLiquidity,
-      myLiquidityReserve,
+      providedLiquidity: fluid?.provided,
+      providedLiquidityReserve: reserves?.provided,
       tokenAReserve,
       tokenBReserve,
       isLoading,
@@ -127,7 +128,7 @@ const useMutateLiquidity = ({
   tokenA,
   tokenB,
   actionState,
-  myLiquidity,
+  providedLiquidity,
 }) => {
   const { address, client } = useRecoilValue(walletState)
   const refetchQueries = useRefetchQueries(['tokenBalance', 'myLiquidity'])
@@ -162,7 +163,7 @@ const useMutateLiquidity = ({
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor(percentage * myLiquidity.tokenAmount),
+          amount: Math.floor(percentage * providedLiquidity.tokenAmount),
           minToken1: 0,
           minToken2: 0,
           swapAddress: tokenB.swap_address,

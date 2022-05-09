@@ -236,7 +236,7 @@ const useGetTokenInfoByDenom = () => {
   ] as const
 }
 
-const useGetTokenDollarValue = () => {
+export const useGetTokenDollarValue = () => {
   const tokenA = useBaseTokenInfo()
   const [chainInfo, fetchingChainInfo] = useChainInfo()
   const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
@@ -245,11 +245,13 @@ const useGetTokenDollarValue = () => {
 
   return [
     async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
+      const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
+
       const priceForOneToken = await tokenToTokenPriceQuery({
         baseToken: tokenA,
         fromTokenInfo: tokenA,
         toTokenInfo: tokenInfo,
-        chainInfo,
+        client,
         amount: 1,
       })
 

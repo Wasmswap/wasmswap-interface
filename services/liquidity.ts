@@ -1,4 +1,5 @@
 import {
+  CosmWasmClient,
   MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
@@ -160,16 +161,15 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
 export type GetLiquidityBalanceInput = {
   address: string
   tokenAddress: string
-  rpcEndpoint: string
+  client: CosmWasmClient
 }
 
 export const getLiquidityBalance = async ({
-  rpcEndpoint,
+  client,
   tokenAddress,
   address,
 }: GetLiquidityBalanceInput) => {
   try {
-    const client = await cosmWasmClientRouter.connect(rpcEndpoint)
     const query = await client.queryContractSmart(tokenAddress, {
       balance: { address },
     })

@@ -13,7 +13,7 @@ export async function tokenToTokenPriceQuery({
   fromTokenInfo,
   toTokenInfo,
   amount,
-  chainInfo,
+  client,
 }): Promise<number | undefined> {
   const formatPrice = (price) =>
     convertMicroDenomToDenom(price, toTokenInfo.decimals)
@@ -32,7 +32,7 @@ export async function tokenToTokenPriceQuery({
       await getToken1ForToken2Price({
         nativeAmount: convertedTokenAmount,
         swapAddress: toTokenInfo.swap_address,
-        rpcEndpoint: chainInfo.rpc,
+        client,
       })
     )
   } else if (
@@ -43,7 +43,7 @@ export async function tokenToTokenPriceQuery({
       await getToken2ForToken1Price({
         tokenAmount: convertedTokenAmount,
         swapAddress: fromTokenInfo.swap_address,
-        rpcEndpoint: chainInfo.rpc,
+        client,
       })
     )
   }
@@ -53,7 +53,7 @@ export async function tokenToTokenPriceQuery({
       tokenAmount: convertedTokenAmount,
       swapAddress: fromTokenInfo.swap_address,
       outputSwapAddress: toTokenInfo.swap_address,
-      rpcEndpoint: chainInfo.rpc,
+      client,
     })
   )
 }

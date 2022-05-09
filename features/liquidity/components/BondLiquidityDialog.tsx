@@ -1,7 +1,6 @@
 import { useUpdateEffect } from '@reach/utils'
 import dayjs from 'dayjs'
 import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
@@ -26,7 +25,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
-import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { useQueryPoolLiquidity } from '../../../queries/useQueryPools'
+import { usePoolTokensDollarValue } from '../hooks'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
@@ -38,11 +38,12 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(poolId)
 
-  const [{ myLiquidity } = {} as any] = usePoolLiquidity({ poolId })
-  const [stakedAmount] = useStakedTokenBalance({ poolId })
+  const [{ liquidity } = {} as any] = useQueryPoolLiquidity({ poolId })
 
   const maxLiquidityTokenAmount =
-    dialogState === 'stake' ? myLiquidity?.tokenAmount ?? 0 : stakedAmount ?? 0
+    dialogState === 'stake'
+      ? liquidity?.provided?.tokenAmount ?? 0
+      : liquidity?.staked.tokenAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
 
@@ -58,7 +59,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
   const refetchQueries = useRefetchQueries([
     'tokenBalance',
-    'myLiquidity',
+    '@liquidity',
     'stakedTokenBalance',
     'claimTokens',
   ])

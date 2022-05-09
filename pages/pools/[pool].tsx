@@ -9,14 +9,12 @@ import {
   ManagePoolDialog,
   UnbondingLiquidityStatusList,
 } from 'features/liquidity'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import {
   useClaimRewards,
   usePendingRewards,
   useRewardsInfo,
 } from 'hooks/useRewardsQueries'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
   Button,
   ChevronIcon,
@@ -39,9 +37,12 @@ import { toast } from 'react-hot-toast'
 import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
+import { usePoolsListQuery } from '../../queries/usePoolsListQuery'
+import { useQueryPoolLiquidity } from '../../queries/useQueryPools'
+
 export default function Pool() {
   const {
-    query: { pool },
+    query: { pool: poolId },
   } = useRouter()
 
   const [
@@ -52,35 +53,34 @@ export default function Pool() {
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const isMobile = useMedia('sm')
-
-  const tokenA = useBaseTokenInfo()
-  const tokenB = useTokenInfoByPoolId(pool as string)
+  const { data: poolsList } = usePoolsListQuery()
+  const pool = poolId && poolsList?.poolsById[poolId as string]
 
   const [
     {
       totalLiquidity,
-      myLiquidity,
-      myLiquidityReserve,
-      myStakedLiquidityReserve,
+      fluid,
+      reserve,
+      staked,
       tokenDollarValue,
       myStakedLiquidity,
-      rewardsInfo,
+      rewards,
     } = {} as any,
     isLoading,
-  ] = usePoolLiquidity({ poolId: pool })
+  ] = useQueryPoolLiquidity({ poolId })
 
   const [rewardsContracts] = useRewardsInfo({
-    swapAddress: tokenB?.swap_address,
+    swapAddress: pool?.swap_address,
   })
 
   const [pendingRewards] = usePendingRewards({
-    swapAddress: tokenB?.swap_address,
+    swapAddress: pool?.swap_address,
   })
 
   const isLoadingInitial = isLoading && !totalLiquidity
 
   const supportsIncentives = Boolean(
-    __POOL_STAKING_ENABLED__ && tokenB?.staking_address
+    __POOL_STAKING_ENABLED__ && pool?.staking_address
   )
 
   const refetchQueries = useRefetchQueries([
@@ -91,7 +91,7 @@ export default function Pool() {
 
   const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
     useClaimRewards({
-      swapAddress: tokenB?.swap_address,
+      swapAddress: pool?.swap_address,
       onSuccess() {
         refetchQueries()
 
@@ -128,23 +128,21 @@ export default function Pool() {
       },
     })
 
-  if (!tokenB || !pool) return null
+  if (!pool || !poolId) return null
 
   return (
     <>
-      {pool && (
-        <ManagePoolDialog
-          isShowing={isManageLiquidityDialogShowing}
-          initialActionType={actionType}
-          onRequestClose={() =>
-            setManageLiquidityDialogState({
-              isShowing: false,
-              actionType: 'add',
-            })
-          }
-          poolId={pool as string}
-        />
-      )}
+      <ManagePoolDialog
+        isShowing={isManageLiquidityDialogShowing}
+        initialActionType={actionType}
+        onRequestClose={() =>
+          setManageLiquidityDialogState({
+            isShowing: false,
+            actionType: 'add',
+          })
+        }
+        poolId={poolId}
+      />
 
       {__POOL_STAKING_ENABLED__ && (
         <BondLiquidityDialog

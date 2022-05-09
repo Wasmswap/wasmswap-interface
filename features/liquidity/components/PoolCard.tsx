@@ -1,4 +1,3 @@
-import { LiquidityType } from 'hooks/usePoolLiquidity'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Card,
@@ -13,16 +12,17 @@ import {
   Text,
 } from 'junoblocks'
 import Link from 'next/link'
+import { PoolState, PoolTokenValue } from 'queries/useQueryPools'
 import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
 
 type PoolCardProps = {
   poolId: string
+  providedTotalLiquidity: PoolTokenValue
+  stakedLiquidity: PoolState
+  fluidLiquidity: PoolState
   tokenASymbol: string
   tokenBSymbol: string
-  totalLiquidity: LiquidityType
-  myLiquidity: LiquidityType
-  myStakedLiquidity: LiquidityType
-  rewardsInfo?: any
+  aprValue: number
 }
 
 const compactNumberFormatter = Intl.NumberFormat('en', {
@@ -42,28 +42,24 @@ export const PoolCard = ({
   poolId,
   tokenASymbol,
   tokenBSymbol,
-  totalLiquidity,
-  myStakedLiquidity,
-  rewardsInfo,
-  myLiquidity,
+  providedTotalLiquidity,
+  stakedLiquidity,
+  fluidLiquidity,
+  aprValue,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const hasProvidedLiquidity = Boolean(
-    myLiquidity.tokenAmount || myStakedLiquidity.dollarValue
-  )
+  const hasProvidedLiquidity = Boolean(providedTotalLiquidity.tokenAmount)
 
-  const stakedTokenBalanceDollarValue = myStakedLiquidity.dollarValue
+  const stakedTokenBalanceDollarValue = stakedLiquidity.provided.dollarValue
 
   const providedLiquidityDollarValueFormatted = hasProvidedLiquidity
-    ? formatToCompactDollarValue(
-        myLiquidity.dollarValue + stakedTokenBalanceDollarValue
-      )
+    ? formatToCompactDollarValue(providedTotalLiquidity.dollarValue)
     : 0
 
   const totalDollarValueLiquidityFormatted = dollarValueFormatterWithDecimals(
-    totalLiquidity.dollarValue,
+    fluidLiquidity.total.dollarValue,
     {
       includeCommaSeparation: true,
     }
@@ -168,7 +164,7 @@ export const PoolCard = ({
               </Text>
 
               <Text variant="primary" align="right">
-                {dollarValueFormatter(rewardsInfo?.yieldPercentageReturn ?? 0)}%
+                {dollarValueFormatter(aprValue ?? 0)}%
               </Text>
             </StyledDivForStatsColumn>
           </Inline>

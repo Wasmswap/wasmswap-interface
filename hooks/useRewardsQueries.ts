@@ -107,6 +107,7 @@ export const useMultipleRewardsInfo = ({
               getRewardsInfo(rewards_address, client)
             )
           )
+          let height = await client.getHeight()
 
           const serializedContractsInfo = await Promise.all(
             rewardsContractsInfo.map(async (contractInfo) => {
@@ -114,17 +115,21 @@ export const useMultipleRewardsInfo = ({
                 denom: contractInfo.config.reward_token,
               })
 
-              const rewardRatePerBlockInTokens = convertMicroDenomToDenom(
-                contractInfo.reward.reward_rate,
-                tokenInfo.decimals
-              )
+              const rewardRatePerBlockInTokens =
+                contractInfo.reward.period_finish < height
+                  ? convertMicroDenomToDenom(
+                      contractInfo.reward.reward_rate,
+                      tokenInfo.decimals
+                    )
+                  : 0
 
-              const rewardRatePerBlockInDollarValue = await getTokenDollarValue(
-                {
-                  tokenInfo,
-                  tokenAmountInDenom: rewardRatePerBlockInTokens,
-                }
-              )
+              const rewardRatePerBlockInDollarValue =
+                contractInfo.reward.period_finish < height
+                  ? await getTokenDollarValue({
+                      tokenInfo,
+                      tokenAmountInDenom: rewardRatePerBlockInTokens,
+                    })
+                  : 0
 
               const blocksPerSecond = 6
               const blocksPerYear = (525600 * 60) / blocksPerSecond

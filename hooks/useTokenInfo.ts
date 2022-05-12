@@ -11,11 +11,6 @@ export const unsafelyGetTokenInfo = (
   tokenSymbol: string,
   tokensList = getCachedTokenList()?.tokens
 ): TokenInfo | undefined => tokensList?.find((x) => x.symbol === tokenSymbol)
-
-export const unsafelyGetTokenInfoByPoolId = (
-  poolId: string,
-  tokensList = getCachedTokenList()?.tokens
-): TokenInfo | undefined => tokensList?.find((x) => x.pool_id === poolId)
 /* /token selector functions */
 
 /* returns a selector for getting multiple tokens info at once */
@@ -42,23 +37,6 @@ export const useMultipleTokenInfo = (tokenSymbols: Array<string>) => {
 /* hook for token info retrieval based on `tokenSymbol` */
 export const useTokenInfo = (tokenSymbol: string) => {
   return useMultipleTokenInfo(useMemo(() => [tokenSymbol], [tokenSymbol]))?.[0]
-}
-
-/* hook for token info retrieval based on `poolId` */
-export const useTokenInfoByPoolIds = (poolIds: Array<string>) => {
-  const [tokenList] = useTokenList()
-  return useMemo(
-    () =>
-      poolIds?.map((poolId) =>
-        unsafelyGetTokenInfoByPoolId(poolId, tokenList?.tokens)
-      ),
-    [poolIds, tokenList]
-  )
-}
-
-/* hook for token info retrieval based on `poolId` */
-export const useTokenInfoByPoolId = (poolId: string) => {
-  return useTokenInfoByPoolIds(useMemo(() => [poolId], [poolId]))?.[0]
 }
 
 /* hook for base token info retrieval */

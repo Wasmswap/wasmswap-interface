@@ -89,6 +89,7 @@ export const usePoolDialogController = ({
     : 0
 
   const { isLoading, mutate: mutateAddLiquidity } = useMutateLiquidity({
+    pool,
     actionState,
     percentage,
     tokenA,
@@ -118,6 +119,7 @@ export const usePoolDialogController = ({
 }
 
 const useMutateLiquidity = ({
+  pool,
   percentage,
   maxApplicableBalanceForTokenA,
   maxApplicableBalanceForTokenB,
@@ -130,7 +132,7 @@ const useMutateLiquidity = ({
   const refetchQueries = useRefetchQueries(['tokenBalance', 'myLiquidity'])
 
   const [swap] = useSwapInfo({
-    tokenSymbol: tokenB.symbol,
+    poolId: pool.pool_id,
   })
 
   const mutation = useMutation(
@@ -150,7 +152,7 @@ const useMutateLiquidity = ({
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
           minLiquidity: 0,
-          swapAddress: tokenB.swap_address,
+          swapAddress: pool.swap_address,
           senderAddress: address,
           tokenAddress: tokenB.token_address,
           tokenDenom: tokenB.denom,
@@ -162,7 +164,7 @@ const useMutateLiquidity = ({
           amount: Math.floor(percentage * providedLiquidity.tokenAmount),
           minToken1: 0,
           minToken2: 0,
-          swapAddress: tokenB.swap_address,
+          swapAddress: pool.swap_address,
           senderAddress: address,
           lpTokenAddress: lp_token_address,
           client,

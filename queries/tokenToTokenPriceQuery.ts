@@ -1,3 +1,6 @@
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+
+import { TokenInfo } from '../hooks/useTokenList'
 import {
   getToken1ForToken2Price,
   getToken2ForToken1Price,
@@ -7,86 +10,23 @@ import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from '../util/conversion'
+import { PoolMatchForSwap } from './useQueryMatchingPoolForSwap'
 
-/*
- * assuming theres always a pool with `baseToken` including either a `tokenA` or `tokenB` pair
- * */
-function findTokenPools({ baseToken, tokenA, tokenB, poolsList }) {
-  const isPoolMatchingTokens = ({
-    pool: {
-      pool_assets: [poolTokenA, poolTokenB],
-    },
-    tokenA,
-    tokenB,
-  }) => {
-    const matchingAB =
-      poolTokenA.symbol === tokenA.symbol && poolTokenB.symbol === tokenB.symbol
-
-    const matchingBA =
-      poolTokenA.symbol === tokenB.symbol && poolTokenB.symbol === tokenA.symbol
-
-    return { matchingAB, matchingBA }
-  }
-
-  return poolsList.reduce(
-    (state, pool) => {
-      /* bail early if we found a streamlinePool` */
-      if (state.streamlinePool) return state
-
-      const matchingStreamlinePair = isPoolMatchingTokens({
-        pool,
-        tokenA,
-        tokenB,
-      })
-
-      if (matchingStreamlinePair.matchingAB) {
-        state.streamlinePoolAB = pool
-        return state
-      }
-      if (matchingStreamlinePair.matchingBA) {
-        state.streamlinePoolBA = pool
-        return state
-      }
-
-      const matchingStreamlineBaseAndTokenA = isPoolMatchingTokens({
-        pool,
-        tokenA: baseToken,
-        tokenB: tokenA,
-      })
-      if (matchingStreamlineBaseAndTokenA.matchingAB) {
-        state.baseTokenBPool = pool
-        return state
-      }
-
-      const matchingStreamlineBaseAndTokenB = isPoolMatchingTokens({
-        pool,
-        tokenA: baseToken,
-        tokenB,
-      })
-      if (matchingStreamlineBaseAndTokenB.matchingAB) {
-        state.baseTokenBPool = pool
-        return state
-      }
-
-      return state
-    },
-    {
-      streamlinePoolAB: null,
-      streamlinePoolBA: null,
-      baseTokenAPool: null,
-      baseTokenBPool: null,
-    }
-  )
+type TokenToTokenPriceQueryArgs = {
+  matchingPools: PoolMatchForSwap
+  tokenA: TokenInfo
+  tokenB: TokenInfo
+  amount: number
+  client: CosmWasmClient
 }
 
 export async function tokenToTokenPriceQueryWithPools({
-  baseToken,
+  matchingPools,
   tokenA,
   tokenB,
-  poolsList,
   amount,
   client,
-}): Promise<number | undefined> {
+}: TokenToTokenPriceQueryArgs): Promise<number | undefined> {
   if (tokenA.symbol === tokenB.symbol) {
     return 1
   }
@@ -97,12 +37,7 @@ export async function tokenToTokenPriceQueryWithPools({
   const convertedTokenAmount = convertDenomToMicroDenom(amount, tokenA.decimals)
 
   const { streamlinePoolAB, streamlinePoolBA, baseTokenAPool, baseTokenBPool } =
-    findTokenPools({
-      baseToken,
-      tokenA,
-      tokenB,
-      poolsList,
-    })
+    matchingPools
 
   if (streamlinePoolAB) {
     return formatPrice(

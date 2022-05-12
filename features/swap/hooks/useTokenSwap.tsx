@@ -1,7 +1,7 @@
-import { unsafelyGetTokenInfo, useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Button,
-  Error,
+  ErrorIcon,
   IconWrapper,
   Toast,
   UpRightArrow,
@@ -23,6 +23,7 @@ import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 
 import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
+import { useQueryMatchingPoolForSwap } from '../../../queries/useQueryMatchingPoolForSwap'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 
 type UseTokenSwapArgs = {
@@ -43,18 +44,16 @@ export const useTokenSwap = ({
   const slippage = useRecoilValue(slippageAtom)
   const setTokenSwap = useSetRecoilState(tokenSwapAtom)
 
-  const baseToken = useBaseTokenInfo()
-
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
+  const [matchingPools] = useQueryMatchingPoolForSwap({ tokenA, tokenB })
   const refetchQueries = useRefetchQueries(['tokenBalance'])
 
   return useMutation(
     'swapTokens',
     async () => {
-      const tokenA = unsafelyGetTokenInfo(tokenASymbol)
-      const tokenB = unsafelyGetTokenInfo(tokenBSymbol)
-
       if (status !== WalletStatusType.connected) {
-        throw 'Please connect your wallet.'
+        throw new Error('Please connect your wallet.')
       }
 
       setTransactionState(TransactionStatus.EXECUTING)
@@ -63,23 +62,31 @@ export const useTokenSwap = ({
         tokenAmount,
         tokenA.decimals
       )
+
       const convertedPrice = convertDenomToMicroDenom(
         tokenToTokenPrice,
         tokenB.decimals
       )
 
-      if (tokenASymbol === baseToken.symbol) {
+      const {
+        streamlinePoolAB,
+        streamlinePoolBA,
+        baseTokenAPool,
+        baseTokenBPool,
+      } = matchingPools
+
+      if (streamlinePoolAB) {
         return await swapToken1ForToken2({
           nativeAmount: convertedTokenAmount,
           price: convertedPrice,
           slippage,
           senderAddress: address,
-          swapAddress: tokenB.swap_address,
+          swapAddress: streamlinePoolAB.swap_address,
           client,
         })
       }
 
-      if (tokenBSymbol === baseToken.symbol) {
+      if (streamlinePoolBA) {
         return await swapToken2ForToken1({
           tokenAmount: convertedTokenAmount,
           price: convertedPrice,
@@ -87,7 +94,7 @@ export const useTokenSwap = ({
           senderAddress: address,
           tokenAddress: tokenA.token_address,
           tokenDenom: tokenA.denom,
-          swapAddress: tokenA.swap_address,
+          swapAddress: streamlinePoolBA.swap_address,
           token2_native: tokenA.native,
           client,
         })
@@ -99,10 +106,10 @@ export const useTokenSwap = ({
         slippage,
         senderAddress: address,
         tokenAddress: tokenA.token_address,
-        swapAddress: tokenA.swap_address,
+        swapAddress: baseTokenAPool.swap_address,
         tokenNative: tokenA.native,
         tokenDenom: tokenA.denom,
-        outputSwapAddress: tokenB.swap_address,
+        outputSwapAddress: baseTokenBPool.swap_address,
         client,
       })
     },
@@ -136,7 +143,7 @@ export const useTokenSwap = ({
 
         toast.custom((t) => (
           <Toast
-            icon={<IconWrapper icon={<Error />} color="error" />}
+            icon={<ErrorIcon color="error" />}
             title="Oops swap error!"
             body={errorMessage}
             buttons={

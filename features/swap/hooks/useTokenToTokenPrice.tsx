@@ -1,11 +1,11 @@
-import { useBaseTokenInfo, useGetMultipleTokenInfo } from 'hooks/useTokenInfo'
+import { useTokenInfo } from 'hooks/useTokenInfo'
+import { useQueryMatchingPoolForSwap } from 'queries/useQueryMatchingPoolForSwap'
 import { useQuery } from 'react-query'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
 import { useCosmWasmClient } from '../../../hooks/useCosmWasmClient'
 import { TokenInfo } from '../../../hooks/useTokenList'
 import { tokenToTokenPriceQueryWithPools } from '../../../queries/tokenToTokenPriceQuery'
-import { usePoolsListQuery } from '../../../queries/usePoolsListQuery'
 
 type UseTokenPairsPricesArgs = {
   tokenASymbol: TokenInfo['symbol']
@@ -22,11 +22,12 @@ export const useTokenToTokenPriceQuery = ({
   enabled = true,
   refetchInBackground,
 }: UseTokenPairsPricesArgs) => {
-  const baseToken = useBaseTokenInfo()
   const client = useCosmWasmClient()
 
-  const { data: poolsListResponse } = usePoolsListQuery()
-  const getMultipleTokenInfo = useGetMultipleTokenInfo()
+  const tokenA = useTokenInfo(tokenASymbol)
+  const tokenB = useTokenInfo(tokenBSymbol)
+
+  const [matchingPools] = useQueryMatchingPoolForSwap({ tokenA, tokenB })
 
   return useQuery({
     queryKey: [
@@ -34,14 +35,8 @@ export const useTokenToTokenPriceQuery = ({
       tokenAmount,
     ],
     async queryFn() {
-      const [tokenA, tokenB] = getMultipleTokenInfo([
-        tokenASymbol,
-        tokenBSymbol,
-      ])
-
       return await tokenToTokenPriceQueryWithPools({
-        poolsList: poolsListResponse.pools,
-        baseToken,
+        matchingPools,
         tokenA,
         tokenB,
         client,
@@ -51,8 +46,7 @@ export const useTokenToTokenPriceQuery = ({
     enabled: Boolean(
       enabled &&
         client &&
-        baseToken &&
-        poolsListResponse?.pools.length > 0 &&
+        matchingPools &&
         tokenBSymbol &&
         tokenASymbol &&
         tokenAmount > 0 &&

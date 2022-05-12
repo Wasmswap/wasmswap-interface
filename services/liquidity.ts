@@ -8,7 +8,6 @@ import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { protectAgainstNaN } from 'junoblocks'
 
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export type AddLiquidityInput = {

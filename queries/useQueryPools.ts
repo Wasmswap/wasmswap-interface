@@ -1,4 +1,4 @@
-import { protectAgainstNaN } from 'junoblocks'
+import { protectAgainstNaN, usePersistance } from 'junoblocks'
 import { useMemo } from 'react'
 import { useQueries } from 'react-query'
 import { useRecoilValue } from 'recoil'
@@ -242,8 +242,10 @@ export const useQueryPoolLiquidity = ({ poolId }) => {
     refetchInBackground: true,
   })
 
+  const persitedData = usePersistance(poolResponse?.data)
+
   return [
-    poolResponse?.data,
+    persitedData,
     poolResponse?.isLoading || loadingPoolsList,
     poolResponse?.isError,
   ] as const

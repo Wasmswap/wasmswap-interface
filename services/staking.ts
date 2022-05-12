@@ -5,7 +5,6 @@ import {
 import { toBase64, toUtf8 } from '@cosmjs/encoding'
 import { StdFee } from '@cosmjs/stargate'
 
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const stakeTokens = async (

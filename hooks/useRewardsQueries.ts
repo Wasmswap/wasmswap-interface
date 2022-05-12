@@ -10,7 +10,7 @@ import {
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { useGetTokenDollarValueQuery } from '../queries/useGetTokenDollarValueQuery'
-import { useRewardContractsList } from './useRewardContractsList'
+import { usePoolsListQuery } from '../queries/usePoolsListQuery'
 import { useTokenList } from './useTokenList'
 
 export const usePendingRewards = ({ swapAddress }) => {
@@ -96,18 +96,18 @@ export const useClaimRewards = ({
 }
 
 const useGetRewardsContractBySwapAddress = () => {
-  const [rewardsContracts] = useRewardContractsList()
+  const { data: poolsListResponse } = usePoolsListQuery()
 
   return [
     useCallback(
       function selectRewardsContract({ swapAddress }) {
-        return rewardsContracts?.find(
+        return poolsListResponse?.pools.find(
           ({ swap_address }) => swap_address === swapAddress
         )
       },
-      [rewardsContracts]
+      [poolsListResponse]
     ),
-    Boolean(rewardsContracts?.length),
+    Boolean(poolsListResponse?.pools.length),
   ] as const
 }
 

@@ -6,25 +6,26 @@ import { useCosmWasmClient } from '../hooks/useCosmWasmClient'
 import { useTokenDollarValue } from '../hooks/useTokenDollarValue'
 import { useBaseTokenInfo } from '../hooks/useTokenInfo'
 import { tokenToTokenPriceQueryWithPools } from './tokenToTokenPriceQuery'
-import { usePoolsListQuery } from './usePoolsListQuery'
+import { useGetQueryMatchingPoolForSwap } from './useQueryMatchingPoolForSwap'
 
 export const useGetTokenDollarValueQuery = () => {
   const tokenA = useBaseTokenInfo()
   const client = useCosmWasmClient()
-  const { data: poolListResponse } = usePoolsListQuery()
   const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
     tokenA?.symbol
   )
+
+  const [getMatchingPoolForSwap, isLoadingPoolForSwapMatcher] =
+    useGetQueryMatchingPoolForSwap()
 
   return [
     async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
       if (!tokenAmountInDenom) return 0
 
       const priceForOneToken = await tokenToTokenPriceQueryWithPools({
-        baseToken: tokenA,
+        matchingPools: getMatchingPoolForSwap({ tokenA, tokenB: tokenInfo }),
         tokenA,
         tokenB: tokenInfo,
-        poolsList: poolListResponse.pools,
         client,
         amount: 1,
       })
@@ -32,7 +33,7 @@ export const useGetTokenDollarValueQuery = () => {
       return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
     },
     Boolean(
-      tokenA && client && !fetchingDollarPrice && poolListResponse?.pools.length
+      tokenA && client && !fetchingDollarPrice && !isLoadingPoolForSwapMatcher
     ),
   ] as const
 }

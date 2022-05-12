@@ -1,92 +1,72 @@
-import { useChainInfo } from 'hooks/useChainInfo'
 import { useBaseTokenInfo, useGetMultipleTokenInfo } from 'hooks/useTokenInfo'
-import { useMemo } from 'react'
-import { useQueries } from 'react-query'
+import { useQuery } from 'react-query'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
+import { useCosmWasmClient } from '../../../hooks/useCosmWasmClient'
 import { TokenInfo } from '../../../hooks/useTokenList'
-import { tokenToTokenPriceQuery } from '../../../queries/tokenToTokenPriceQuery'
-import { cosmWasmClientRouter } from '../../../util/cosmWasmClientRouter'
+import { tokenToTokenPriceQueryWithPools } from '../../../queries/tokenToTokenPriceQuery'
+import { usePoolsListQuery } from '../../../queries/usePoolsListQuery'
 
 type UseTokenPairsPricesArgs = {
-  tokenPairs: Array<{
-    tokenASymbol: TokenInfo['symbol']
-    tokenBSymbol: TokenInfo['symbol']
-    tokenAmount: number
-  }>
+  tokenASymbol: TokenInfo['symbol']
+  tokenBSymbol: TokenInfo['symbol']
+  tokenAmount: number
   enabled?: boolean
   refetchInBackground?: boolean
 }
 
-export const useTokenPairsPrices = ({
-  tokenPairs,
+export const useTokenToTokenPriceQuery = ({
+  tokenAmount,
+  tokenASymbol,
+  tokenBSymbol,
   enabled = true,
   refetchInBackground,
 }: UseTokenPairsPricesArgs) => {
-  const [chainInfo] = useChainInfo()
-  const getMultipleTokenInfo = useGetMultipleTokenInfo()
   const baseToken = useBaseTokenInfo()
+  const client = useCosmWasmClient()
 
-  return useQueries(
-    tokenPairs?.map(({ tokenASymbol, tokenBSymbol, tokenAmount }) => ({
-      queryKey: [
-        `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-        chainInfo,
-        tokenAmount,
-      ],
-      async queryFn() {
-        const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
+  const { data: poolsListResponse } = usePoolsListQuery()
+  const getMultipleTokenInfo = useGetMultipleTokenInfo()
 
-        const [fromTokenInfo, toTokenInfo] = getMultipleTokenInfo([
-          tokenASymbol,
-          tokenBSymbol,
-        ])
+  return useQuery({
+    queryKey: [
+      `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
+      tokenAmount,
+    ],
+    async queryFn() {
+      const [tokenA, tokenB] = getMultipleTokenInfo([
+        tokenASymbol,
+        tokenBSymbol,
+      ])
 
-        const tokenPrice = await tokenToTokenPriceQuery({
-          baseToken,
-          fromTokenInfo,
-          toTokenInfo,
-          client,
-          amount: tokenAmount,
-        })
-
-        return {
-          tokenPrice,
-          tokenASymbol,
-          tokenBSymbol,
-          tokenAmount,
-        }
-      },
-      enabled: Boolean(
-        enabled &&
-          chainInfo?.rpc &&
-          baseToken &&
-          tokenBSymbol &&
-          tokenASymbol &&
-          tokenAmount > 0 &&
-          tokenBSymbol !== tokenASymbol
-      ),
-      refetchOnMount: 'always' as const,
-      refetchInterval: refetchInBackground
-        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
-        : undefined,
-      refetchIntervalInBackground: Boolean(refetchInBackground),
-    }))
-  )
+      return await tokenToTokenPriceQueryWithPools({
+        poolsList: poolsListResponse.pools,
+        baseToken,
+        tokenA,
+        tokenB,
+        client,
+        amount: tokenAmount,
+      })
+    },
+    enabled: Boolean(
+      enabled &&
+        client &&
+        baseToken &&
+        poolsListResponse?.pools.length > 0 &&
+        tokenBSymbol &&
+        tokenASymbol &&
+        tokenAmount > 0 &&
+        tokenBSymbol !== tokenASymbol
+    ),
+    refetchOnMount: 'always' as const,
+    refetchInterval: refetchInBackground
+      ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+      : undefined,
+    refetchIntervalInBackground: Boolean(refetchInBackground),
+  })
 }
 
-export const useTokenToTokenPrice = ({
-  tokenASymbol,
-  tokenBSymbol,
-  tokenAmount,
-}) => {
-  const [{ data, isLoading }] = useTokenPairsPrices({
-    tokenPairs: useMemo(
-      () => [{ tokenASymbol, tokenBSymbol, tokenAmount }],
-      [tokenASymbol, tokenBSymbol, tokenAmount]
-    ),
-    refetchInBackground: true,
-  })
-
-  return [data?.tokenPrice, isLoading] as const
+export const useTokenToTokenPrice = (args: UseTokenPairsPricesArgs) => {
+  const { data, isLoading } = useTokenToTokenPriceQuery(args)
+  return [data, isLoading] as const
 }

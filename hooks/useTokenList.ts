@@ -3,10 +3,8 @@ import { queryClient } from 'services/queryClient'
 
 export type TokenInfo = {
   id: string
-  pool_id: string
   chain_id: string
   token_address: string
-  swap_address: string
   symbol: string
   name: string
   decimals: number
@@ -14,8 +12,6 @@ export type TokenInfo = {
   tags: string[]
   denom: string
   native: boolean
-  staking_address: string
-  rewards_addresses: string[]
 }
 
 export type TokenList = {

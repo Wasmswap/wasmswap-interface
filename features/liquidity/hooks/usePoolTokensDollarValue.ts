@@ -32,10 +32,15 @@ export const useGetPoolTokensDollarValue = () => {
   ] as const
 }
 
+type UsePoolTokensDollarValueArgs = {
+  poolId: string
+  tokenAmountInMicroDenom: number
+}
+
 export const usePoolTokensDollarValue = ({
   poolId,
   tokenAmountInMicroDenom,
-}) => {
+}: UsePoolTokensDollarValueArgs) => {
   const [getPoolTokensDollarValue, enabled] = useGetPoolTokensDollarValue()
 
   const [swapInfo, isLoading] = useSwapInfo({ poolId })

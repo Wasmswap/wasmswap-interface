@@ -1,11 +1,7 @@
 import { useCallback } from 'react'
-import { useMutation, useQueries, useQuery } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import {
-  claimRewards,
-  getPendingRewards,
-  getRewardsInfo,
-} from 'services/rewards'
+import { claimRewards, getPendingRewards } from 'services/rewards'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import {
   __POOL_REWARDS_ENABLED__,
@@ -13,12 +9,8 @@ import {
 } from 'util/constants'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
-import { tokenToTokenPriceQuery } from '../queries/tokenToTokenPriceQuery'
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
-import { useChainInfo } from './useChainInfo'
+import { useGetTokenDollarValueQuery } from '../queries/useGetTokenDollarValueQuery'
 import { useRewardContractsList } from './useRewardContractsList'
-import { useTokenDollarValue } from './useTokenDollarValue'
-import { useBaseTokenInfo } from './useTokenInfo'
 import { useTokenList } from './useTokenList'
 
 export const usePendingRewards = ({ swapAddress }) => {
@@ -28,7 +20,7 @@ export const usePendingRewards = ({ swapAddress }) => {
   const [getTokenInfoByDenom, enabledTokenInfoByDenomSearch] =
     useGetTokenInfoByDenom()
   const [getTokenDollarValue, enabledTokenDollarValueQuery] =
-    useGetTokenDollarValue()
+    useGetTokenDollarValueQuery()
 
   const { data: rewards, isLoading } = useQuery(
     [`pendingRewards/${swapAddress}`, address],
@@ -77,106 +69,6 @@ export const usePendingRewards = ({ swapAddress }) => {
   )
 
   return [rewards, isLoading]
-}
-
-type UseMultipleRewardsInfoArgs = {
-  swapAddresses: Array<string>
-  refetchInBackground?: boolean
-}
-
-export const useMultipleRewardsInfo = ({
-  swapAddresses,
-  refetchInBackground = false,
-}: UseMultipleRewardsInfoArgs) => {
-  const [chainInfo] = useChainInfo()
-  const [getRewardsContract, enabledRewardsContractsQuery] =
-    useGetRewardsContractBySwapAddress()
-  const [getTokenInfoByDenom, enabledTokenInfoSearch] = useGetTokenInfoByDenom()
-  const [getTokenDollarValue, enabledTokenDollarValueQuery] =
-    useGetTokenDollarValue()
-
-  return useQueries(
-    (swapAddresses ?? [])?.map((swapAddress) => ({
-      queryKey: `rewardsInfo/${swapAddress}`,
-      async queryFn() {
-        const rewardsContract = getRewardsContract({ swapAddress })
-        if (rewardsContract) {
-          const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
-          const rewardsContractsInfo = await Promise.all(
-            rewardsContract.rewards_tokens.map(({ rewards_address }) =>
-              getRewardsInfo(rewards_address, client)
-            )
-          )
-
-          const serializedContractsInfo = await Promise.all(
-            rewardsContractsInfo.map(async (contractInfo) => {
-              const tokenInfo = getTokenInfoByDenom({
-                denom: contractInfo.config.reward_token,
-              })
-
-              const rewardRatePerBlockInTokens = convertMicroDenomToDenom(
-                contractInfo.reward.reward_rate,
-                tokenInfo.decimals
-              )
-
-              const rewardRatePerBlockInDollarValue = await getTokenDollarValue(
-                {
-                  tokenInfo,
-                  tokenAmountInDenom: rewardRatePerBlockInTokens,
-                }
-              )
-
-              const blocksPerSecond = 6
-              const blocksPerYear = (525600 * 60) / blocksPerSecond
-
-              const rewardRate = {
-                ratePerBlock: {
-                  tokens: rewardRatePerBlockInTokens,
-                  dollarValue: rewardRatePerBlockInDollarValue,
-                },
-                ratePerYear: {
-                  tokens: rewardRatePerBlockInTokens * blocksPerYear,
-                  dollarValue: rewardRatePerBlockInDollarValue * blocksPerYear,
-                },
-              }
-
-              return {
-                contract: contractInfo,
-                rewardRate,
-                tokenInfo,
-              }
-            })
-          )
-
-          return {
-            contracts: serializedContractsInfo,
-            swap_address: swapAddress,
-          }
-        }
-
-        return undefined
-      },
-      enabled: Boolean(
-        __POOL_REWARDS_ENABLED__ &&
-          Boolean(chainInfo?.rpc) &&
-          enabledRewardsContractsQuery &&
-          enabledTokenInfoSearch &&
-          enabledTokenDollarValueQuery
-      ),
-      refetchInterval: refetchInBackground
-        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
-        : undefined,
-      refetchIntervalInBackground: refetchInBackground,
-      refetchOnMount: false,
-    }))
-  )
-}
-
-export const useRewardsInfo = ({ swapAddress }) => {
-  const [response] =
-    useMultipleRewardsInfo({ swapAddresses: [swapAddress] }) || []
-
-  return [response?.data, response?.isLoading]
 }
 
 type UseClaimRewardsArgs = {
@@ -233,30 +125,5 @@ const useGetTokenInfoByDenom = () => {
       })
     },
     !fetching,
-  ] as const
-}
-
-export const useGetTokenDollarValue = () => {
-  const tokenA = useBaseTokenInfo()
-  const [chainInfo, fetchingChainInfo] = useChainInfo()
-  const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
-    tokenA?.symbol
-  )
-
-  return [
-    async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
-      const client = await cosmWasmClientRouter.connect(chainInfo.rpc)
-
-      const priceForOneToken = await tokenToTokenPriceQuery({
-        baseToken: tokenA,
-        fromTokenInfo: tokenA,
-        toTokenInfo: tokenInfo,
-        client,
-        amount: 1,
-      })
-
-      return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
-    },
-    Boolean(tokenA && !fetchingChainInfo && !fetchingDollarPrice),
   ] as const
 }

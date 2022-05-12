@@ -1,4 +1,4 @@
-import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { usePoolFromListQuery } from 'queries/usePoolsListQuery'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { claimTokens } from 'services/staking'
@@ -13,12 +13,12 @@ export const useClaimTokens = ({
   ...mutationArgs
 }: UseClaimTokensMutationArgs) => {
   const { address, client } = useRecoilValue(walletState)
-  const tokenInfo = useTokenInfoByPoolId(poolId)
+  const [pool] = usePoolFromListQuery({ poolId })
 
   return useMutation(
     `claimTokens/${poolId}`,
     async () => {
-      return claimTokens(address, tokenInfo.staking_address, client)
+      return claimTokens(address, pool.staking_address, client)
     },
     mutationArgs
   )

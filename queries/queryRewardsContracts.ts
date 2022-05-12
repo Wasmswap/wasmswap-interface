@@ -1,7 +1,8 @@
-import { getRewardsInfo } from '../services/rewards'
+import { getRewardsInfo, RewardsInfoResponse } from '../services/rewards'
 import { convertMicroDenomToDenom } from '../util/conversion'
 import { InternalQueryContext } from './types'
-import { PoolEntityType } from './usePoolsListQuery'
+import { PoolEntityType, TokenInfoWithReward } from './usePoolsListQuery'
+import { PoolTokenValue } from './useQueryPools'
 
 const blocksPerSecond = 6
 const blocksPerYear = (525600 * 60) / blocksPerSecond
@@ -12,18 +13,26 @@ export type QueryRewardsContractsArgs = {
   context: InternalQueryContext
 }
 
+export type SerializedRewardsContract = {
+  contract: RewardsInfoResponse
+  tokenInfo: TokenInfoWithReward
+  rewardRate: {
+    ratePerBlock: PoolTokenValue
+    ratePerYear: PoolTokenValue
+  }
+}
+
 export async function queryRewardsContracts({
-  swapAddress,
   rewardsTokens,
   context: { client, getTokenDollarValue },
-}: QueryRewardsContractsArgs) {
+}: QueryRewardsContractsArgs): Promise<Array<SerializedRewardsContract>> {
   const rewardsContractsInfo = await Promise.all(
     rewardsTokens.map(({ rewards_address }) =>
       getRewardsInfo(rewards_address, client)
     )
   )
 
-  const serializedContractsInfo = await Promise.all(
+  return await Promise.all(
     rewardsContractsInfo.map(async (contractInfo, index) => {
       const tokenInfo = rewardsTokens[index]
 
@@ -55,9 +64,4 @@ export async function queryRewardsContracts({
       }
     })
   )
-
-  return {
-    contracts: serializedContractsInfo,
-    swap_address: swapAddress,
-  }
 }

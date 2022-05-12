@@ -12,34 +12,43 @@ import {
   useSubscribeInteractions,
 } from 'junoblocks'
 
+import { PoolTokenValue } from '../../../queries/useQueryPools'
 import { BaseCardForEmptyState } from './BaseCardForEmptyState'
 import { SegmentedRewardsSimulator } from './SegmentedRewardsSimulator'
 import { StepIcon } from './StepIcon'
 
+type ManageBondedLiquidityCardProps = {
+  onClick: () => void
+  yieldPercentageReturn?: number
+  providedLiquidity: PoolTokenValue
+  stakedLiquidity: PoolTokenValue
+  supportsIncentives: boolean
+}
+
 export const ManageBondedLiquidityCard = ({
   onClick,
-  rewardsInfo,
-  myLiquidity,
-  stakedBalance,
+  yieldPercentageReturn,
+  providedLiquidity,
+  stakedLiquidity,
   supportsIncentives,
-}) => {
+}: ManageBondedLiquidityCardProps) => {
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const bondedLiquidity = supportsIncentives && stakedBalance?.tokenAmount > 0
-  const providedLiquidity = myLiquidity?.tokenAmount > 0
+  const bondedLiquidity = supportsIncentives && stakedLiquidity?.tokenAmount > 0
+  const didProvideLiquidity = providedLiquidity?.tokenAmount > 0
 
   const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(
-    stakedBalance?.dollarValue,
+    stakedLiquidity?.dollarValue,
     {
       includeCommaSeparation: true,
     }
   )
 
   const formattedYieldPercentageReturn = dollarValueFormatter(
-    rewardsInfo?.yieldPercentageReturn ?? 0
+    yieldPercentageReturn ?? 0
   )
-  const interestOnStakedBalance =
-    (rewardsInfo?.yieldPercentageReturn ?? 0) / 100
+
+  const interestOnStakedBalance = (yieldPercentageReturn ?? 0) / 100
 
   if (!supportsIncentives) {
     return (
@@ -68,7 +77,7 @@ export const ManageBondedLiquidityCard = ({
     )
   }
 
-  if (!providedLiquidity && !bondedLiquidity) {
+  if (!didProvideLiquidity && !bondedLiquidity) {
     return (
       <BaseCardForEmptyState
         variant="ghost"
@@ -116,7 +125,7 @@ export const ManageBondedLiquidityCard = ({
 
         <SegmentedRewardsSimulator
           interestOnStakedBalance={interestOnStakedBalance}
-          stakedBalanceDollarValue={stakedBalance?.dollarValue}
+          stakedLiquidityDollarValue={stakedLiquidity?.dollarValue}
         />
 
         <Inline css={{ paddingBottom: '$12' }}>

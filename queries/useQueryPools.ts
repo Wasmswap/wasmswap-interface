@@ -1,3 +1,4 @@
+import { protectAgainstNaN } from 'junoblocks'
 import { useMemo } from 'react'
 import { useQueries } from 'react-query'
 import { useRecoilValue } from 'recoil'
@@ -8,7 +9,10 @@ import { walletState } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { convertMicroDenomToDenom } from '../util/conversion'
 import { queryMyLiquidity } from './queryMyLiquidity'
-import { queryRewardsAnnualYieldRate } from './queryRewardsAnnualYieldRate'
+import {
+  queryRewardsContracts,
+  SerializedRewardsContract,
+} from './queryRewardsContracts'
 import { queryStakedLiquidity } from './queryStakedLiquidity'
 import { querySwapInfo } from './querySwapInfo'
 import { useGetTokenDollarValueQuery } from './useGetTokenDollarValueQuery'
@@ -42,6 +46,7 @@ export type PoolLiquidityState = {
 
   rewards: {
     annualYieldPercentageReturn: number
+    contracts?: Array<SerializedRewardsContract>
   }
 }
 
@@ -152,14 +157,19 @@ export const useQueryMultiplePoolsLiquidity = ({
       ])
 
     let annualYieldPercentageReturn = 0
+    let rewardsContracts: Array<SerializedRewardsContract> | undefined
 
     const shouldQueryRewardsContracts = pool.rewards_tokens?.length > 0
     if (shouldQueryRewardsContracts) {
-      annualYieldPercentageReturn = await queryRewardsAnnualYieldRate({
+      rewardsContracts = await queryRewardsContracts({
         swapAddress: pool.swap_address,
         rewardsTokens: pool.rewards_tokens,
-        totalStakedDollarValue: totalStaked.dollarValue,
         context,
+      })
+
+      annualYieldPercentageReturn = calculateRewardsAnnualYieldRate({
+        rewardsContracts,
+        totalStakedDollarValue: totalStaked.dollarValue,
       })
     }
 
@@ -188,6 +198,7 @@ export const useQueryMultiplePoolsLiquidity = ({
       },
       rewards: {
         annualYieldPercentageReturn,
+        contracts: rewardsContracts,
       },
     }
 
@@ -218,17 +229,38 @@ export const useQueryMultiplePoolsLiquidity = ({
 }
 
 export const useQueryPoolLiquidity = ({ poolId }) => {
-  const { data: poolsList } = usePoolsListQuery()
+  const { data: poolsListResponse, isLoading: loadingPoolsList } =
+    usePoolsListQuery()
 
   const poolToFetch = useMemo(() => {
-    const pool = poolsList?.pools.find((pool) => pool.pool_id === poolId)
-    return pool ? [pool] : []
-  }, [poolsList, poolId])
+    const pool = poolsListResponse?.poolsById[poolId]
+    return pool ? [pool] : undefined
+  }, [poolId, poolsListResponse])
 
-  const [liquidity, isLoading] = useQueryMultiplePoolsLiquidity({
+  const [poolResponse] = useQueryMultiplePoolsLiquidity({
     pools: poolToFetch,
     refetchInBackground: true,
   })
 
-  return [liquidity?.[0], isLoading] as const
+  return [
+    poolResponse?.data,
+    poolResponse?.isLoading || loadingPoolsList,
+    poolResponse?.isError,
+  ] as const
+}
+
+export function calculateRewardsAnnualYieldRate({
+  rewardsContracts,
+  totalStakedDollarValue,
+}) {
+  /* rewards math */
+  return rewardsContracts.reduce((yieldReturnValue, rewardsContract) => {
+    return (
+      yieldReturnValue +
+      protectAgainstNaN(
+        rewardsContract.rewardRate.ratePerYear.dollarValue /
+          totalStakedDollarValue
+      )
+    )
+  }, 0)
 }

@@ -2,7 +2,6 @@ import { useUpdateEffect } from '@reach/utils'
 import dayjs from 'dayjs'
 import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
   Button,
   Column,
@@ -32,18 +31,30 @@ import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
 import { StateSwitchButtons } from './StateSwitchButtons'
 
-export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
+type BondLiquidityDialogProps = {
+  isShowing: boolean
+  onRequestClose: () => void
+  poolId: string
+}
+
+export const BondLiquidityDialog = ({
+  isShowing,
+  onRequestClose,
+  poolId,
+}: BondLiquidityDialogProps) => {
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
 
-  const tokenA = useBaseTokenInfo()
-  const tokenB = useTokenInfoByPoolId(poolId)
+  const [pool] = useQueryPoolLiquidity({
+    poolId,
+  })
 
-  const [{ liquidity } = {} as any] = useQueryPoolLiquidity({ poolId })
+  const { pool_assets, liquidity } = pool || {}
+  const [tokenA, tokenB] = pool_assets || []
 
   const maxLiquidityTokenAmount =
     dialogState === 'stake'
-      ? liquidity?.provided?.tokenAmount ?? 0
-      : liquidity?.staked.tokenAmount ?? 0
+      ? liquidity?.fluid.provided.tokenAmount ?? 0
+      : liquidity?.staked.provided.tokenAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
 
@@ -186,7 +197,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     return isLoading || !tokenAmount
   }
 
-  const canManageStaking = Boolean(stakedAmount > 0)
+  const canManageStaking = Boolean(liquidity?.staked.provided.tokenAmount > 0)
 
   useEffect(() => {
     const shouldResetDialogState =

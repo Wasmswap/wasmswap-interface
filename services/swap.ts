@@ -8,7 +8,6 @@ import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { unsafelyGetBaseToken } from 'hooks/useTokenInfo'
 
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export interface SwapToken1ForToken2Input {
@@ -212,12 +211,12 @@ export const getToken1ForToken2Price = async ({
   client,
 }: GetToken1ForToken2PriceInput) => {
   try {
-    const query = await client.queryContractSmart(swapAddress, {
+    const response = await client.queryContractSmart(swapAddress, {
       token1_for_token2_price: {
         token1_amount: `${nativeAmount}`,
       },
     })
-    return query.token2_amount
+    return response.token2_amount
   } catch (e) {
     console.error('err(getToken1ForToken2Price):', e)
   }
@@ -250,23 +249,19 @@ export interface GetTokenForTokenPriceInput {
   tokenAmount: number
   swapAddress: string
   outputSwapAddress: string
-  rpcEndpoint: string
+  client: CosmWasmClient
 }
 
 export const getTokenForTokenPrice = async (
   input: GetTokenForTokenPriceInput
 ) => {
   try {
-    const nativePrice = await getToken2ForToken1Price({
-      tokenAmount: input.tokenAmount,
-      swapAddress: input.swapAddress,
-      rpcEndpoint: input.rpcEndpoint,
-    })
+    const nativePrice = await getToken2ForToken1Price(input)
 
     return getToken1ForToken2Price({
       nativeAmount: nativePrice,
       swapAddress: input.outputSwapAddress,
-      rpcEndpoint: input.rpcEndpoint,
+      client: input.client,
     })
   } catch (e) {
     console.error('error(getTokenForTokenPrice)', e)

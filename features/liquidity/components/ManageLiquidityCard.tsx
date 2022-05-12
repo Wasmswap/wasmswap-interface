@@ -18,6 +18,7 @@ import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 
 type ManageLiquidityCardProps = {
   stakedLiquidity: PoolState
+  providedLiquidity: PoolTokenValue
   providedTotalLiquidity: PoolTokenValue
   providedLiquidityReserve: ReserveType
   stakedLiquidityReserve: ReserveType
@@ -32,6 +33,7 @@ export const ManageLiquidityCard = ({
   providedLiquidityReserve,
   stakedLiquidityReserve,
   providedTotalLiquidity,
+  providedLiquidity,
   stakedLiquidity,
   tokenASymbol,
   tokenBSymbol,
@@ -42,8 +44,9 @@ export const ManageLiquidityCard = ({
 
   const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const bondedLiquidity = stakedLiquidity?.provided.tokenAmount > 0
-  const providedLiquidity = providedLiquidityReserve?.[0] > 0 || bondedLiquidity
+  const didBondLiquidity = stakedLiquidity?.provided.tokenAmount > 0
+  const didProvideLiquidity =
+    providedLiquidityReserve?.[0] > 0 || didBondLiquidity
 
   const tokenAReserve = convertMicroDenomToDenom(
     providedLiquidityReserve?.[0] + stakedLiquidityReserve?.[0],
@@ -65,7 +68,9 @@ export const ManageLiquidityCard = ({
       ref={refForCard}
       tabIndex={-1}
       role="button"
-      variant={providedLiquidity || bondedLiquidity ? 'primary' : 'secondary'}
+      variant={
+        didProvideLiquidity || didBondLiquidity ? 'primary' : 'secondary'
+      }
       onClick={onClick}
     >
       <CardContent>
@@ -75,7 +80,7 @@ export const ManageLiquidityCard = ({
         <Text variant="hero">${providedLiquidityDollarValue}</Text>
         <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>
           $
-          {dollarValueFormatterWithDecimals(availableLiquidityInDollarValue, {
+          {dollarValueFormatterWithDecimals(providedLiquidity?.dollarValue, {
             includeCommaSeparation: true,
           })}{' '}
           available
@@ -98,7 +103,7 @@ export const ManageLiquidityCard = ({
           />
         </Column>
         <Inline css={{ paddingBottom: '$12' }}>
-          {providedLiquidity && (
+          {didProvideLiquidity && (
             <Button
               variant="secondary"
               size="large"
@@ -112,7 +117,7 @@ export const ManageLiquidityCard = ({
               Manage Liquidity
             </Button>
           )}
-          {!providedLiquidity && (
+          {!didProvideLiquidity && (
             <Button
               variant="primary"
               size="large"

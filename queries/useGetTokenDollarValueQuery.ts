@@ -5,11 +5,13 @@
 import { useCosmWasmClient } from '../hooks/useCosmWasmClient'
 import { useTokenDollarValue } from '../hooks/useTokenDollarValue'
 import { useBaseTokenInfo } from '../hooks/useTokenInfo'
-import { tokenToTokenPriceQuery } from './tokenToTokenPriceQuery'
+import { tokenToTokenPriceQueryWithPools } from './tokenToTokenPriceQuery'
+import { usePoolsListQuery } from './usePoolsListQuery'
 
 export const useGetTokenDollarValueQuery = () => {
   const tokenA = useBaseTokenInfo()
   const client = useCosmWasmClient()
+  const { data: poolListResponse } = usePoolsListQuery()
   const [tokenADollarPrice, fetchingDollarPrice] = useTokenDollarValue(
     tokenA?.symbol
   )
@@ -18,16 +20,19 @@ export const useGetTokenDollarValueQuery = () => {
     async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
       if (!tokenAmountInDenom) return 0
 
-      const priceForOneToken = await tokenToTokenPriceQuery({
+      const priceForOneToken = await tokenToTokenPriceQueryWithPools({
         baseToken: tokenA,
-        fromTokenInfo: tokenA,
-        toTokenInfo: tokenInfo,
+        tokenA,
+        tokenB: tokenInfo,
+        poolsList: poolListResponse.pools,
         client,
         amount: 1,
       })
 
       return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
     },
-    Boolean(tokenA && client && !fetchingDollarPrice),
+    Boolean(
+      tokenA && client && !fetchingDollarPrice && poolListResponse?.pools.length
+    ),
   ] as const
 }

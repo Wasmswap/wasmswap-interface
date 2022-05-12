@@ -26,7 +26,7 @@ import { toast } from 'react-hot-toast'
 
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
 
-type Props = {
+type UnbondingLiquidityStatusListProps = {
   poolId: string
   tokenA: TokenInfo
   tokenB: TokenInfo
@@ -38,7 +38,7 @@ export const UnbondingLiquidityStatusList = ({
   tokenA,
   tokenB,
   size = 'large',
-}: Props) => {
+}: UnbondingLiquidityStatusListProps) => {
   /* mocks for getting the amount of tokens that can be redeemed  */
   const { amount, claims, canRedeem, hasUnstakingTokens, isLoading } =
     useRedeemableTokensBalance({

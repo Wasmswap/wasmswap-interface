@@ -15,19 +15,32 @@ import {
   __POOL_STAKING_ENABLED__,
 } from 'util/constants'
 
+import { TokenInfo } from '../../../hooks/useTokenList'
+import { SerializedRewardsContract } from '../../../queries/queryRewardsContracts'
+import { PoolTokenValue } from '../../../queries/useQueryPools'
 import { usePoolPairTokenAmount } from '../hooks'
 import { AprPill } from './AprPill'
 import { StyledDivForTokenLogos } from './PoolCard'
+
+type LiquidityBreakdownProps = {
+  tokenA: TokenInfo
+  tokenB: TokenInfo
+  poolId: string
+  totalLiquidity: PoolTokenValue
+  yieldPercentageReturn: number
+  rewardsContracts: Array<SerializedRewardsContract>
+  size: 'large' | 'small'
+}
 
 export const LiquidityBreakdown = ({
   tokenA,
   tokenB,
   poolId,
   totalLiquidity,
-  rewardsInfo,
+  yieldPercentageReturn,
   rewardsContracts,
   size = 'large',
-}) => {
+}: LiquidityBreakdownProps) => {
   const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.symbol,
     tokenBSymbol: tokenB?.symbol,
@@ -47,7 +60,7 @@ export const LiquidityBreakdown = ({
   })
 
   const formattedYieldPercentageReturn = dollarValueFormatter(
-    rewardsInfo?.yieldPercentageReturn ?? 0
+    yieldPercentageReturn ?? 0
   )
 
   const priceBreakdown = isPriceLoading
@@ -100,7 +113,7 @@ export const LiquidityBreakdown = ({
               Token reward distribution
             </Text>
             <Inline gap={8}>
-              {rewardsContracts?.contracts?.map(({ tokenInfo }, key) => (
+              {rewardsContracts?.map(({ tokenInfo }, key) => (
                 <Inline gap={3} key={key}>
                   <ImageForTokenLogo
                     size="large"
@@ -121,7 +134,7 @@ export const LiquidityBreakdown = ({
     <>
       <Inline justifyContent="space-between" css={{ padding: '$8 0' }}>
         <Inline gap={18}>
-          <Text variant="primary">Pool #{tokenB.pool_id}</Text>
+          <Text variant="primary">Pool #{poolId}</Text>
           <Inline gap={12}>
             <Inline gap={6}>
               <ImageForTokenLogo
@@ -178,7 +191,7 @@ export const LiquidityBreakdown = ({
                 Token reward
               </Text>
               <StyledDivForTokenLogos>
-                {rewardsContracts?.contracts.map(({ tokenInfo }) => (
+                {rewardsContracts?.map(({ tokenInfo }) => (
                   <ImageForTokenLogo
                     size="large"
                     key={tokenInfo.symbol}

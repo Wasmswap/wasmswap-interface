@@ -6,10 +6,15 @@ import {
 } from 'junoblocks'
 import { useRef, useState } from 'react'
 
+type SegmentedRewardsSimulatorProps = {
+  interestOnStakedBalance: number
+  stakedLiquidityDollarValue: number
+}
+
 export const SegmentedRewardsSimulator = ({
   interestOnStakedBalance,
-  stakedBalanceDollarValue,
-}) => {
+  stakedLiquidityDollarValue,
+}: SegmentedRewardsSimulatorProps) => {
   const values = useRef([
     { value: 'year', label: 'Year' },
     { value: 'month', label: 'Month' },
@@ -19,10 +24,10 @@ export const SegmentedRewardsSimulator = ({
   const [activeValue, setActiveValue] =
     useState<typeof values[number]['value']>('year')
 
-  const hasStakedLiquidity = stakedBalanceDollarValue > 0
+  const hasStakedLiquidity = stakedLiquidityDollarValue > 0
 
   const yearRewardOnStakedBalance =
-    stakedBalanceDollarValue * interestOnStakedBalance
+    stakedLiquidityDollarValue * interestOnStakedBalance
 
   let divider = 1
   if (activeValue === 'month') {

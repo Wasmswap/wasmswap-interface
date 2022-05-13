@@ -70,7 +70,7 @@ export const BondLiquidityDialog = ({
 
   const refetchQueries = useRefetchQueries([
     'tokenBalance',
-    '@liquidity',
+    `@pool-liquidity/${pool.pool_id}`,
     'stakedTokenBalance',
     'claimTokens',
   ])

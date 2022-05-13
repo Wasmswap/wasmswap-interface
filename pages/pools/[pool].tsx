@@ -33,7 +33,11 @@ import { useRouter } from 'next/router'
 import { useQueryPoolLiquidity } from 'queries/useQueryPools'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  __POOL_STAKING_ENABLED__,
+  APP_NAME,
+} from 'util/constants'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 export default function Pool() {
@@ -52,20 +56,22 @@ export default function Pool() {
   const [pool, isLoading, isError] = useQueryPoolLiquidity({ poolId })
 
   const [pendingRewards] = usePendingRewards({
-    swapAddress: pool?.swap_address,
+    pool,
   })
 
   const isLoadingInitial = isLoading && !pool
 
   const supportsIncentives = Boolean(
-    __POOL_STAKING_ENABLED__ && pool?.staking_address
+    __POOL_STAKING_ENABLED__ &&
+      __POOL_REWARDS_ENABLED__ &&
+      pool?.staking_address
   )
 
   const refetchQueries = useRefetchQueries(['@liquidity', 'pendingRewards'])
 
   const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
     useClaimRewards({
-      swapAddress: pool?.swap_address,
+      pool,
       onSuccess() {
         refetchQueries()
 

@@ -1,4 +1,4 @@
-import { protectAgainstNaN, usePersistance } from 'junoblocks'
+import { usePersistance } from 'junoblocks'
 import { useMemo } from 'react'
 import { useQueries } from 'react-query'
 import { useRecoilValue } from 'recoil'
@@ -6,7 +6,10 @@ import { useRecoilValue } from 'recoil'
 import { useGetPoolTokensDollarValue } from '../features/liquidity'
 import { useCosmWasmClient } from '../hooks/useCosmWasmClient'
 import { walletState } from '../state/atoms/walletAtoms'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
+} from '../util/constants'
 import { convertMicroDenomToDenom } from '../util/conversion'
 import { queryMyLiquidity } from './queryMyLiquidity'
 import {
@@ -166,7 +169,6 @@ export const useQueryMultiplePoolsLiquidity = ({
         rewardsTokens: pool.rewards_tokens,
         context,
       })
-
       annualYieldPercentageReturn = calculateRewardsAnnualYieldRate({
         rewardsContracts,
         totalStakedDollarValue: totalStaked.dollarValue,
@@ -210,7 +212,7 @@ export const useQueryMultiplePoolsLiquidity = ({
 
   return useQueries(
     (pools ?? []).map((pool) => ({
-      queryKey: ['@pool-liquidity', pool.pool_id, address],
+      queryKey: `@pool-liquidity/${pool.pool_id}/${address}`,
       enabled: Boolean(
         enabledGetTokenDollarValue && enabledGetPoolTokensDollarValue
       ),
@@ -255,14 +257,14 @@ export function calculateRewardsAnnualYieldRate({
   rewardsContracts,
   totalStakedDollarValue,
 }) {
+  if (!__POOL_REWARDS_ENABLED__) return 0
+
   /* rewards math */
   return rewardsContracts.reduce((yieldReturnValue, rewardsContract) => {
     return (
       yieldReturnValue +
-      protectAgainstNaN(
-        rewardsContract.rewardRate.ratePerYear.dollarValue /
-          totalStakedDollarValue
-      )
+      rewardsContract.rewardRate.ratePerYear.dollarValue /
+        (totalStakedDollarValue || 1)
     )
   }, 0)
 }

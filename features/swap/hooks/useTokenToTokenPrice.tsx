@@ -47,8 +47,8 @@ export const useTokenToTokenPriceQuery = ({
       enabled &&
         client &&
         matchingPools &&
-        tokenBSymbol &&
-        tokenASymbol &&
+        tokenA &&
+        tokenB &&
         tokenAmount > 0 &&
         tokenBSymbol !== tokenASymbol
     ),

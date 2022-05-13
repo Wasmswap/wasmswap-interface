@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { claimRewards, getPendingRewards } from 'services/rewards'
@@ -10,55 +9,59 @@ import {
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { useGetTokenDollarValueQuery } from '../queries/useGetTokenDollarValueQuery'
-import { usePoolsListQuery } from '../queries/usePoolsListQuery'
+import { PoolEntityType } from '../queries/usePoolsListQuery'
+import { PoolEntityTypeWithLiquidity } from '../queries/useQueryPools'
 import { useTokenList } from './useTokenList'
 
-export const usePendingRewards = ({ swapAddress }) => {
+type UsePendingRewardsArgs = {
+  pool: PoolEntityTypeWithLiquidity
+}
+
+export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
   const { address, status, client } = useRecoilValue(walletState)
 
-  const [getRewardsContract, enabled] = useGetRewardsContractBySwapAddress()
   const [getTokenInfoByDenom, enabledTokenInfoByDenomSearch] =
     useGetTokenInfoByDenom()
   const [getTokenDollarValue, enabledTokenDollarValueQuery] =
     useGetTokenDollarValueQuery()
 
+  const shouldQueryRewards =
+    pool?.rewards_tokens?.length > 0 && pool?.staking_address
+
   const { data: rewards, isLoading } = useQuery(
-    [`pendingRewards/${swapAddress}`, address],
+    [`pendingRewards/${pool?.pool_id}`, address],
     async () => {
-      const rewardsContract = getRewardsContract({ swapAddress })
       return await Promise.all(
-        rewardsContract.rewards_tokens.map(
-          async ({ rewards_address, decimals }) => {
-            const { pending_rewards, denom } = await getPendingRewards(
-              address,
-              rewards_address,
-              client
-            )
+        pool.rewards_tokens.map(async ({ rewards_address, decimals }) => {
+          const { pending_rewards, denom } = await getPendingRewards(
+            address,
+            rewards_address,
+            client
+          )
 
-            const tokenInfo = getTokenInfoByDenom({ denom })
-            const tokenAmount = convertMicroDenomToDenom(
-              Number(pending_rewards),
-              decimals ?? tokenInfo.decimals
-            )
+          const tokenInfo = getTokenInfoByDenom({ denom })
+          const tokenAmount = convertMicroDenomToDenom(
+            Number(pending_rewards),
+            decimals ?? tokenInfo.decimals
+          )
 
-            return {
-              tokenAmount,
+          return {
+            tokenAmount,
+            tokenInfo,
+            dollarValue: await getTokenDollarValue({
               tokenInfo,
-              dollarValue: await getTokenDollarValue({
-                tokenInfo,
-                tokenAmountInDenom: tokenAmount,
-              }),
-            }
+              tokenAmountInDenom: tokenAmount,
+            }),
           }
-        )
+        })
       )
     },
     {
       enabled: Boolean(
-        __POOL_REWARDS_ENABLED__ &&
-          enabled &&
+        pool &&
+          __POOL_REWARDS_ENABLED__ &&
+          shouldQueryRewards &&
           enabledTokenInfoByDenomSearch &&
-          swapAddress &&
           enabledTokenDollarValueQuery &&
           status === WalletStatusType.connected
       ),
@@ -72,47 +75,36 @@ export const usePendingRewards = ({ swapAddress }) => {
 }
 
 type UseClaimRewardsArgs = {
-  swapAddress: string
+  pool: PoolEntityType
 } & Parameters<typeof useMutation>[2]
 
-export const useClaimRewards = ({
-  swapAddress,
-  ...options
-}: UseClaimRewardsArgs) => {
+export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
   const { address, client } = useRecoilValue(walletState)
-  const [getRewardsContract] = useGetRewardsContractBySwapAddress()
 
   return useMutation(
-    `@claim-rewards/${swapAddress}`,
+    `@claim-rewards/${pool?.pool_id}`,
     async () => {
-      const rewardsContract = getRewardsContract({ swapAddress })
-      const rewardsAddresses = rewardsContract.rewards_tokens.map(
-        ({ rewards_address }) => rewards_address
-      )
-      return await claimRewards(address, rewardsAddresses, client)
+      const shouldBeAbleToClaimRewards =
+        pool &&
+        client &&
+        __POOL_REWARDS_ENABLED__ &&
+        pool.rewards_tokens.length > 0 &&
+        pool.staking_address
+
+      if (shouldBeAbleToClaimRewards) {
+        const rewardsAddresses = pool.rewards_tokens.map(
+          ({ rewards_address }) => rewards_address
+        )
+
+        return await claimRewards(address, rewardsAddresses, client)
+      }
     },
     options
   )
 }
 
-const useGetRewardsContractBySwapAddress = () => {
-  const { data: poolsListResponse } = usePoolsListQuery()
-
-  return [
-    useCallback(
-      function selectRewardsContract({ swapAddress }) {
-        return poolsListResponse?.pools.find(
-          ({ swap_address }) => swap_address === swapAddress
-        )
-      },
-      [poolsListResponse]
-    ),
-    Boolean(poolsListResponse?.pools.length),
-  ] as const
-}
-
 const useGetTokenInfoByDenom = () => {
-  const [tokenList, fetching] = useTokenList()
+  const [tokenList] = useTokenList()
   return [
     function getTokenInfoByDenom({ denom: tokenDenom }) {
       return tokenList.tokens.find(({ denom, token_address }) => {
@@ -124,6 +116,6 @@ const useGetTokenInfoByDenom = () => {
         }
       })
     },
-    !fetching,
+    Boolean(tokenList?.tokens),
   ] as const
 }

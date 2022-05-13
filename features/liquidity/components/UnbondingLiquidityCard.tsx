@@ -51,8 +51,6 @@ export const UnbondingLiquidityCard = ({
     tokenPairIndex: 0,
   })
 
-  console.log({ poolId })
-
   const tokenAFormattedAmount = `${formatTokenBalance(tokenAAmount, {
     includeCommaSeparation: true,
   })} ${tokenA.symbol}`

@@ -35,11 +35,10 @@ export const claimRewards = async (
       }),
     })
   )
-
   const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
   const fee: StdFee = {
     amount: defaultExecuteFee.amount,
-    gas: String(Number(defaultExecuteFee.gas) * 2.5),
+    gas: String(Number(defaultExecuteFee.gas) * 2),
   }
 
   const result = await client.signAndBroadcast(senderAddress, messages, fee)

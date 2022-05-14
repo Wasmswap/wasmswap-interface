@@ -200,17 +200,17 @@ export const useMultiplePoolsLiquidity = ({
                 tokenAmountInMicroDenom: rewardsInfo.totalStakedInMicroDenom,
               }) || 1
 
+            const totalRewardRatePerYearInDollarValue =
+              rewardsContracts.contracts.reduce((value, rewardsContract) => {
+                return (
+                  value + rewardsContract.rewardRate.ratePerYear.dollarValue
+                )
+              }, 0)
+
             rewardsInfo.yieldPercentageReturn =
-              rewardsContracts.contracts.reduce(
-                (yieldReturnValue, rewardsContract) => {
-                  return (
-                    yieldReturnValue +
-                    rewardsContract.rewardRate.ratePerYear.dollarValue /
-                      rewardsInfo.totalStakedDollarValue
-                  )
-                },
-                0
-              )
+              (totalRewardRatePerYearInDollarValue /
+                rewardsInfo.totalStakedDollarValue) *
+              100
           }
 
           return {

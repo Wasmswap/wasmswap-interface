@@ -35,13 +35,13 @@ export const LiquidityBreakdown = ({
   })
 
   const [tokenAAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: (totalLiquidity?.tokenAmount ?? 0) / 2,
+    tokenAmountInMicroDenom: totalLiquidity?.tokenAmount ?? 0,
     tokenPairIndex: 0,
     poolId,
   })
 
   const [tokenBAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: (totalLiquidity?.tokenAmount ?? 0) / 2,
+    tokenAmountInMicroDenom: totalLiquidity?.tokenAmount ?? 0,
     tokenPairIndex: 1,
     poolId,
   })

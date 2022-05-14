@@ -15,8 +15,6 @@ export const stakeTokens = async (
   amount: number,
   client: SigningCosmWasmClient
 ) => {
-  amount = Math.floor(amount)
-  console.log(amount)
   const subMsg = { stake: {} }
   const encodedMsg = toBase64(toUtf8(JSON.stringify(subMsg)))
   const msg = {

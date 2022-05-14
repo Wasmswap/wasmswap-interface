@@ -1,7 +1,4 @@
-import {
-  usePoolPairTokenAmount,
-  usePoolTokensDollarValue,
-} from 'features/liquidity/hooks'
+import { usePoolPairTokenAmount } from 'features/liquidity/hooks'
 import { TokenInfo } from 'hooks/useTokenList'
 import {
   BasicNumberInput,
@@ -21,6 +18,8 @@ type StakingSummaryProps = {
   maxLiquidity: number
   liquidityAmount: number
   onChangeLiquidity: (liquidityAmount: number) => void
+  maxLiquidityInDollarValue: number
+  liquidityInDollarValue: number
 }
 
 export const StakingSummary = ({
@@ -28,18 +27,15 @@ export const StakingSummary = ({
   poolId,
   tokenA,
   tokenB,
-  maxLiquidity,
   liquidityAmount,
   onChangeLiquidity,
+  maxLiquidityInDollarValue,
+  liquidityInDollarValue,
 }: StakingSummaryProps) => {
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
     useState(false)
 
   const refForInput = useRef<HTMLInputElement>()
-
-  console.log({
-    liquidityAmount,
-  })
 
   const [tokenAAmount] = usePoolPairTokenAmount({
     tokenAmountInMicroDenom: liquidityAmount,
@@ -51,16 +47,6 @@ export const StakingSummary = ({
     tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 1,
     poolId,
-  })
-
-  const [maxLiquidityInDollarValue] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: maxLiquidity,
-  })
-
-  const [liquidityInDollarValue] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: liquidityAmount,
   })
 
   const handleChangeDollarValue = (amount: number) => {

@@ -143,7 +143,7 @@ export const PoolCard = ({
                 )}
               </Text>
             </StyledDivForStatsColumn>
-            {__POOL_REWARDS_ENABLED__ && (
+            {false && (
               <StyledDivForStatsColumn align="center">
                 <Text variant="legend" color="secondary" align="center">
                   Rewards

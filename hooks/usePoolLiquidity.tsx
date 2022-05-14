@@ -140,14 +140,16 @@ export const useMultiplePoolsLiquidity = ({
             tokenAmount: lp_token_supply,
             dollarValue:
               convertMicroDenomToDenom(reserve[0], tokenADecimals) *
-              tokenADollarPrice,
+              tokenADollarPrice *
+              2,
           }
 
           const myLiquidity = {
             tokenAmount: providedLiquidityBalance,
             dollarValue:
               convertMicroDenomToDenom(myLiquidityReserve[0], tokenADecimals) *
-              tokenADollarPrice,
+              tokenADollarPrice *
+              2,
           }
 
           /* staked liquidity math */
@@ -172,10 +174,16 @@ export const useMultiplePoolsLiquidity = ({
             ),
           ]
 
+          console.log(tokenADollarPrice)
           const myStakedLiquidity = {
             tokenAmount: stakedBalanceInMicroDenom || 0,
             dollarValue: stakedBalanceInDenom
-              ? stakedBalanceInDenom * tokenADollarPrice
+              ? convertMicroDenomToDenom(
+                  (stakedBalanceInMicroDenom / lp_token_supply) * reserve[0],
+                  tokenADecimals
+                ) *
+                tokenADollarPrice *
+                2
               : 0,
           }
 

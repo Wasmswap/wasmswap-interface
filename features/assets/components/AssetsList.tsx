@@ -1,11 +1,10 @@
-import { AssetCard, AssetCardState } from './AssetCard'
-import { Text } from 'components/Text'
-import { styled } from 'components/theme'
-import { walletState } from 'state/atoms/walletAtoms'
 import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
-import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'
-import { useDelayedAppearanceFlag } from 'hooks/useDelayedAppearanceFlag'
+import { styled, Text, useDelayedAppearanceFlag } from 'junoblocks'
+import { walletState } from 'state/atoms/walletAtoms'
 import { __TRANSFERS_ENABLED__ } from 'util/constants'
+
+import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'
+import { AssetCard, AssetCardState } from './AssetCard'
 
 export const AssetsList = ({ onActionClick }) => {
   const [loadingBalances, [myTokens, allTokens]] =

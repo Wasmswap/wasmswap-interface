@@ -1,90 +1,89 @@
-import { useQuery } from 'react-query'
-import {
-  getToken1ForToken2Price,
-  getToken2ForToken1Price,
-  getTokenForTokenPrice,
-} from '../../../services/swap'
-import {
-  unsafelyGetTokenInfo,
-  useBaseTokenInfo,
-} from '../../../hooks/useTokenInfo'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../../../util/constants'
-import {
-  convertDenomToMicroDenom,
-  convertMicroDenomToDenom,
-} from 'util/conversion'
-import { useChainInfo } from '../../../hooks/useChainInfo'
+import { useChainInfo } from 'hooks/useChainInfo'
+import { useBaseTokenInfo, useGetMultipleTokenInfo } from 'hooks/useTokenInfo'
+import { useMemo } from 'react'
+import { useQueries } from 'react-query'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
-export const useTokenToTokenPrice = ({
-  tokenASymbol,
-  tokenBSymbol,
-  tokenAmount,
-}) => {
+import { TokenInfo } from '../../../hooks/useTokenList'
+import { tokenToTokenPriceQuery } from '../../../queries/tokenToTokenPriceQuery'
+
+type UseTokenPairsPricesArgs = {
+  tokenPairs: Array<{
+    tokenASymbol: TokenInfo['symbol']
+    tokenBSymbol: TokenInfo['symbol']
+    tokenAmount: number
+  }>
+  enabled?: boolean
+  refetchInBackground?: boolean
+}
+
+export const useTokenPairsPrices = ({
+  tokenPairs,
+  enabled = true,
+  refetchInBackground,
+}: UseTokenPairsPricesArgs) => {
   const [chainInfo] = useChainInfo()
+  const getMultipleTokenInfo = useGetMultipleTokenInfo()
   const baseToken = useBaseTokenInfo()
 
-  const { data, isLoading } = useQuery(
-    [
-      `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-      tokenASymbol,
-      tokenBSymbol,
-      tokenAmount,
-    ],
-    async ({
-      queryKey: [, symbolForTokenA, symbolForTokenB, amount],
-    }): Promise<number | undefined> => {
-      const fromTokenInfo = unsafelyGetTokenInfo(symbolForTokenA)
-      const toTokenInfo = unsafelyGetTokenInfo(symbolForTokenB)
+  return useQueries(
+    tokenPairs?.map(({ tokenASymbol, tokenBSymbol, tokenAmount }) => ({
+      queryKey: [
+        `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
+        chainInfo,
+        tokenAmount,
+      ],
+      async queryFn() {
+        const [fromTokenInfo, toTokenInfo] = getMultipleTokenInfo([
+          tokenASymbol,
+          tokenBSymbol,
+        ])
 
-      const formatPrice = (price) =>
-        convertMicroDenomToDenom(price, toTokenInfo.decimals)
-
-      const convertedTokenAmount = convertDenomToMicroDenom(
-        amount,
-        fromTokenInfo.decimals
-      )
-
-      if (fromTokenInfo.symbol === baseToken.symbol) {
-        return formatPrice(
-          await getToken1ForToken2Price({
-            nativeAmount: convertedTokenAmount,
-            swapAddress: toTokenInfo.swap_address,
-            rpcEndpoint: chainInfo.rpc,
-          })
-        )
-      } else if (toTokenInfo.symbol === baseToken.symbol) {
-        return formatPrice(
-          await getToken2ForToken1Price({
-            tokenAmount: convertedTokenAmount,
-            swapAddress: fromTokenInfo.swap_address,
-            rpcEndpoint: chainInfo.rpc,
-          })
-        )
-      }
-
-      return formatPrice(
-        await getTokenForTokenPrice({
-          tokenAmount: convertedTokenAmount,
-          swapAddress: fromTokenInfo.swap_address,
-          outputSwapAddress: toTokenInfo.swap_address,
-          rpcEndpoint: chainInfo.rpc,
+        const tokenPrice = await tokenToTokenPriceQuery({
+          baseToken,
+          fromTokenInfo,
+          toTokenInfo,
+          chainInfo,
+          amount: tokenAmount,
         })
-      )
-    },
-    {
+
+        return {
+          tokenPrice,
+          tokenASymbol,
+          tokenBSymbol,
+          tokenAmount,
+        }
+      },
       enabled: Boolean(
-        chainInfo?.rpc &&
+        enabled &&
+          chainInfo?.rpc &&
           baseToken &&
           tokenBSymbol &&
           tokenASymbol &&
           tokenAmount > 0 &&
           tokenBSymbol !== tokenASymbol
       ),
-      refetchOnMount: 'always',
-      refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
-      refetchIntervalInBackground: true,
-    }
+      refetchOnMount: 'always' as const,
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: Boolean(refetchInBackground),
+    }))
   )
+}
 
-  return [data, isLoading] as const
+export const useTokenToTokenPrice = ({
+  tokenASymbol,
+  tokenBSymbol,
+  tokenAmount,
+}) => {
+  const [{ data, isLoading }] = useTokenPairsPrices({
+    tokenPairs: useMemo(
+      () => [{ tokenASymbol, tokenBSymbol, tokenAmount }],
+      [tokenASymbol, tokenBSymbol, tokenAmount]
+    ),
+    refetchInBackground: true,
+  })
+
+  return [data?.tokenPrice, isLoading] as const
 }

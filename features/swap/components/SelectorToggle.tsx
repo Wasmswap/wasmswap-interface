@@ -1,11 +1,15 @@
-import React from 'react'
-import { Text } from 'components/Text'
-import { IconWrapper } from 'components/IconWrapper'
-import { Chevron } from 'icons/Chevron'
-import { formatTokenBalance } from 'util/conversion'
-import { styled } from 'components/theme'
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { ButtonForWrapper } from 'components/Button'
+import {
+  ButtonForWrapper,
+  Chevron,
+  formatTokenBalance,
+  IconWrapper,
+  ImageForTokenLogo,
+  styled,
+  Text,
+} from 'junoblocks'
+import React from 'react'
+import { getPropsForInteractiveElement } from 'util/getPropsForInteractiveElement'
 
 type SelectorToggleProps = {
   isSelecting: boolean
@@ -31,15 +35,14 @@ export const SelectorToggle = ({
   return (
     <StyledDivForSelector
       state={isSelecting || !tokenSymbol ? 'selecting' : 'selected'}
-      onClick={onToggle}
+      {...getPropsForInteractiveElement({ onClick: onToggle })}
       variant="ghost"
-      role="button"
     >
       {(isSelecting || !hasTokenSelected) && (
         <>
           <Text variant="body">Select a token</Text>
           <IconWrapper
-            size="24px"
+            size="large"
             rotation={tokenSymbol ? '90deg' : '-90deg'}
             color="tertiary"
             icon={<Chevron />}
@@ -48,11 +51,7 @@ export const SelectorToggle = ({
       )}
       {!isSelecting && hasTokenSelected && (
         <>
-          <StyledImgForTokenLogo
-            as={logoURI ? 'img' : 'div'}
-            src={logoURI}
-            alt={tokenSymbol}
-          />
+          <ImageForTokenLogo logoURI={logoURI} size="big" alt={tokenSymbol} />
           <div>
             <Text variant="body">{tokenSymbol}</Text>
             <Text variant="secondary">
@@ -60,7 +59,7 @@ export const SelectorToggle = ({
             </Text>
           </div>
           <IconWrapper
-            size="16px"
+            size="medium"
             rotation="-90deg"
             color="tertiary"
             icon={<Chevron />}
@@ -97,11 +96,4 @@ const StyledDivForSelector = styled(ButtonForWrapper, {
       },
     },
   },
-})
-
-const StyledImgForTokenLogo = styled('img', {
-  width: '1.875rem',
-  height: '1.875rem',
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
 })

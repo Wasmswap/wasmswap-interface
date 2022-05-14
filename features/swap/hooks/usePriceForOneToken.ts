@@ -1,5 +1,6 @@
+import { usePersistance } from 'junoblocks'
+
 import { useTokenToTokenPrice } from './useTokenToTokenPrice'
-import { usePersistance } from 'hooks/usePersistance'
 
 export const usePriceForOneToken = ({ tokenASymbol, tokenBSymbol }) => {
   const [currentTokenPrice, isPriceLoading] = useTokenToTokenPrice({

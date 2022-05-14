@@ -1,8 +1,10 @@
+import {
+  calculateCharactersLength,
+  styled,
+  Text,
+  useAmountChangeController,
+} from 'junoblocks'
 import React, { HTMLProps, Ref } from 'react'
-import { Text } from 'components/Text'
-import { styled } from 'components/theme'
-import { useAmountChangeController } from 'hooks/useAmountChangeController'
-import { calculateCharactersLength } from 'components/BasicNumberInput'
 
 type SelectorInputProps = {
   amount: number

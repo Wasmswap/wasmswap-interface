@@ -1,14 +1,15 @@
-import { useRecoilValue } from 'recoil'
-import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
-import { CW20 } from '../services/cw20'
-import { unsafelyGetTokenInfo } from './useTokenInfo'
-import { useQuery } from 'react-query'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { useMemo } from 'react'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
-import { IBCAssetInfo } from './useIbcAssetList'
+import { useQuery } from 'react-query'
+import { useRecoilValue } from 'recoil'
 import { convertMicroDenomToDenom } from 'util/conversion'
+
+import { CW20 } from '../services/cw20'
+import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
+import { IBCAssetInfo } from './useIbcAssetList'
+import { unsafelyGetTokenInfo } from './useTokenInfo'
 
 async function fetchTokenBalance({
   client,
@@ -65,15 +66,15 @@ export const useTokenBalance = (tokenSymbol: string) => {
   const { address, status, client } = useRecoilValue(walletState)
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`tokenBalance`, tokenSymbol, address],
+    ['tokenBalance', tokenSymbol, address],
     async ({ queryKey: [, symbol] }) => {
-      if (symbol) {
+      if (symbol && client) {
         return await fetchTokenBalance({
           client,
           address,
           token:
             unsafelyGetTokenInfo(symbol) ||
-            mapIbcTokenToNative(getIBCAssetInfo(symbol)) ||
+            mapIbcTokenToNative(unsafelyGetIBCAssetInfo(symbol)) ||
             {},
         })
       }
@@ -107,7 +108,7 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
             address,
             token:
               unsafelyGetTokenInfo(tokenSymbol) ||
-              mapIbcTokenToNative(getIBCAssetInfo(tokenSymbol)) ||
+              mapIbcTokenToNative(unsafelyGetIBCAssetInfo(tokenSymbol)) ||
               {},
           })
         )

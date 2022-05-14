@@ -1,30 +1,43 @@
-import React, { useState } from 'react'
-import { media, styled } from 'components/theme'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { AppLayout } from 'components/Layout/AppLayout'
-import { Button } from 'components/Button'
-import { Spinner } from 'components/Spinner'
-import { ChevronIcon } from 'icons/Chevron'
-import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
-import { NavigationSidebar } from 'components/Layout/NavigationSidebar'
-import { RewardsStatus } from 'features/liquidity/components/RewardsStatus'
-import { UnbondingStatus } from 'features/liquidity/components/UnbondingStatus'
-import { LiquidityHeader } from 'features/liquidity/components/LiquidityHeader'
-import { LiquidityBreakdown } from 'features/liquidity/components/LiquidityBreakdown'
-import { BondLiquidityDialog } from 'features/liquidity'
+import { AppLayout, NavigationSidebar } from 'components'
 import {
+  BondLiquidityDialog,
+  LiquidityBreakdown,
+  LiquidityHeader,
+  LiquidityRewardsCard,
   ManageBondedLiquidityCard,
-  UnbondingLiquidityCard,
-  ManagePoolDialog,
   ManageLiquidityCard,
+  ManagePoolDialog,
+  UnbondingLiquidityStatusList,
 } from 'features/liquidity'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
-import { useMedia } from 'hooks/useMedia'
-import { __POOL_REWARDS_ENABLED__, APP_NAME } from 'util/constants'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import {
+  useClaimRewards,
+  usePendingRewards,
+  useRewardsInfo,
+} from 'hooks/useRewardsQueries'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import {
+  Button,
+  ChevronIcon,
+  Divider,
+  Error,
+  IconWrapper,
+  media,
+  Spinner,
+  styled,
+  Toast,
+  UpRightArrow,
+  useMedia,
+  Valid,
+} from 'junoblocks'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 export default function Pool() {
   const {
@@ -44,15 +57,78 @@ export default function Pool() {
   const tokenB = useTokenInfoByPoolId(pool as string)
 
   const [
-    { totalLiquidity, myLiquidity, myReserve, tokenDollarValue } = {} as any,
+    {
+      totalLiquidity,
+      myLiquidity,
+      myLiquidityReserve,
+      myStakedLiquidityReserve,
+      tokenDollarValue,
+      myStakedLiquidity,
+      rewardsInfo,
+    } = {} as any,
     isLoading,
   ] = usePoolLiquidity({ poolId: pool })
 
-  const isLoadingInitial = !totalLiquidity || (!totalLiquidity && isLoading)
+  const [rewardsContracts] = useRewardsInfo({
+    swapAddress: tokenB?.swap_address,
+  })
 
-  if (!tokenB || !pool) {
-    return null
-  }
+  const [pendingRewards] = usePendingRewards({
+    swapAddress: tokenB?.swap_address,
+  })
+
+  const isLoadingInitial = isLoading && !totalLiquidity
+
+  const supportsIncentives = Boolean(
+    __POOL_STAKING_ENABLED__ && tokenB?.staking_address
+  )
+
+  const refetchQueries = useRefetchQueries([
+    'myLiquidity',
+    'stakedTokenBalance',
+    'pendingRewards',
+  ])
+
+  const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
+    useClaimRewards({
+      swapAddress: tokenB?.swap_address,
+      onSuccess() {
+        refetchQueries()
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Valid />} color="valid" />}
+            title="Rewards were successfully claimed!"
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+      },
+      onError(e) {
+        console.error(e)
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Error />} color="error" />}
+            title={"Couldn't claim your rewards"}
+            body={formatSdkErrorMessage(e)}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+      },
+    })
+
+  if (!tokenB || !pool) return null
 
   return (
     <>
@@ -70,7 +146,7 @@ export default function Pool() {
         />
       )}
 
-      {__POOL_REWARDS_ENABLED__ && (
+      {__POOL_STAKING_ENABLED__ && (
         <BondLiquidityDialog
           isShowing={isBondingDialogShowing}
           onRequestClose={() => setIsBondingDialogShowing(false)}
@@ -108,83 +184,62 @@ export default function Pool() {
 
         {isLoadingInitial && (
           <StyledDivForSpinner>
-            <Spinner color="black" size={32} />
+            <Spinner color="primary" size={32} />
           </StyledDivForSpinner>
         )}
 
         {!isLoadingInitial && (
           <>
             <LiquidityBreakdown
+              poolId={pool}
               tokenA={tokenA}
               tokenB={tokenB}
               totalLiquidity={totalLiquidity}
+              rewardsInfo={rewardsInfo}
+              rewardsContracts={rewardsContracts}
               size={isMobile ? 'small' : 'large'}
             />
             <>
               <StyledDivForCards>
                 <ManageLiquidityCard
-                  myReserve={myReserve}
+                  myLiquidityReserve={myLiquidityReserve}
                   tokenDollarValue={tokenDollarValue}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
-                  onAddLiquidityClick={() =>
+                  myStakedLiquidity={myStakedLiquidity}
+                  myStakedLiquidityReserve={myStakedLiquidityReserve}
+                  supportsIncentives={supportsIncentives}
+                  onClick={() =>
                     setManageLiquidityDialogState({
                       isShowing: true,
                       actionType: 'add',
                     })
                   }
-                  onRemoveLiquidityClick={() => {
-                    setManageLiquidityDialogState({
-                      isShowing: true,
-                      actionType: 'remove',
-                    })
-                  }}
                 />
                 <ManageBondedLiquidityCard
-                  onButtonClick={() => setIsBondingDialogShowing(true)}
+                  onClick={() => setIsBondingDialogShowing(true)}
                   myLiquidity={myLiquidity}
-                  tokenASymbol={tokenA.symbol}
-                  tokenBSymbol={tokenB.symbol}
+                  stakedBalance={myStakedLiquidity}
+                  rewardsInfo={rewardsInfo}
+                  supportsIncentives={supportsIncentives}
+                />
+                <LiquidityRewardsCard
+                  onClick={mutateClaimRewards}
+                  hasBondedLiquidity={myStakedLiquidity?.tokenAmount > 0}
+                  hasProvidedLiquidity={myLiquidity?.tokenAmount > 0}
+                  pendingRewards={pendingRewards}
+                  loading={isClaimingRewards}
+                  supportsIncentives={supportsIncentives}
                 />
               </StyledDivForCards>
             </>
             <>
-              {__POOL_REWARDS_ENABLED__ && (
-                <>
-                  <RewardsStatus
-                    tokenA={tokenA}
-                    tokenB={tokenB}
-                    size={isMobile ? 'small' : 'large'}
-                  />
-                  <UnbondingStatus
-                    tokenA={tokenA}
-                    tokenB={tokenB}
-                    size={isMobile ? 'small' : 'large'}
-                  />
-                  <Column gap={6}>
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                    <UnbondingLiquidityCard
-                      tokenA={tokenA}
-                      tokenB={tokenB}
-                      size={isMobile ? 'small' : 'large'}
-                    />
-                  </Column>
-                </>
-              )}
-              {!__POOL_REWARDS_ENABLED__ && (
-                <RewardsStatus
-                  disabled={true}
+              {supportsIncentives && (
+                <UnbondingLiquidityStatusList
+                  poolId={pool as string}
                   tokenA={tokenA}
                   tokenB={tokenB}
+                  size={isMobile ? 'small' : 'large'}
                 />
               )}
             </>
@@ -198,7 +253,7 @@ export default function Pool() {
 const StyledDivForCards = styled('div', {
   display: 'grid',
   columnGap: '$8',
-  gridTemplateColumns: '1fr 1fr',
+  gridTemplateColumns: '1fr 1fr 1fr',
   [media.sm]: {
     gridTemplateColumns: '1fr',
     rowGap: '$8',

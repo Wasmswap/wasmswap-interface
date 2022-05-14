@@ -1,12 +1,21 @@
-import { useRef, useState } from 'react'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
+import {
+  usePoolPairTokenAmount,
+  usePoolTokensDollarValue,
+} from 'features/liquidity/hooks'
 import { TokenInfo } from 'hooks/useTokenList'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { dollarValueFormatter, formatTokenBalance } from 'util/conversion'
+import {
+  BasicNumberInput,
+  formatTokenBalance,
+  ImageForTokenLogo,
+  protectAgainstNaN,
+  styled,
+  Text,
+} from 'junoblocks'
+import { useRef, useState } from 'react'
 
 type StakingSummaryProps = {
   label: string
+  poolId: string
   tokenA: TokenInfo
   tokenB: TokenInfo
   maxLiquidity: number
@@ -16,28 +25,53 @@ type StakingSummaryProps = {
 
 export const StakingSummary = ({
   label,
+  poolId,
   tokenA,
   tokenB,
   maxLiquidity,
   liquidityAmount,
   onChangeLiquidity,
 }: StakingSummaryProps) => {
-  const [tokenAPrice] = useTokenDollarValue(tokenA?.symbol)
-  const [tokenBPrice] = useTokenDollarValue(tokenB?.symbol)
-
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
     useState(false)
+
   const refForInput = useRef<HTMLInputElement>()
 
-  const tokenAAmount = (liquidityAmount * 0.5) / tokenAPrice
-  const tokenBAmount = (liquidityAmount * 0.5) / tokenBPrice
+  console.log({
+    liquidityAmount,
+  })
 
-  const formattedLiquidityAmount = String(dollarValueFormatter(liquidityAmount))
+  const [tokenAAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: liquidityAmount,
+    tokenPairIndex: 0,
+    poolId,
+  })
 
-  const handleChangeDollarValue = ({ target: { value } }) => {
-    const validatedValue =
-      Number(value) > maxLiquidity ? maxLiquidity : dollarValueFormatter(value)
-    onChangeLiquidity(Number(validatedValue))
+  const [tokenBAmount] = usePoolPairTokenAmount({
+    tokenAmountInMicroDenom: liquidityAmount,
+    tokenPairIndex: 1,
+    poolId,
+  })
+
+  const [maxLiquidityInDollarValue] = usePoolTokensDollarValue({
+    poolId,
+    tokenAmountInMicroDenom: maxLiquidity,
+  })
+
+  const [liquidityInDollarValue] = usePoolTokensDollarValue({
+    poolId,
+    tokenAmountInMicroDenom: liquidityAmount,
+  })
+
+  const handleChangeDollarValue = (amount: number) => {
+    const multiplier =
+      liquidityInDollarValue > 0
+        ? liquidityAmount / Number(liquidityInDollarValue)
+        : 1
+
+    const liquidityValue = amount * multiplier
+
+    onChangeLiquidity(protectAgainstNaN(liquidityValue))
   }
 
   return (
@@ -68,16 +102,12 @@ export const StakingSummary = ({
         >
           <StyledTextForInputWithSymbol variant="caption">
             $
-            <input
-              ref={refForInput}
+            <BasicNumberInput
               placeholder="0.0"
-              min="0"
-              type="number"
-              lang="en-US"
-              value={formattedLiquidityAmount}
-              style={{
-                width: `${formattedLiquidityAmount.length}ch`,
-              }}
+              min={0}
+              max={(maxLiquidityInDollarValue as number) || 0}
+              value={(liquidityInDollarValue as number) || 0}
+              maximumFractionDigits={2}
               onChange={handleChangeDollarValue}
               onFocus={() => {
                 setIsDollarValueInputFocused(true)
@@ -95,7 +125,7 @@ export const StakingSummary = ({
 
 const StyledNodeForToken = ({ logoURI, name, amount }) => (
   <StyledDivForToken>
-    <StyledImgForTokenLogo as={logoURI ? 'img' : 'div'} src={logoURI} />
+    <ImageForTokenLogo logoURI={logoURI} alt={name} size="large" />
     <Text transform="uppercase" variant="caption" wrap={false}>
       {formatTokenBalance(amount)} {name}
     </Text>
@@ -146,13 +176,6 @@ const StyledDivForToken = styled('div', {
   alignItems: 'center',
   columnGap: '$space$4',
   width: '100%',
-})
-
-const StyledImgForTokenLogo = styled('img', {
-  width: '20px',
-  height: '20px',
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
 })
 
 const StyledTextForInputWithSymbol: any = styled(Text, {

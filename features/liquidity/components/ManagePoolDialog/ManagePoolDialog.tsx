@@ -1,32 +1,32 @@
-import { useEffect, useRef, useState } from 'react'
 import { PlusIcon } from '@heroicons/react/solid'
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { LiquidityInput } from 'components/LiquidityInput'
-import { IconWrapper } from 'components/IconWrapper'
+import { usePrevious } from '@reach/utils'
+import { LiquidityInput } from 'components'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
+  Button,
+  Dialog,
+  DialogButtons,
+  DialogContent,
+  DialogDivider,
+  DialogHeader,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
+  IconWrapper,
+  ImageForTokenLogo,
   protectAgainstNaN,
-} from 'util/conversion'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { usePoolDialogController } from './usePoolDialogController'
-import { TokenToTokenRates } from './TokenToTokenRates'
-import { StateSwitchButtons } from '../StateSwitchButtons'
+  Spinner,
+  styled,
+  Text,
+} from 'junoblocks'
+import { useEffect, useRef, useState } from 'react'
+
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
 import { PercentageSelection } from '../PercentageSelection'
-import { Button } from 'components/Button'
-import {
-  DialogHeader,
-  DialogContent,
-  Dialog,
-  DialogDivider,
-  DialogButtons,
-} from 'components/Dialog'
-import { Spinner } from 'components/Spinner'
-import { usePrevious } from '@reach/utils'
+import { StateSwitchButtons } from '../StateSwitchButtons'
+import { TokenToTokenRates } from './TokenToTokenRates'
+import { usePoolDialogController } from './usePoolDialogController'
 
 type ManagePoolDialogProps = {
   isShowing: boolean
@@ -103,7 +103,7 @@ export const ManagePoolDialog = ({
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader paddingBottom={canManageLiquidity ? '$8' : '$12'}>
-        <Text variant="header">Manage liquidity</Text>
+        <Text variant="header">Manage Liquidity</Text>
       </DialogHeader>
 
       {canManageLiquidity && (
@@ -301,14 +301,22 @@ function RemoveLiquidityContent({
         </Text>
         <StyledDivForLiquiditySummary>
           <StyledDivForToken>
-            <StyledImageForTokenLogo src={tokenA.logoURI} alt={tokenA.name} />
+            <ImageForTokenLogo
+              size="large"
+              logoURI={tokenA.logoURI}
+              alt={tokenA.name}
+            />
             <Text variant="caption">
               {formatTokenBalance(tokenAReserve * liquidityPercentage)}{' '}
               {tokenA.symbol}
             </Text>
           </StyledDivForToken>
           <StyledDivForToken>
-            <StyledImageForTokenLogo src={tokenB.logoURI} alt={tokenB.name} />
+            <ImageForTokenLogo
+              size="large"
+              logoURI={tokenB.logoURI}
+              alt={tokenB.name}
+            />
             <Text variant="caption">
               {formatTokenBalance(tokenBReserve * liquidityPercentage)}{' '}
               {tokenB.symbol}
@@ -345,10 +353,4 @@ const StyledDivForToken = styled('div', {
   display: 'flex',
   alignItems: 'center',
   columnGap: '$space$4',
-})
-
-const StyledImageForTokenLogo = styled('img', {
-  width: 20,
-  height: 20,
-  borderRadius: '50%',
 })

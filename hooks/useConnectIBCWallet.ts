@@ -1,9 +1,10 @@
 import { SigningStargateClient } from '@cosmjs/stargate'
+import { useEffect } from 'react'
+import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
+
 import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { useIBCAssetInfo } from './useIBCAssetInfo'
-import { useMutation } from 'react-query'
-import { useEffect } from 'react'
 
 /* shares very similar logic with `useConnectWallet` and is a subject to refactor */
 export const useConnectIBCWallet = (

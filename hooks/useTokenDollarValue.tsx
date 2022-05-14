@@ -1,12 +1,14 @@
+import { usePriceForOneToken } from 'features/swap'
 import { useQuery } from 'react-query'
+
+import { tokenDollarValueQuery } from '../queries/tokenDollarValueQuery'
+import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
+import { useGetMultipleIBCAssetInfo } from './useIBCAssetInfo'
 import {
-  unsafelyGetTokenInfo,
   useBaseTokenInfo,
+  useGetMultipleTokenInfo,
   useTokenInfo,
 } from './useTokenInfo'
-import { getIBCAssetInfo } from './useIBCAssetInfo'
-import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { usePriceForOneToken } from '../features/swap/hooks/usePriceForOneToken'
 
 export const useTokenDollarValue = (tokenSymbol?: string) => {
   const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
@@ -15,6 +17,7 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
   const tokenSymbolToLookupDollarValueFor = tokenInfo?.id
     ? tokenSymbol
     : baseTokenSymbol
+
   const [[tokenDollarPrice], fetchingTokenDollarPrice] =
     useTokenDollarValueQuery(
       tokenSymbolToLookupDollarValueFor
@@ -44,21 +47,21 @@ export const useTokenDollarValue = (tokenSymbol?: string) => {
 }
 
 export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
+  const getMultipleTokenInfo = useGetMultipleTokenInfo()
+  const getMultipleIBCAssetInfo = useGetMultipleIBCAssetInfo()
+
   const { data, isLoading } = useQuery(
-    `coinDollarValue/${tokenSymbols?.join('/')}`,
+    `tokenDollarValue/${tokenSymbols?.join('/')}`,
     async (): Promise<Array<number>> => {
       const tokenIds = tokenSymbols.map(
         (tokenSymbol) =>
-          (unsafelyGetTokenInfo(tokenSymbol) || getIBCAssetInfo(tokenSymbol)).id
+          (
+            getMultipleTokenInfo([tokenSymbol])?.[0] ||
+            getMultipleIBCAssetInfo([tokenSymbol])?.[0]
+          )?.id
       )
 
-      const response = await fetch(getApiUrl(tokenIds), {
-        method: 'GET',
-      })
-
-      const prices = await response.json()
-
-      return tokenIds.map((id): number => prices[id]?.usd || 0)
+      return tokenDollarValueQuery(tokenIds)
     },
     {
       enabled: Boolean(tokenSymbols?.length),
@@ -69,10 +72,4 @@ export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
   )
 
   return [data || [], isLoading] as const
-}
-
-function getApiUrl(tokenIds: Array<string>) {
-  return `https://api.coingecko.com/api/v3/simple/price?ids=${tokenIds.join(
-    ','
-  )}&vs_currencies=usd`
 }

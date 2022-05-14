@@ -1,6 +1,6 @@
-import React from 'react'
-import { Button } from 'components/Button'
 import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { Button } from 'junoblocks'
+import React from 'react'
 
 type ConvenienceBalanceButtonsProps = {
   disabled?: boolean

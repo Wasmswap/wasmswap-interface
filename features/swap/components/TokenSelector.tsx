@@ -1,16 +1,19 @@
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { styled } from 'components/theme'
-import { IconWrapper } from 'components/IconWrapper'
+import {
+  Button,
+  IconWrapper,
+  Inline,
+  styled,
+  Union,
+  useOnClickOutside,
+} from 'junoblocks'
 import React, { useRef, useState } from 'react'
-import { TokenOptionsList } from './TokenOptionsList'
-import { Union } from 'icons/Union'
-import { Inline } from '../../../components/Inline'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { SelectorToggle } from './SelectorToggle'
-import { SelectorInput } from './SelectorInput'
+
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
-import { Button } from 'components/Button'
 import { QueryInput } from './QueryInput'
+import { SelectorInput } from './SelectorInput'
+import { SelectorToggle } from './SelectorToggle'
+import { TokenOptionsList } from './TokenOptionsList'
 
 type TokenSelectorProps = {
   readOnly?: boolean
@@ -49,7 +52,7 @@ export const TokenSelector = ({
     setTokenListShowing(false)
   }
 
-  useOnClickOutside(wrapperRef, () => {
+  useOnClickOutside([wrapperRef], () => {
     setTokenListShowing(false)
   })
 
@@ -128,7 +131,7 @@ export const TokenSelector = ({
           <TokenOptionsList
             activeTokenSymbol={tokenSymbol}
             onSelect={handleSelectToken}
-            css={{ padding: '$1 $6 $12' }}
+            css={{ padding: '$4 $6 $12' }}
             queryFilter={tokenSearchQuery}
             emptyStateLabel={`No result for “${tokenSearchQuery}”`}
             visibleNumberOfTokensInViewport={4.5}
@@ -222,7 +225,7 @@ export const TokenSelector = ({
           activeTokenSymbol={tokenSymbol}
           onSelect={handleSelectToken}
           queryFilter={tokenSearchQuery}
-          css={{ padding: '$1 $6 $12' }}
+          css={{ padding: '$4 $6 $12' }}
           emptyStateLabel={`No result for “${tokenSearchQuery}”`}
         />
       )}

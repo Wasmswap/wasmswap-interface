@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
-import { useTokenList, getCachedTokenList, TokenInfo } from './useTokenList'
+import { useCallback, useMemo } from 'react'
+
+import { getCachedTokenList, TokenInfo, useTokenList } from './useTokenList'
 
 /* token selector functions */
 export const unsafelyGetBaseToken = (
@@ -17,26 +18,51 @@ export const unsafelyGetTokenInfoByPoolId = (
 ): TokenInfo | undefined => tokensList?.find((x) => x.pool_id === poolId)
 /* /token selector functions */
 
-/* hook for base token info retrieval */
-export const useBaseTokenInfo = () => {
+/* returns a selector for getting multiple tokens info at once */
+export const useGetMultipleTokenInfo = () => {
   const [tokenList] = useTokenList()
-  return useMemo(() => unsafelyGetBaseToken(tokenList), [tokenList])
+  return useCallback(
+    (tokenSymbols: Array<string>) =>
+      tokenSymbols?.map((tokenSymbol) =>
+        unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens)
+      ),
+    [tokenList]
+  )
+}
+
+/* hook for token info retrieval based on multiple `tokenSymbol` */
+export const useMultipleTokenInfo = (tokenSymbols: Array<string>) => {
+  const getMultipleTokenInfo = useGetMultipleTokenInfo()
+  return useMemo(
+    () => getMultipleTokenInfo(tokenSymbols),
+    [tokenSymbols, getMultipleTokenInfo]
+  )
 }
 
 /* hook for token info retrieval based on `tokenSymbol` */
 export const useTokenInfo = (tokenSymbol: string) => {
+  return useMultipleTokenInfo(useMemo(() => [tokenSymbol], [tokenSymbol]))?.[0]
+}
+
+/* hook for token info retrieval based on `poolId` */
+export const useTokenInfoByPoolIds = (poolIds: Array<string>) => {
   const [tokenList] = useTokenList()
   return useMemo(
-    () => unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens),
-    [tokenSymbol, tokenList]
+    () =>
+      poolIds?.map((poolId) =>
+        unsafelyGetTokenInfoByPoolId(poolId, tokenList?.tokens)
+      ),
+    [poolIds, tokenList]
   )
 }
 
 /* hook for token info retrieval based on `poolId` */
 export const useTokenInfoByPoolId = (poolId: string) => {
+  return useTokenInfoByPoolIds(useMemo(() => [poolId], [poolId]))?.[0]
+}
+
+/* hook for base token info retrieval */
+export const useBaseTokenInfo = () => {
   const [tokenList] = useTokenList()
-  return useMemo(
-    () => unsafelyGetTokenInfoByPoolId(poolId, tokenList?.tokens),
-    [poolId, tokenList]
-  )
+  return useMemo(() => unsafelyGetBaseToken(tokenList), [tokenList])
 }

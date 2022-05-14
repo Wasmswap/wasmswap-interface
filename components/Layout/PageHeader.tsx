@@ -1,8 +1,8 @@
-import React from 'react'
-import { Text } from '../Text'
+import { Text, useMedia } from 'junoblocks'
 import Head from 'next/head'
+import React from 'react'
+
 import { APP_NAME } from '../../util/constants'
-import { useMedia } from '../../hooks/useMedia'
 
 export const PageHeader = ({ title, subtitle }) => {
   const isSmall = useMedia('sm')

@@ -1,12 +1,13 @@
 import { coins } from '@cosmjs/stargate'
 import { ChainInfo } from '@keplr-wallet/types'
+
 import { unsafelyReadChainInfoCache } from '../hooks/useChainInfo'
 
 export const getDefaultExecuteFee = (
   feeCurrency: ChainInfo['feeCurrencies']
 ) => ({
-  amount: coins(500000, feeCurrency[0].coinDenom),
-  gas: '500000',
+  amount: coins(400000, feeCurrency[0].coinDenom),
+  gas: '400000',
 })
 
 export const unsafelyGetDefaultExecuteFee = () => {

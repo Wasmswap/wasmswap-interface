@@ -1,28 +1,44 @@
-import React, { useMemo } from 'react'
-import { media, styled } from 'components/theme'
-import { AppLayout } from 'components/Layout/AppLayout'
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { PoolCard } from 'features/liquidity/components/PoolCard'
-import { PageHeader } from 'components/Layout/PageHeader'
+import { useUpdateEffect } from '@reach/utils'
+import { AppLayout, PageHeader } from 'components'
+import {
+  ButtonWithDropdownForSorting,
+  PoolCard,
+  SortDirections,
+  SortParameters,
+  useSortPools,
+} from 'features/liquidity'
 import { useMultiplePoolsLiquidity } from 'hooks/usePoolLiquidity'
-import { Text } from 'components/Text'
-import { Spinner } from 'components/Spinner'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
 import { useTokenList } from 'hooks/useTokenList'
-import { Column } from '../../components/Column'
+import { Column, Inline, media, Spinner, styled, Text } from 'junoblocks'
+import React, { useMemo, useState } from 'react'
 
 export default function Pools() {
+  const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
+
   const [supportedTokens, poolIds] = usePlatformPools()
   const [liquidity, isLoading] = useMultiplePoolsLiquidity({
     refetchInBackground: false,
     poolIds,
   })
 
-  const [myPools, allPools] = useSplitTokens({ liquidity, supportedTokens })
+  const { sortDirection, sortParameter, setSortDirection, setSortParameter } =
+    useSortControllers()
 
-  const { symbol: baseTokenSymbol } = useBaseTokenInfo() || {}
+  const [myPools, allPools] = useSortPools({
+    liquidity,
+    supportedTokens,
+    sortBy: useMemo(
+      () => ({
+        parameter: sortParameter,
+        direction: sortDirection,
+      }),
+      [sortParameter, sortDirection]
+    ),
+  })
 
-  const shouldShowFetchingState = isLoading || !liquidity?.length
-  const shouldRenderPools = !isLoading && Boolean(liquidity?.length)
+  const shouldShowFetchingState = isLoading && !liquidity?.length
+  const shouldRenderPools = Boolean(liquidity?.length)
 
   return (
     <AppLayout>
@@ -39,7 +55,7 @@ export default function Pools() {
             align="center"
             css={{ paddingTop: '$24' }}
           >
-            <Spinner size={32} color="black" />
+            <Spinner size={32} color="primary" />
           </Column>
         </>
       )}
@@ -48,33 +64,54 @@ export default function Pools() {
         <>
           {Boolean(myPools?.length) && (
             <>
-              <SectionTitle>My Pools</SectionTitle>
+              <Text variant="primary" css={{ paddingBottom: '$11' }}>
+                Your Liquidity Pools
+              </Text>
+
               <StyledDivForPoolsGrid>
-                {myPools.map(({ liquidityInfo, tokenInfo }, key) => (
+                {myPools.map(({ liquidityInfo, tokenB }, key) => (
                   <PoolCard
                     key={key}
                     tokenASymbol={baseTokenSymbol}
-                    poolId={tokenInfo.pool_id}
-                    tokenBSymbol={tokenInfo.symbol}
+                    poolId={tokenB.pool_id}
+                    tokenBSymbol={tokenB.symbol}
                     myLiquidity={liquidityInfo.myLiquidity}
+                    myStakedLiquidity={liquidityInfo.myStakedLiquidity}
                     totalLiquidity={liquidityInfo.totalLiquidity}
+                    rewardsInfo={liquidityInfo.rewardsInfo}
                   />
                 ))}
               </StyledDivForPoolsGrid>
               {Boolean(allPools?.length) && (
-                <SectionTitle variant="all">All pools</SectionTitle>
+                <Inline
+                  gap={4}
+                  css={{
+                    paddingTop: '$19',
+                    paddingBottom: '$11',
+                  }}
+                >
+                  <Text variant="primary">{allPools.length} Other Pools</Text>
+                  <ButtonWithDropdownForSorting
+                    sortParameter={sortParameter}
+                    sortDirection={sortDirection}
+                    onSortParameterChange={setSortParameter}
+                    onSortDirectionChange={setSortDirection}
+                  />
+                </Inline>
               )}
             </>
           )}
           <StyledDivForPoolsGrid>
-            {allPools?.map(({ liquidityInfo, tokenInfo }, key) => (
+            {allPools?.map(({ liquidityInfo, tokenB }, key) => (
               <PoolCard
                 key={key}
                 tokenASymbol={baseTokenSymbol}
-                poolId={tokenInfo.pool_id}
-                tokenBSymbol={tokenInfo.symbol}
+                poolId={tokenB.pool_id}
+                tokenBSymbol={tokenB.symbol}
                 myLiquidity={liquidityInfo.myLiquidity}
                 totalLiquidity={liquidityInfo.totalLiquidity}
+                myStakedLiquidity={liquidityInfo.myStakedLiquidity}
+                rewardsInfo={liquidityInfo?.rewardsInfo}
               />
             ))}
           </StyledDivForPoolsGrid>
@@ -96,31 +133,49 @@ const usePlatformPools = () => {
       .map(({ pool_id }) => pool_id)
       .filter(Boolean)
 
-    return [tokensCollection, poolIdsCollection]
+    return [tokensCollection, poolIdsCollection] as const
   }, [tokenList])
 }
 
-const useSplitTokens = ({ liquidity, supportedTokens }) => {
-  return useMemo(() => {
-    if (!liquidity?.length) return []
-    const pools = [[], []]
-    liquidity.forEach((liquidityInfo, index) => {
-      const poolIndex = liquidityInfo.myLiquidity.coins > 0 ? 0 : 1
-      pools[poolIndex].push({
-        liquidityInfo,
-        tokenInfo: supportedTokens[index],
-      })
-    })
+const useSortControllers = () => {
+  const storeKeyForParameter = '@pools/sort/parameter'
+  const storeKeyForDirection = '@pools/sort/direction'
 
-    return pools
-  }, [liquidity, supportedTokens])
+  const [sortParameter, setSortParameter] = useState<SortParameters>(
+    () =>
+      (localStorage.getItem(storeKeyForParameter) as SortParameters) ||
+      'liquidity'
+  )
+  const [sortDirection, setSortDirection] = useState<SortDirections>(
+    () =>
+      (localStorage.getItem(storeKeyForDirection) as SortDirections) || 'desc'
+  )
+
+  useUpdateEffect(() => {
+    localStorage.setItem(storeKeyForParameter, sortParameter)
+  }, [sortParameter])
+
+  useUpdateEffect(() => {
+    localStorage.setItem(storeKeyForDirection, sortDirection)
+  }, [sortDirection])
+
+  return {
+    sortDirection,
+    sortParameter,
+    setSortDirection,
+    setSortParameter,
+  }
 }
 
 const StyledDivForPoolsGrid = styled('div', {
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
+  gridTemplateColumns: '1fr 1fr 1fr 1fr',
   columnGap: '$8',
   rowGap: '$8',
+
+  '@media (max-width: 1550px)': {
+    gridTemplateColumns: '1fr 1fr 1fr',
+  },
 
   '@media (max-width: 1360px)': {
     gridTemplateColumns: '1fr 1fr',
@@ -133,17 +188,3 @@ const StyledDivForPoolsGrid = styled('div', {
     rowGap: '$8',
   },
 })
-
-const SectionTitle = ({ variant = 'my', children }) => {
-  return (
-    <Text
-      variant="primary"
-      css={{
-        paddingBottom: '$11',
-        paddingTop: variant === 'all' ? '$19' : '0px',
-      }}
-    >
-      {children}
-    </Text>
-  )
-}

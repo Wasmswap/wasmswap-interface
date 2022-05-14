@@ -1,3 +1,3 @@
-export { Address } from './Address'
-export { ArrowUp } from './ArrowUp'
-export { Open } from './Open'
+export * from './Logo'
+export * from './LogoBrighter'
+export * from './LogoText'

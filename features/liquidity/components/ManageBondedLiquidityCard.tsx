@@ -1,119 +1,160 @@
-import { Text } from 'components/Text'
-import { Button } from 'components/Button'
-import { MultisigIcon } from 'icons/Multisig'
-import { useTokenInfo } from 'hooks/useTokenInfo'
-import { Divider } from 'components/Divider'
 import {
+  ArrowUpIcon,
+  Button,
+  Card,
+  CardContent,
+  Column,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-} from 'util/conversion'
-import { Card, CardContent } from 'components/Card'
-import { Inline } from 'components/Inline'
-import { SharesIcon } from 'icons/Shares'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
-import { StyledDivForTokenLogos } from './PoolCard'
-import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+  Inline,
+  Text,
+  UnionIcon,
+  useSubscribeInteractions,
+} from 'junoblocks'
+
+import { BaseCardForEmptyState } from './BaseCardForEmptyState'
+import { SegmentedRewardsSimulator } from './SegmentedRewardsSimulator'
+import { StepIcon } from './StepIcon'
 
 export const ManageBondedLiquidityCard = ({
-  onButtonClick,
-  tokenASymbol,
-  tokenBSymbol,
+  onClick,
+  rewardsInfo,
   myLiquidity,
+  stakedBalance,
+  supportsIncentives,
 }) => {
-  const tokenA = useTokenInfo(tokenASymbol)
-  const tokenB = useTokenInfo(tokenBSymbol)
+  const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const bondedLiquidity = __POOL_REWARDS_ENABLED__ && false
+  const bondedLiquidity = supportsIncentives && stakedBalance?.tokenAmount > 0
+  const providedLiquidity = myLiquidity?.tokenAmount > 0
 
-  const unstakedLiquidityDollarValue = dollarValueFormatter(
-    parseInt(myLiquidity.dollarValue, 10),
+  const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(
+    stakedBalance?.dollarValue,
     {
       includeCommaSeparation: true,
     }
   )
 
-  const bondedLiquidityDollarValue = dollarValueFormatterWithDecimals(0.0, {
-    includeCommaSeparation: true,
-  })
+  const formattedYieldPercentageReturn = dollarValueFormatter(
+    rewardsInfo?.yieldPercentageReturn ?? 0
+  )
+  const interestOnStakedBalance =
+    (rewardsInfo?.yieldPercentageReturn ?? 0) / 100
+
+  if (!supportsIncentives) {
+    return (
+      <BaseCardForEmptyState
+        variant="secondary"
+        disabled={true}
+        content={
+          <Column align="center">
+            <UnionIcon color="error" />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Incentives are not supported for this token, yet.
+            </Text>
+          </Column>
+        }
+        footer={
+          <Text align="center" variant="link" color="disabled">
+            Come back later
+          </Text>
+        }
+      />
+    )
+  }
+
+  if (!providedLiquidity && !bondedLiquidity) {
+    return (
+      <BaseCardForEmptyState
+        variant="ghost"
+        disabled={true}
+        content={
+          <Column align="center">
+            <StepIcon step={1} />
+            <Text
+              align="center"
+              variant="body"
+              color="tertiary"
+              css={{ padding: '$15 0 $6' }}
+            >
+              Add liquidity to the pool so you can bond your tokens and enjoy
+              the {formattedYieldPercentageReturn}% APR
+            </Text>
+          </Column>
+        }
+        footer={
+          <Inline gap={3}>
+            <ArrowUpIcon color="brand" rotation="-90deg" />
+            <Text align="center" variant="link" color="brand">
+              First, add the liquidity
+            </Text>
+          </Inline>
+        }
+      />
+    )
+  }
 
   return (
-    <Card>
+    <Card
+      ref={refForCard}
+      onClick={supportsIncentives ? onClick : undefined}
+      variant={bondedLiquidity ? 'primary' : 'secondary'}
+    >
       <CardContent>
-        <Inline gap={1} css={{ padding: '$12 0 $3' }}>
-          <SharesIcon color="brand" size="24px" />
-          <Text variant="legend" color="brand">
-            Staked liquidity
-          </Text>
-        </Inline>
+        <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
+          Staked liquidity
+        </Text>
         <Text variant="hero">${bondedLiquidityDollarValue}</Text>
-      </CardContent>
-      <Divider offsetTop="$16" offsetBottom="$10" />
-      <CardContent>
-        {!bondedLiquidity && (
-          <>
-            <Text
-              variant="legend"
-              color="secondary"
-              css={{ paddingBottom: '4.55rem' }}
+        <Text variant="link" color="tertiary" css={{ padding: '$2 0 $14' }}>
+          Expected interest with {formattedYieldPercentageReturn}% APR
+        </Text>
+
+        <SegmentedRewardsSimulator
+          interestOnStakedBalance={interestOnStakedBalance}
+          stakedBalanceDollarValue={stakedBalance?.dollarValue}
+        />
+
+        <Inline css={{ paddingBottom: '$12' }}>
+          {bondedLiquidity && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
+              state={supportsIncentives ? cardInteractionState : undefined}
+              variant="secondary"
+              size="large"
+              disabled={!supportsIncentives}
+              css={{ width: '100%' }}
             >
-              Currently no incentive
-            </Text>
-            <Inline justifyContent="flex-end">
-              <Button
-                onClick={onButtonClick}
-                variant="ghost"
-                iconRight={<MultisigIcon />}
-                disabled={!__POOL_REWARDS_ENABLED__}
-              >
-                ${unstakedLiquidityDollarValue} to stake
-              </Button>
-            </Inline>
-          </>
-        )}
-        {bondedLiquidity && (
-          <>
-            <Text variant="legend" color="secondary">
-              Current reward incentive
-            </Text>
-            <Inline gap={6} css={{ padding: '$6 0 $18' }}>
-              <StyledDivForTokenLogos>
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenA.logoURI}
-                  alt={tokenA.symbol}
-                />
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={tokenB.logoURI}
-                  alt={tokenB.symbol}
-                />
-              </StyledDivForTokenLogos>
-              <Text variant="link">$105/days in 4 tokens</Text>
-            </Inline>
-            <Inline
-              gap={4}
-              justifyContent="flex-end"
-              css={{ paddingBottom: '$10' }}
+              {supportsIncentives
+                ? 'Manage Staking'
+                : 'Does not support staking'}
+            </Button>
+          )}
+          {!bondedLiquidity && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
+              state={supportsIncentives ? cardInteractionState : undefined}
+              variant="primary"
+              size="large"
+              css={{ width: '100%' }}
+              disabled={!supportsIncentives}
             >
-              <Button variant="menu" onClick={onButtonClick}>
-                ${unstakedLiquidityDollarValue} unstaked
-              </Button>
-              <Button variant="secondary" onClick={onButtonClick}>
-                Manage staking
-              </Button>
-            </Inline>
-          </>
-        )}
+              {supportsIncentives
+                ? 'Bond liquidity'
+                : 'Does not support bonding'}
+            </Button>
+          )}
+        </Inline>
       </CardContent>
     </Card>
   )

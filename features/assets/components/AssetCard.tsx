@@ -1,13 +1,16 @@
-import { styled } from '@stitches/react'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { Button } from 'components/Button'
-import { Text } from '../../../components/Text'
-import { IconWrapper } from '../../../components/IconWrapper'
+import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
+import {
+  ArrowUp,
+  Button,
+  dollarValueFormatterWithDecimals,
+  IconWrapper,
+  ImageForTokenLogo,
+  styled,
+  Text,
+} from 'junoblocks'
 import { HTMLProps } from 'react'
-import { __TRANSFERS_ENABLED__ } from '../../../util/constants'
-import { ArrowUp } from '../../../icons'
-import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
-import { dollarValueFormatterWithDecimals } from '../../../util/conversion'
+import { __TRANSFERS_ENABLED__ } from 'util/constants'
 
 export enum AssetCardState {
   fetching = 'FETCHING',
@@ -52,7 +55,7 @@ export const AssetCard = ({
       <StyledElementForCard {...(htmlProps as any)} kind="wrapper">
         <StyledElementForCard kind="content">
           <StyledElementForToken>
-            <StyledTokenImage as="div" />
+            <ImageForTokenLogo size="big" />
           </StyledElementForToken>
         </StyledElementForCard>
         <div />
@@ -70,7 +73,7 @@ export const AssetCard = ({
     >
       <StyledElementForCard kind="content">
         <StyledElementForToken>
-          <StyledTokenImage src={logoURI} />
+          <ImageForTokenLogo logoURI={logoURI} size="big" />
           <div>
             <Text variant="primary">
               {rendersActiveAppearance ? balance : null} {name}
@@ -154,11 +157,4 @@ const StyledElementForToken = styled('div', {
   gridAutoFlow: 'column',
   columnGap: '$6',
   alignItems: 'center',
-})
-
-const StyledTokenImage = styled('img', {
-  width: 26,
-  height: 26,
-  borderRadius: '50%',
-  backgroundColor: '#ccc',
 })

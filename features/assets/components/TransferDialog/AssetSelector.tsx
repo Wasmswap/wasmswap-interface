@@ -1,17 +1,21 @@
-import { useState } from 'react'
-import { styled } from 'components/theme'
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
-import { Text } from 'components/Text'
-import { IconWrapper } from 'components/IconWrapper'
-import { ImageForTokenLogo } from 'components/ImageForTokenLogo'
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
-import { formatTokenBalance } from 'util/conversion'
-import { Button, ButtonForWrapper } from 'components/Button'
-import { Union } from 'icons/Union'
-import { Chevron } from 'icons/Chevron'
-import { TokenOptionsList } from './TokenOptionsList'
-import { Spinner } from 'components/Spinner'
 import { useTokenBalance } from 'hooks/useTokenBalance'
+import {
+  Button,
+  ButtonForWrapper,
+  Chevron,
+  formatTokenBalance,
+  IconWrapper,
+  ImageForTokenLogo,
+  Spinner,
+  styled,
+  Text,
+  Union,
+} from 'junoblocks'
+import { useState } from 'react'
+
+import { TokenOptionsList } from './TokenOptionsList'
 
 type AssetSelectorProps = {
   activeTokenSymbol: string
@@ -71,7 +75,7 @@ export const AssetSelector = ({
           onClick={handleToggleList}
           icon={
             <IconWrapper
-              size="16px"
+              size="medium"
               rotation="-90deg"
               color="tertiary"
               icon={

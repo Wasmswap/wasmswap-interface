@@ -1,11 +1,6 @@
+import { ArrowUp, Button, IconWrapper, Inline, styled, Text } from 'junoblocks'
 import Link from 'next/link'
-import { Button } from '../../../components/Button'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { ArrowUp } from '../../../icons'
-import { Text } from '../../../components/Text'
 import React from 'react'
-import { styled } from '../../../components/theme'
-import { Inline } from '../../../components/Inline'
 
 export const LiquidityHeader = ({ tokenA, tokenB, size = 'large' }) => {
   if (size === 'small') {

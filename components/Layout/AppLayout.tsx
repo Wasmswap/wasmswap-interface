@@ -1,9 +1,9 @@
-import { media, styled } from '../theme'
-import { NavigationSidebar } from './NavigationSidebar'
-import { FooterBar } from './FooterBar'
+import { media, styled, useMedia } from 'junoblocks'
 import { APP_MAX_WIDTH } from 'util/constants'
+
 import { ExtensionSidebar } from './ExtensionSidebar'
-import { useMedia } from 'hooks/useMedia'
+import { FooterBar } from './FooterBar'
+import { NavigationSidebar } from './NavigationSidebar'
 
 export const AppLayout = ({
   navigationSidebar = <NavigationSidebar />,

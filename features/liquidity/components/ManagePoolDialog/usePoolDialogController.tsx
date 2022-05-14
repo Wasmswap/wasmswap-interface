@@ -1,25 +1,27 @@
-import { useRecoilValue } from 'recoil'
-import { walletState } from 'state/atoms/walletAtoms'
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { useTokenBalance } from 'hooks/useTokenBalance'
 import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
+import { useSwapInfo } from 'hooks/useSwapInfo'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import { TokenInfo } from 'hooks/useTokenList'
+import {
+  Button,
+  Error,
+  IconWrapper,
+  Toast,
+  UpRightArrow,
+  Valid,
+} from 'junoblocks'
+import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
+import { useRecoilValue } from 'recoil'
 import { addLiquidity, removeLiquidity } from 'services/liquidity'
+import { walletState } from 'state/atoms/walletAtoms'
 import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from 'util/conversion'
-import { toast } from 'react-hot-toast'
-import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { getSwapInfo } from 'services/swap'
-import { useChainInfo } from 'hooks/useChainInfo'
-import { TokenInfo } from 'hooks/useTokenList'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
-import { Valid } from 'icons/Valid'
-import { Error } from 'icons/Error'
-import { Button } from 'components/Button'
-import { UpRightArrow } from 'icons/UpRightArrow'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
@@ -37,9 +39,10 @@ export const usePoolDialogController = ({
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
 
-  const [{ myLiquidity, myReserve, reserve } = {} as any] = usePoolLiquidity({
-    poolId: tokenB.pool_id,
-  })
+  const [{ myLiquidity, myLiquidityReserve, reserve } = {} as any] =
+    usePoolLiquidity({
+      poolId: tokenB.pool_id,
+    })
 
   function calculateMaxApplicableBalances() {
     // Decimal converted reserves
@@ -81,11 +84,11 @@ export const usePoolDialogController = ({
     tokenB: maxApplicableBalanceForTokenB,
   } = calculateMaxApplicableBalances()
 
-  const tokenAReserve = myReserve?.[0]
-    ? convertMicroDenomToDenom(myReserve[0], tokenA.decimals)
+  const tokenAReserve = myLiquidityReserve?.[0]
+    ? convertMicroDenomToDenom(myLiquidityReserve[0], tokenA.decimals)
     : 0
-  const tokenBReserve = myReserve?.[1]
-    ? convertMicroDenomToDenom(myReserve[1], tokenB.decimals)
+  const tokenBReserve = myLiquidityReserve?.[1]
+    ? convertMicroDenomToDenom(myLiquidityReserve[1], tokenB.decimals)
     : 0
 
   const { isLoading, mutate: mutateAddLiquidity } = useMutateLiquidity({
@@ -101,7 +104,7 @@ export const usePoolDialogController = ({
   return {
     state: {
       myLiquidity,
-      myReserve,
+      myLiquidityReserve,
       tokenAReserve,
       tokenBReserve,
       isLoading,
@@ -127,15 +130,15 @@ const useMutateLiquidity = ({
   myLiquidity,
 }) => {
   const { address, client } = useRecoilValue(walletState)
-  const refetchQueries = useRefetchQueries()
-  const [chainInfo] = useChainInfo()
+  const refetchQueries = useRefetchQueries(['tokenBalance', 'myLiquidity'])
+
+  const [swap] = useSwapInfo({
+    tokenSymbol: tokenB.symbol,
+  })
 
   const mutation = useMutation(
     async () => {
-      const { lp_token_address } = await getSwapInfo(
-        tokenB.swap_address,
-        chainInfo.rpc
-      )
+      const { lp_token_address } = swap
 
       const tokenAAmount = percentage * maxApplicableBalanceForTokenA
       const tokenBAmount = percentage * maxApplicableBalanceForTokenB
@@ -146,7 +149,7 @@ const useMutateLiquidity = ({
             convertDenomToMicroDenom(tokenAAmount, tokenA.decimals)
           ),
           nativeDenom: tokenA.denom,
-          maxToken: Math.floor(
+          maxToken: Math.ceil(
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
           minLiquidity: 0,
@@ -159,7 +162,7 @@ const useMutateLiquidity = ({
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor(percentage * myLiquidity.coins),
+          amount: Math.floor(percentage * myLiquidity.tokenAmount),
           minToken1: 0,
           minToken2: 0,
           swapAddress: tokenB.swap_address,
@@ -185,12 +188,6 @@ const useMutateLiquidity = ({
       },
       onError(e) {
         console.error(e)
-        const errorMessage =
-          String(e).length > 300
-            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
-                String(e).length - 150
-              )}`
-            : String(e)
 
         toast.custom((t) => (
           <Toast
@@ -198,7 +195,7 @@ const useMutateLiquidity = ({
             title={`Couldn't ${
               actionState === 'add' ? 'Add' : 'Remove'
             } liquidity`}
-            body={errorMessage}
+            body={formatSdkErrorMessage(e)}
             buttons={
               <Button
                 as="a"

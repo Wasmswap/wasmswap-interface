@@ -1,19 +1,24 @@
-import { media, styled } from 'components/theme'
-import { Wallet } from '../icons/Wallet'
-import { Text } from './Text'
-import { IconWrapper } from './IconWrapper'
-import { Button } from './Button'
-import { CopyTextTooltip, Tooltip } from './Tooltip'
-import { useBaseTokenInfo } from '../hooks/useTokenInfo'
-import { useTokenBalance } from '../hooks/useTokenBalance'
-import { formatTokenBalance } from '../util/conversion'
-import { Logout } from '../icons/Logout'
-import { Copy } from '../icons/Copy'
 import { CSS } from '@stitches/react'
-import { useRecoilValue } from 'recoil'
-import { walletState } from '../state/atoms/walletAtoms'
-import { Valid } from '../icons/Valid'
+import { useTokenBalance } from 'hooks/useTokenBalance'
+import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import {
+  Button,
+  Column,
+  Copy,
+  CopyTextTooltip,
+  formatTokenBalance,
+  IconWrapper,
+  Logout,
+  media,
+  styled,
+  Text,
+  Tooltip,
+  Valid,
+  Wallet,
+} from 'junoblocks'
 import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { walletState } from 'state/atoms/walletAtoms'
 
 type ConnectedWalletButtonProps = { css?: CSS } & {
   walletName?: string
@@ -35,15 +40,17 @@ export const ConnectedWalletButton = ({
 
   if (!connected) {
     return (
-      <Button onClick={onConnect} variant="primary" {...props}>
-        Connect Keplr
-      </Button>
+      <Column css={{ paddingBottom: '$6' }}>
+        <Button onClick={onConnect} size="large" variant="primary" {...props}>
+          Connect Keplr
+        </Button>
+      </Column>
     )
   }
 
   return (
     <StyledWalletButton {...props} role="button">
-      <IconWrapper size="16px" color="#FE8D9E" icon={<Wallet />} />
+      <IconWrapper size="medium" css={{ color: '#FE8D9E' }} icon={<Wallet />} />
       <div data-content="">
         <Text variant="link" color="body">
           {walletName}
@@ -128,13 +135,13 @@ const StyledWalletButton = styled('div', {
   textAlign: 'left',
   border: '1px solid $borderColors$default',
   '&:hover': {
-    border: '1px solid $borderColors$focus',
+    border: '1px solid $borderColors$selected',
     [`${StyledDivForActions}`]: {
       opacity: 1,
     },
   },
   [media.sm]: {
-    border: '1px solid $borderColors$focus',
+    border: '1px solid $borderColors$selected',
     [`${StyledDivForActions}`]: {
       opacity: 1,
     },

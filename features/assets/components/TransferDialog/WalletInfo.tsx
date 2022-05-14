@@ -1,11 +1,8 @@
-import { styled } from 'components/theme'
-import { Text } from 'components/Text'
-import { ConnectIcon } from 'icons/Connect'
+import { CSS } from '@stitches/react'
+import { Logo } from 'icons'
+import { ConnectIcon, IconWrapper, styled, Text } from 'junoblocks'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
-import { IconWrapper } from 'components/IconWrapper'
-import { Logo } from 'icons/Logo'
-import { CSS } from '@stitches/react'
 import { APP_NAME } from 'util/constants'
 
 export const WalletInfo = ({ label, icon, address, css }) => {
@@ -15,7 +12,7 @@ export const WalletInfo = ({ label, icon, address, css }) => {
       <div>
         <Text variant="primary">{label}</Text>
         <StyledDivForAddressRow>
-          <ConnectIcon color="secondary" size="16px" />
+          <ConnectIcon color="secondary" size="medium" />
           <Text truncate={true} variant="legend">
             {address || "address wasn't identified yet"}
           </Text>
@@ -50,7 +47,7 @@ export const AppWalletInfo = ({ css, depositing }: WalletInfoProps) => {
     <WalletInfo
       css={css}
       label={`${depositing ? 'To ' : ''}${APP_NAME}`}
-      icon={<IconWrapper color="secondary" size="32px" icon={<Logo />} />}
+      icon={<IconWrapper color="secondary" size="big" icon={<Logo />} />}
       address={walletAddress}
     />
   )

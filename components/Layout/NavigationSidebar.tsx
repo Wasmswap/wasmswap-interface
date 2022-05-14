@@ -1,34 +1,39 @@
-import React, { ReactNode, useState } from 'react'
-import Link from 'next/link'
-import { Button } from '../Button'
-import { Text } from '../Text'
 import { useConnectWallet } from 'hooks/useConnectWallet'
+import { Logo, LogoText } from 'icons'
+import {
+  AddressIcon,
+  ArrowUpIcon,
+  Button,
+  ChevronIcon,
+  Column,
+  Discord,
+  Divider,
+  FeedbackIcon,
+  Github,
+  IconWrapper,
+  Inline,
+  media,
+  MoonIcon,
+  Open,
+  styled,
+  Telegram,
+  Text,
+  ToggleSwitch,
+  TreasuryIcon,
+  Twitter,
+  UnionIcon,
+  UpRightArrow,
+  useControlTheme,
+  useMedia,
+} from 'junoblocks'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { ReactNode, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { useRouter } from 'next/router'
-import { Address, ArrowUp, Open } from 'icons'
-import { IconWrapper } from '../IconWrapper'
-import { Inline } from 'components/Inline'
-import { Column } from 'components/Column'
-import { ConnectedWalletButton } from '../ConnectedWalletButton'
-import { Logo } from 'icons/Logo'
-import { LogoText } from 'icons/LogoText'
-import { Github } from 'icons/Github'
-import { Discord } from 'icons/Discord'
-import { Telegram } from 'icons/Telegram'
-import { Twitter } from 'icons/Twitter'
-import { UnionIcon } from 'icons/Union'
-import { ChevronIcon } from 'icons/Chevron'
-import { MoonIcon } from 'icons/Moon'
-import { media, styled } from '../theme'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
-import { useMedia } from 'hooks/useMedia'
-import { Divider } from '../Divider'
-import { ToggleSwitch } from '../ToggleSwitch'
-import { FeedbackIcon } from '../../icons/Feedback'
-import { AppTheme } from '../theme/themeAtom'
-import { useControlTheme } from '../theme/hooks/useTheme'
-import { UpRightArrow } from '../../icons/UpRightArrow'
+
+import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
 type NavigationSidebarProps = {
   shouldRenderBackButton?: boolean
@@ -62,7 +67,7 @@ export function NavigationSidebar({
       walletName={key?.name}
       onConnect={() => connectWallet(null)}
       onDisconnect={resetWalletConnection}
-      css={{ marginBottom: '$6' }}
+      css={{ marginBottom: '$8' }}
     />
   )
 
@@ -76,7 +81,7 @@ export function NavigationSidebar({
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<IconWrapper icon={<Address />} />}
+          iconLeft={<AddressIcon />}
           selected={getIsLinkActive('/')}
         >
           Swap
@@ -87,7 +92,7 @@ export function NavigationSidebar({
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<IconWrapper icon={<ArrowUp />} />}
+          iconLeft={<ArrowUpIcon />}
           selected={getIsLinkActive('/transfer')}
         >
           Transfer
@@ -228,7 +233,7 @@ export function NavigationSidebar({
                 id="theme-toggle"
                 name="dark-theme"
                 onChange={themeController.setDarkTheme}
-                checked={themeController.theme === AppTheme.dark}
+                checked={themeController.theme.name === 'dark'}
                 optionLabels={['Dark theme', 'Light theme']}
               />
             }
@@ -237,17 +242,30 @@ export function NavigationSidebar({
           </Button>
         </Inline>
         <Divider offsetY="$6" />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
-          target="__blank"
-          variant="ghost"
-          size="large"
-          iconLeft={<FeedbackIcon />}
-          iconRight={<IconWrapper icon={<UpRightArrow />} />}
-        >
-          Provide feedback
-        </Button>
+        <Column gap={4}>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+            target="__blank"
+            variant="ghost"
+            size="large"
+            iconLeft={<FeedbackIcon />}
+            iconRight={<IconWrapper icon={<UpRightArrow />} />}
+          >
+            Provide feedback
+          </Button>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_GOVERNANCE_LINK_URL}
+            target="__blank"
+            variant="ghost"
+            size="large"
+            iconLeft={<TreasuryIcon />}
+            iconRight={<IconWrapper icon={<UpRightArrow />} />}
+          >
+            {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
+          </Button>
+        </Column>
         <Inline gap={2} css={{ padding: '$20 0 $13' }}>
           <Button
             as="a"

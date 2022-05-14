@@ -1,17 +1,20 @@
-import { styled } from 'components/theme'
-import { Text } from '../../../components/Text'
 import { CSS } from '@stitches/react'
-import { IconWrapper } from '../../../components/IconWrapper'
-import { Chevron } from '../../../icons/Chevron'
+import {
+  Chevron,
+  IconWrapper,
+  styled,
+  Text,
+  useOnClickOutside,
+} from 'junoblocks'
 import { useRef, useState } from 'react'
-import { SLIPPAGE_OPTIONS } from '../../../util/constants'
-import { useOnClickOutside } from '../../../hooks/useOnClickOutside'
+import { SLIPPAGE_OPTIONS } from 'util/constants'
 
 type SlippageSelectorProps = {
   slippage: number
   onSlippageChange: (slippage: number) => void
   css?: CSS
 }
+
 export const SlippageSelector = ({
   slippage = 0.01,
   onSlippageChange,
@@ -20,7 +23,7 @@ export const SlippageSelector = ({
   const [isShowingSettings, setShowingSettings] = useState(false)
 
   const refForWrapper = useRef()
-  useOnClickOutside(refForWrapper, () => {
+  useOnClickOutside([refForWrapper], () => {
     setShowingSettings(false)
   })
 
@@ -35,7 +38,7 @@ export const SlippageSelector = ({
       >
         <Text variant="legend">Slippage {slippage * 100}%</Text>
         <IconWrapper
-          size="24px"
+          size="large"
           color="tertiary"
           icon={<Chevron />}
           rotation={isShowingSettings ? '90deg' : '-90deg'}

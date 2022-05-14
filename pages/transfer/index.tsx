@@ -1,19 +1,19 @@
-import React, { useEffect, useReducer } from 'react'
-import styled from 'styled-components'
-import { TransferDialog } from 'features/assets/components/TransferDialog'
+import { AppLayout, PageHeader } from 'components'
+import { AssetsList, TransferDialog } from 'features/assets'
 import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
-import { toast } from 'react-hot-toast'
-import { AppLayout } from 'components/Layout/AppLayout'
-import { PageHeader } from 'components/Layout/PageHeader'
-import { AssetsList } from 'features/assets/components/AssetsList'
 import { useConnectWallet } from 'hooks/useConnectWallet'
+import {
+  Button,
+  Error,
+  IconWrapper,
+  styled,
+  Toast,
+  UpRightArrow,
+} from 'junoblocks'
+import React, { useEffect, useReducer } from 'react'
+import { toast } from 'react-hot-toast'
 import { useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { Toast } from 'components/Toast'
-import { IconWrapper } from 'components/IconWrapper'
-import { Error } from 'icons/Error'
-import { Button } from 'components/Button'
-import { UpRightArrow } from 'icons/UpRightArrow'
 
 export default function Transfer() {
   const [
@@ -134,6 +134,6 @@ export default function Transfer() {
   )
 }
 
-const StyledWrapper = styled.section`
-  padding-bottom: 34px;
-`
+const StyledWrapper = styled('section', {
+  paddingBottom: '$17',
+})

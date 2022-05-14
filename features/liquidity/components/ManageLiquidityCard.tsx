@@ -1,116 +1,138 @@
-import { Text } from 'components/Text'
-import { Button } from 'components/Button'
-import { Card, CardContent } from 'components/Card'
-import { PlusIcon } from '../../../icons/Plus'
-import {
-  convertMicroDenomToDenom,
-  dollarValueFormatterWithDecimals,
-  formatTokenBalance,
-} from 'util/conversion'
-import { SharesIcon } from '../../../icons/Shares'
 import { LiquidityInfoType } from 'hooks/usePoolLiquidity'
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { Inline } from '../../../components/Inline'
-import { Divider } from '../../../components/Divider'
-import { ImageForTokenLogo } from '../../../components/ImageForTokenLogo'
+import {
+  Button,
+  Card,
+  CardContent,
+  Column,
+  convertMicroDenomToDenom,
+  Divider,
+  dollarValueFormatterWithDecimals,
+  Inline,
+  protectAgainstNaN,
+  Text,
+  useSubscribeInteractions,
+} from 'junoblocks'
+
+import { UnderlyingAssetRow } from './UnderlyingAssetRow'
 
 type ManageLiquidityCardProps = Pick<
   LiquidityInfoType,
-  'myReserve' | 'tokenDollarValue'
+  | 'myLiquidityReserve'
+  | 'myStakedLiquidityReserve'
+  | 'tokenDollarValue'
+  | 'myStakedLiquidity'
 > & {
-  onAddLiquidityClick: () => void
-  onRemoveLiquidityClick: () => void
+  onClick: () => void
   tokenASymbol: string
   tokenBSymbol: string
+  supportsIncentives?: boolean
 }
 
 export const ManageLiquidityCard = ({
-  onAddLiquidityClick,
-  onRemoveLiquidityClick,
-  myReserve,
+  onClick,
+  myLiquidityReserve,
+  myStakedLiquidityReserve,
   tokenDollarValue,
   tokenASymbol,
   tokenBSymbol,
+  myStakedLiquidity,
+  supportsIncentives,
 }: ManageLiquidityCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const providedLiquidity = myReserve?.[0] > 0
+  const [refForCard, cardInteractionState] = useSubscribeInteractions()
 
-  const tokenAReserve = formatTokenBalance(
-    convertMicroDenomToDenom(myReserve[0], tokenA.decimals),
-    { includeCommaSeparation: true }
+  const bondedLiquidity = myStakedLiquidity?.tokenAmount > 0
+  const providedLiquidity = myLiquidityReserve?.[0] > 0 || bondedLiquidity
+
+  const tokenAReserve = convertMicroDenomToDenom(
+    myLiquidityReserve?.[0] + myStakedLiquidityReserve?.[0],
+    tokenA.decimals
   )
-  const tokenBReserve = formatTokenBalance(
-    convertMicroDenomToDenom(myReserve[1], tokenB.decimals),
-    { includeCommaSeparation: true }
+
+  const tokenBReserve = convertMicroDenomToDenom(
+    myLiquidityReserve?.[1] + myStakedLiquidityReserve?.[1],
+    tokenB.decimals
   )
+
+  const availableLiquidityInDollarValue =
+    convertMicroDenomToDenom(myLiquidityReserve?.[0], tokenA.decimals) *
+    tokenDollarValue *
+    2
+
+  const stakedLiquidityInDollarValue = myStakedLiquidity?.dollarValue ?? 0
 
   const providedLiquidityDollarValue = dollarValueFormatterWithDecimals(
-    convertMicroDenomToDenom(myReserve[0], tokenA.decimals) *
-      tokenDollarValue *
-      2 || '0.00',
+    protectAgainstNaN(
+      stakedLiquidityInDollarValue + availableLiquidityInDollarValue
+    ) || '0.00',
     { includeCommaSeparation: true }
   )
 
   return (
-    <Card>
+    <Card
+      ref={refForCard}
+      tabIndex={-1}
+      role="button"
+      variant={providedLiquidity || bondedLiquidity ? 'primary' : 'secondary'}
+      onClick={onClick}
+    >
       <CardContent>
-        <Inline gap={1} css={{ padding: '$12 0 $3' }}>
-          <SharesIcon size="24px" />
-          <Text variant="legend" color="body">
-            Available liquidity
-          </Text>
-        </Inline>
+        <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
+          Your liquidity
+        </Text>
         <Text variant="hero">${providedLiquidityDollarValue}</Text>
+        <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>
+          $
+          {dollarValueFormatterWithDecimals(availableLiquidityInDollarValue, {
+            includeCommaSeparation: true,
+          })}{' '}
+          available
+          {supportsIncentives ? ' to bond' : ''}
+        </Text>
       </CardContent>
-      <Divider offsetTop="$16" offsetBottom="$10" />
+      <Divider offsetTop="$14" offsetBottom="$12" />
       <CardContent>
-        <Text variant="legend" color="secondary">
+        <Text variant="legend" color="secondary" css={{ paddingBottom: '$12' }}>
           Underlying assets
         </Text>
-        <Inline gap={12} css={{ padding: '$6 0 $18' }}>
-          <Inline gap={3}>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenA.logoURI}
-              alt={tokenA.symbol}
-            />
-            <Text variant="body">{tokenAReserve}</Text>
-          </Inline>
-          <Inline gap={3}>
-            <ImageForTokenLogo
-              size="large"
-              logoURI={tokenB.logoURI}
-              alt={tokenB.symbol}
-            />
-            <Text variant="body">{tokenBReserve}</Text>
-          </Inline>
-        </Inline>
-        <Inline
-          gap={4}
-          justifyContent="flex-end"
-          css={{ paddingBottom: '$10' }}
-        >
+        <Column gap={6} css={{ paddingBottom: '$16' }}>
+          <UnderlyingAssetRow
+            tokenSymbol={tokenA.symbol}
+            tokenAmount={tokenAReserve}
+          />
+          <UnderlyingAssetRow
+            tokenSymbol={tokenB.symbol}
+            tokenAmount={tokenBReserve}
+          />
+        </Column>
+        <Inline css={{ paddingBottom: '$12' }}>
           {providedLiquidity && (
-            <>
-              <Button onClick={onRemoveLiquidityClick} variant="secondary">
-                Remove
-              </Button>
-              <Button
-                onClick={onAddLiquidityClick}
-                variant="secondary"
-                iconRight={<PlusIcon />}
-              >
-                Add Liquidity
-              </Button>
-            </>
+            <Button
+              variant="secondary"
+              size="large"
+              state={cardInteractionState}
+              css={{ width: '100%' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
+            >
+              Manage Liquidity
+            </Button>
           )}
           {!providedLiquidity && (
             <Button
-              onClick={onAddLiquidityClick}
-              variant="ghost"
-              iconRight={<PlusIcon />}
+              variant="primary"
+              size="large"
+              state={cardInteractionState}
+              css={{ width: '100%' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onClick?.()
+              }}
             >
               Add Liquidity
             </Button>

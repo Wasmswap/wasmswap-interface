@@ -1,59 +1,225 @@
+import { useUpdateEffect } from '@reach/utils'
+import dayjs from 'dayjs'
+import { useBondTokens, useUnbondTokens } from 'hooks/useBondTokens'
+import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
+import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
-import { Text } from 'components/Text'
-import { LiquidityInputSelector } from './LiquidityInputSelector'
-import { useState } from 'react'
 import {
+  Button,
+  Column,
+  Dialog,
+  DialogButtons,
+  DialogContent,
+  DialogHeader,
+  Divider,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-} from 'util/conversion'
+  Error,
+  IconWrapper,
+  Spinner,
+  Text,
+  Toast,
+  UpRightArrow,
+  Valid,
+} from 'junoblocks'
+import React, { useEffect, useRef, useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
+
+import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
+import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
-import { Divider } from 'components/Divider'
-import { Column } from 'components/Column'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { StateSwitchButtons } from './StateSwitchButtons'
-import dayjs from 'dayjs'
-import {
-  DialogHeader,
-  Dialog,
-  DialogContent,
-  DialogButtons,
-} from 'components/Dialog'
-import { Button } from 'components/Button'
 
 export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
+  const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
+
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(poolId)
 
-  const [
-    {
-      // totalLiquidity,
-      myLiquidity,
-      // myReserve,
-      // tokenDollarValue,
-    } = {} as any,
-  ] = usePoolLiquidity({ poolId })
+  const [{ myLiquidity } = {} as any] = usePoolLiquidity({ poolId })
+  const [stakedAmount] = useStakedTokenBalance({ poolId })
 
-  const maxDollarValueLiquidity = myLiquidity?.dollarValue ?? 0
-  const [liquidityDollarAmount, setLiquidityDollarAmount] = useState(0)
+  const maxLiquidityTokenAmount =
+    dialogState === 'stake' ? myLiquidity?.tokenAmount ?? 0 : stakedAmount ?? 0
 
-  const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
-  const canManageStaking = true
+  const [tokenAmount, setTokenAmount] = useState(0)
+
+  const [maxDollarValueLiquidity] = usePoolTokensDollarValue({
+    poolId,
+    tokenAmountInMicroDenom: maxLiquidityTokenAmount,
+  })
+
+  const [liquidityDollarAmount] = usePoolTokensDollarValue({
+    poolId,
+    tokenAmountInMicroDenom: tokenAmount,
+  })
+
+  const refetchQueries = useRefetchQueries([
+    'tokenBalance',
+    'myLiquidity',
+    'stakedTokenBalance',
+    'claimTokens',
+  ])
+
+  const { mutate: bondTokens, isLoading: isRequestingToBond } = useBondTokens({
+    poolId,
+
+    onSuccess() {
+      // reset cache
+      refetchQueries()
+
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Valid />} color="valid" />}
+          title={`Successfully bonded $${dollarValueFormatterWithDecimals(
+            liquidityDollarAmount as number,
+            { includeCommaSeparation: true }
+          )}`}
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
+
+      // close modal
+      requestAnimationFrame(onRequestClose)
+    },
+    onError(error) {
+      toast.custom((t) => (
+        <Toast
+          icon={<IconWrapper icon={<Error />} color="error" />}
+          title={`Couldn't bond your $${dollarValueFormatterWithDecimals(
+            liquidityDollarAmount as number,
+            { includeCommaSeparation: true }
+          )}`}
+          body={formatSdkErrorMessage(error)}
+          buttons={
+            <Button
+              as="a"
+              variant="ghost"
+              href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+              target="__blank"
+              iconRight={<UpRightArrow />}
+            >
+              Provide feedback
+            </Button>
+          }
+          onClose={() => toast.dismiss(t.id)}
+        />
+      ))
+    },
+  })
+
+  // todo reset cache & show toasts
+  const { mutate: unbondTokens, isLoading: isRequestingToUnbond } =
+    useUnbondTokens({
+      poolId,
+
+      onSuccess() {
+        // reset cache
+        refetchQueries()
+
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Valid />} color="valid" />}
+            title={`Unbond of $${dollarValueFormatterWithDecimals(
+              liquidityDollarAmount as number,
+              { includeCommaSeparation: true }
+            )} successfully started!`}
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+
+        // close modal
+        requestAnimationFrame(onRequestClose)
+      },
+      onError(error) {
+        toast.custom((t) => (
+          <Toast
+            icon={<IconWrapper icon={<Error />} color="error" />}
+            title={`Could not unbond your $${dollarValueFormatterWithDecimals(
+              liquidityDollarAmount as number,
+              { includeCommaSeparation: true }
+            )}`}
+            body={formatSdkErrorMessage(error)}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
+            onClose={() => toast.dismiss(t.id)}
+          />
+        ))
+      },
+    })
+
+  const isLoading = isRequestingToBond || isRequestingToUnbond
+
+  const handleAction = () => {
+    if (dialogState === 'stake') {
+      bondTokens(tokenAmount)
+    } else {
+      unbondTokens(tokenAmount)
+    }
+  }
+
+  const getIsFormSubmissionDisabled = () => {
+    if (dialogState === 'stake') {
+      if (maxLiquidityTokenAmount <= 0) {
+        return true
+      }
+    }
+
+    if (dialogState === 'unstake') {
+      if (maxLiquidityTokenAmount <= 0) {
+        return true
+      }
+    }
+
+    return isLoading || !tokenAmount
+  }
+
+  const canManageStaking = Boolean(stakedAmount > 0)
+
+  useEffect(() => {
+    const shouldResetDialogState =
+      !canManageStaking && dialogState === 'unstake'
+    if (shouldResetDialogState) setDialogState('stake')
+  }, [canManageStaking, dialogState])
+
+  useUpdateEffect(() => {
+    if (isShowing) {
+      setTokenAmount(0)
+    }
+  }, [isShowing, dialogState])
+
+  const inputRef = useRef<HTMLInputElement>()
+  useEffect(() => {
+    if (isShowing) {
+      inputRef.current?.focus()
+    }
+  }, [isShowing])
 
   return (
     <Dialog isShowing={isShowing} onRequestClose={onRequestClose}>
       <DialogHeader>
         {canManageStaking ? (
           <Text variant="header" css={{ paddingBottom: '$8' }}>
-            Manage staking
+            Manage Bonding
           </Text>
         ) : (
           <>
             <Text variant="header" css={{ paddingBottom: '$2' }}>
-              Staking tokens
+              Bonding tokens
             </Text>
             <Text variant="body" css={{ paddingBottom: '$10' }}>
-              Choose how many tokens to stake
+              Choose how many tokens to bond
             </Text>
           </>
         )}
@@ -63,10 +229,10 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <>
           <DialogContent css={{ paddingBottom: '$8' }}>
             <StateSwitchButtons
-              activeValue={dialogState === 'stake' ? 'staking' : 'unstaking'}
-              values={['staking', 'unstaking']}
+              activeValue={dialogState === 'stake' ? 'stake' : 'unstake'}
+              values={['stake', 'unstake']}
               onStateChange={(value) => {
-                setDialogState(value === 'staking' ? 'stake' : 'unstake')
+                setDialogState(value === 'stake' ? 'stake' : 'unstake')
               }}
             />
           </DialogContent>
@@ -80,31 +246,34 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
       )}
       <DialogContent css={{ paddingBottom: '$12' }}>
         <LiquidityInputSelector
-          maxLiquidity={maxDollarValueLiquidity}
-          liquidity={liquidityDollarAmount}
-          onChangeLiquidity={(value) => setLiquidityDollarAmount(value)}
+          inputRef={inputRef}
+          maxLiquidity={maxLiquidityTokenAmount}
+          liquidity={tokenAmount}
+          onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
-          Max available for stacking is worth $
-          {dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
-            includeCommaSeparation: true,
-          })}
+          Max available to {dialogState === 'stake' ? 'bond' : 'unbond'} is $
+          {typeof maxDollarValueLiquidity === 'number' &&
+            dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
+              includeCommaSeparation: true,
+            })}
         </Text>
         <PercentageSelection
-          maxLiquidity={maxDollarValueLiquidity}
-          liquidity={liquidityDollarAmount}
-          onChangeLiquidity={setLiquidityDollarAmount}
+          maxLiquidity={maxLiquidityTokenAmount}
+          liquidity={tokenAmount}
+          onChangeLiquidity={setTokenAmount}
         />
       </DialogContent>
       <Divider />
       <DialogContent>
         <StakingSummary
-          label="Staking"
+          label={dialogState === 'stake' ? 'Bonding' : 'Unbonding'}
+          poolId={poolId}
           tokenA={tokenA}
           tokenB={tokenB}
-          maxLiquidity={maxDollarValueLiquidity}
-          liquidityAmount={liquidityDollarAmount}
-          onChangeLiquidity={setLiquidityDollarAmount}
+          maxLiquidity={maxLiquidityTokenAmount}
+          liquidityAmount={tokenAmount}
+          onChangeLiquidity={setTokenAmount}
         />
       </DialogContent>
       <Divider />
@@ -118,13 +287,13 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
 
           <Text variant="secondary" css={{ paddingBottom: '$12' }}>
             {dialogState === 'stake'
-              ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous stake."
-              : `Because of the 14 days unstaking period, you will be able to redeem your $${dollarValueFormatter(
-                  liquidityDollarAmount,
-                  {
+              ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous unbond."
+              : `Because of the 14 days unbonding period, you will be able to redeem your $${
+                  typeof liquidityDollarAmount === 'number' &&
+                  dollarValueFormatter(liquidityDollarAmount, {
                     includeCommaSeparation: true,
-                  }
-                )} worth of staked token on ${dayjs()
+                  })
+                } worth of bonded token on ${dayjs()
                   .add(14, 'day')
                   .format('MMM D')}.`}
           </Text>
@@ -134,8 +303,18 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
         <Button variant="secondary" onClick={onRequestClose}>
           Cancel
         </Button>
-        <Button variant="primary">
-          {dialogState === 'stake' ? 'Stake' : 'Unstake'}
+        <Button
+          variant="primary"
+          onClick={handleAction}
+          disabled={getIsFormSubmissionDisabled()}
+        >
+          {isLoading ? (
+            <Spinner instant />
+          ) : dialogState === 'stake' ? (
+            'Bond'
+          ) : (
+            'Unbond'
+          )}
         </Button>
       </DialogButtons>
     </Dialog>

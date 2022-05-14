@@ -1,5 +1,4 @@
-import { styled } from 'components/theme'
-import { Button } from 'components/Button'
+import { Button, styled } from 'junoblocks'
 
 type PercentageSelectionProps = {
   maxLiquidity: number

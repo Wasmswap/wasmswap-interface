@@ -2,20 +2,42 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
+import { toBase64, toUtf8 } from '@cosmjs/encoding'
+import { StdFee } from '@cosmjs/stargate'
+
+import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const stakeTokens = async (
   senderAddress: string,
-  tokenAddress: string,
+  stakeContractAddress: string,
+  lpTokenAddress: string,
   amount: number,
   client: SigningCosmWasmClient
 ) => {
-  let msg = { stake: { amount: amount.toString() } }
+  amount = Math.floor(amount)
+  console.log(amount)
+  const subMsg = { stake: {} }
+  const encodedMsg = toBase64(toUtf8(JSON.stringify(subMsg)))
+  const msg = {
+    send: {
+      contract: stakeContractAddress,
+      amount: String(amount),
+      msg: encodedMsg,
+    },
+  }
+
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+  const fee: StdFee = {
+    amount: defaultExecuteFee.amount,
+    gas: (Number(defaultExecuteFee.gas) * 2.6).toString(),
+  }
+
   return await client.execute(
     senderAddress,
-    tokenAddress,
+    lpTokenAddress,
     msg,
-    unsafelyGetDefaultExecuteFee(),
+    fee,
     undefined,
     []
   )
@@ -23,16 +45,22 @@ export const stakeTokens = async (
 
 export const unstakeTokens = async (
   senderAddress: string,
-  tokenAddress: string,
+  stakingContractAddress: string,
   amount: number,
   client: SigningCosmWasmClient
 ) => {
-  let msg = { unstake: { amount: amount.toString() } }
+  amount = Math.floor(amount)
+  const msg = { unstake: { amount: amount.toString() } }
+  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
+  const fee: StdFee = {
+    amount: defaultExecuteFee.amount,
+    gas: (Number(defaultExecuteFee.gas) * 2.6).toString(),
+  }
   return await client.execute(
     senderAddress,
-    tokenAddress,
+    stakingContractAddress,
     msg,
-    unsafelyGetDefaultExecuteFee(),
+    fee,
     undefined,
     []
   )
@@ -40,13 +68,13 @@ export const unstakeTokens = async (
 
 export const claimTokens = async (
   senderAddress: string,
-  tokenAddress: string,
+  stakingContractAddress: string,
   client: SigningCosmWasmClient
 ) => {
-  let msg = { claim: {} }
+  const msg = { claim: {} }
   return await client.execute(
     senderAddress,
-    tokenAddress,
+    stakingContractAddress,
     msg,
     unsafelyGetDefaultExecuteFee(),
     undefined,
@@ -56,48 +84,50 @@ export const claimTokens = async (
 
 export const getStakedBalance = async (
   address: string,
-  tokenAddress: string,
-  client: CosmWasmClient
-): Promise<string> => {
-  let msg = { staked_balance_at_height: { address: address } }
-  let result = await client.queryContractSmart(tokenAddress, msg)
-  return result.balance
+  stakingContractAddress: string,
+  client: SigningCosmWasmClient
+) => {
+  const msg = { staked_value: { address: address } }
+  const result = await client.queryContractSmart(stakingContractAddress, msg)
+  return Number(result.value)
 }
 
 export const getTotalStakedBalance = async (
-  tokenAddress: string,
-  client: CosmWasmClient
+  stakingContractAddress: string,
+  rpcEndpoint: string
 ): Promise<string> => {
-  let msg = { total_staked_at_height: {} }
-  let result = await client.queryContractSmart(tokenAddress, msg)
+  const msg = { total_value: {} }
+  const client = await cosmWasmClientRouter.connect(rpcEndpoint)
+  const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.total
 }
 
-export type claim = {
-  amount: string
+export type Claim = {
+  amount: number
   release_at: number
 }
 
 export const getClaims = async (
   address: string,
-  tokenAddress: string,
+  stakingContractAddress: string,
   client: CosmWasmClient
-): Promise<Array<claim>> => {
-  let msg = { claims: { address: address } }
-  let resp = await client.queryContractSmart(tokenAddress, msg)
+): Promise<Array<Claim>> => {
+  const msg = { claims: { address: address } }
+  const resp = await client.queryContractSmart(stakingContractAddress, msg)
+
   return resp.claims.map((c) => {
     return {
-      amount: c.amount,
-      release_at: c.release_at.at_time,
+      amount: Number(c.amount),
+      release_at: Number(c.release_at.at_time) / 1000000,
     }
   })
 }
 
 export const getUnstakingDuration = async (
-  tokenAddress: string,
+  stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<number> => {
-  let msg = { unstaking_duration: {} }
-  let result = await client.queryContractSmart(tokenAddress, msg)
+  const msg = { unstaking_duration: {} }
+  const result = await client.queryContractSmart(stakingContractAddress, msg)
   return result.duration.time
 }

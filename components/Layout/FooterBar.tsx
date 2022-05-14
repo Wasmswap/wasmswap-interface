@@ -1,9 +1,5 @@
-import { Text } from '../Text'
-import { styled } from '../theme'
-import { Button } from '../Button'
-import { UpRightArrow } from '../../icons/UpRightArrow'
-import { IconWrapper } from '../IconWrapper'
-import { APP_NAME } from '../../util/constants'
+import { Button, IconWrapper, styled, Text, UpRightArrow } from 'junoblocks'
+import { APP_NAME } from 'util/constants'
 
 export const FooterBar = () => {
   return (

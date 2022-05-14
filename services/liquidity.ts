@@ -1,11 +1,13 @@
 import {
-  SigningCosmWasmClient,
-  CosmWasmClient,
   MsgExecuteContractEncodeObject,
+  SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { toUtf8 } from '@cosmjs/encoding'
-import { coin, StdFee, isDeliverTxFailure } from '@cosmjs/stargate'
+import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
+import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
+import { protectAgainstNaN } from 'junoblocks'
+
+import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export type AddLiquidityInput = {
@@ -64,24 +66,27 @@ export const addLiquidity = async (input: AddLiquidityInput): Promise<any> => {
       amount: defaultExecuteFee.amount,
       gas: (Number(defaultExecuteFee.gas) * 1.8).toString(),
     }
-    let result = await input.client.signAndBroadcast(
+
+    const result = await input.client.signAndBroadcast(
       input.senderAddress,
       [executeContractMsg1, executeContractMsg2],
       fee
     )
+
     if (isDeliverTxFailure(result)) {
       throw new Error(
         `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
       )
     }
+
     return result
   } else {
-    let funds = [
+    const funds = [
       coin(input.nativeAmount, input.nativeDenom),
       coin(input.maxToken, input.tokenDenom),
-    ]
-    funds.sort((a, b) => (a.denom > b.denom ? 1 : -1))
-    await input.client.execute(
+    ].sort((a, b) => (a.denom > b.denom ? 1 : -1))
+
+    return await input.client.execute(
       input.senderAddress,
       input.swapAddress,
       add_liquidity_msg,
@@ -164,12 +169,12 @@ export const getLiquidityBalance = async ({
   address,
 }: GetLiquidityBalanceInput) => {
   try {
-    const client = await CosmWasmClient.connect(rpcEndpoint)
+    const client = await cosmWasmClientRouter.connect(rpcEndpoint)
     const query = await client.queryContractSmart(tokenAddress, {
       balance: { address },
     })
 
-    return query.balance
+    return protectAgainstNaN(Number(query.balance))
   } catch (e) {
     console.error('Cannot get liquidity balance:', e)
   }

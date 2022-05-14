@@ -1,7 +1,7 @@
-import { atom } from 'recoil'
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { Key } from '@keplr-wallet/types'
+import { atom } from 'recoil'
 
 export enum WalletStatusType {
   /* nothing happens to the wallet */
@@ -45,7 +45,7 @@ function createWalletState<TClient = any, TState = {}>({
     dangerouslyAllowMutability: true,
     effects_UNSTABLE: [
       ({ onSet, setSelf }) => {
-        const CACHE_KEY = `@junoswap/wallet-state/type-${key}`
+        const CACHE_KEY = `@wasmswap/wallet-state/type-${key}`
 
         const savedValue = localStorage.getItem(CACHE_KEY)
 

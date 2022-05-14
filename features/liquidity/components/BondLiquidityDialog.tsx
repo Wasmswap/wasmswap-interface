@@ -162,10 +162,11 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const isLoading = isRequestingToBond || isRequestingToUnbond
 
   const handleAction = () => {
+    const amountForStaking = Math.floor(tokenAmount)
     if (dialogState === 'stake') {
-      bondTokens(tokenAmount)
+      bondTokens(amountForStaking)
     } else {
-      unbondTokens(tokenAmount)
+      unbondTokens(amountForStaking)
     }
   }
 

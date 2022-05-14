@@ -253,7 +253,7 @@ const useGetTokenDollarValue = () => {
         amount: 1,
       })
 
-      return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
+      return (tokenAmountInDenom / priceForOneToken) * tokenADollarPrice
     },
     Boolean(tokenA && !fetchingChainInfo && !fetchingDollarPrice),
   ] as const

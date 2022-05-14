@@ -174,10 +174,16 @@ export const useMultiplePoolsLiquidity = ({
             ),
           ]
 
+          console.log(tokenADollarPrice)
           const myStakedLiquidity = {
             tokenAmount: stakedBalanceInMicroDenom || 0,
             dollarValue: stakedBalanceInDenom
-              ? stakedBalanceInDenom * tokenADollarPrice
+              ? convertMicroDenomToDenom(
+                  (stakedBalanceInMicroDenom / lp_token_supply) * reserve[0],
+                  tokenADecimals
+                ) *
+                tokenADollarPrice *
+                2
               : 0,
           }
 

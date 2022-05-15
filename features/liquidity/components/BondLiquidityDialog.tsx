@@ -26,7 +26,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
-import { usePoolTokensDollarValue, useStakedTokenBalance } from '../hooks'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
@@ -38,23 +37,24 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const tokenA = useBaseTokenInfo()
   const tokenB = useTokenInfoByPoolId(poolId)
 
-  const [{ myLiquidity } = {} as any] = usePoolLiquidity({ poolId })
-  const [stakedAmount] = useStakedTokenBalance({ poolId })
+  const [{ myLiquidity, myStakedLiquidity } = {} as any] = usePoolLiquidity({
+    poolId,
+  })
 
   const maxLiquidityTokenAmount =
-    dialogState === 'stake' ? myLiquidity?.tokenAmount ?? 0 : stakedAmount ?? 0
+    dialogState === 'stake'
+      ? myLiquidity?.tokenAmount ?? 0
+      : myStakedLiquidity?.tokenAmount ?? 0
+
+  const maxDollarValueLiquidity =
+    dialogState === 'stake'
+      ? myLiquidity?.dollarValue ?? 0
+      : myStakedLiquidity?.dollarValue ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)
 
-  const [maxDollarValueLiquidity] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: maxLiquidityTokenAmount,
-  })
-
-  const [liquidityDollarAmount] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: tokenAmount,
-  })
+  const liquidityDollarAmount =
+    (tokenAmount / maxLiquidityTokenAmount) * maxDollarValueLiquidity
 
   const refetchQueries = useRefetchQueries([
     'tokenBalance',
@@ -162,10 +162,11 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
   const isLoading = isRequestingToBond || isRequestingToUnbond
 
   const handleAction = () => {
+    const amountForStaking = Math.floor(tokenAmount)
     if (dialogState === 'stake') {
-      bondTokens(tokenAmount)
+      bondTokens(amountForStaking)
     } else {
-      unbondTokens(tokenAmount)
+      unbondTokens(amountForStaking)
     }
   }
 
@@ -185,7 +186,7 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
     return isLoading || !tokenAmount
   }
 
-  const canManageStaking = Boolean(stakedAmount > 0)
+  const canManageStaking = Boolean(myStakedLiquidity?.tokenAmount > 0)
 
   useEffect(() => {
     const shouldResetDialogState =
@@ -274,6 +275,8 @@ export const BondLiquidityDialog = ({ isShowing, onRequestClose, poolId }) => {
           maxLiquidity={maxLiquidityTokenAmount}
           liquidityAmount={tokenAmount}
           onChangeLiquidity={setTokenAmount}
+          maxLiquidityInDollarValue={maxDollarValueLiquidity}
+          liquidityInDollarValue={liquidityDollarAmount}
         />
       </DialogContent>
       <Divider />

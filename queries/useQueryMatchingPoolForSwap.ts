@@ -1,8 +1,11 @@
 import { useCallback, useMemo } from 'react'
 
 import { useBaseTokenInfo } from '../hooks/useTokenInfo'
-import { TokenInfo } from '../hooks/useTokenList'
-import { PoolEntityType, usePoolsListQuery } from './usePoolsListQuery'
+import {
+  PoolEntityType,
+  TokenInfo,
+  usePoolsListQuery,
+} from './usePoolsListQuery'
 
 export type PoolMatchForSwap = {
   streamlinePoolAB?: PoolEntityType

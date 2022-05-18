@@ -1,14 +1,10 @@
 import { useCallback, useMemo } from 'react'
 
-import {
-  getCachedIBCAssetList,
-  IBCAssetInfo,
-  useIBCAssetList,
-} from './useIbcAssetList'
+import { IBCAssetInfo, useIBCAssetList } from './useIbcAssetList'
 
-export const unsafelyGetIBCAssetInfo = (
+export const getIBCAssetInfoFromList = (
   assetSymbol: string,
-  assetList = getCachedIBCAssetList()?.tokens
+  assetList: Array<IBCAssetInfo>
 ): IBCAssetInfo | undefined => assetList?.find((x) => x.symbol === assetSymbol)
 
 export const useGetMultipleIBCAssetInfo = () => {
@@ -16,7 +12,7 @@ export const useGetMultipleIBCAssetInfo = () => {
   return useCallback(
     function getMultipleIBCAssetInfo(assetSymbols: Array<string>) {
       return assetSymbols?.map((assetSymbol) =>
-        unsafelyGetIBCAssetInfo(assetSymbol, assetList?.tokens)
+        getIBCAssetInfoFromList(assetSymbol, assetList?.tokens)
       )
     },
     [assetList]

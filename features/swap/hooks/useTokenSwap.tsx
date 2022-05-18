@@ -82,6 +82,7 @@ export const useTokenSwap = ({
           slippage,
           senderAddress: address,
           swapAddress: streamlinePoolAB.swap_address,
+          tokenDenom: tokenA.denom,
           client,
         })
       }

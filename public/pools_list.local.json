@@ -8,6 +8,18 @@
       "description": "Pools that are listed on testnet"
     }
   },
+  "base_token": {
+    "id": "juno-network",
+    "chain_id": "lucina",
+    "token_address": "",
+    "symbol": "JUNO",
+    "name": "Juno",
+    "decimals": 6,
+    "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
+    "tags": ["native"],
+    "native": true,
+    "denom": "ujuno"
+  },
   "timestamp": "2021-06-12T00:00:00+00:00",
   "pools": [
     {

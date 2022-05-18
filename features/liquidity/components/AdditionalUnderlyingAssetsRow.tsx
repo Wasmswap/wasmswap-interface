@@ -1,5 +1,4 @@
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   Button,
   Column,
@@ -13,6 +12,8 @@ import {
   Tooltip,
 } from 'junoblocks'
 import { useMemo } from 'react'
+
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
 
 type AdditionalUnderlyingAssetsRowProps = {
   assets: Array<{

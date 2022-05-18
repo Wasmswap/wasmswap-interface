@@ -4,8 +4,8 @@ import { useQuery } from 'react-query'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
 import { useCosmWasmClient } from '../../../hooks/useCosmWasmClient'
-import { TokenInfo } from '../../../hooks/useTokenList'
 import { tokenToTokenPriceQueryWithPools } from '../../../queries/tokenToTokenPriceQuery'
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
 
 type UseTokenPairsPricesArgs = {
   tokenASymbol: TokenInfo['symbol']

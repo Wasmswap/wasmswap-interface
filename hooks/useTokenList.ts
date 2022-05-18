@@ -1,62 +1,43 @@
 import { useQuery } from 'react-query'
-import { queryClient } from 'services/queryClient'
 
-export type TokenInfo = {
-  id: string
-  chain_id: string
-  token_address: string
-  symbol: string
-  name: string
-  decimals: number
-  logoURI: string
-  tags: string[]
-  denom: string
-  native: boolean
-}
+import { TokenInfo, usePoolsListQuery } from '../queries/usePoolsListQuery'
 
 export type TokenList = {
-  name: string
-  logoURI: string
-  keywords: Array<string>
-  timestamp: string
   base_token: TokenInfo
   tokens: Array<TokenInfo>
-  tags: Record<
-    string,
-    {
-      name: string
-      description: string
-    }
-  >
-
-  version: {
-    major: number
-    minor: number
-    patch: number
-  }
 }
 
-export const getCachedTokenList = () =>
-  queryClient.getQueryCache().find('@token-list')?.state?.data as
-    | TokenList
-    | undefined
-
 export const useTokenList = () => {
-  const { data, isLoading } = useQuery<TokenList>(
+  const { data: poolsListResponse } = usePoolsListQuery()
+
+  /* generate token list off pool list and store it in cache */
+  const { data } = useQuery<TokenList>(
     '@token-list',
-    async () => {
-      const response = await fetch(process.env.NEXT_PUBLIC_TOKEN_LIST_URL)
-      return await response.json()
+    () => {
+      const tokenMapBySymbol = new Map()
+      poolsListResponse.pools.forEach(({ pool_assets }) => {
+        pool_assets.forEach((token) => {
+          if (!tokenMapBySymbol.has(token.symbol)) {
+            tokenMapBySymbol.set(token.symbol, token)
+          }
+        })
+      })
+
+      return {
+        base_token: poolsListResponse.base_token,
+        tokens: Array.from(tokenMapBySymbol.values()),
+      }
     },
     {
-      onError(e) {
-        console.error('Error loading token list:', e)
-      },
+      enabled: Boolean(poolsListResponse?.pools),
       refetchOnMount: false,
-      refetchIntervalInBackground: true,
-      refetchInterval: 1000 * 60,
+      onError(e) {
+        console.error('Error generating token list:', e)
+      },
     }
   )
+
+  const isLoading = !poolsListResponse?.pools
 
   return [data, isLoading] as const
 }

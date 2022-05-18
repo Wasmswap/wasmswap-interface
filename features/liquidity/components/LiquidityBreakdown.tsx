@@ -15,8 +15,8 @@ import {
   __POOL_STAKING_ENABLED__,
 } from 'util/constants'
 
-import { TokenInfo } from '../../../hooks/useTokenList'
 import { SerializedRewardsContract } from '../../../queries/queryRewardsContracts'
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
 import { PoolTokenValue } from '../../../queries/useQueryPools'
 import { usePoolPairTokenAmount } from '../hooks'
 import { AprPill } from './AprPill'

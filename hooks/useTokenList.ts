@@ -5,6 +5,7 @@ import { TokenInfo, usePoolsListQuery } from '../queries/usePoolsListQuery'
 export type TokenList = {
   base_token: TokenInfo
   tokens: Array<TokenInfo>
+  tokensBySymbol: Map<string, TokenInfo>
 }
 
 export const useTokenList = () => {
@@ -26,6 +27,7 @@ export const useTokenList = () => {
       return {
         base_token: poolsListResponse.base_token,
         tokens: Array.from(tokenMapBySymbol.values()),
+        tokensBySymbol: tokenMapBySymbol,
       }
     },
     {

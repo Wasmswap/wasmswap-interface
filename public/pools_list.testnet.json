@@ -9,6 +9,18 @@
     }
   },
   "timestamp": "2021-06-12T00:00:00+00:00",
+  "base_token": {
+    "id": "juno-network",
+    "chain_id": "lucina",
+    "token_address": "",
+    "symbol": "JUNOX",
+    "name": "Junox",
+    "decimals": 6,
+    "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
+    "tags": ["native"],
+    "native": true,
+    "denom": "ujunox"
+  },
   "pools": [
     {
       "pool_id": "JUNO-POOD",

@@ -1,6 +1,5 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 
-import { TokenInfo } from '../hooks/useTokenList'
 import {
   getToken1ForToken2Price,
   getToken2ForToken1Price,
@@ -10,6 +9,7 @@ import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
 } from '../util/conversion'
+import { TokenInfo } from './usePoolsListQuery'
 import { PoolMatchForSwap } from './useQueryMatchingPoolForSwap'
 
 type TokenToTokenPriceQueryArgs = {

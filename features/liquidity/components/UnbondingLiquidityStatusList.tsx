@@ -5,7 +5,6 @@ import {
   useStakingClaims,
 } from 'features/liquidity/hooks'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   Button,
   Column,
@@ -24,6 +23,7 @@ import {
 import React, { useMemo } from 'react'
 import { toast } from 'react-hot-toast'
 
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
 
 type UnbondingLiquidityStatusListProps = {

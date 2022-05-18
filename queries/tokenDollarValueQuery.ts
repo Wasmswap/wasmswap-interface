@@ -1,4 +1,4 @@
-import { TokenInfo } from '../hooks/useTokenList'
+import { TokenInfo } from './usePoolsListQuery'
 
 export async function tokenDollarValueQuery(tokenIds: Array<TokenInfo['id']>) {
   const prices = await fetchTokensPrice(tokenIds)

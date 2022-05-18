@@ -3,7 +3,6 @@ import {
   usePoolPairTokenAmount,
   usePoolTokensDollarValue,
 } from 'features/liquidity/hooks'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   Card,
   CardContent,
@@ -16,6 +15,8 @@ import {
 } from 'junoblocks'
 import { useQuery } from 'react-query'
 import { maybePluralize } from 'util/maybePluralize'
+
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
 
 type UnbondingLiquidityCardProps = {
   poolId: string

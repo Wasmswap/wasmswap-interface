@@ -6,7 +6,6 @@ import { toUtf8 } from '@cosmjs/encoding'
 import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 
-import { unsafelyGetBaseToken } from '../../hooks/useTokenInfo'
 import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 
 export type SwapToken1ForToken2Input = {
@@ -15,6 +14,7 @@ export type SwapToken1ForToken2Input = {
   slippage: number
   senderAddress: string
   swapAddress: string
+  tokenDenom: string
   client: SigningCosmWasmClient
 }
 
@@ -33,7 +33,7 @@ export const swapToken1ForToken2 = async (input: SwapToken1ForToken2Input) => {
     msg,
     unsafelyGetDefaultExecuteFee(),
     undefined,
-    [coin(input.nativeAmount, unsafelyGetBaseToken().denom)]
+    [coin(input.nativeAmount, input.tokenDenom)]
   )
 }
 

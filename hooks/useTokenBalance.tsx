@@ -7,9 +7,10 @@ import { convertMicroDenomToDenom } from 'util/conversion'
 import { CW20 } from '../services/cw20'
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
-import { IBCAssetInfo } from './useIbcAssetList'
-import { unsafelyGetTokenInfo } from './useTokenInfo'
+import { getIBCAssetInfoFromList, useIBCAssetInfo } from './useIBCAssetInfo'
+import { IBCAssetInfo, useIBCAssetList } from './useIbcAssetList'
+import { getTokenInfoFromTokenList, useTokenInfo } from './useTokenInfo'
+import { useTokenList } from './useTokenList'
 
 async function fetchTokenBalance({
   client,
@@ -65,17 +66,17 @@ const mapIbcTokenToNative = (ibcToken?: IBCAssetInfo) => {
 export const useTokenBalance = (tokenSymbol: string) => {
   const { address, status, client } = useRecoilValue(walletState)
 
+  const tokenInfo = useTokenInfo(tokenSymbol)
+  const ibcAssetInfo = useIBCAssetInfo(tokenSymbol)
+
   const { data: balance = 0, isLoading } = useQuery(
     ['tokenBalance', tokenSymbol, address],
     async ({ queryKey: [, symbol] }) => {
-      if (symbol && client) {
+      if (symbol && client && (tokenInfo || ibcAssetInfo)) {
         return await fetchTokenBalance({
           client,
           address,
-          token:
-            unsafelyGetTokenInfo(symbol) ||
-            mapIbcTokenToNative(unsafelyGetIBCAssetInfo(symbol)) ||
-            {},
+          token: tokenInfo || ibcAssetInfo,
         })
       }
     },
@@ -92,6 +93,8 @@ export const useTokenBalance = (tokenSymbol: string) => {
 
 export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
   const { address, status, client } = useRecoilValue(walletState)
+  const [tokenList] = useTokenList()
+  const [ibcAssetsList] = useIBCAssetList()
 
   const queryKey = useMemo(
     () => `multipleTokenBalances/${tokenSymbols?.join('+')}`,
@@ -107,8 +110,10 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
             client,
             address,
             token:
-              unsafelyGetTokenInfo(tokenSymbol) ||
-              mapIbcTokenToNative(unsafelyGetIBCAssetInfo(tokenSymbol)) ||
+              getTokenInfoFromTokenList(tokenSymbol, tokenList.tokens) ||
+              mapIbcTokenToNative(
+                getIBCAssetInfoFromList(tokenSymbol, ibcAssetsList?.tokens)
+              ) ||
               {},
           })
         )
@@ -121,7 +126,9 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
     },
     {
       enabled: Boolean(
-        status === WalletStatusType.connected && tokenSymbols?.length
+        status === WalletStatusType.connected &&
+          tokenSymbols?.length &&
+          tokenList?.tokens
       ),
 
       refetchOnMount: 'always',

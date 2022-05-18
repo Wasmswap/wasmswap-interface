@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from 'react'
 
-import { getCachedTokenList, TokenInfo, useTokenList } from './useTokenList'
+import { TokenInfo } from '../queries/usePoolsListQuery'
+import { useTokenList } from './useTokenList'
 
 /* token selector functions */
-export const unsafelyGetBaseToken = (
-  tokenList = getCachedTokenList()
-): TokenInfo | undefined => tokenList?.base_token
+export const getBaseTokenFromTokenList = (tokenList): TokenInfo | undefined =>
+  tokenList?.base_token
 
-export const unsafelyGetTokenInfo = (
+export const getTokenInfoFromTokenList = (
   tokenSymbol: string,
-  tokensList = getCachedTokenList()?.tokens
+  tokensList: Array<TokenInfo>
 ): TokenInfo | undefined => tokensList?.find((x) => x.symbol === tokenSymbol)
 /* /token selector functions */
 
@@ -19,7 +19,7 @@ export const useGetMultipleTokenInfo = () => {
   return useCallback(
     (tokenSymbols: Array<string>) =>
       tokenSymbols?.map((tokenSymbol) =>
-        unsafelyGetTokenInfo(tokenSymbol, tokenList?.tokens)
+        getTokenInfoFromTokenList(tokenSymbol, tokenList?.tokens)
       ),
     [tokenList]
   )
@@ -42,5 +42,5 @@ export const useTokenInfo = (tokenSymbol: string) => {
 /* hook for base token info retrieval */
 export const useBaseTokenInfo = () => {
   const [tokenList] = useTokenList()
-  return useMemo(() => unsafelyGetBaseToken(tokenList), [tokenList])
+  return useMemo(() => getBaseTokenFromTokenList(tokenList), [tokenList])
 }

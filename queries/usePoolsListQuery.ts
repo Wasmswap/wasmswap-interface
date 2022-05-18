@@ -1,10 +1,16 @@
 import { useQuery } from 'react-query'
 
-import { TokenInfo } from '../hooks/useTokenList'
-
-export type PoolValue = {
-  tokenAmount: number
-  dollarValue: number
+export type TokenInfo = {
+  id: string
+  chain_id: string
+  token_address: string
+  symbol: string
+  name: string
+  decimals: number
+  logoURI: string
+  tags: string[]
+  denom: string
+  native: boolean
 }
 
 export type TokenInfoWithReward = TokenInfo & {
@@ -20,6 +26,7 @@ export type PoolEntityType = {
 }
 
 type PoolsListQueryResponse = {
+  base_token: TokenInfo
   pools: Array<PoolEntityType>
   poolsById: Record<string, PoolEntityType>
   name: string

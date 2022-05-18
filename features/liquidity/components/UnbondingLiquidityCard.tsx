@@ -47,7 +47,7 @@ export const UnbondingLiquidityCard = ({
 
   const [tokenAAmount] = usePoolPairTokenAmount({
     poolId,
-    tokenAmountInMicroDenom: amount / 2,
+    tokenAmountInMicroDenom: amount,
     tokenPairIndex: 0,
   })
 
@@ -57,7 +57,7 @@ export const UnbondingLiquidityCard = ({
 
   const [tokenBAmount] = usePoolPairTokenAmount({
     poolId,
-    tokenAmountInMicroDenom: amount / 2,
+    tokenAmountInMicroDenom: amount,
     tokenPairIndex: 1,
   })
 

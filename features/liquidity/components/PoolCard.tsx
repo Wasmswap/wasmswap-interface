@@ -15,6 +15,8 @@ import Link from 'next/link'
 import { PoolState, PoolTokenValue } from 'queries/useQueryPools'
 import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
 
+import { PoolEntityType } from '../../../queries/usePoolsListQuery'
+
 type PoolCardProps = {
   poolId: string
   providedTotalLiquidity: PoolTokenValue
@@ -23,6 +25,7 @@ type PoolCardProps = {
   tokenASymbol: string
   tokenBSymbol: string
   aprValue: number
+  rewardsTokens?: PoolEntityType['rewards_tokens']
 }
 
 const compactNumberFormatter = Intl.NumberFormat('en', {
@@ -45,6 +48,7 @@ export const PoolCard = ({
   providedTotalLiquidity,
   stakedLiquidity,
   fluidLiquidity,
+  rewardsTokens,
   aprValue,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
@@ -58,8 +62,8 @@ export const PoolCard = ({
     ? formatToCompactDollarValue(providedTotalLiquidity.dollarValue)
     : 0
 
-  const totalDollarValueLiquidityFormatted = dollarValueFormatterWithDecimals(
-    fluidLiquidity.total.dollarValue,
+  const totalDollarValueLiquidityFormatted = dollarValueFormatter(
+    parseInt(String(fluidLiquidity.total.dollarValue), 10),
     {
       includeCommaSeparation: true,
     }
@@ -139,22 +143,20 @@ export const PoolCard = ({
                 )}
               </Text>
             </StyledDivForStatsColumn>
-            {__POOL_REWARDS_ENABLED__ && (
+            {__POOL_REWARDS_ENABLED__ && Boolean(rewardsTokens?.length) && (
               <StyledDivForStatsColumn align="center">
                 <Text variant="legend" color="secondary" align="center">
                   Rewards
                 </Text>
                 <StyledDivForTokenLogos css={{ paddingTop: '0' }}>
-                  <ImageForTokenLogo
-                    size="medium"
-                    logoURI={tokenA.logoURI}
-                    alt={tokenA.symbol}
-                  />
-                  <ImageForTokenLogo
-                    size="medium"
-                    logoURI={tokenB.logoURI}
-                    alt={tokenB.symbol}
-                  />
+                  {rewardsTokens.map((token) => (
+                    <ImageForTokenLogo
+                      key={token.symbol}
+                      size="medium"
+                      logoURI={token.logoURI}
+                      alt={token.symbol}
+                    />
+                  ))}
                 </StyledDivForTokenLogos>
               </StyledDivForStatsColumn>
             )}

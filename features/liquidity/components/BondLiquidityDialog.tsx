@@ -25,7 +25,6 @@ import { toast } from 'react-hot-toast'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 import { useQueryPoolLiquidity } from '../../../queries/useQueryPools'
-import { usePoolTokensDollarValue } from '../hooks'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
@@ -56,17 +55,15 @@ export const BondLiquidityDialog = ({
       ? liquidity?.fluid.provided.tokenAmount ?? 0
       : liquidity?.staked.provided.tokenAmount ?? 0
 
+  const maxDollarValueLiquidity =
+    dialogState === 'stake'
+      ? liquidity?.fluid.provided.dollarValue ?? 0
+      : liquidity?.staked.provided.dollarValue ?? 0
+
   const [tokenAmount, setTokenAmount] = useState(0)
 
-  const [maxDollarValueLiquidity] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: maxLiquidityTokenAmount,
-  })
-
-  const [liquidityDollarAmount] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: tokenAmount,
-  })
+  const liquidityDollarAmount =
+    (tokenAmount / maxLiquidityTokenAmount) * maxDollarValueLiquidity
 
   const refetchQueries = useRefetchQueries([
     'tokenBalance',
@@ -174,10 +171,11 @@ export const BondLiquidityDialog = ({
   const isLoading = isRequestingToBond || isRequestingToUnbond
 
   const handleAction = () => {
+    const amountForStaking = Math.floor(tokenAmount)
     if (dialogState === 'stake') {
-      bondTokens(tokenAmount)
+      bondTokens(amountForStaking)
     } else {
-      unbondTokens(tokenAmount)
+      unbondTokens(amountForStaking)
     }
   }
 
@@ -286,6 +284,8 @@ export const BondLiquidityDialog = ({
           maxLiquidity={maxLiquidityTokenAmount}
           liquidityAmount={tokenAmount}
           onChangeLiquidity={setTokenAmount}
+          maxLiquidityInDollarValue={maxDollarValueLiquidity}
+          liquidityInDollarValue={liquidityDollarAmount}
         />
       </DialogContent>
       <Divider />

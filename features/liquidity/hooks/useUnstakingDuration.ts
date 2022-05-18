@@ -5,7 +5,7 @@ import { WalletStatusType } from 'state/atoms/walletAtoms'
 
 import {
   PoolEntityType,
-  usePoolFromListQuery,
+  usePoolFromListQueryById,
 } from '../../../queries/usePoolsListQuery'
 import { cosmWasmClientRouter } from '../../../util/cosmWasmClientRouter'
 
@@ -14,7 +14,7 @@ type UseUnstakingDurationArgs = {
 }
 
 export const useUnstakingDuration = ({ poolId }: UseUnstakingDurationArgs) => {
-  const [pool] = usePoolFromListQuery({ poolId })
+  const [pool] = usePoolFromListQueryById({ poolId })
   const [chainInfo] = useChainInfo()
 
   const { data = 0, isLoading } = useQuery(

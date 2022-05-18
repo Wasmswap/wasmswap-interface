@@ -1,16 +1,15 @@
-import { usePersistance } from 'junoblocks'
+import { protectAgainstNaN, usePersistance } from 'junoblocks'
 import { useMemo } from 'react'
 import { useQueries } from 'react-query'
 import { useRecoilValue } from 'recoil'
 
-import { useGetPoolTokensDollarValue } from '../features/liquidity'
 import { useCosmWasmClient } from '../hooks/useCosmWasmClient'
 import { walletState } from '../state/atoms/walletAtoms'
 import {
   __POOL_REWARDS_ENABLED__,
   DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
 } from '../util/constants'
-import { convertMicroDenomToDenom } from '../util/conversion'
+import { calcPoolTokenDollarValue } from '../util/conversion'
 import { queryMyLiquidity } from './queryMyLiquidity'
 import {
   queryRewardsContracts,
@@ -68,8 +67,6 @@ export const useQueryMultiplePoolsLiquidity = ({
 }: QueryMultiplePoolsArgs) => {
   const [getTokenDollarValue, enabledGetTokenDollarValue] =
     useGetTokenDollarValueQuery()
-  const [getPoolTokensDollarValue, enabledGetPoolTokensDollarValue] =
-    useGetPoolTokensDollarValue()
 
   const { address, client: signingClient } = useRecoilValue(walletState)
   const client = useCosmWasmClient()
@@ -78,7 +75,6 @@ export const useQueryMultiplePoolsLiquidity = ({
     client,
     signingClient,
     getTokenDollarValue,
-    getPoolTokensDollarValue,
   }
 
   async function queryPoolLiquidity(
@@ -111,53 +107,41 @@ export const useQueryMultiplePoolsLiquidity = ({
       swap,
     })
 
-    const [totalLiquidity, providedLiquidity, totalStaked, providedStaked] =
-      await Promise.all([
-        /* fetch total liquidity dollar value */
-        getTokenDollarValue({
-          tokenInfo: tokenA,
-          tokenAmountInDenom: convertMicroDenomToDenom(
-            totalReserve[0],
-            tokenA.decimals
-          ),
-        }).then((dollarValue) => ({
-          tokenAmount: swap.lp_token_supply,
-          dollarValue: dollarValue * 2,
-        })),
-        /* fetch provided liquidity dollar value */
-        getTokenDollarValue({
-          tokenInfo: tokenA,
-          tokenAmountInDenom: convertMicroDenomToDenom(
-            providedReserve[0],
-            tokenA.decimals
-          ),
-        }).then((dollarValue) => ({
-          tokenAmount: providedLiquidityInMicroDenom,
-          dollarValue: dollarValue * 2,
-        })),
-        /* fetch total staked liquidity dollar value */
-        getTokenDollarValue({
-          tokenInfo: tokenA,
-          tokenAmountInDenom: convertMicroDenomToDenom(
-            totalStakedAmountInMicroDenom,
-            tokenA.decimals
-          ),
-        }).then((dollarValue) => ({
-          tokenAmount: providedLiquidityInMicroDenom,
-          dollarValue: dollarValue * 2,
-        })),
-        /* fetch provided liquidity dollar value */
-        getTokenDollarValue({
-          tokenInfo: tokenA,
-          tokenAmountInDenom: convertMicroDenomToDenom(
-            providedStakedAmountInMicroDenom,
-            tokenA.decimals
-          ),
-        }).then((dollarValue) => ({
-          tokenAmount: providedStakedAmountInMicroDenom,
-          dollarValue: dollarValue * 2,
-        })),
-      ])
+    const tokenADollarPrice = await getTokenDollarValue({
+      tokenInfo: tokenA,
+      tokenAmountInDenom: 1,
+    })
+
+    function getPoolTokensValue({ tokenAmountInMicroDenom }) {
+      return {
+        tokenAmount: tokenAmountInMicroDenom,
+        dollarValue: calcPoolTokenDollarValue({
+          tokenAmountInMicroDenom,
+          tokenSupply: swap.lp_token_supply,
+          tokenReserves: totalReserve[0],
+          tokenDollarPrice: tokenADollarPrice,
+        }),
+      }
+    }
+
+    const [totalLiquidity, providedLiquidity, totalStaked, providedStaked] = [
+      /* calc total liquidity dollar value */
+      getPoolTokensValue({
+        tokenAmountInMicroDenom: swap.lp_token_supply,
+      }),
+      /* calc provided liquidity dollar value */
+      getPoolTokensValue({
+        tokenAmountInMicroDenom: providedLiquidityInMicroDenom,
+      }),
+      /* calc total staked liquidity dollar value */
+      getPoolTokensValue({
+        tokenAmountInMicroDenom: totalStakedAmountInMicroDenom,
+      }),
+      /* calc provided liquidity dollar value */
+      getPoolTokensValue({
+        tokenAmountInMicroDenom: providedStakedAmountInMicroDenom,
+      }),
+    ]
 
     let annualYieldPercentageReturn = 0
     let rewardsContracts: Array<SerializedRewardsContract> | undefined
@@ -171,7 +155,7 @@ export const useQueryMultiplePoolsLiquidity = ({
       })
       annualYieldPercentageReturn = calculateRewardsAnnualYieldRate({
         rewardsContracts,
-        totalStakedDollarValue: totalStaked.dollarValue,
+        totalStakedDollarValue: totalStaked.dollarValue || 1,
       })
     }
 
@@ -213,9 +197,7 @@ export const useQueryMultiplePoolsLiquidity = ({
   return useQueries(
     (pools ?? []).map((pool) => ({
       queryKey: `@pool-liquidity/${pool.pool_id}/${address}`,
-      enabled: Boolean(
-        enabledGetTokenDollarValue && enabledGetPoolTokensDollarValue
-      ),
+      enabled: Boolean(enabledGetTokenDollarValue && pool.pool_id),
 
       refetchOnMount: false as const,
       refetchInterval: refetchInBackground
@@ -244,10 +226,10 @@ export const useQueryPoolLiquidity = ({ poolId }) => {
     refetchInBackground: true,
   })
 
-  const persitedData = usePersistance(poolResponse?.data)
+  const persistedData = usePersistance(poolResponse?.data)
 
   return [
-    persitedData,
+    persistedData,
     poolResponse?.isLoading || loadingPoolsList,
     poolResponse?.isError,
   ] as const
@@ -259,12 +241,12 @@ export function calculateRewardsAnnualYieldRate({
 }) {
   if (!__POOL_REWARDS_ENABLED__) return 0
 
-  /* rewards math */
-  return rewardsContracts.reduce((yieldReturnValue, rewardsContract) => {
-    return (
-      yieldReturnValue +
-      rewardsContract.rewardRate.ratePerYear.dollarValue /
-        (totalStakedDollarValue || 1)
-    )
-  }, 0)
+  const totalRewardRatePerYearInDollarValue = rewardsContracts.reduce(
+    (value, { rewardRate }) => value + rewardRate.ratePerYear.dollarValue,
+    0
+  )
+
+  return protectAgainstNaN(
+    (totalRewardRatePerYearInDollarValue / totalStakedDollarValue) * 100
+  )
 }

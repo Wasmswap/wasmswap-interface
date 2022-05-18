@@ -5,7 +5,7 @@ import { Claim, getClaims } from 'services/staking'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
-import { usePoolFromListQuery } from '../../../queries/usePoolsListQuery'
+import { usePoolFromListQueryById } from '../../../queries/usePoolsListQuery'
 
 type StakingClaimsType = {
   redeemableClaims?: Array<Claim>
@@ -14,7 +14,7 @@ type StakingClaimsType = {
 }
 
 export const useStakingClaims = ({ poolId }) => {
-  const [pool] = usePoolFromListQuery({ poolId })
+  const [pool] = usePoolFromListQueryById({ poolId })
   const { address, status, client } = useRecoilValue(walletState)
 
   const { data = {} as StakingClaimsType, isLoading } =

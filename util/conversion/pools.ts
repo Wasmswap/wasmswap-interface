@@ -11,3 +11,20 @@ export const calcPoolTokenValue = ({
     POOL_TOKENS_DECIMALS
   )
 }
+
+export const calcPoolTokenDollarValue = ({
+  tokenAmountInMicroDenom,
+  tokenSupply,
+  tokenReserves,
+  tokenDollarPrice,
+}) => {
+  return (
+    calcPoolTokenValue({
+      tokenAmountInMicroDenom,
+      tokenSupply,
+      tokenReserves,
+    }) *
+    tokenDollarPrice *
+    2
+  )
+}

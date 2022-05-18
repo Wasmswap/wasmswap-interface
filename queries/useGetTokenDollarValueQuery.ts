@@ -30,7 +30,7 @@ export const useGetTokenDollarValueQuery = () => {
         amount: 1,
       })
 
-      return tokenAmountInDenom * (priceForOneToken * tokenADollarPrice)
+      return (tokenAmountInDenom / priceForOneToken) * tokenADollarPrice
     },
     Boolean(
       tokenA && client && !fetchingDollarPrice && !isLoadingPoolForSwapMatcher

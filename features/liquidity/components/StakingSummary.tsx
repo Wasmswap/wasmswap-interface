@@ -1,6 +1,4 @@
-import {
-  usePoolPairTokenAmount,
-} from 'features/liquidity/hooks'
+import { usePoolPairTokenAmount } from 'features/liquidity/hooks'
 import {
   BasicNumberInput,
   formatTokenBalance,
@@ -9,9 +7,8 @@ import {
   styled,
   Text,
 } from 'junoblocks'
-import { useRef, useState } from 'react'
-
 import { TokenInfo } from 'queries/usePoolsListQuery'
+import { useRef, useState } from 'react'
 
 type StakingSummaryProps = {
   label: string

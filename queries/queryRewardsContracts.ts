@@ -32,19 +32,26 @@ export async function queryRewardsContracts({
     )
   )
 
+  const currentHeight = await client.getHeight()
+
   return await Promise.all(
     rewardsContractsInfo.map(async (contractInfo, index) => {
       const tokenInfo = rewardsTokens[index]
+      const expired = currentHeight > contractInfo.reward.period_finish
 
-      const rewardRatePerBlockInTokens = convertMicroDenomToDenom(
-        contractInfo.reward.reward_rate,
-        tokenInfo.decimals
-      )
+      const rewardRatePerBlockInTokens = expired
+        ? 0
+        : convertMicroDenomToDenom(
+            contractInfo.reward.reward_rate,
+            tokenInfo.decimals
+          )
 
-      const rewardRatePerBlockInDollarValue = await getTokenDollarValue({
-        tokenInfo,
-        tokenAmountInDenom: rewardRatePerBlockInTokens,
-      })
+      const rewardRatePerBlockInDollarValue = expired
+        ? 0
+        : await getTokenDollarValue({
+            tokenInfo,
+            tokenAmountInDenom: rewardRatePerBlockInTokens,
+          })
 
       const rewardRate = {
         ratePerBlock: {

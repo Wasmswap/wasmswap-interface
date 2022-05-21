@@ -14,6 +14,7 @@ export type IBCAssetInfo = {
   channel: string
   logoURI: string
   deposit_gas_fee?: number
+  external_deposit_uri?: string
 }
 
 export type IBCAssetList = {

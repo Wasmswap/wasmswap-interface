@@ -1,7 +1,7 @@
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
 
-import { usePoolFromListQuery } from '../queries/usePoolsListQuery'
+import { usePoolFromListQueryById } from '../queries/usePoolsListQuery'
 import { stakeTokens, unstakeTokens } from '../services/staking'
 import { walletState } from '../state/atoms/walletAtoms'
 import { useSwapInfo } from './useSwapInfo'
@@ -11,7 +11,7 @@ type UseBondTokensArgs = {
 } & Parameters<typeof useMutation>[2]
 
 export const useBondTokens = ({ poolId, ...options }: UseBondTokensArgs) => {
-  const [pool] = usePoolFromListQuery({ poolId })
+  const [pool] = usePoolFromListQueryById({ poolId })
   const { address, client } = useRecoilValue(walletState)
   const [swap] = useSwapInfo({ poolId })
 
@@ -34,7 +34,7 @@ export const useUnbondTokens = ({
   poolId,
   ...options
 }: UseUnbondTokensArgs) => {
-  const [pool] = usePoolFromListQuery({ poolId })
+  const [pool] = usePoolFromListQueryById({ poolId })
   const { address, client } = useRecoilValue(walletState)
 
   return useMutation(async (amount: number) => {

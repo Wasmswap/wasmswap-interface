@@ -59,7 +59,7 @@ export const usePoolsListQuery = (options?: Parameters<typeof useQuery>[1]) => {
   )
 }
 
-export const usePoolFromListQuery = ({ poolId }: { poolId: string }) => {
+export const usePoolFromListQueryById = ({ poolId }: { poolId: string }) => {
   const { data: poolListResponse, isLoading } = usePoolsListQuery()
   return [poolListResponse?.poolsById[poolId], isLoading] as const
 }

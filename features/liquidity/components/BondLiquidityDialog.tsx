@@ -25,7 +25,6 @@ import { toast } from 'react-hot-toast'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 import { useQueryPoolLiquidity } from '../../../queries/useQueryPools'
-import { usePoolTokensDollarValue } from '../hooks'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
@@ -51,22 +50,21 @@ export const BondLiquidityDialog = ({
   const { pool_assets, liquidity } = pool || {}
   const [tokenA, tokenB] = pool_assets || []
 
-  const maxLiquidityTokenAmount =
+  const totalLiquidityProvidedTokenAmount =
     dialogState === 'stake'
       ? liquidity?.available.provided.tokenAmount ?? 0
       : liquidity?.staked.provided.tokenAmount ?? 0
 
+  const totalLiquidityProvidedDollarValue =
+    dialogState === 'stake'
+      ? liquidity?.fluid.provided.dollarValue ?? 0
+      : liquidity?.staked.provided.dollarValue ?? 0
+
   const [tokenAmount, setTokenAmount] = useState(0)
 
-  const [maxDollarValueLiquidity] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: maxLiquidityTokenAmount,
-  })
-
-  const [liquidityDollarAmount] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: tokenAmount,
-  })
+  const liquidityDollarAmount =
+    (tokenAmount / totalLiquidityProvidedTokenAmount) *
+    totalLiquidityProvidedDollarValue
 
   const refetchQueries = useRefetchQueries([
     'tokenBalance',
@@ -174,22 +172,23 @@ export const BondLiquidityDialog = ({
   const isLoading = isRequestingToBond || isRequestingToUnbond
 
   const handleAction = () => {
+    const flooredTokenAmount = Math.floor(tokenAmount)
     if (dialogState === 'stake') {
-      bondTokens(tokenAmount)
+      bondTokens(flooredTokenAmount)
     } else {
-      unbondTokens(tokenAmount)
+      unbondTokens(flooredTokenAmount)
     }
   }
 
   const getIsFormSubmissionDisabled = () => {
     if (dialogState === 'stake') {
-      if (maxLiquidityTokenAmount <= 0) {
+      if (totalLiquidityProvidedTokenAmount <= 0) {
         return true
       }
     }
 
     if (dialogState === 'unstake') {
-      if (maxLiquidityTokenAmount <= 0) {
+      if (totalLiquidityProvidedTokenAmount <= 0) {
         return true
       }
     }
@@ -259,19 +258,22 @@ export const BondLiquidityDialog = ({
       <DialogContent css={{ paddingBottom: '$12' }}>
         <LiquidityInputSelector
           inputRef={inputRef}
-          maxLiquidity={maxLiquidityTokenAmount}
+          maxLiquidity={totalLiquidityProvidedTokenAmount}
           liquidity={tokenAmount}
           onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
           Max available to {dialogState === 'stake' ? 'bond' : 'unbond'} is $
-          {typeof maxDollarValueLiquidity === 'number' &&
-            dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
-              includeCommaSeparation: true,
-            })}
+          {typeof totalLiquidityProvidedDollarValue === 'number' &&
+            dollarValueFormatterWithDecimals(
+              totalLiquidityProvidedDollarValue,
+              {
+                includeCommaSeparation: true,
+              }
+            )}
         </Text>
         <PercentageSelection
-          maxLiquidity={maxLiquidityTokenAmount}
+          maxLiquidity={totalLiquidityProvidedTokenAmount}
           liquidity={tokenAmount}
           onChangeLiquidity={setTokenAmount}
         />
@@ -283,9 +285,11 @@ export const BondLiquidityDialog = ({
           poolId={poolId}
           tokenA={tokenA}
           tokenB={tokenB}
-          maxLiquidity={maxLiquidityTokenAmount}
+          totalLiquidityProvidedTokenAmount={totalLiquidityProvidedTokenAmount}
+          totalLiquidityProvidedDollarValue={totalLiquidityProvidedDollarValue}
           liquidityAmount={tokenAmount}
           onChangeLiquidity={setTokenAmount}
+          liquidityInDollarValue={liquidityDollarAmount}
         />
       </DialogContent>
       <Divider />

@@ -42,7 +42,7 @@ export const useSwapInfo = ({
       }
     },
     {
-      enabled: Boolean(poolsListResponse?.pools.length && client),
+      enabled: Boolean(poolsListResponse?.pools.length && client && poolId),
       refetchOnMount: false,
       refetchInterval: refetchInBackground
         ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL

@@ -87,18 +87,21 @@ export async function tokenToTokenPriceQuery({
     return 1
   }
 
-  if (fromTokenInfo.symbol === baseToken.symbol && toTokenInfo.swap_address) {
-    return formatPrice(
-      await getToken1ForToken2Price({
-        nativeAmount: convertedTokenAmount,
-        swapAddress: toTokenInfo.swap_address,
-        client,
-      })
-    )
-  } else if (
-    toTokenInfo.symbol === baseToken.symbol &&
-    fromTokenInfo.swap_address
-  ) {
+  const shouldQueryBaseTokenForTokenB =
+    fromTokenInfo.symbol === baseToken.symbol && toTokenInfo.swap_address
+
+  const shouldQueryTokenBForBaseToken =
+    toTokenInfo.symbol === baseToken.symbol && fromTokenInfo.swap_address
+
+  if (shouldQueryBaseTokenForTokenB) {
+    const resp = await getToken1ForToken2Price({
+      nativeAmount: convertedTokenAmount,
+      swapAddress: toTokenInfo.swap_address,
+      client,
+    })
+
+    return formatPrice(resp)
+  } else if (shouldQueryTokenBForBaseToken) {
     return formatPrice(
       await getToken2ForToken1Price({
         tokenAmount: convertedTokenAmount,

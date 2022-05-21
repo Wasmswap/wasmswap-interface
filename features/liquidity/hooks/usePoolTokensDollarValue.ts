@@ -1,14 +1,25 @@
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
+import {
+  PoolEntityType,
+  usePoolFromListQueryById,
+} from 'queries/usePoolsListQuery'
 import { useCallback } from 'react'
 import { calcPoolTokenValue } from 'util/conversion'
 
-export const useGetPoolTokensDollarValue = () => {
-  const tokenA = useBaseTokenInfo()
-  const [tokenAPrice, isPriceLoading] = useTokenDollarValue(tokenA?.symbol)
+type UseGetPoolTokensDollarValueArgs = {
+  poolId: PoolEntityType['pool_id']
+}
 
-  const enabled = !isPriceLoading
+export const useGetPoolTokensDollarValue = ({
+  poolId,
+}: UseGetPoolTokensDollarValueArgs) => {
+  const [pool] = usePoolFromListQueryById({ poolId })
+  const [tokenAPrice, isPriceLoading] = useTokenDollarValue(
+    pool?.pool_assets[0].symbol
+  )
+
+  const enabled = pool && typeof tokenAPrice === 'number' && !isPriceLoading
 
   return [
     useCallback(
@@ -41,7 +52,9 @@ export const usePoolTokensDollarValue = ({
   poolId,
   tokenAmountInMicroDenom,
 }: UsePoolTokensDollarValueArgs) => {
-  const [getPoolTokensDollarValue, enabled] = useGetPoolTokensDollarValue()
+  const [getPoolTokensDollarValue, enabled] = useGetPoolTokensDollarValue({
+    poolId,
+  })
 
   const [swapInfo, isLoading] = useSwapInfo({ poolId })
 

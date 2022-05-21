@@ -70,11 +70,17 @@ export default function Pools() {
 
               <StyledDivForPoolsGrid>
                 {myPools.map(
-                  ({ liquidity, pool_id, pool_assets: [tokenA, tokenB] }) => (
+                  ({
+                    liquidity,
+                    pool_id,
+                    pool_assets: [tokenA, tokenB],
+                    rewards_tokens,
+                  }) => (
                     <PoolCard
                       key={pool_id}
                       tokenASymbol={tokenA.symbol}
                       poolId={pool_id}
+                      rewardsTokens={rewards_tokens}
                       tokenBSymbol={tokenB.symbol}
                       providedTotalLiquidity={liquidity.providedTotal}
                       stakedLiquidity={liquidity.staked}

@@ -1,7 +1,4 @@
-import {
-  usePoolPairTokenAmount,
-  usePoolTokensDollarValue,
-} from 'features/liquidity/hooks'
+import { usePoolPairTokenAmount } from 'features/liquidity/hooks'
 import {
   BasicNumberInput,
   formatTokenBalance,
@@ -10,18 +7,19 @@ import {
   styled,
   Text,
 } from 'junoblocks'
+import { TokenInfo } from 'queries/usePoolsListQuery'
 import { useRef, useState } from 'react'
-
-import { TokenInfo } from '../../../queries/usePoolsListQuery'
 
 type StakingSummaryProps = {
   label: string
   poolId: string
   tokenA: TokenInfo
   tokenB: TokenInfo
-  maxLiquidity: number
+  totalLiquidityProvidedTokenAmount: number
   liquidityAmount: number
   onChangeLiquidity: (liquidityAmount: number) => void
+  totalLiquidityProvidedDollarValue: number
+  liquidityInDollarValue: number
 }
 
 export const StakingSummary = ({
@@ -29,9 +27,10 @@ export const StakingSummary = ({
   poolId,
   tokenA,
   tokenB,
-  maxLiquidity,
   liquidityAmount,
   onChangeLiquidity,
+  totalLiquidityProvidedDollarValue,
+  liquidityInDollarValue,
 }: StakingSummaryProps) => {
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
     useState(false)
@@ -48,16 +47,6 @@ export const StakingSummary = ({
     tokenAmountInMicroDenom: liquidityAmount,
     tokenPairIndex: 1,
     poolId,
-  })
-
-  const [maxLiquidityInDollarValue] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: maxLiquidity,
-  })
-
-  const [liquidityInDollarValue] = usePoolTokensDollarValue({
-    poolId,
-    tokenAmountInMicroDenom: liquidityAmount,
   })
 
   const handleChangeDollarValue = (amount: number) => {
@@ -102,7 +91,7 @@ export const StakingSummary = ({
             <BasicNumberInput
               placeholder="0.0"
               min={0}
-              max={(maxLiquidityInDollarValue as number) || 0}
+              max={(totalLiquidityProvidedDollarValue as number) || 0}
               value={(liquidityInDollarValue as number) || 0}
               maximumFractionDigits={2}
               onChange={handleChangeDollarValue}

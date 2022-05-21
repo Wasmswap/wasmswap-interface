@@ -9,7 +9,6 @@ import {
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { useGetTokenDollarValueQuery } from '../queries/useGetTokenDollarValueQuery'
-import { PoolEntityType } from '../queries/usePoolsListQuery'
 import { PoolEntityTypeWithLiquidity } from '../queries/useQueryPools'
 import { useTokenList } from './useTokenList'
 
@@ -29,7 +28,7 @@ export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
     pool?.rewards_tokens?.length > 0 && pool?.staking_address
 
   const { data: rewards, isLoading } = useQuery(
-    [`pendingRewards/${pool?.pool_id}`, address],
+    `pendingRewards/${pool?.pool_id}`,
     async () => {
       return await Promise.all(
         pool.rewards_tokens.map(async ({ rewards_address, decimals }) => {
@@ -71,25 +70,27 @@ export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
     }
   )
 
-  return [rewards, isLoading]
+  return [rewards, isLoading] as const
 }
 
 type UseClaimRewardsArgs = {
-  pool: PoolEntityType
+  pool: PoolEntityTypeWithLiquidity
 } & Parameters<typeof useMutation>[2]
 
 export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
   const { address, client } = useRecoilValue(walletState)
+  const [pendingRewards] = usePendingRewards({
+    pool,
+  })
 
   return useMutation(
     `@claim-rewards/${pool?.pool_id}`,
     async () => {
-      const shouldBeAbleToClaimRewards =
-        pool &&
-        client &&
+      const hasPendingRewards =
         __POOL_REWARDS_ENABLED__ &&
-        pool.rewards_tokens.length > 0 &&
-        pool.staking_address
+        pendingRewards?.find(({ dollarValue }) => dollarValue > 0)
+
+      const shouldBeAbleToClaimRewards = pool && client && hasPendingRewards
 
       if (shouldBeAbleToClaimRewards) {
         const rewardsAddresses = pool.rewards_tokens.map(

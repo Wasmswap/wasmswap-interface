@@ -63,7 +63,7 @@ export const PoolCard = ({
     : 0
 
   const totalDollarValueLiquidityFormatted = dollarValueFormatter(
-    parseInt(String(fluidLiquidity.total.dollarValue), 10),
+    Math.ceil(fluidLiquidity.total.dollarValue),
     {
       includeCommaSeparation: true,
     }

@@ -50,12 +50,12 @@ export const BondLiquidityDialog = ({
   const { pool_assets, liquidity } = pool || {}
   const [tokenA, tokenB] = pool_assets || []
 
-  const maxLiquidityTokenAmount =
+  const totalLiquidityProvidedTokenAmount =
     dialogState === 'stake'
       ? liquidity?.fluid.provided.tokenAmount ?? 0
       : liquidity?.staked.provided.tokenAmount ?? 0
 
-  const maxDollarValueLiquidity =
+  const totalLiquidityProvidedDollarValue =
     dialogState === 'stake'
       ? liquidity?.fluid.provided.dollarValue ?? 0
       : liquidity?.staked.provided.dollarValue ?? 0
@@ -63,7 +63,8 @@ export const BondLiquidityDialog = ({
   const [tokenAmount, setTokenAmount] = useState(0)
 
   const liquidityDollarAmount =
-    (tokenAmount / maxLiquidityTokenAmount) * maxDollarValueLiquidity
+    (tokenAmount / totalLiquidityProvidedTokenAmount) *
+    totalLiquidityProvidedDollarValue
 
   const refetchQueries = useRefetchQueries([
     'tokenBalance',
@@ -171,23 +172,23 @@ export const BondLiquidityDialog = ({
   const isLoading = isRequestingToBond || isRequestingToUnbond
 
   const handleAction = () => {
-    const amountForStaking = Math.floor(tokenAmount)
+    const flooredTokenAmount = Math.floor(tokenAmount)
     if (dialogState === 'stake') {
-      bondTokens(amountForStaking)
+      bondTokens(flooredTokenAmount)
     } else {
-      unbondTokens(amountForStaking)
+      unbondTokens(flooredTokenAmount)
     }
   }
 
   const getIsFormSubmissionDisabled = () => {
     if (dialogState === 'stake') {
-      if (maxLiquidityTokenAmount <= 0) {
+      if (totalLiquidityProvidedTokenAmount <= 0) {
         return true
       }
     }
 
     if (dialogState === 'unstake') {
-      if (maxLiquidityTokenAmount <= 0) {
+      if (totalLiquidityProvidedTokenAmount <= 0) {
         return true
       }
     }
@@ -257,19 +258,22 @@ export const BondLiquidityDialog = ({
       <DialogContent css={{ paddingBottom: '$12' }}>
         <LiquidityInputSelector
           inputRef={inputRef}
-          maxLiquidity={maxLiquidityTokenAmount}
+          maxLiquidity={totalLiquidityProvidedTokenAmount}
           liquidity={tokenAmount}
           onChangeLiquidity={setTokenAmount}
         />
         <Text variant="caption" color="tertiary" css={{ padding: '$6 0 $9' }}>
           Max available to {dialogState === 'stake' ? 'bond' : 'unbond'} is $
-          {typeof maxDollarValueLiquidity === 'number' &&
-            dollarValueFormatterWithDecimals(maxDollarValueLiquidity, {
-              includeCommaSeparation: true,
-            })}
+          {typeof totalLiquidityProvidedDollarValue === 'number' &&
+            dollarValueFormatterWithDecimals(
+              totalLiquidityProvidedDollarValue,
+              {
+                includeCommaSeparation: true,
+              }
+            )}
         </Text>
         <PercentageSelection
-          maxLiquidity={maxLiquidityTokenAmount}
+          maxLiquidity={totalLiquidityProvidedTokenAmount}
           liquidity={tokenAmount}
           onChangeLiquidity={setTokenAmount}
         />
@@ -281,10 +285,10 @@ export const BondLiquidityDialog = ({
           poolId={poolId}
           tokenA={tokenA}
           tokenB={tokenB}
-          maxLiquidity={maxLiquidityTokenAmount}
+          totalLiquidityProvidedTokenAmount={totalLiquidityProvidedTokenAmount}
+          totalLiquidityProvidedDollarValue={totalLiquidityProvidedDollarValue}
           liquidityAmount={tokenAmount}
           onChangeLiquidity={setTokenAmount}
-          maxLiquidityInDollarValue={maxDollarValueLiquidity}
           liquidityInDollarValue={liquidityDollarAmount}
         />
       </DialogContent>

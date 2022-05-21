@@ -46,6 +46,7 @@ export const unstakeTokens = async (
   amount: number,
   client: SigningCosmWasmClient
 ) => {
+  amount = Math.floor(amount)
   const msg = { unstake: { amount: amount.toString() } }
   const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
   const fee: StdFee = {

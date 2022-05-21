@@ -57,7 +57,7 @@ export const BondLiquidityDialog = ({
 
   const totalLiquidityProvidedDollarValue =
     dialogState === 'stake'
-      ? liquidity?.fluid.provided.dollarValue ?? 0
+      ? liquidity?.available.provided.dollarValue ?? 0
       : liquidity?.staked.provided.dollarValue ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)

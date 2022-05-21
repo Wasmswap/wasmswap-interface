@@ -12,10 +12,9 @@ import {
   Text,
 } from 'junoblocks'
 import Link from 'next/link'
+import { PoolEntityType } from 'queries/usePoolsListQuery'
 import { PoolState, PoolTokenValue } from 'queries/useQueryPools'
 import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
-
-import { PoolEntityType } from 'queries/usePoolsListQuery'
 
 type PoolCardProps = {
   poolId: string

@@ -96,12 +96,12 @@ export const usePoolDialogController = ({
     tokenB,
     maxApplicableBalanceForTokenA,
     maxApplicableBalanceForTokenB,
-    providedLiquidity: liquidity?.fluid?.provided,
+    providedLiquidity: liquidity?.available?.provided,
   })
 
   return {
     state: {
-      providedLiquidity: liquidity?.fluid?.provided,
+      providedLiquidity: liquidity?.available?.provided,
       providedLiquidityReserve: liquidity?.reserves?.provided,
       tokenAReserve,
       tokenBReserve,

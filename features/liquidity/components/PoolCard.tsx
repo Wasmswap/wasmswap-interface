@@ -19,7 +19,7 @@ type PoolCardProps = {
   poolId: string
   providedTotalLiquidity: PoolTokenValue
   stakedLiquidity: PoolState
-  fluidLiquidity: PoolState
+  availableLiquidity: PoolState
   tokenASymbol: string
   tokenBSymbol: string
   aprValue: number
@@ -44,7 +44,7 @@ export const PoolCard = ({
   tokenBSymbol,
   providedTotalLiquidity,
   stakedLiquidity,
-  fluidLiquidity,
+  availableLiquidity,
   aprValue,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
@@ -59,7 +59,7 @@ export const PoolCard = ({
     : 0
 
   const totalDollarValueLiquidityFormatted = dollarValueFormatterWithDecimals(
-    fluidLiquidity.total.dollarValue,
+    availableLiquidity.total.dollarValue,
     {
       includeCommaSeparation: true,
     }

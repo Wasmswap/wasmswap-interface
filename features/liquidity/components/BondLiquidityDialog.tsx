@@ -53,7 +53,7 @@ export const BondLiquidityDialog = ({
 
   const maxLiquidityTokenAmount =
     dialogState === 'stake'
-      ? liquidity?.fluid.provided.tokenAmount ?? 0
+      ? liquidity?.available.provided.tokenAmount ?? 0
       : liquidity?.staked.provided.tokenAmount ?? 0
 
   const [tokenAmount, setTokenAmount] = useState(0)

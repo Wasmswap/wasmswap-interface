@@ -190,7 +190,7 @@ export default function Pool() {
               poolId={poolId as string}
               tokenA={tokenA}
               tokenB={tokenB}
-              totalLiquidity={pool.liquidity.fluid.total}
+              totalLiquidity={pool.liquidity.available.total}
               yieldPercentageReturn={
                 pool.liquidity.rewards.annualYieldPercentageReturn
               }
@@ -201,7 +201,7 @@ export default function Pool() {
               <StyledDivForCards>
                 <ManageLiquidityCard
                   providedLiquidityReserve={pool.liquidity.reserves.provided}
-                  providedLiquidity={pool.liquidity.fluid.provided}
+                  providedLiquidity={pool.liquidity.available.provided}
                   stakedLiquidityReserve={
                     pool.liquidity.reserves.providedStaked
                   }
@@ -219,7 +219,7 @@ export default function Pool() {
                 />
                 <ManageBondedLiquidityCard
                   onClick={() => setIsBondingDialogShowing(true)}
-                  providedLiquidity={pool.liquidity.fluid.provided}
+                  providedLiquidity={pool.liquidity.available.provided}
                   stakedLiquidity={pool.liquidity.staked.provided}
                   yieldPercentageReturn={
                     pool.liquidity.rewards.annualYieldPercentageReturn
@@ -232,7 +232,7 @@ export default function Pool() {
                     pool.liquidity.staked.provided.tokenAmount > 0
                   }
                   hasProvidedLiquidity={
-                    pool.liquidity.fluid.provided.tokenAmount > 0
+                    pool.liquidity.available.provided.tokenAmount > 0
                   }
                   pendingRewards={pendingRewards}
                   loading={isClaimingRewards}

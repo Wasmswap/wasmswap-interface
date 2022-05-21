@@ -78,7 +78,7 @@ export default function Pools() {
                       tokenBSymbol={tokenB.symbol}
                       providedTotalLiquidity={liquidity.providedTotal}
                       stakedLiquidity={liquidity.staked}
-                      fluidLiquidity={liquidity.fluid}
+                      availableLiquidity={liquidity.available}
                       aprValue={liquidity.rewards.annualYieldPercentageReturn}
                     />
                   )
@@ -113,7 +113,7 @@ export default function Pools() {
                   tokenBSymbol={tokenB.symbol}
                   providedTotalLiquidity={liquidity.providedTotal}
                   stakedLiquidity={liquidity.staked}
-                  fluidLiquidity={liquidity.fluid}
+                  availableLiquidity={liquidity.available}
                   aprValue={liquidity.rewards.annualYieldPercentageReturn}
                 />
               )

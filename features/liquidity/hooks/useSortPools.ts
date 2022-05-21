@@ -51,8 +51,8 @@ function sortPools(
   const result = pools.sort((poolA, poolB) => {
     /* sort by total liquidity */
     if (sortBy.parameter === 'liquidity') {
-      const poolATotalLiquidity = poolA.liquidity.fluid.total.dollarValue
-      const poolBTotalLiquidity = poolB.liquidity.fluid.total.dollarValue
+      const poolATotalLiquidity = poolA.liquidity.available.total.dollarValue
+      const poolBTotalLiquidity = poolB.liquidity.available.total.dollarValue
 
       if (poolATotalLiquidity > poolBTotalLiquidity) {
         return 1

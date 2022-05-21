@@ -34,7 +34,7 @@ export type PoolState = {
 }
 
 export type PoolLiquidityState = {
-  fluid: PoolState
+  available: PoolState
   staked: PoolState
 
   providedTotal: PoolTokenValue
@@ -176,7 +176,7 @@ export const useQueryMultiplePoolsLiquidity = ({
     }
 
     const liquidity = {
-      fluid: {
+      available: {
         total: totalLiquidity,
         provided: providedLiquidity,
       },

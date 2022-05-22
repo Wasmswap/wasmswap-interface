@@ -1,10 +1,9 @@
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import {
-  ArrowUp,
+  ArrowUpIcon,
   Button,
   dollarValueFormatterWithDecimals,
-  IconWrapper,
   ImageForTokenLogo,
   styled,
   Text,
@@ -105,24 +104,39 @@ export const AssetCard = ({
         </StyledElementForCard>
 
         <StyledElementForCard kind="actions">
-          {balance > 0 && (
+          {shouldPerformDepositOutsideApp ? (
             <Button
               disabled={!__TRANSFERS_ENABLED__}
-              onClick={__TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined}
-              iconRight={<IconWrapper icon={<ArrowUp />} />}
+              onClick={handleDepositClick}
+              iconRight={<ArrowUpIcon rotation="45deg" />}
               variant="ghost"
             >
-              Withdraw
+              Transfer
             </Button>
+          ) : (
+            <>
+              {balance > 0 && (
+                <Button
+                  disabled={!__TRANSFERS_ENABLED__}
+                  onClick={
+                    __TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined
+                  }
+                  iconRight={<ArrowUpIcon />}
+                  variant="ghost"
+                >
+                  Withdraw
+                </Button>
+              )}
+              <Button
+                disabled={!__TRANSFERS_ENABLED__}
+                onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
+                iconRight={<ArrowUpIcon rotation="180deg" />}
+                variant="ghost"
+              >
+                Deposit
+              </Button>
+            </>
           )}
-          <Button
-            disabled={!__TRANSFERS_ENABLED__}
-            onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
-            iconRight={<IconWrapper icon={<ArrowUp />} rotation="180deg" />}
-            variant="ghost"
-          >
-            Deposit
-          </Button>
         </StyledElementForCard>
       </StyledElementForCard>
 

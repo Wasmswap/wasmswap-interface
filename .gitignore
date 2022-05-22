@@ -19,6 +19,7 @@
 .DS_Store
 *.pem
 .idea
+*.client-test.*
 
 # debug
 npm-debug.log*

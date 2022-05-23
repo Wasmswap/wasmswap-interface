@@ -19,7 +19,7 @@ export const useStakingClaims = ({ poolId }) => {
 
   const { data = {} as StakingClaimsType, isLoading } =
     useQuery<StakingClaimsType>(
-      [`claims/${poolId}`, address],
+      `@staking-claims/${poolId}`,
       async () => {
         const claims = await getClaims(address, pool.staking_address, client)
 

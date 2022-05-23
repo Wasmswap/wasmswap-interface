@@ -20,11 +20,12 @@ import {
   UpRightArrow,
   Valid,
 } from 'junoblocks'
+import { useQueryPoolLiquidity } from 'queries/useQueryPools'
+import { useQueryPoolUnstakingDuration } from 'queries/useQueryPoolUnstakingDuration'
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
-import { useQueryPoolLiquidity } from '../../../queries/useQueryPools'
 import { LiquidityInputSelector } from './LiquidityInputSelector'
 import { PercentageSelection } from './PercentageSelection'
 import { StakingSummary } from './StakingSummary'
@@ -44,6 +45,10 @@ export const BondLiquidityDialog = ({
   const [dialogState, setDialogState] = useState<'stake' | 'unstake'>('stake')
 
   const [pool] = useQueryPoolLiquidity({
+    poolId,
+  })
+
+  const { data: unstakingDuration } = useQueryPoolUnstakingDuration({
     poolId,
   })
 
@@ -297,20 +302,24 @@ export const BondLiquidityDialog = ({
         <Column>
           <Text variant="body" css={{ padding: '$8 0 $4' }}>
             {dialogState === 'stake'
-              ? 'Unbonding Period: 14 days'
-              : `Available on: ${dayjs().add(14, 'day').format('MMMM D YYYY')}`}
+              ? `Unbonding Period: ${unstakingDuration?.days} days`
+              : `Available on: ${dayjs()
+                  .add(unstakingDuration?.days, 'day')
+                  .format('MMMM D YYYY')}`}
           </Text>
 
           <Text variant="secondary" css={{ paddingBottom: '$12' }}>
             {dialogState === 'stake'
-              ? "There'll be 14 days from the time you decide to unbond your tokens, to the time you can redeem your previous unbond."
-              : `Because of the 14 days unbonding period, you will be able to redeem your $${
+              ? `There'll be ${unstakingDuration?.days} days from the time you decide to unbond your tokens, to the time you can redeem your previous unbond.`
+              : `Because of the ${
+                  unstakingDuration?.days
+                } days unbonding period, you will be able to redeem your $${
                   typeof liquidityDollarAmount === 'number' &&
                   dollarValueFormatter(liquidityDollarAmount, {
                     includeCommaSeparation: true,
                   })
                 } worth of bonded token on ${dayjs()
-                  .add(14, 'day')
+                  .add(unstakingDuration?.days, 'day')
                   .format('MMM D')}.`}
           </Text>
         </Column>

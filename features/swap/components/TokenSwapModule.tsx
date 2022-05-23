@@ -1,6 +1,6 @@
 import { useTokenList } from 'hooks/useTokenList'
 import { styled, useMedia, usePersistance } from 'junoblocks'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   TransactionStatus,
@@ -13,7 +13,12 @@ import { TokenSelector } from './TokenSelector'
 import { TransactionAction } from './TransactionAction'
 import { TransactionTips } from './TransactionTips'
 
-export const TokenSwapModule = () => {
+type TokenSwapModuleProps = {
+  /* will be used if provided on first render instead of internal state */
+  initialTokenPair?: readonly [string, string]
+}
+
+export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
   /* connect to recoil */
   const [[tokenA, tokenB], setTokenSwapState] = useRecoilState(tokenSwapAtom)
   const transactionStatus = useRecoilValue(transactionStatusState)
@@ -33,6 +38,26 @@ export const TokenSwapModule = () => {
       ])
     }
   }, [tokenList, tokenA, tokenB, setTokenSwapState])
+
+  const initialTokenPairValue = useRef(initialTokenPair).current
+  useEffect(
+    function setInitialTokenPairIfProvided() {
+      if (initialTokenPairValue) {
+        const [tokenASymbol, tokenBSymbol] = initialTokenPairValue
+        setTokenSwapState([
+          {
+            tokenSymbol: tokenASymbol,
+            amount: 0,
+          },
+          {
+            tokenSymbol: tokenBSymbol,
+            amount: 0,
+          },
+        ])
+      }
+    },
+    [initialTokenPairValue, setTokenSwapState]
+  )
 
   const isUiDisabled =
     transactionStatus === TransactionStatus.EXECUTING || isTokenListLoading

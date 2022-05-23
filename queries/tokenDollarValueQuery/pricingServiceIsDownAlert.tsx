@@ -9,7 +9,7 @@ function createAlertPricingServiceIsDown() {
   function renderAlert() {
     toast.custom((t) => (
       <Toast
-        icon={<ErrorIcon />}
+        icon={<ErrorIcon color="error" />}
         title="Oops, sorry! Our pricing service is temporarily down"
         onClose={() => toast.dismiss(t.id)}
       />

@@ -1,16 +1,17 @@
 import { useIBCAssetInfo } from 'hooks/useIBCAssetInfo'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import {
-  ArrowUp,
+  ArrowUpIcon,
   Button,
   dollarValueFormatterWithDecimals,
-  IconWrapper,
   ImageForTokenLogo,
   styled,
   Text,
 } from 'junoblocks'
-import { HTMLProps } from 'react'
+import { HTMLProps, useState } from 'react'
 import { __TRANSFERS_ENABLED__ } from 'util/constants'
+
+import { DepositRedirectDialog } from './DepositRedirectDialog'
 
 export enum AssetCardState {
   fetching = 'FETCHING',
@@ -34,15 +35,26 @@ export const AssetCard = ({
   state,
   ...htmlProps
 }: AssetCardProps) => {
-  const { symbol, name, logoURI } = useIBCAssetInfo(tokenSymbol) || {}
+  const { symbol, name, logoURI, external_deposit_uri } =
+    useIBCAssetInfo(tokenSymbol) || {}
+  const [showingRedirectDepositDialog, setShowingRedirectDepositDialog] =
+    useState(false)
 
   const [dollarValue] = useTokenDollarValue(tokenSymbol)
 
-  const handleDepositClick = () =>
+  const shouldPerformDepositOutsideApp = Boolean(external_deposit_uri)
+
+  const handleDepositClick = () => {
+    // bail early if redirecting the user to perform deposit externally
+    if (shouldPerformDepositOutsideApp) {
+      return setShowingRedirectDepositDialog(true)
+    }
+
     onActionClick({
       tokenSymbol: symbol,
       actionType: 'deposit',
     })
+  }
 
   const handleWithdrawClick = () =>
     onActionClick({
@@ -66,51 +78,77 @@ export const AssetCard = ({
   const rendersActiveAppearance = balance > 0
 
   return (
-    <StyledElementForCard
-      active={rendersActiveAppearance}
-      {...(htmlProps as any)}
-      kind="wrapper"
-    >
-      <StyledElementForCard kind="content">
-        <StyledElementForToken>
-          <ImageForTokenLogo logoURI={logoURI} size="big" />
-          <div>
-            <Text variant="primary">
-              {rendersActiveAppearance ? balance : null} {name}
-            </Text>
-            {rendersActiveAppearance && (
-              <Text variant="caption" css={{ paddingTop: '$1' }}>
-                $
-                {dollarValueFormatterWithDecimals(dollarValue * balance, {
-                  includeCommaSeparation: true,
-                })}
+    <>
+      <StyledElementForCard
+        active={rendersActiveAppearance}
+        {...(htmlProps as any)}
+        kind="wrapper"
+      >
+        <StyledElementForCard kind="content">
+          <StyledElementForToken>
+            <ImageForTokenLogo logoURI={logoURI} size="big" />
+            <div>
+              <Text variant="primary">
+                {rendersActiveAppearance ? balance : null} {name}
               </Text>
-            )}
-          </div>
-        </StyledElementForToken>
+              {rendersActiveAppearance && (
+                <Text variant="caption" css={{ paddingTop: '$1' }}>
+                  $
+                  {dollarValueFormatterWithDecimals(dollarValue * balance, {
+                    includeCommaSeparation: true,
+                  })}
+                </Text>
+              )}
+            </div>
+          </StyledElementForToken>
+        </StyledElementForCard>
+
+        <StyledElementForCard kind="actions">
+          {shouldPerformDepositOutsideApp ? (
+            <Button
+              disabled={!__TRANSFERS_ENABLED__}
+              onClick={handleDepositClick}
+              iconRight={<ArrowUpIcon rotation="45deg" />}
+              variant="ghost"
+            >
+              Transfer
+            </Button>
+          ) : (
+            <>
+              {balance > 0 && (
+                <Button
+                  disabled={!__TRANSFERS_ENABLED__}
+                  onClick={
+                    __TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined
+                  }
+                  iconRight={<ArrowUpIcon />}
+                  variant="ghost"
+                >
+                  Withdraw
+                </Button>
+              )}
+              <Button
+                disabled={!__TRANSFERS_ENABLED__}
+                onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
+                iconRight={<ArrowUpIcon rotation="180deg" />}
+                variant="ghost"
+              >
+                Deposit
+              </Button>
+            </>
+          )}
+        </StyledElementForCard>
       </StyledElementForCard>
 
-      <StyledElementForCard kind="actions">
-        {balance > 0 && (
-          <Button
-            disabled={!__TRANSFERS_ENABLED__}
-            onClick={__TRANSFERS_ENABLED__ ? handleWithdrawClick : undefined}
-            iconRight={<IconWrapper icon={<ArrowUp />} />}
-            variant="ghost"
-          >
-            Withdraw
-          </Button>
-        )}
-        <Button
-          disabled={!__TRANSFERS_ENABLED__}
-          onClick={__TRANSFERS_ENABLED__ ? handleDepositClick : undefined}
-          iconRight={<IconWrapper icon={<ArrowUp />} rotation="180deg" />}
-          variant="ghost"
-        >
-          Deposit
-        </Button>
-      </StyledElementForCard>
-    </StyledElementForCard>
+      {shouldPerformDepositOutsideApp && (
+        <DepositRedirectDialog
+          isShowing={showingRedirectDepositDialog}
+          onRequestClose={() => setShowingRedirectDepositDialog(false)}
+          tokenSymbol={tokenSymbol}
+          href={external_deposit_uri}
+        />
+      )}
+    </>
   )
 }
 

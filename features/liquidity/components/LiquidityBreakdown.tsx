@@ -1,13 +1,16 @@
 import { useTokenToTokenPrice } from 'features/swap'
 import {
+  Button,
   Column,
   Divider,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
   ImageForTokenLogo,
+  InfoIcon,
   Inline,
   Text,
+  Tooltip,
 } from 'junoblocks'
 import React from 'react'
 import {
@@ -18,6 +21,7 @@ import {
 import { SerializedRewardsContract } from '../../../queries/queryRewardsContracts'
 import { TokenInfo } from '../../../queries/usePoolsListQuery'
 import { PoolTokenValue } from '../../../queries/useQueryPools'
+import { formatCompactNumber } from '../../../util/formatCompactNumber'
 import { usePoolPairTokenAmount } from '../hooks'
 import { AprPill } from './AprPill'
 import { StyledDivForTokenLogos } from './PoolCard'
@@ -59,6 +63,21 @@ export const LiquidityBreakdown = ({
     poolId,
   })
 
+  const compactTokenAAmount = formatCompactNumber(tokenAAmount, 'tokenAmount')
+  const compactTokenBAmount = formatCompactNumber(tokenBAmount, 'tokenAmount')
+  const compactTotalLiquidity = formatCompactNumber(totalLiquidity?.dollarValue)
+
+  const formattedTokenAAmount = formatTokenBalance(tokenAAmount, {
+    includeCommaSeparation: true,
+  })
+  const formattedTokenBAmount = formatTokenBalance(tokenBAmount, {
+    includeCommaSeparation: true,
+  })
+  const formattedTotalLiquidity = dollarValueFormatterWithDecimals(
+    totalLiquidity?.dollarValue,
+    { includeCommaSeparation: true }
+  )
+
   const formattedYieldPercentageReturn = dollarValueFormatter(
     yieldPercentageReturn ?? 0
   )
@@ -93,12 +112,7 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="left">
               Total liquidity
             </Text>
-            <Text variant="header">
-              $
-              {dollarValueFormatterWithDecimals(totalLiquidity?.dollarValue, {
-                includeCommaSeparation: true,
-              })}
-            </Text>
+            <Text variant="header">${compactTotalLiquidity}</Text>
           </Column>
           <Column gap={6} align="flex-end" justifyContent="flex-end">
             <Text variant="legend" color="secondary" align="right">
@@ -113,15 +127,13 @@ export const LiquidityBreakdown = ({
               Token reward distribution
             </Text>
             <Inline gap={8}>
-              {rewardsContracts?.map(({ tokenInfo }, key) => (
-                <Inline gap={3} key={key}>
-                  <ImageForTokenLogo
-                    size="large"
-                    logoURI={tokenInfo.logoURI}
-                    alt={tokenInfo.symbol}
-                  />
-                  <Text variant="link">33%</Text>
-                </Inline>
+              {rewardsContracts?.map(({ tokenInfo }) => (
+                <ImageForTokenLogo
+                  size="large"
+                  key={tokenInfo.symbol}
+                  logoURI={tokenInfo.logoURI}
+                  alt={tokenInfo.symbol}
+                />
               ))}
             </Inline>
           </Column>
@@ -163,26 +175,64 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="left">
               Total liquidity
             </Text>
-            <Text variant="header">
-              $
-              {dollarValueFormatterWithDecimals(totalLiquidity?.dollarValue, {
-                includeCommaSeparation: true,
-              })}
-            </Text>
+            <Inline gap={2}>
+              <Text variant="header">${compactTotalLiquidity} </Text>
+              <Tooltip
+                label={`$${formattedTotalLiquidity}`}
+                aria-label={`$${formattedTotalLiquidity} in total liquidity`}
+              >
+                <Button
+                  variant="ghost"
+                  size="small"
+                  icon={<InfoIcon />}
+                  iconColor={'secondary'}
+                />
+              </Tooltip>
+            </Inline>
           </Column>
 
           <Column gap={6} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">
               {tokenA?.symbol}
             </Text>
-            <Text variant="header">{formatTokenBalance(tokenAAmount)}</Text>
+            <Inline gap={2}>
+              <Text variant="header">
+                {compactTokenAAmount} ${tokenA?.symbol}
+              </Text>
+              <Tooltip
+                label={`${formattedTokenAAmount} $${tokenA?.symbol}`}
+                aria-label={`${formattedTokenAAmount} $${tokenA?.symbol} in liquidity`}
+              >
+                <Button
+                  variant="ghost"
+                  size="small"
+                  icon={<InfoIcon />}
+                  iconColor={'secondary'}
+                />
+              </Tooltip>
+            </Inline>
           </Column>
 
           <Column gap={6} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">
               {tokenB?.symbol}
             </Text>
-            <Text variant="header">{formatTokenBalance(tokenBAmount)}</Text>
+            <Inline gap={2}>
+              <Text variant="header">
+                {compactTokenBAmount} ${tokenB?.symbol}
+              </Text>
+              <Tooltip
+                label={`${formattedTokenBAmount} $${tokenB?.symbol}`}
+                aria-label={`${formattedTokenBAmount} $${tokenB?.symbol} in liquidity`}
+              >
+                <Button
+                  variant="ghost"
+                  size="small"
+                  icon={<InfoIcon />}
+                  iconColor={'secondary'}
+                />
+              </Tooltip>
+            </Inline>
           </Column>
 
           {__POOL_REWARDS_ENABLED__ && (

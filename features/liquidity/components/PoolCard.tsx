@@ -4,7 +4,6 @@ import {
   CardContent,
   Column,
   Divider,
-  dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   ImageForTokenLogo,
   Inline,
@@ -15,6 +14,7 @@ import Link from 'next/link'
 import { PoolEntityType } from 'queries/usePoolsListQuery'
 import { PoolState, PoolTokenValue } from 'queries/useQueryPools'
 import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+import { formatCompactNumber } from 'util/formatCompactNumber'
 
 type PoolCardProps = {
   poolId: string
@@ -25,19 +25,6 @@ type PoolCardProps = {
   tokenBSymbol: string
   aprValue: number
   rewardsTokens?: PoolEntityType['rewards_tokens']
-}
-
-const compactNumberFormatter = Intl.NumberFormat('en', {
-  notation: 'compact',
-})
-
-const formatToCompactDollarValue = (value: number) => {
-  if (value < 10000) {
-    return dollarValueFormatterWithDecimals(value, {
-      includeCommaSeparation: true,
-    })
-  }
-  return compactNumberFormatter.format(value)
 }
 
 export const PoolCard = ({
@@ -58,14 +45,11 @@ export const PoolCard = ({
   const stakedTokenBalanceDollarValue = stakedLiquidity.provided.dollarValue
 
   const providedLiquidityDollarValueFormatted = hasProvidedLiquidity
-    ? formatToCompactDollarValue(providedTotalLiquidity.dollarValue)
+    ? formatCompactNumber(providedTotalLiquidity.dollarValue)
     : 0
 
-  const totalDollarValueLiquidityFormatted = dollarValueFormatterWithDecimals(
-    Math.ceil(availableLiquidity.total.dollarValue),
-    {
-      includeCommaSeparation: true,
-    }
+  const totalDollarValueLiquidityFormatted = formatCompactNumber(
+    availableLiquidity.total.dollarValue
   )
 
   return (
@@ -128,15 +112,7 @@ export const PoolCard = ({
               >
                 {hasProvidedLiquidity &&
                 typeof stakedTokenBalanceDollarValue === 'number' ? (
-                  <>
-                    $
-                    {dollarValueFormatterWithDecimals(
-                      stakedTokenBalanceDollarValue,
-                      {
-                        includeCommaSeparation: true,
-                      }
-                    )}
-                  </>
+                  <>${formatCompactNumber(stakedTokenBalanceDollarValue)}</>
                 ) : (
                   '--'
                 )}
@@ -165,7 +141,7 @@ export const PoolCard = ({
               </Text>
 
               <Text variant="primary" align="right">
-                {dollarValueFormatter(aprValue ?? 0)}%
+                {dollarValueFormatterWithDecimals(aprValue ?? 0)}%
               </Text>
             </StyledDivForStatsColumn>
           </Inline>

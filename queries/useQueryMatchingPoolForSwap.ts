@@ -77,7 +77,7 @@ export function findPoolForSwap({
       tokenB: tokenA,
     })
     if (matchingStreamlineBaseAndTokenA.matchingAB) {
-      result.baseTokenBPool = pool
+      result.baseTokenAPool = pool
       return result
     }
 

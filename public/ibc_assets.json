@@ -25,7 +25,7 @@
       "juno_channel": "channel-7",
       "juno_denom": "ibc/test",
       "logoURI": "https://cryptologos.cc/logos/usd-coin-usdc-logo.svg?v=014",
-      "external_deposit_uri": ""
+      "external_deposit_uri": "http://localhost:3000"
     }
   ]
 }

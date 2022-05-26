@@ -5,16 +5,15 @@ import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { walletState } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
-import { unsafelyGetIBCAssetInfo } from './useIBCAssetInfo'
+import { useIBCAssetInfo } from './useIBCAssetInfo'
 
 export const useIBCTokenBalance = (tokenSymbol) => {
   const { address: nativeWalletAddress } = useRecoilValue(walletState)
-
+  const ibcAsset = useIBCAssetInfo(tokenSymbol)
   const { data: balance = 0, isLoading } = useQuery(
     [`ibcTokenBalance/${tokenSymbol}`, nativeWalletAddress],
     async () => {
-      const { denom, decimals, chain_id, rpc } =
-        unsafelyGetIBCAssetInfo(tokenSymbol)
+      const { denom, decimals, chain_id, rpc } = ibcAsset
 
       await window.keplr.enable(chain_id)
       const offlineSigner = await window.getOfflineSigner(chain_id)
@@ -31,7 +30,7 @@ export const useIBCTokenBalance = (tokenSymbol) => {
       return convertMicroDenomToDenom(amount, decimals)
     },
     {
-      enabled: Boolean(nativeWalletAddress),
+      enabled: Boolean(nativeWalletAddress && ibcAsset),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,

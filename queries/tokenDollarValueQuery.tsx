@@ -1,8 +1,7 @@
 import { ErrorIcon, Toast } from 'junoblocks'
+import { TokenInfo } from 'queries/usePoolsListQuery'
 import React from 'react'
 import { toast } from 'react-hot-toast'
-
-import { TokenInfo } from '../hooks/useTokenList'
 
 const pricingServiceIsDownAlert = createAlertPricingServiceIsDown()
 

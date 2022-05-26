@@ -9,23 +9,19 @@ import {
   ManagePoolDialog,
   UnbondingLiquidityStatusList,
 } from 'features/liquidity'
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import {
-  useClaimRewards,
-  usePendingRewards,
-  useRewardsInfo,
-} from 'hooks/useRewardsQueries'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
+import { useClaimRewards, usePendingRewards } from 'hooks/useRewardsQueries'
 import {
   Button,
   ChevronIcon,
   Divider,
   Error,
   IconWrapper,
+  Inline,
   media,
   Spinner,
   styled,
+  Text,
   Toast,
   UpRightArrow,
   useMedia,
@@ -34,14 +30,19 @@ import {
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useQueryPoolLiquidity } from 'queries/useQueryPools'
 import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
-import { __POOL_STAKING_ENABLED__, APP_NAME } from 'util/constants'
+import {
+  __POOL_REWARDS_ENABLED__,
+  __POOL_STAKING_ENABLED__,
+  APP_NAME,
+} from 'util/constants'
 import { formatSdkErrorMessage } from 'util/formatSdkErrorMessage'
 
 export default function Pool() {
   const {
-    query: { pool },
+    query: { pool: poolId },
   } = useRouter()
 
   const [
@@ -52,46 +53,25 @@ export default function Pool() {
   const [isBondingDialogShowing, setIsBondingDialogShowing] = useState(false)
 
   const isMobile = useMedia('sm')
-
-  const tokenA = useBaseTokenInfo()
-  const tokenB = useTokenInfoByPoolId(pool as string)
-
-  const [
-    {
-      totalLiquidity,
-      myLiquidity,
-      myLiquidityReserve,
-      myStakedLiquidityReserve,
-      tokenDollarValue,
-      myStakedLiquidity,
-      rewardsInfo,
-    } = {} as any,
-    isLoading,
-  ] = usePoolLiquidity({ poolId: pool })
-
-  const [rewardsContracts] = useRewardsInfo({
-    swapAddress: tokenB?.swap_address,
-  })
+  const [pool, isLoading, isError] = useQueryPoolLiquidity({ poolId })
 
   const [pendingRewards] = usePendingRewards({
-    swapAddress: tokenB?.swap_address,
+    pool,
   })
 
-  const isLoadingInitial = isLoading && !totalLiquidity
+  const isLoadingInitial = isLoading && !pool
 
   const supportsIncentives = Boolean(
-    __POOL_STAKING_ENABLED__ && tokenB?.staking_address
+    __POOL_STAKING_ENABLED__ &&
+      __POOL_REWARDS_ENABLED__ &&
+      pool?.staking_address
   )
 
-  const refetchQueries = useRefetchQueries([
-    'myLiquidity',
-    'stakedTokenBalance',
-    'pendingRewards',
-  ])
+  const refetchQueries = useRefetchQueries(['@liquidity', 'pendingRewards'])
 
   const { mutate: mutateClaimRewards, isLoading: isClaimingRewards } =
     useClaimRewards({
-      swapAddress: tokenB?.swap_address,
+      pool,
       onSuccess() {
         refetchQueries()
 
@@ -128,36 +108,52 @@ export default function Pool() {
       },
     })
 
-  if (!tokenB || !pool) return null
+  if (!pool || !poolId) {
+    return (
+      <Inline
+        align="center"
+        justifyContent="center"
+        css={{ padding: '$10', height: '100vh' }}
+      >
+        {isError ? (
+          <Text variant="header">
+            {"Oops, we've messed up. Please try again later."}
+          </Text>
+        ) : (
+          <Spinner color="primary" />
+        )}
+      </Inline>
+    )
+  }
+
+  const [tokenA, tokenB] = pool.pool_assets
 
   return (
     <>
-      {pool && (
-        <ManagePoolDialog
-          isShowing={isManageLiquidityDialogShowing}
-          initialActionType={actionType}
-          onRequestClose={() =>
-            setManageLiquidityDialogState({
-              isShowing: false,
-              actionType: 'add',
-            })
-          }
-          poolId={pool as string}
-        />
-      )}
+      <ManagePoolDialog
+        isShowing={isManageLiquidityDialogShowing}
+        initialActionType={actionType}
+        onRequestClose={() =>
+          setManageLiquidityDialogState({
+            isShowing: false,
+            actionType: 'add',
+          })
+        }
+        poolId={poolId as string}
+      />
 
       {__POOL_STAKING_ENABLED__ && (
         <BondLiquidityDialog
           isShowing={isBondingDialogShowing}
           onRequestClose={() => setIsBondingDialogShowing(false)}
-          poolId={pool}
+          poolId={poolId as string}
         />
       )}
 
       {pool && (
         <Head>
           <title>
-            {APP_NAME} — Pool {tokenB.pool_id}
+            {APP_NAME} — Pool {tokenA.symbol}/{tokenB.symbol}
           </title>
         </Head>
       )}
@@ -191,23 +187,28 @@ export default function Pool() {
         {!isLoadingInitial && (
           <>
             <LiquidityBreakdown
-              poolId={pool}
+              poolId={poolId as string}
               tokenA={tokenA}
               tokenB={tokenB}
-              totalLiquidity={totalLiquidity}
-              rewardsInfo={rewardsInfo}
-              rewardsContracts={rewardsContracts}
+              totalLiquidity={pool.liquidity.available.total}
+              yieldPercentageReturn={
+                pool.liquidity.rewards.annualYieldPercentageReturn
+              }
+              rewardsContracts={pool.liquidity.rewards.contracts}
               size={isMobile ? 'small' : 'large'}
             />
             <>
               <StyledDivForCards>
                 <ManageLiquidityCard
-                  myLiquidityReserve={myLiquidityReserve}
-                  tokenDollarValue={tokenDollarValue}
+                  providedLiquidityReserve={pool.liquidity.reserves.provided}
+                  providedLiquidity={pool.liquidity.available.provided}
+                  stakedLiquidityReserve={
+                    pool.liquidity.reserves.providedStaked
+                  }
+                  providedTotalLiquidity={pool.liquidity.providedTotal}
+                  stakedLiquidity={pool.liquidity.staked}
                   tokenASymbol={tokenA.symbol}
                   tokenBSymbol={tokenB.symbol}
-                  myStakedLiquidity={myStakedLiquidity}
-                  myStakedLiquidityReserve={myStakedLiquidityReserve}
                   supportsIncentives={supportsIncentives}
                   onClick={() =>
                     setManageLiquidityDialogState({
@@ -218,15 +219,21 @@ export default function Pool() {
                 />
                 <ManageBondedLiquidityCard
                   onClick={() => setIsBondingDialogShowing(true)}
-                  myLiquidity={myLiquidity}
-                  stakedBalance={myStakedLiquidity}
-                  rewardsInfo={rewardsInfo}
+                  providedLiquidity={pool.liquidity.available.provided}
+                  stakedLiquidity={pool.liquidity.staked.provided}
+                  yieldPercentageReturn={
+                    pool.liquidity.rewards.annualYieldPercentageReturn
+                  }
                   supportsIncentives={supportsIncentives}
                 />
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
-                  hasBondedLiquidity={myStakedLiquidity?.tokenAmount > 0}
-                  hasProvidedLiquidity={myLiquidity?.tokenAmount > 0}
+                  hasBondedLiquidity={
+                    pool.liquidity.staked.provided.tokenAmount > 0
+                  }
+                  hasProvidedLiquidity={
+                    pool.liquidity.available.provided.tokenAmount > 0
+                  }
                   pendingRewards={pendingRewards}
                   loading={isClaimingRewards}
                   supportsIncentives={supportsIncentives}
@@ -236,7 +243,7 @@ export default function Pool() {
             <>
               {supportsIncentives && (
                 <UnbondingLiquidityStatusList
-                  poolId={pool as string}
+                  poolId={poolId as string}
                   tokenA={tokenA}
                   tokenB={tokenB}
                   size={isMobile ? 'small' : 'large'}

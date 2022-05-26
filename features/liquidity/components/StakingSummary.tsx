@@ -1,5 +1,4 @@
 import { usePoolPairTokenAmount } from 'features/liquidity/hooks'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   BasicNumberInput,
   formatTokenBalance,
@@ -8,6 +7,7 @@ import {
   styled,
   Text,
 } from 'junoblocks'
+import { TokenInfo } from 'queries/usePoolsListQuery'
 import { useRef, useState } from 'react'
 
 type StakingSummaryProps = {
@@ -15,10 +15,10 @@ type StakingSummaryProps = {
   poolId: string
   tokenA: TokenInfo
   tokenB: TokenInfo
-  maxLiquidity: number
+  totalLiquidityProvidedTokenAmount: number
   liquidityAmount: number
   onChangeLiquidity: (liquidityAmount: number) => void
-  maxLiquidityInDollarValue: number
+  totalLiquidityProvidedDollarValue: number
   liquidityInDollarValue: number
 }
 
@@ -29,7 +29,7 @@ export const StakingSummary = ({
   tokenB,
   liquidityAmount,
   onChangeLiquidity,
-  maxLiquidityInDollarValue,
+  totalLiquidityProvidedDollarValue,
   liquidityInDollarValue,
 }: StakingSummaryProps) => {
   const [isDollarValueInputFocused, setIsDollarValueInputFocused] =
@@ -91,7 +91,7 @@ export const StakingSummary = ({
             <BasicNumberInput
               placeholder="0.0"
               min={0}
-              max={(maxLiquidityInDollarValue as number) || 0}
+              max={(totalLiquidityProvidedDollarValue as number) || 0}
               value={(liquidityInDollarValue as number) || 0}
               maximumFractionDigits={2}
               onChange={handleChangeDollarValue}

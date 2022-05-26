@@ -2,7 +2,6 @@ import { PlusIcon } from '@heroicons/react/solid'
 import { usePrevious } from '@reach/utils'
 import { LiquidityInput } from 'components'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { useBaseTokenInfo, useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import {
   Button,
   Dialog,
@@ -20,6 +19,7 @@ import {
   styled,
   Text,
 } from 'junoblocks'
+import { useQueryPoolLiquidity } from 'queries/useQueryPools'
 import { useEffect, useRef, useState } from 'react'
 
 import { LiquidityInputSelector } from '../LiquidityInputSelector'
@@ -41,7 +41,10 @@ export const ManagePoolDialog = ({
   onRequestClose,
   poolId,
 }: ManagePoolDialogProps) => {
-  const tokenInfo = useTokenInfoByPoolId(poolId)
+  const [pool] = useQueryPoolLiquidity({ poolId })
+  const {
+    pool_assets: [tokenA, tokenB],
+  } = pool || { pool_assets: [] }
 
   const [isAddingLiquidity, setAddingLiquidity] = useState(
     initialActionType !== 'remove'
@@ -49,8 +52,6 @@ export const ManagePoolDialog = ({
 
   const [addLiquidityPercent, setAddLiquidityPercent] = useState(0)
   const [removeLiquidityPercent, setRemoveLiquidityPercent] = useState(0)
-
-  const tokenA = useBaseTokenInfo()
 
   const {
     state: {
@@ -64,8 +65,8 @@ export const ManagePoolDialog = ({
     },
     actions: { mutateAddLiquidity },
   } = usePoolDialogController({
+    pool,
     actionState: isAddingLiquidity ? 'add' : 'remove',
-    tokenInfo,
     percentage: isAddingLiquidity
       ? addLiquidityPercent
       : removeLiquidityPercent,
@@ -131,7 +132,7 @@ export const ManagePoolDialog = ({
         <AddLiquidityContent
           isLoading={isLoading}
           tokenASymbol={tokenA.symbol}
-          tokenBSymbol={tokenInfo?.symbol}
+          tokenBSymbol={tokenB?.symbol}
           tokenABalance={tokenABalance}
           tokenBBalance={tokenBBalance}
           maxApplicableBalanceForTokenA={maxApplicableBalanceForTokenA}
@@ -144,7 +145,7 @@ export const ManagePoolDialog = ({
       {!isAddingLiquidity && (
         <RemoveLiquidityContent
           tokenA={tokenA}
-          tokenB={tokenInfo}
+          tokenB={tokenB}
           tokenAReserve={tokenAReserve}
           tokenBReserve={tokenBReserve}
           liquidityPercentage={removeLiquidityPercent}

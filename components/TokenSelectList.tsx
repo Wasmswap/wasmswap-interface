@@ -1,6 +1,5 @@
 import { useIBCTokenBalance } from 'hooks/useIBCTokenBalance'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   ButtonForWrapper,
   Divider,
@@ -14,6 +13,7 @@ import {
 } from 'junoblocks'
 import { ComponentPropsWithoutRef, useMemo } from 'react'
 
+import { TokenInfo } from '../queries/usePoolsListQuery'
 import { getPropsForInteractiveElement } from '../util/getPropsForInteractiveElement'
 
 const StyledDivForScrollContainer = styled('div', {

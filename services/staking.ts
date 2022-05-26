@@ -5,7 +5,6 @@ import {
 import { toBase64, toUtf8 } from '@cosmjs/encoding'
 import { StdFee } from '@cosmjs/stargate'
 
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const stakeTokens = async (
@@ -80,24 +79,23 @@ export const claimTokens = async (
   )
 }
 
-export const getStakedBalance = async (
+export const getProvidedStakedAmount = async (
   address: string,
   stakingContractAddress: string,
-  client: SigningCosmWasmClient
+  client: CosmWasmClient
 ) => {
   const msg = { staked_value: { address: address } }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
   return Number(result.value)
 }
 
-export const getTotalStakedBalance = async (
+export const getTotalStakedAmount = async (
   stakingContractAddress: string,
-  rpcEndpoint: string
-): Promise<string> => {
+  client: CosmWasmClient
+) => {
   const msg = { total_value: {} }
-  const client = await cosmWasmClientRouter.connect(rpcEndpoint)
   const result = await client.queryContractSmart(stakingContractAddress, msg)
-  return result.total
+  return Number(result.total)
 }
 
 export type Claim = {
@@ -125,7 +123,7 @@ export const getUnstakingDuration = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<number> => {
-  const msg = { unstaking_duration: {} }
+  const msg = { get_config: {} }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
-  return result.duration.time
+  return result.unstaking_duration.time
 }

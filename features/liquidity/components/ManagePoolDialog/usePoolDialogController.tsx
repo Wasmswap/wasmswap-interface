@@ -1,9 +1,6 @@
-import { usePoolLiquidity } from 'hooks/usePoolLiquidity'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { useTokenBalance } from 'hooks/useTokenBalance'
-import { useBaseTokenInfo } from 'hooks/useTokenInfo'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   Button,
   Error,
@@ -12,6 +9,7 @@ import {
   UpRightArrow,
   Valid,
 } from 'junoblocks'
+import { PoolEntityTypeWithLiquidity } from 'queries/useQueryPools'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
@@ -27,31 +25,30 @@ type UsePoolDialogControllerArgs = {
   /* value from 0 to 1 */
   percentage: number
   actionState: 'add' | 'remove'
-  tokenInfo: TokenInfo
+  pool: PoolEntityTypeWithLiquidity
 }
 
 export const usePoolDialogController = ({
   actionState,
   percentage,
-  tokenInfo: tokenB,
+  pool,
 }: UsePoolDialogControllerArgs) => {
-  const tokenA = useBaseTokenInfo()
+  const {
+    liquidity,
+    pool_assets: [tokenA, tokenB],
+  } = pool || { pool_assets: [] }
+
   const { balance: tokenABalance } = useTokenBalance(tokenA.symbol)
   const { balance: tokenBBalance } = useTokenBalance(tokenB.symbol)
-
-  const [{ myLiquidity, myLiquidityReserve, reserve } = {} as any] =
-    usePoolLiquidity({
-      poolId: tokenB.pool_id,
-    })
 
   function calculateMaxApplicableBalances() {
     // Decimal converted reserves
     const tokenAReserve = convertMicroDenomToDenom(
-      reserve?.[0],
+      liquidity?.reserves?.total[0],
       tokenA.decimals
     )
     const tokenBReserve = convertMicroDenomToDenom(
-      reserve?.[1],
+      liquidity?.reserves?.total[1],
       tokenB.decimals
     )
 
@@ -84,27 +81,28 @@ export const usePoolDialogController = ({
     tokenB: maxApplicableBalanceForTokenB,
   } = calculateMaxApplicableBalances()
 
-  const tokenAReserve = myLiquidityReserve?.[0]
-    ? convertMicroDenomToDenom(myLiquidityReserve[0], tokenA.decimals)
+  const tokenAReserve = liquidity.reserves?.provided[0]
+    ? convertMicroDenomToDenom(liquidity.reserves?.provided[0], tokenA.decimals)
     : 0
-  const tokenBReserve = myLiquidityReserve?.[1]
-    ? convertMicroDenomToDenom(myLiquidityReserve[1], tokenB.decimals)
+  const tokenBReserve = liquidity.reserves?.provided[1]
+    ? convertMicroDenomToDenom(liquidity.reserves?.provided[1], tokenB.decimals)
     : 0
 
   const { isLoading, mutate: mutateAddLiquidity } = useMutateLiquidity({
+    pool,
     actionState,
     percentage,
     tokenA,
     tokenB,
     maxApplicableBalanceForTokenA,
     maxApplicableBalanceForTokenB,
-    myLiquidity,
+    providedLiquidity: liquidity?.available?.provided,
   })
 
   return {
     state: {
-      myLiquidity,
-      myLiquidityReserve,
+      providedLiquidity: liquidity?.available?.provided,
+      providedLiquidityReserve: liquidity?.reserves?.provided,
       tokenAReserve,
       tokenBReserve,
       isLoading,
@@ -121,19 +119,20 @@ export const usePoolDialogController = ({
 }
 
 const useMutateLiquidity = ({
+  pool,
   percentage,
   maxApplicableBalanceForTokenA,
   maxApplicableBalanceForTokenB,
   tokenA,
   tokenB,
   actionState,
-  myLiquidity,
+  providedLiquidity,
 }) => {
   const { address, client } = useRecoilValue(walletState)
   const refetchQueries = useRefetchQueries(['tokenBalance', 'myLiquidity'])
 
   const [swap] = useSwapInfo({
-    tokenSymbol: tokenB.symbol,
+    poolId: pool.pool_id,
   })
 
   const mutation = useMutation(
@@ -153,7 +152,7 @@ const useMutateLiquidity = ({
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
           minLiquidity: 0,
-          swapAddress: tokenB.swap_address,
+          swapAddress: pool.swap_address,
           senderAddress: address,
           tokenAddress: tokenB.token_address,
           tokenDenom: tokenB.denom,
@@ -162,10 +161,10 @@ const useMutateLiquidity = ({
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor(percentage * myLiquidity.tokenAmount),
+          amount: Math.floor(percentage * providedLiquidity.tokenAmount),
           minToken1: 0,
           minToken2: 0,
-          swapAddress: tokenB.swap_address,
+          swapAddress: pool.swap_address,
           senderAddress: address,
           lpTokenAddress: lp_token_address,
           client,

@@ -1,11 +1,9 @@
-import { LiquidityType } from 'hooks/usePoolLiquidity'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Card,
   CardContent,
   Column,
   Divider,
-  dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   ImageForTokenLogo,
   Inline,
@@ -13,60 +11,45 @@ import {
   Text,
 } from 'junoblocks'
 import Link from 'next/link'
+import { PoolEntityType } from 'queries/usePoolsListQuery'
+import { PoolState, PoolTokenValue } from 'queries/useQueryPools'
 import { __POOL_REWARDS_ENABLED__ } from 'util/constants'
+import { formatCompactNumber } from 'util/formatCompactNumber'
 
 type PoolCardProps = {
   poolId: string
+  providedTotalLiquidity: PoolTokenValue
+  stakedLiquidity: PoolState
+  availableLiquidity: PoolState
   tokenASymbol: string
   tokenBSymbol: string
-  totalLiquidity: LiquidityType
-  myLiquidity: LiquidityType
-  myStakedLiquidity: LiquidityType
-  rewardsInfo?: any
-}
-
-const compactNumberFormatter = Intl.NumberFormat('en', {
-  notation: 'compact',
-})
-
-const formatToCompactDollarValue = (value: number) => {
-  if (value < 10000) {
-    return dollarValueFormatterWithDecimals(value, {
-      includeCommaSeparation: true,
-    })
-  }
-  return compactNumberFormatter.format(value)
+  aprValue: number
+  rewardsTokens?: PoolEntityType['rewards_tokens']
 }
 
 export const PoolCard = ({
   poolId,
   tokenASymbol,
   tokenBSymbol,
-  totalLiquidity,
-  myStakedLiquidity,
-  rewardsInfo,
-  myLiquidity,
+  providedTotalLiquidity,
+  stakedLiquidity,
+  availableLiquidity,
+  rewardsTokens,
+  aprValue,
 }: PoolCardProps) => {
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const hasProvidedLiquidity = Boolean(
-    myLiquidity.tokenAmount || myStakedLiquidity.dollarValue
-  )
+  const hasProvidedLiquidity = Boolean(providedTotalLiquidity.tokenAmount)
 
-  const stakedTokenBalanceDollarValue = myStakedLiquidity.dollarValue
+  const stakedTokenBalanceDollarValue = stakedLiquidity.provided.dollarValue
 
   const providedLiquidityDollarValueFormatted = hasProvidedLiquidity
-    ? formatToCompactDollarValue(
-        myLiquidity.dollarValue + stakedTokenBalanceDollarValue
-      )
+    ? formatCompactNumber(providedTotalLiquidity.dollarValue)
     : 0
 
-  const totalDollarValueLiquidityFormatted = dollarValueFormatterWithDecimals(
-    totalLiquidity.dollarValue,
-    {
-      includeCommaSeparation: true,
-    }
+  const totalDollarValueLiquidityFormatted = formatCompactNumber(
+    availableLiquidity.total.dollarValue
   )
 
   return (
@@ -129,36 +112,26 @@ export const PoolCard = ({
               >
                 {hasProvidedLiquidity &&
                 typeof stakedTokenBalanceDollarValue === 'number' ? (
-                  <>
-                    $
-                    {dollarValueFormatterWithDecimals(
-                      stakedTokenBalanceDollarValue,
-                      {
-                        includeCommaSeparation: true,
-                      }
-                    )}
-                  </>
+                  <>${formatCompactNumber(stakedTokenBalanceDollarValue)}</>
                 ) : (
                   '--'
                 )}
               </Text>
             </StyledDivForStatsColumn>
-            {false && (
+            {__POOL_REWARDS_ENABLED__ && Boolean(rewardsTokens?.length) && (
               <StyledDivForStatsColumn align="center">
                 <Text variant="legend" color="secondary" align="center">
                   Rewards
                 </Text>
                 <StyledDivForTokenLogos css={{ paddingTop: '0' }}>
-                  <ImageForTokenLogo
-                    size="medium"
-                    logoURI={tokenA.logoURI}
-                    alt={tokenA.symbol}
-                  />
-                  <ImageForTokenLogo
-                    size="medium"
-                    logoURI={tokenB.logoURI}
-                    alt={tokenB.symbol}
-                  />
+                  {rewardsTokens.map((token) => (
+                    <ImageForTokenLogo
+                      key={token.symbol}
+                      size="medium"
+                      logoURI={token.logoURI}
+                      alt={token.symbol}
+                    />
+                  ))}
                 </StyledDivForTokenLogos>
               </StyledDivForStatsColumn>
             )}
@@ -168,7 +141,7 @@ export const PoolCard = ({
               </Text>
 
               <Text variant="primary" align="right">
-                {dollarValueFormatter(rewardsInfo?.yieldPercentageReturn ?? 0)}%
+                {dollarValueFormatterWithDecimals(aprValue ?? 0)}%
               </Text>
             </StyledDivForStatsColumn>
           </Inline>

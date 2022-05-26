@@ -1,5 +1,4 @@
 import { useQuery } from 'react-query'
-import { queryClient } from 'services/queryClient'
 
 export type IBCAssetInfo = {
   id: string
@@ -20,11 +19,6 @@ export type IBCAssetInfo = {
 export type IBCAssetList = {
   tokens: Array<IBCAssetInfo>
 }
-
-export const getCachedIBCAssetList = () =>
-  queryClient.getQueryCache().find('@ibc-asset-list')?.state?.data as
-    | IBCAssetList
-    | undefined
 
 export const useIBCAssetList = () => {
   const { data, isLoading } = useQuery<IBCAssetList>(

@@ -5,17 +5,16 @@ import {
 import { toUtf8 } from '@cosmjs/encoding'
 import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
-import { unsafelyGetBaseToken } from 'hooks/useTokenInfo'
 
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
-import { unsafelyGetDefaultExecuteFee } from '../util/fees'
+import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 
-export interface SwapToken1ForToken2Input {
+export type SwapToken1ForToken2Input = {
   nativeAmount: number
   price: number
   slippage: number
   senderAddress: string
   swapAddress: string
+  tokenDenom: string
   client: SigningCosmWasmClient
 }
 
@@ -34,11 +33,11 @@ export const swapToken1ForToken2 = async (input: SwapToken1ForToken2Input) => {
     msg,
     unsafelyGetDefaultExecuteFee(),
     undefined,
-    [coin(input.nativeAmount, unsafelyGetBaseToken().denom)]
+    [coin(input.nativeAmount, input.tokenDenom)]
   )
 }
 
-export interface swapToken2ForToken1Input {
+export type SwapToken2ForToken1Input = {
   tokenAmount: number
   price: number
   slippage: number
@@ -51,7 +50,7 @@ export interface swapToken2ForToken1Input {
 }
 
 export const swapToken2ForToken1 = async (
-  input: swapToken2ForToken1Input
+  input: SwapToken2ForToken1Input
 ): Promise<any> => {
   const minNative = Math.floor(input.price * (1 - input.slippage))
   const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
@@ -197,106 +196,4 @@ export const swapTokenForToken = async (
     undefined,
     [{ amount: input.tokenAmount.toString(), denom: input.tokenDenom }]
   )
-}
-
-export interface getToken1ForToken2PriceInput {
-  nativeAmount: number
-  swapAddress: string
-  rpcEndpoint: string
-}
-
-export const getToken1ForToken2Price = async (
-  input: getToken1ForToken2PriceInput
-) => {
-  try {
-    const client = await cosmWasmClientRouter.connect(input.rpcEndpoint)
-    const query = await client.queryContractSmart(input.swapAddress, {
-      token1_for_token2_price: {
-        token1_amount: `${input.nativeAmount}`,
-      },
-    })
-    return query.token2_amount
-  } catch (e) {
-    console.error('err(getToken1ForToken2Price):', e)
-  }
-}
-
-export interface GetToken2ForToken1PriceInput {
-  tokenAmount: number
-  swapAddress: string
-  rpcEndpoint: string
-}
-
-export const getToken2ForToken1Price = async (
-  input: GetToken2ForToken1PriceInput
-) => {
-  try {
-    const client = await cosmWasmClientRouter.connect(input.rpcEndpoint)
-    const query = await client.queryContractSmart(input.swapAddress, {
-      token2_for_token1_price: {
-        token2_amount: `${input.tokenAmount}`,
-      },
-    })
-    return query.token1_amount
-  } catch (e) {
-    console.error('error(getToken2ForToken1Price):', e)
-  }
-}
-
-export interface GetTokenForTokenPriceInput {
-  tokenAmount: number
-  swapAddress: string
-  outputSwapAddress: string
-  rpcEndpoint: string
-}
-
-export const getTokenForTokenPrice = async (
-  input: GetTokenForTokenPriceInput
-) => {
-  try {
-    const nativePrice = await getToken2ForToken1Price({
-      tokenAmount: input.tokenAmount,
-      swapAddress: input.swapAddress,
-      rpcEndpoint: input.rpcEndpoint,
-    })
-
-    return getToken1ForToken2Price({
-      nativeAmount: nativePrice,
-      swapAddress: input.outputSwapAddress,
-      rpcEndpoint: input.rpcEndpoint,
-    })
-  } catch (e) {
-    console.error('error(getTokenForTokenPrice)', e)
-  }
-}
-export type InfoResponse = {
-  lp_token_supply: string
-  lp_token_address: string
-  token1_denom: string
-  token1_reserve: string
-  token2_denom: string
-  token2_reserve: string
-}
-
-export const getSwapInfo = async (
-  swapAddress: string,
-  rpcEndpoint: string
-): Promise<InfoResponse> => {
-  try {
-    if (!swapAddress || !rpcEndpoint) {
-      throw new Error(
-        `No swapAddress or rpcEndpoint was provided: ${JSON.stringify({
-          swapAddress,
-          rpcEndpoint,
-        })}`
-      )
-    }
-
-    const client = await cosmWasmClientRouter.connect(rpcEndpoint)
-    return await client.queryContractSmart(swapAddress, {
-      info: {},
-    })
-  } catch (e) {
-    console.error('Cannot get swap info:', e)
-  }
 }

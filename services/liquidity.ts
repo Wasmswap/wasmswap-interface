@@ -1,4 +1,5 @@
 import {
+  CosmWasmClient,
   MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
@@ -7,7 +8,6 @@ import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 import { protectAgainstNaN } from 'junoblocks'
 
-import { cosmWasmClientRouter } from '../util/cosmWasmClientRouter'
 import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export type AddLiquidityInput = {
@@ -160,16 +160,15 @@ export const removeLiquidity = async (input: RemoveLiquidityInput) => {
 export type GetLiquidityBalanceInput = {
   address: string
   tokenAddress: string
-  rpcEndpoint: string
+  client: CosmWasmClient
 }
 
 export const getLiquidityBalance = async ({
-  rpcEndpoint,
+  client,
   tokenAddress,
   address,
 }: GetLiquidityBalanceInput) => {
   try {
-    const client = await cosmWasmClientRouter.connect(rpcEndpoint)
     const query = await client.queryContractSmart(tokenAddress, {
       balance: { address },
     })

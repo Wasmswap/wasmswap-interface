@@ -5,7 +5,6 @@ import {
   useStakingClaims,
 } from 'features/liquidity/hooks'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
-import { TokenInfo } from 'hooks/useTokenList'
 import {
   Button,
   Column,
@@ -24,9 +23,10 @@ import {
 import React, { useMemo } from 'react'
 import { toast } from 'react-hot-toast'
 
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
 import { UnbondingLiquidityCard } from './UnbondingLiquidityCard'
 
-type Props = {
+type UnbondingLiquidityStatusListProps = {
   poolId: string
   tokenA: TokenInfo
   tokenB: TokenInfo
@@ -38,7 +38,7 @@ export const UnbondingLiquidityStatusList = ({
   tokenA,
   tokenB,
   size = 'large',
-}: Props) => {
+}: UnbondingLiquidityStatusListProps) => {
   /* mocks for getting the amount of tokens that can be redeemed  */
   const { amount, claims, canRedeem, hasUnstakingTokens, isLoading } =
     useRedeemableTokensBalance({

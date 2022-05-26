@@ -1,10 +1,11 @@
 import dayjs from 'dayjs'
-import { useTokenInfoByPoolId } from 'hooks/useTokenInfo'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { Claim, getClaims } from 'services/staking'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
+
+import { usePoolFromListQueryById } from '../../../queries/usePoolsListQuery'
 
 type StakingClaimsType = {
   redeemableClaims?: Array<Claim>
@@ -13,14 +14,14 @@ type StakingClaimsType = {
 }
 
 export const useStakingClaims = ({ poolId }) => {
-  const token = useTokenInfoByPoolId(poolId)
+  const [pool] = usePoolFromListQueryById({ poolId })
   const { address, status, client } = useRecoilValue(walletState)
 
   const { data = {} as StakingClaimsType, isLoading } =
     useQuery<StakingClaimsType>(
-      [`claims/${poolId}`, address],
+      `@staking-claims/${poolId}`,
       async () => {
-        const claims = await getClaims(address, token.staking_address, client)
+        const claims = await getClaims(address, pool.staking_address, client)
 
         return claims.reduce(
           (claims, claim) => {
@@ -43,7 +44,7 @@ export const useStakingClaims = ({ poolId }) => {
       },
       {
         enabled: Boolean(
-          token?.staking_address && status === WalletStatusType.connected
+          pool?.staking_address && status === WalletStatusType.connected
         ),
         refetchOnMount: 'always',
         refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,

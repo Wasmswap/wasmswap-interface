@@ -31,7 +31,7 @@ export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
     `pendingRewards/${pool?.pool_id}`,
     async () => {
       return await Promise.all(
-        pool.rewards_tokens.map(async ({ rewards_address, decimals }) => {
+        pool.rewards_tokens?.map(async ({ rewards_address, decimals }) => {
           const { pending_rewards, denom } = await getPendingRewards(
             address,
             rewards_address,
@@ -93,7 +93,7 @@ export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
       const shouldBeAbleToClaimRewards = pool && client && hasPendingRewards
 
       if (shouldBeAbleToClaimRewards) {
-        const rewardsAddresses = pool.rewards_tokens.map(
+        const rewardsAddresses = pool.rewards_tokens?.map(
           ({ rewards_address }) => rewards_address
         )
 

@@ -123,7 +123,7 @@ export const getUnstakingDuration = async (
   stakingContractAddress: string,
   client: CosmWasmClient
 ): Promise<number> => {
-  const msg = { unstaking_duration: {} }
+  const msg = { get_config: {} }
   const result = await client.queryContractSmart(stakingContractAddress, msg)
-  return result.duration.time
+  return result.unstaking_duration.time
 }

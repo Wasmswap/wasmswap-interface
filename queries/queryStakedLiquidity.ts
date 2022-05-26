@@ -11,12 +11,12 @@ export async function queryStakedLiquidity({
   swap,
   context: { client },
 }) {
-  const shouldQueryStakedBalance = address && stakingAddress
-
   const [providedStakedAmountInMicroDenom, totalStakedAmountInMicroDenom] =
-    shouldQueryStakedBalance
+    stakingAddress
       ? await Promise.all([
-          getProvidedStakedAmount(address, stakingAddress, client),
+          address
+            ? getProvidedStakedAmount(address, stakingAddress, client)
+            : new Promise<number>((resolve) => resolve(0)),
           getTotalStakedAmount(stakingAddress, client),
         ])
       : [0, 0]

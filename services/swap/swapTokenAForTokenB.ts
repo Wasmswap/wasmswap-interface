@@ -5,27 +5,25 @@ import { TokenInfo } from '../../queries/usePoolsListQuery'
 import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 import { executeSwapWithIncreasedAllowance } from './executeSwapWithIncreasedAllowance'
 
-export type SwapToken1AForTokenBArgs = {
+type SwapTokenAForTokenBArgs = {
   tokenAmount: number
   price: number
   slippage: number
   senderAddress: string
   swapAddress: string
   tokenA: TokenInfo
-  tokenB: TokenInfo
   client: SigningCosmWasmClient
 }
 
 export const swapTokenAForTokenB = async ({
   tokenA,
-  tokenB,
   swapAddress,
   senderAddress,
   slippage,
   price,
   tokenAmount,
   client,
-}: SwapToken1AForTokenBArgs) => {
+}: SwapTokenAForTokenBArgs) => {
   const minToken = Math.floor(price * (1 - slippage))
   const swapMessage = {
     swap: {
@@ -35,13 +33,13 @@ export const swapTokenAForTokenB = async ({
     },
   }
 
-  if (!tokenB.native) {
+  if (!tokenA.native) {
     return executeSwapWithIncreasedAllowance({
       swapMessage,
       swapAddress,
       senderAddress,
       tokenAmount,
-      tokenAddress: tokenB.token_address,
+      tokenAddress: tokenA.token_address,
       client,
     })
   }

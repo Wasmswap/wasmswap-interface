@@ -4,7 +4,7 @@ import { TokenInfo } from '../../queries/usePoolsListQuery'
 import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 import { executeSwapWithIncreasedAllowance } from './executeSwapWithIncreasedAllowance'
 
-export type SwapTokenBForTokenAArgs = {
+type SwapTokenBForTokenAArgs = {
   tokenAmount: number
   price: number
   slippage: number

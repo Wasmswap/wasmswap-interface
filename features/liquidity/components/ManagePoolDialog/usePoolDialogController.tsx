@@ -144,26 +144,21 @@ const useMutateLiquidity = ({
 
       if (actionState === 'add') {
         return await addLiquidity({
-          nativeAmount: Math.floor(
+          tokenA,
+          tokenB,
+          tokenAAmount: Math.floor(
             convertDenomToMicroDenom(tokenAAmount, tokenA.decimals)
           ),
-          nativeDenom: tokenA.denom,
-          maxToken: Math.ceil(
+          tokenBAmount: Math.ceil(
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
-          minLiquidity: 0,
           swapAddress: pool.swap_address,
           senderAddress: address,
-          tokenAddress: tokenB.token_address,
-          tokenDenom: tokenB.denom,
-          tokenNative: tokenB.native,
           client,
         })
       } else {
         return await removeLiquidity({
-          amount: Math.floor(percentage * providedLiquidity.tokenAmount),
-          minToken1: 0,
-          minToken2: 0,
+          tokenAmount: Math.floor(percentage * providedLiquidity.tokenAmount),
           swapAddress: pool.swap_address,
           senderAddress: address,
           lpTokenAddress: lp_token_address,

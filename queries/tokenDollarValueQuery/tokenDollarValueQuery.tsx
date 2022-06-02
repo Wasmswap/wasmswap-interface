@@ -1,4 +1,4 @@
-import { TokenInfo } from 'hooks/useTokenList'
+import { TokenInfo } from 'queries/usePoolsListQuery'
 
 import { fetchDollarPriceByTokenIds } from './fetchDollarPriceByTokenIds'
 import { pricingServiceIsDownAlert } from './pricingServiceIsDownAlert'

@@ -83,7 +83,6 @@ export const useTokenSwap = ({
           senderAddress: address,
           swapAddress: streamlinePoolAB.swap_address,
           tokenA,
-          tokenB,
           client,
         })
       }

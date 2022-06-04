@@ -11,8 +11,8 @@ import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import {
-  swapTokenAForTokenB,
-  swapTokenBForTokenA,
+  swapToken1ForToken2,
+  swapToken2ForToken1,
   swapTokenForToken,
 } from 'services/swap'
 import {
@@ -76,25 +76,27 @@ export const useTokenSwap = ({
       } = matchingPools
 
       if (streamlinePoolAB) {
-        return await swapTokenAForTokenB({
-          tokenAmount: convertedTokenAmount,
+        return await swapToken1ForToken2({
+          nativeAmount: convertedTokenAmount,
           price: convertedPrice,
           slippage,
           senderAddress: address,
           swapAddress: streamlinePoolAB.swap_address,
-          tokenA,
+          tokenDenom: tokenA.denom,
           client,
         })
       }
 
       if (streamlinePoolBA) {
-        return await swapTokenBForTokenA({
+        return await swapToken2ForToken1({
           tokenAmount: convertedTokenAmount,
           price: convertedPrice,
           slippage,
           senderAddress: address,
+          tokenAddress: tokenA.token_address,
+          tokenDenom: tokenA.denom,
           swapAddress: streamlinePoolBA.swap_address,
-          tokenA,
+          token2_native: tokenA.native,
           client,
         })
       }
@@ -104,8 +106,10 @@ export const useTokenSwap = ({
         price: convertedPrice,
         slippage,
         senderAddress: address,
-        tokenA,
+        tokenAddress: tokenA.token_address,
         swapAddress: baseTokenAPool.swap_address,
+        tokenNative: tokenA.native,
+        tokenDenom: tokenA.denom,
         outputSwapAddress: baseTokenBPool.swap_address,
         client,
       })

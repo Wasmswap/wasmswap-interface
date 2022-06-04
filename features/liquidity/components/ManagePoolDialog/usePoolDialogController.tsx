@@ -13,7 +13,7 @@ import { PoolEntityTypeWithLiquidity } from 'queries/useQueryPools'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { addLiquidity, removeLiquidity } from 'services/liquidity'
+import { executeAddLiquidity, executeRemoveLiquidity } from 'services/liquidity'
 import { walletState } from 'state/atoms/walletAtoms'
 import {
   convertDenomToMicroDenom,
@@ -143,27 +143,22 @@ const useMutateLiquidity = ({
       const tokenBAmount = percentage * maxApplicableBalanceForTokenB
 
       if (actionState === 'add') {
-        return await addLiquidity({
-          nativeAmount: Math.floor(
+        return executeAddLiquidity({
+          tokenA,
+          tokenB,
+          tokenAAmount: Math.floor(
             convertDenomToMicroDenom(tokenAAmount, tokenA.decimals)
           ),
-          nativeDenom: tokenA.denom,
-          maxToken: Math.ceil(
+          maxTokenBAmount: Math.ceil(
             convertDenomToMicroDenom(tokenBAmount, tokenB.decimals)
           ),
-          minLiquidity: 0,
           swapAddress: pool.swap_address,
           senderAddress: address,
-          tokenAddress: tokenB.token_address,
-          tokenDenom: tokenB.denom,
-          tokenNative: tokenB.native,
           client,
         })
       } else {
-        return await removeLiquidity({
-          amount: Math.floor(percentage * providedLiquidity.tokenAmount),
-          minToken1: 0,
-          minToken2: 0,
+        return executeRemoveLiquidity({
+          tokenAmount: Math.floor(percentage * providedLiquidity.tokenAmount),
           swapAddress: pool.swap_address,
           senderAddress: address,
           lpTokenAddress: lp_token_address,

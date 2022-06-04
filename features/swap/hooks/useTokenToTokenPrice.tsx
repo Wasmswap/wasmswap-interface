@@ -35,13 +35,15 @@ export const useTokenToTokenPriceQuery = ({
       tokenAmount,
     ],
     async queryFn() {
-      return await tokenToTokenPriceQueryWithPools({
-        matchingPools,
-        tokenA,
-        tokenB,
-        client,
-        amount: tokenAmount,
-      })
+      if (tokenA && tokenB && matchingPools) {
+        return await tokenToTokenPriceQueryWithPools({
+          matchingPools,
+          tokenA,
+          tokenB,
+          client,
+          amount: tokenAmount,
+        })
+      }
     },
     enabled: Boolean(
       enabled &&

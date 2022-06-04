@@ -53,7 +53,7 @@ export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
   const { data, isLoading } = useQuery(
     `tokenDollarValue/${tokenSymbols?.join('/')}`,
     async (): Promise<Array<number>> => {
-      const tokenIds = tokenSymbols.map(
+      const tokenIds = tokenSymbols?.map(
         (tokenSymbol) =>
           (
             getMultipleTokenInfo([tokenSymbol])?.[0] ||
@@ -61,7 +61,9 @@ export const useTokenDollarValueQuery = (tokenSymbols?: Array<string>) => {
           )?.id
       )
 
-      return tokenDollarValueQuery(tokenIds)
+      if (tokenIds) {
+        return tokenDollarValueQuery(tokenIds)
+      }
     },
     {
       enabled: Boolean(tokenSymbols?.length),

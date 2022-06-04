@@ -7,7 +7,15 @@ import {
   SortParameters,
   useSortPools,
 } from 'features/liquidity'
-import { Column, Inline, media, Spinner, styled, Text } from 'junoblocks'
+import {
+  Column,
+  ErrorIcon,
+  Inline,
+  media,
+  Spinner,
+  styled,
+  Text,
+} from 'junoblocks'
 import React, { useMemo, useState } from 'react'
 
 import { useQueriesDataSelector } from '../../hooks/useQueriesDataSelector'
@@ -16,7 +24,7 @@ import { useQueryMultiplePoolsLiquidity } from '../../queries/useQueryPools'
 
 export default function Pools() {
   const { data: poolsListResponse } = usePoolsListQuery()
-  const [pools, isLoading] = useQueriesDataSelector(
+  const [pools, isLoading, isError] = useQueriesDataSelector(
     useQueryMultiplePoolsLiquidity({
       refetchInBackground: false,
       pools: poolsListResponse?.pools,
@@ -40,13 +48,39 @@ export default function Pools() {
   const shouldShowFetchingState = isLoading && !pools?.length
   const shouldRenderPools = Boolean(pools?.length)
 
+  const pageHeaderContents = (
+    <PageHeader
+      title="Liquidity"
+      subtitle="Provide liquidity to the market and
+        receive swap fees from each trade."
+    />
+  )
+
+  if (isError) {
+    return (
+      <AppLayout>
+        {pageHeaderContents}
+        <Column
+          justifyContent="center"
+          align="center"
+          css={{ paddingTop: '$24' }}
+        >
+          <Inline gap={2}>
+            <ErrorIcon color="error" />
+            <Text variant="primary">
+              {
+                "Oops, we've messed up querying the pools. Please come back later."
+              }
+            </Text>
+          </Inline>
+        </Column>
+      </AppLayout>
+    )
+  }
+
   return (
     <AppLayout>
-      <PageHeader
-        title="Liquidity"
-        subtitle="Provide liquidity to the market and
-        receive swap fees from each trade."
-      />
+      {pageHeaderContents}
 
       {shouldShowFetchingState && (
         <>

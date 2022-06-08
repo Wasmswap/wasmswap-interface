@@ -6,8 +6,6 @@ import { toUtf8 } from '@cosmjs/encoding'
 import { isDeliverTxFailure } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 
-import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
-
 type ExecuteSwapWithIncreasedAllowanceArgs = {
   tokenAmount: number
   swapAddress: string
@@ -25,8 +23,6 @@ export const executeSwapWithIncreasedAllowance = async ({
   swapMessage,
   client,
 }: ExecuteSwapWithIncreasedAllowanceArgs) => {
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
-
   const increaseAllowanceMessage = {
     increase_allowance: {
       amount: `${tokenAmount}`,
@@ -57,10 +53,7 @@ export const executeSwapWithIncreasedAllowance = async ({
   const result = await client.signAndBroadcast(
     senderAddress,
     [executeContractMsg1, executeContractMsg2],
-    {
-      amount: defaultExecuteFee.amount,
-      gas: (+defaultExecuteFee.gas * 2).toString(),
-    }
+    'auto'
   )
 
   if (isDeliverTxFailure(result)) {

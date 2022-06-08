@@ -1,7 +1,6 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { isDeliverTxFailure } from '@cosmjs/stargate'
 
-import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 import { createExecuteMessage } from './utils/createExecuteMessage'
 import { createIncreaseAllowanceMessage } from './utils/createIncreaseAllowanceMessage'
 
@@ -39,14 +38,10 @@ export const executeRemoveLiquidity = async ({
     },
   })
 
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
   const result = await client.signAndBroadcast(
     senderAddress,
     [increaseAllowanceMessage, executeMessage],
-    {
-      amount: defaultExecuteFee.amount,
-      gas: String(Number(defaultExecuteFee.gas) * 2),
-    }
+    'auto'
   )
 
   if (isDeliverTxFailure(result)) {

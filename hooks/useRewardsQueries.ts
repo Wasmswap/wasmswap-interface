@@ -30,30 +30,32 @@ export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
   const { data: rewards, isLoading } = useQuery(
     `pendingRewards/${pool?.pool_id}`,
     async () => {
-      return await Promise.all(
-        pool.rewards_tokens?.map(async ({ rewards_address, decimals }) => {
-          const { pending_rewards, denom } = await getPendingRewards(
-            address,
-            rewards_address,
-            client
-          )
+      if (shouldQueryRewards) {
+        return await Promise.all(
+          pool.rewards_tokens.map(async ({ rewards_address, decimals }) => {
+            const { pending_rewards, denom } = await getPendingRewards(
+              address,
+              rewards_address,
+              client
+            )
 
-          const tokenInfo = getTokenInfoByDenom({ denom })
-          const tokenAmount = convertMicroDenomToDenom(
-            Number(pending_rewards),
-            decimals ?? tokenInfo.decimals
-          )
+            const tokenInfo = getTokenInfoByDenom({ denom })
+            const tokenAmount = convertMicroDenomToDenom(
+              Number(pending_rewards),
+              decimals ?? tokenInfo.decimals
+            )
 
-          return {
-            tokenAmount,
-            tokenInfo,
-            dollarValue: await getTokenDollarValue({
+            return {
+              tokenAmount,
               tokenInfo,
-              tokenAmountInDenom: tokenAmount,
-            }),
-          }
-        })
-      )
+              dollarValue: await getTokenDollarValue({
+                tokenInfo,
+                tokenAmountInDenom: tokenAmount,
+              }),
+            }
+          })
+        )
+      }
     },
     {
       enabled: Boolean(

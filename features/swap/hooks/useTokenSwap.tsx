@@ -25,6 +25,7 @@ import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 type UseTokenSwapArgs = {
   tokenASymbol: string
   tokenBSymbol: string
+  /* token amount in denom */
   tokenAmount: number
   tokenToTokenPrice: number
 }
@@ -32,7 +33,7 @@ type UseTokenSwapArgs = {
 export const useTokenSwap = ({
   tokenASymbol,
   tokenBSymbol,
-  tokenAmount,
+  tokenAmount: providedTokenAmount,
   tokenToTokenPrice,
 }: UseTokenSwapArgs) => {
   const { client, address, status } = useRecoilValue(walletState)
@@ -54,15 +55,12 @@ export const useTokenSwap = ({
 
       setTransactionState(TransactionStatus.EXECUTING)
 
-      const convertedTokenAmount = convertDenomToMicroDenom(
-        tokenAmount,
+      const tokenAmount = convertDenomToMicroDenom(
+        providedTokenAmount,
         tokenA.decimals
       )
 
-      const convertedPrice = convertDenomToMicroDenom(
-        tokenToTokenPrice,
-        tokenB.decimals
-      )
+      const price = convertDenomToMicroDenom(tokenToTokenPrice, tokenB.decimals)
 
       const {
         streamlinePoolAB,
@@ -77,9 +75,10 @@ export const useTokenSwap = ({
           : 'tokenBtoTokenA'
         const swapAddress =
           streamlinePoolAB?.swap_address ?? streamlinePoolBA?.swap_address
+
         return await directTokenSwap({
-          tokenAmount: convertedTokenAmount,
-          price: convertedPrice,
+          tokenAmount,
+          price,
           slippage,
           senderAddress: address,
           swapAddress,
@@ -90,8 +89,8 @@ export const useTokenSwap = ({
       }
 
       return await passThroughTokenSwap({
-        tokenAmount: convertedTokenAmount,
-        price: convertedPrice,
+        tokenAmount,
+        price,
         slippage,
         senderAddress: address,
         tokenA,

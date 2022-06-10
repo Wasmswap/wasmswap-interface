@@ -1,12 +1,12 @@
 import {
   CosmWasmClient,
-  MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { toUtf8 } from '@cosmjs/encoding'
-import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 
-import { validateTransactionSuccess } from '../util/messages'
+import {
+  createExecuteMessage,
+  validateTransactionSuccess,
+} from '../util/messages'
 
 type Denom =
   | {
@@ -22,17 +22,13 @@ export const claimRewards = async (
   rewardsAddresses: Array<string>,
   client: SigningCosmWasmClient
 ) => {
-  const messageBody = toUtf8(JSON.stringify({ claim: {} }))
+  const claimRewardsMsg = { claim: {} }
 
-  const messages = rewardsAddresses.map(
-    (rewardsAddress): MsgExecuteContractEncodeObject => ({
-      typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
-      value: MsgExecuteContract.fromPartial({
-        sender: senderAddress,
-        contract: rewardsAddress,
-        msg: messageBody,
-        funds: [],
-      }),
+  const messages = rewardsAddresses.map((rewardsAddress) =>
+    createExecuteMessage({
+      senderAddress,
+      contractAddress: rewardsAddress,
+      message: claimRewardsMsg,
     })
   )
 

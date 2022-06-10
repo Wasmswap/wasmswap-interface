@@ -29,7 +29,7 @@ export const executeRemoveLiquidity = async ({
 
   const executeMessage = createExecuteMessage({
     senderAddress,
-    swapAddress,
+    contractAddress: swapAddress,
     message: {
       remove_liquidity: {
         amount: `${tokenAmount}`,

@@ -49,7 +49,7 @@ export const passThroughTokenSwap = async ({
 
     const executeMessage = createExecuteMessage({
       senderAddress,
-      swapAddress,
+      contractAddress: swapAddress,
       message: swapMessage,
     })
 

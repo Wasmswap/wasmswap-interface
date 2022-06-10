@@ -1,8 +1,9 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { isDeliverTxFailure } from '@cosmjs/stargate'
-
-import { createExecuteMessage } from './utils/createExecuteMessage'
-import { createIncreaseAllowanceMessage } from './utils/createIncreaseAllowanceMessage'
+import {
+  createExecuteMessage,
+  createIncreaseAllowanceMessage,
+} from 'util/messages'
 
 type ExecuteRemoveLiquidityArgs = {
   tokenAmount: number

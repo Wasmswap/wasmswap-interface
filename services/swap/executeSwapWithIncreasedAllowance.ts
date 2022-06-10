@@ -3,8 +3,9 @@ import {
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
 import { toUtf8 } from '@cosmjs/encoding'
-import { isDeliverTxFailure } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
+
+import { validateTransactionSuccess } from '../../util/messages'
 
 type ExecuteSwapWithIncreasedAllowanceArgs = {
   tokenAmount: number
@@ -50,17 +51,11 @@ export const executeSwapWithIncreasedAllowance = async ({
     }),
   }
 
-  const result = await client.signAndBroadcast(
-    senderAddress,
-    [executeContractMsg1, executeContractMsg2],
-    'auto'
-  )
-
-  if (isDeliverTxFailure(result)) {
-    throw new Error(
-      `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+  return validateTransactionSuccess(
+    await client.signAndBroadcast(
+      senderAddress,
+      [executeContractMsg1, executeContractMsg2],
+      'auto'
     )
-  }
-
-  return result
+  )
 }

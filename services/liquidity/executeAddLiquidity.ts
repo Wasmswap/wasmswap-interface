@@ -5,8 +5,10 @@ import {
 import { coin, isDeliverTxFailure } from '@cosmjs/stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
-import { createExecuteMessage } from './utils/createExecuteMessage'
-import { createIncreaseAllowanceMessage } from './utils/createIncreaseAllowanceMessage'
+import {
+  createExecuteMessage,
+  createIncreaseAllowanceMessage,
+} from '../../util/messages'
 
 type ExecuteAddLiquidityArgs = {
   tokenA: TokenInfo

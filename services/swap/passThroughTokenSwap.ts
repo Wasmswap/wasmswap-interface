@@ -3,39 +3,42 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { TokenInfo } from '../../queries/usePoolsListQuery'
 import { executeSwapWithIncreasedAllowance } from './executeSwapWithIncreasedAllowance'
 
-type SwapTokenBForTokenAArgs = {
+type PassThroughTokenSwapArgs = {
   tokenAmount: number
   price: number
   slippage: number
   senderAddress: string
   swapAddress: string
-  client: SigningCosmWasmClient
+  outputSwapAddress: string
   tokenA: TokenInfo
+  client: SigningCosmWasmClient
 }
 
-export const swapTokenBForTokenA = async ({
-  price,
-  tokenA,
+export const passThroughTokenSwap = async ({
   tokenAmount,
-  senderAddress,
+  tokenA,
+  outputSwapAddress,
   swapAddress,
+  senderAddress,
   slippage,
+  price,
   client,
-}: SwapTokenBForTokenAArgs): Promise<any> => {
-  const minNative = Math.floor(price * (1 - slippage))
+}: PassThroughTokenSwapArgs): Promise<any> => {
+  const minOutputToken = Math.floor(price * (1 - slippage))
 
   const swapMessage = {
-    swap: {
+    pass_through_swap: {
+      output_min_token: `${minOutputToken}`,
       input_token: 'Token2',
-      input_amount: `${tokenAmount}`,
-      min_output: `${minNative}`,
+      input_token_amount: `${tokenAmount}`,
+      output_amm_address: outputSwapAddress,
     },
   }
 
   if (!tokenA.native) {
     return executeSwapWithIncreasedAllowance({
-      tokenAddress: tokenA.token_address,
       tokenAmount,
+      tokenAddress: tokenA.token_address,
       senderAddress,
       swapAddress,
       swapMessage,

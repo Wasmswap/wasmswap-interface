@@ -10,11 +10,7 @@ import {
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-  swapTokenAForTokenB,
-  swapTokenBForTokenA,
-  swapTokenForToken,
-} from 'services/swap'
+import { directTokenSwap, passThroughTokenSwap } from 'services/swap'
 import {
   TransactionStatus,
   transactionStatusState,
@@ -75,31 +71,25 @@ export const useTokenSwap = ({
         baseTokenBPool,
       } = matchingPools
 
-      if (streamlinePoolAB) {
-        return await swapTokenAForTokenB({
+      if (streamlinePoolAB || streamlinePoolBA) {
+        const swapDirection = streamlinePoolAB?.swap_address
+          ? 'tokenAtoTokenB'
+          : 'tokenBtoTokenA'
+        const swapAddress =
+          streamlinePoolAB?.swap_address ?? streamlinePoolBA?.swap_address
+        return await directTokenSwap({
           tokenAmount: convertedTokenAmount,
           price: convertedPrice,
           slippage,
           senderAddress: address,
-          swapAddress: streamlinePoolAB.swap_address,
+          swapAddress,
+          swapDirection,
           tokenA,
           client,
         })
       }
 
-      if (streamlinePoolBA) {
-        return await swapTokenBForTokenA({
-          tokenAmount: convertedTokenAmount,
-          price: convertedPrice,
-          slippage,
-          senderAddress: address,
-          swapAddress: streamlinePoolBA.swap_address,
-          tokenA,
-          client,
-        })
-      }
-
-      return await swapTokenForToken({
+      return await passThroughTokenSwap({
         tokenAmount: convertedTokenAmount,
         price: convertedPrice,
         slippage,

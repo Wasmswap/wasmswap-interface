@@ -4,9 +4,8 @@ import {
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
 import { toUtf8 } from '@cosmjs/encoding'
-import { isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
+import { isDeliverTxFailure } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
-import { unsafelyGetDefaultExecuteFee } from 'util/fees'
 
 type Denom =
   | {
@@ -35,13 +34,8 @@ export const claimRewards = async (
       }),
     })
   )
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
-  const fee: StdFee = {
-    amount: defaultExecuteFee.amount,
-    gas: String(Number(defaultExecuteFee.gas) * 2),
-  }
 
-  const result = await client.signAndBroadcast(senderAddress, messages, fee)
+  const result = await client.signAndBroadcast(senderAddress, messages, 'auto')
 
   if (isDeliverTxFailure(result)) {
     throw new Error(

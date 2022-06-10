@@ -3,9 +3,6 @@ import {
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
 import { toBase64, toUtf8 } from '@cosmjs/encoding'
-import { StdFee } from '@cosmjs/stargate'
-
-import { unsafelyGetDefaultExecuteFee } from '../util/fees'
 
 export const stakeTokens = async (
   senderAddress: string,
@@ -24,17 +21,11 @@ export const stakeTokens = async (
     },
   }
 
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
-  const fee: StdFee = {
-    amount: defaultExecuteFee.amount,
-    gas: (Number(defaultExecuteFee.gas) * 2.6).toString(),
-  }
-
   return await client.execute(
     senderAddress,
     lpTokenAddress,
     msg,
-    fee,
+    'auto',
     undefined,
     []
   )
@@ -48,16 +39,12 @@ export const unstakeTokens = async (
 ) => {
   amount = Math.floor(amount)
   const msg = { unstake: { amount: amount.toString() } }
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
-  const fee: StdFee = {
-    amount: defaultExecuteFee.amount,
-    gas: (Number(defaultExecuteFee.gas) * 2.6).toString(),
-  }
+
   return await client.execute(
     senderAddress,
     stakingContractAddress,
     msg,
-    fee,
+    'auto',
     undefined,
     []
   )
@@ -73,7 +60,7 @@ export const claimTokens = async (
     senderAddress,
     stakingContractAddress,
     msg,
-    unsafelyGetDefaultExecuteFee(),
+    'auto',
     undefined,
     []
   )

@@ -1,9 +1,10 @@
-import { SigningStargateClient } from '@cosmjs/stargate'
+import { GasPrice, SigningStargateClient } from '@cosmjs/stargate'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
 
 import { ibcWalletState, WalletStatusType } from '../state/atoms/walletAtoms'
+import { GAS_PRICE } from '../util/constants'
 import { useIBCAssetInfo } from './useIBCAssetInfo'
 
 /* shares very similar logic with `useConnectWallet` and is a subject to refactor */
@@ -50,7 +51,10 @@ export const useConnectIBCWallet = (
 
       const wasmChainClient = await SigningStargateClient.connectWithSigner(
         rpc,
-        offlineSigner
+        offlineSigner,
+        {
+          gasPrice: GasPrice.fromString(GAS_PRICE),
+        }
       )
 
       const [{ address }] = await offlineSigner.getAccounts()

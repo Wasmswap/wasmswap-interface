@@ -1,4 +1,3 @@
-import { PlusIcon } from '@heroicons/react/solid'
 import { usePrevious } from '@reach/utils'
 import { LiquidityInput } from 'components'
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
@@ -14,6 +13,7 @@ import {
   formatTokenBalance,
   IconWrapper,
   ImageForTokenLogo,
+  PlusIcon,
   protectAgainstNaN,
   Spinner,
   styled,

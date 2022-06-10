@@ -1,9 +1,11 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { GasPrice } from '@cosmjs/stargate'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
 
 import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
+import { GAS_PRICE } from '../util/constants'
 import { useChainInfo } from './useChainInfo'
 
 export const useConnectWallet = (
@@ -33,7 +35,10 @@ export const useConnectWallet = (
 
       const wasmChainClient = await SigningCosmWasmClient.connectWithSigner(
         chainInfo.rpc,
-        offlineSigner
+        offlineSigner,
+        {
+          gasPrice: GasPrice.fromString(GAS_PRICE),
+        }
       )
 
       const [{ address }] = await offlineSigner.getAccounts()
@@ -60,25 +65,32 @@ export const useConnectWallet = (
     }
   }, mutationOptions)
 
-  useEffect(() => {
-    /* restore wallet connection if the state has been set with the */
-    if (chainInfo?.rpc && status === WalletStatusType.restored) {
-      mutation.mutate(null)
-    }
-  }, [status, chainInfo?.rpc]) // eslint-disable-line
-
-  useEffect(() => {
-    function reconnectWallet() {
-      if (status === WalletStatusType.connected) {
+  useEffect(
+    function restoreWalletConnectionIfHadBeenConnectedBefore() {
+      /* restore wallet connection if the state has been set with the */
+      if (chainInfo?.rpc && status === WalletStatusType.restored) {
         mutation.mutate(null)
       }
-    }
+    }, // eslint-disable-next-line
+    [status, chainInfo?.rpc]
+  )
 
-    window.addEventListener('keplr_keystorechange', reconnectWallet)
-    return () => {
-      window.removeEventListener('keplr_keystorechange', reconnectWallet)
-    }
-  }, [status]) // eslint-disable-line
+  useEffect(
+    function listenToWalletAddressChangeInKeplr() {
+      function reconnectWallet() {
+        if (status === WalletStatusType.connected) {
+          mutation.mutate(null)
+        }
+      }
+
+      window.addEventListener('keplr_keystorechange', reconnectWallet)
+      return () => {
+        window.removeEventListener('keplr_keystorechange', reconnectWallet)
+      }
+    },
+    // eslint-disable-next-line
+    [status]
+  )
 
   return mutation
 }

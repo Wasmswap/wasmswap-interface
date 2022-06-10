@@ -2,10 +2,9 @@ import {
   MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { coin, isDeliverTxFailure, StdFee } from '@cosmjs/stargate'
+import { coin, isDeliverTxFailure } from '@cosmjs/stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
-import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 import { createExecuteMessage } from './utils/createExecuteMessage'
 import { createIncreaseAllowanceMessage } from './utils/createIncreaseAllowanceMessage'
 
@@ -40,8 +39,6 @@ export const executeAddLiquidity = async ({
       min_liquidity: `${0}`,
     },
   }
-
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
 
   if (!tokenA.native || !tokenB.native) {
     const increaseAllowanceMessages: Array<MsgExecuteContractEncodeObject> = []
@@ -79,15 +76,10 @@ export const executeAddLiquidity = async ({
       ].filter(Boolean),
     })
 
-    const fee: StdFee = {
-      amount: defaultExecuteFee.amount,
-      gas: (Number(defaultExecuteFee.gas) * 1.8).toString(),
-    }
-
     const result = await client.signAndBroadcast(
       senderAddress,
       [...increaseAllowanceMessages, executeAddLiquidityMessage],
-      fee
+      'auto'
     )
 
     if (isDeliverTxFailure(result)) {
@@ -108,7 +100,7 @@ export const executeAddLiquidity = async ({
     senderAddress,
     swapAddress,
     addLiquidityMessage,
-    defaultExecuteFee,
+    'auto',
     undefined,
     funds
   )

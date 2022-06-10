@@ -1,7 +1,6 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
-import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 import { executeSwapWithIncreasedAllowance } from './executeSwapWithIncreasedAllowance'
 
 type SwapTokenBForTokenAArgs = {
@@ -24,7 +23,6 @@ export const swapTokenBForTokenA = async ({
   client,
 }: SwapTokenBForTokenAArgs): Promise<any> => {
   const minNative = Math.floor(price * (1 - slippage))
-  const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
 
   const swapMessage = {
     swap: {
@@ -49,7 +47,7 @@ export const swapTokenBForTokenA = async ({
     senderAddress,
     swapAddress,
     swapMessage,
-    defaultExecuteFee,
+    'auto',
     undefined,
     [{ amount: tokenAmount.toString(), denom: tokenA.denom }]
   )

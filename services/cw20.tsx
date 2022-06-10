@@ -1,6 +1,5 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { Coin } from '@cosmjs/launchpad'
-import { unsafelyGetDefaultExecuteFee } from 'util/fees'
 
 export type Expiration =
   | { readonly at_height: number }
@@ -108,9 +107,6 @@ export interface CW20Contract {
 
 export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
   const use = (contractAddress: string): CW20Instance => {
-    /* hack: read chain info from query cache */
-    const defaultExecuteFee = unsafelyGetDefaultExecuteFee()
-
     const balance = async (address: string): Promise<string> => {
       const result = await client.queryContractSmart(contractAddress, {
         balance: { address },
@@ -180,7 +176,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           mint: { recipient, amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -197,7 +193,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           transfer: { recipient, amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -210,7 +206,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           burn: { amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -226,7 +222,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           increase_allowance: { spender, amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -242,7 +238,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           decrease_allowance: { spender, amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -259,7 +255,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           transfer_from: { owner, recipient, amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -269,7 +265,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         sender,
         contractAddress,
         { bond: {} },
-        defaultExecuteFee,
+        'auto',
         undefined,
         [coin]
       )
@@ -283,7 +279,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           unbond: { amount },
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }
@@ -295,7 +291,7 @@ export const CW20 = (client: SigningCosmWasmClient): CW20Contract => {
         {
           claim: {},
         },
-        defaultExecuteFee
+        'auto'
       )
       return result.transactionHash
     }

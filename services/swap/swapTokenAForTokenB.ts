@@ -2,7 +2,6 @@ import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { coin } from '@cosmjs/stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
-import { unsafelyGetDefaultExecuteFee } from '../../util/fees'
 import { executeSwapWithIncreasedAllowance } from './executeSwapWithIncreasedAllowance'
 
 type SwapTokenAForTokenBArgs = {
@@ -48,7 +47,7 @@ export const swapTokenAForTokenB = async ({
     senderAddress,
     swapAddress,
     swapMessage,
-    unsafelyGetDefaultExecuteFee(),
+    'auto',
     undefined,
     [coin(tokenAmount, tokenA.denom)]
   )

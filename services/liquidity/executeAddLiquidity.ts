@@ -71,7 +71,7 @@ export const executeAddLiquidity = async ({
     const executeAddLiquidityMessage = createExecuteMessage({
       message: addLiquidityMessage,
       senderAddress,
-      swapAddress,
+      contractAddress: swapAddress,
       /* each native token needs to be added to the funds */
       funds: [
         tokenA.native && coin(tokenAAmount, tokenA.denom),

@@ -49,7 +49,7 @@ export const directTokenSwap = async ({
 
     const executeMessage = createExecuteMessage({
       senderAddress,
-      swapAddress,
+      contractAddress: swapAddress,
       message: swapMessage,
     })
 

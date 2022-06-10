@@ -4,8 +4,9 @@ import {
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
 import { toUtf8 } from '@cosmjs/encoding'
-import { isDeliverTxFailure } from '@cosmjs/stargate'
 import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
+
+import { validateTransactionSuccess } from '../util/messages'
 
 type Denom =
   | {
@@ -35,15 +36,9 @@ export const claimRewards = async (
     })
   )
 
-  const result = await client.signAndBroadcast(senderAddress, messages, 'auto')
-
-  if (isDeliverTxFailure(result)) {
-    throw new Error(
-      `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
-    )
-  }
-
-  return result
+  return validateTransactionSuccess(
+    await client.signAndBroadcast(senderAddress, messages, 'auto')
+  )
 }
 
 type PendingRewardsResponse = {

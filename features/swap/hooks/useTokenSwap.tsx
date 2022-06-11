@@ -10,11 +10,7 @@ import {
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import {
-  swapTokenAForTokenB,
-  swapTokenBForTokenA,
-  swapTokenForToken,
-} from 'services/swap'
+import { directTokenSwap, passThroughTokenSwap } from 'services/swap'
 import {
   TransactionStatus,
   transactionStatusState,
@@ -29,6 +25,7 @@ import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 type UseTokenSwapArgs = {
   tokenASymbol: string
   tokenBSymbol: string
+  /* token amount in denom */
   tokenAmount: number
   tokenToTokenPrice: number
 }
@@ -36,7 +33,7 @@ type UseTokenSwapArgs = {
 export const useTokenSwap = ({
   tokenASymbol,
   tokenBSymbol,
-  tokenAmount,
+  tokenAmount: providedTokenAmount,
   tokenToTokenPrice,
 }: UseTokenSwapArgs) => {
   const { client, address, status } = useRecoilValue(walletState)
@@ -58,15 +55,12 @@ export const useTokenSwap = ({
 
       setTransactionState(TransactionStatus.EXECUTING)
 
-      const convertedTokenAmount = convertDenomToMicroDenom(
-        tokenAmount,
+      const tokenAmount = convertDenomToMicroDenom(
+        providedTokenAmount,
         tokenA.decimals
       )
 
-      const convertedPrice = convertDenomToMicroDenom(
-        tokenToTokenPrice,
-        tokenB.decimals
-      )
+      const price = convertDenomToMicroDenom(tokenToTokenPrice, tokenB.decimals)
 
       const {
         streamlinePoolAB,
@@ -75,33 +69,28 @@ export const useTokenSwap = ({
         baseTokenBPool,
       } = matchingPools
 
-      if (streamlinePoolAB) {
-        return await swapTokenAForTokenB({
-          tokenAmount: convertedTokenAmount,
-          price: convertedPrice,
+      if (streamlinePoolAB || streamlinePoolBA) {
+        const swapDirection = streamlinePoolAB?.swap_address
+          ? 'tokenAtoTokenB'
+          : 'tokenBtoTokenA'
+        const swapAddress =
+          streamlinePoolAB?.swap_address ?? streamlinePoolBA?.swap_address
+
+        return await directTokenSwap({
+          tokenAmount,
+          price,
           slippage,
           senderAddress: address,
-          swapAddress: streamlinePoolAB.swap_address,
+          swapAddress,
+          swapDirection,
           tokenA,
           client,
         })
       }
 
-      if (streamlinePoolBA) {
-        return await swapTokenBForTokenA({
-          tokenAmount: convertedTokenAmount,
-          price: convertedPrice,
-          slippage,
-          senderAddress: address,
-          swapAddress: streamlinePoolBA.swap_address,
-          tokenA,
-          client,
-        })
-      }
-
-      return await swapTokenForToken({
-        tokenAmount: convertedTokenAmount,
-        price: convertedPrice,
+      return await passThroughTokenSwap({
+        tokenAmount,
+        price,
         slippage,
         senderAddress: address,
         tokenA,

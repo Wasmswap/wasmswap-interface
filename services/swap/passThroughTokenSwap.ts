@@ -1,9 +1,14 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { coin } from '@cosmjs/stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
-import { executeSwapWithIncreasedAllowance } from './executeSwapWithIncreasedAllowance'
+import {
+  createExecuteMessage,
+  createIncreaseAllowanceMessage,
+  validateTransactionSuccess,
+} from '../../util/messages'
 
-type SwapTokenForTokenInput = {
+type PassThroughTokenSwapArgs = {
   tokenAmount: number
   price: number
   slippage: number
@@ -14,7 +19,7 @@ type SwapTokenForTokenInput = {
   client: SigningCosmWasmClient
 }
 
-export const swapTokenForToken = async ({
+export const passThroughTokenSwap = async ({
   tokenAmount,
   tokenA,
   outputSwapAddress,
@@ -23,7 +28,7 @@ export const swapTokenForToken = async ({
   slippage,
   price,
   client,
-}: SwapTokenForTokenInput): Promise<any> => {
+}: PassThroughTokenSwapArgs): Promise<any> => {
   const minOutputToken = Math.floor(price * (1 - slippage))
 
   const swapMessage = {
@@ -36,14 +41,26 @@ export const swapTokenForToken = async ({
   }
 
   if (!tokenA.native) {
-    return executeSwapWithIncreasedAllowance({
+    const increaseAllowanceMessage = createIncreaseAllowanceMessage({
+      senderAddress,
       tokenAmount,
       tokenAddress: tokenA.token_address,
-      senderAddress,
       swapAddress,
-      swapMessage,
-      client,
     })
+
+    const executeMessage = createExecuteMessage({
+      senderAddress,
+      contractAddress: swapAddress,
+      message: swapMessage,
+    })
+
+    return validateTransactionSuccess(
+      await client.signAndBroadcast(
+        senderAddress,
+        [increaseAllowanceMessage, executeMessage],
+        'auto'
+      )
+    )
   }
 
   return await client.execute(
@@ -52,6 +69,6 @@ export const swapTokenForToken = async ({
     swapMessage,
     'auto',
     undefined,
-    [{ amount: tokenAmount.toString(), denom: tokenA.denom }]
+    [coin(tokenAmount, tokenA.denom)]
   )
 }

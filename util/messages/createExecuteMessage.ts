@@ -6,20 +6,20 @@ import { MsgExecuteContract } from 'cosmjs-types/cosmwasm/wasm/v1/tx'
 type CreateExecuteMessageArgs = {
   senderAddress: string
   message: Record<string, Record<string, string>>
-  swapAddress: string
+  contractAddress: string
   funds?: Array<Coin>
 }
 
 export const createExecuteMessage = ({
   senderAddress,
-  swapAddress,
+  contractAddress,
   message,
   funds,
 }: CreateExecuteMessageArgs): MsgExecuteContractEncodeObject => ({
   typeUrl: '/cosmwasm.wasm.v1.MsgExecuteContract',
   value: MsgExecuteContract.fromPartial({
     sender: senderAddress,
-    contract: swapAddress,
+    contract: contractAddress,
     msg: toUtf8(JSON.stringify(message)),
     funds: funds || [],
   }),

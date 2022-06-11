@@ -2,11 +2,14 @@ import {
   MsgExecuteContractEncodeObject,
   SigningCosmWasmClient,
 } from '@cosmjs/cosmwasm-stargate'
-import { coin, isDeliverTxFailure } from '@cosmjs/stargate'
+import { coin } from '@cosmjs/stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
-import { createExecuteMessage } from './utils/createExecuteMessage'
-import { createIncreaseAllowanceMessage } from './utils/createIncreaseAllowanceMessage'
+import {
+  createExecuteMessage,
+  createIncreaseAllowanceMessage,
+  validateTransactionSuccess,
+} from '../../util/messages'
 
 type ExecuteAddLiquidityArgs = {
   tokenA: TokenInfo
@@ -68,7 +71,7 @@ export const executeAddLiquidity = async ({
     const executeAddLiquidityMessage = createExecuteMessage({
       message: addLiquidityMessage,
       senderAddress,
-      swapAddress,
+      contractAddress: swapAddress,
       /* each native token needs to be added to the funds */
       funds: [
         tokenA.native && coin(tokenAAmount, tokenA.denom),
@@ -76,19 +79,13 @@ export const executeAddLiquidity = async ({
       ].filter(Boolean),
     })
 
-    const result = await client.signAndBroadcast(
-      senderAddress,
-      [...increaseAllowanceMessages, executeAddLiquidityMessage],
-      'auto'
-    )
-
-    if (isDeliverTxFailure(result)) {
-      throw new Error(
-        `Error when broadcasting tx ${result.transactionHash} at height ${result.height}. Code: ${result.code}; Raw log: ${result.rawLog}`
+    return validateTransactionSuccess(
+      await client.signAndBroadcast(
+        senderAddress,
+        [...increaseAllowanceMessages, executeAddLiquidityMessage],
+        'auto'
       )
-    }
-
-    return result
+    )
   }
 
   const funds = [

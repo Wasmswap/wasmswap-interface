@@ -90,7 +90,7 @@ export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
     async () => {
       const hasPendingRewards =
         __POOL_REWARDS_ENABLED__ &&
-        pendingRewards?.find(({ dollarValue }) => dollarValue > 0)
+        pendingRewards?.find(({ tokenAmount }) => tokenAmount > 0)
 
       const shouldBeAbleToClaimRewards = pool && client && hasPendingRewards
 
@@ -104,7 +104,7 @@ export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
               ({ tokenInfo }) => token.symbol === tokenInfo.symbol
             )
 
-            return pendingRewardsForToken.dollarValue > 0
+            return pendingRewardsForToken.tokenAmount > 0
           })
           .map(({ rewards_address }) => rewards_address)
 

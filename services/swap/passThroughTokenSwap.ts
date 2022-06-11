@@ -1,4 +1,5 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { coin } from '@cosmjs/stargate'
 
 import { TokenInfo } from '../../queries/usePoolsListQuery'
 import {
@@ -49,7 +50,7 @@ export const passThroughTokenSwap = async ({
 
     const executeMessage = createExecuteMessage({
       senderAddress,
-      swapAddress,
+      contractAddress: swapAddress,
       message: swapMessage,
     })
 
@@ -68,6 +69,6 @@ export const passThroughTokenSwap = async ({
     swapMessage,
     'auto',
     undefined,
-    [{ amount: tokenAmount.toString(), denom: tokenA.denom }]
+    [coin(tokenAmount, tokenA.denom)]
   )
 }

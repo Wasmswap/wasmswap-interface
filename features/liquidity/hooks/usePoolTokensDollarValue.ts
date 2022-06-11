@@ -62,8 +62,8 @@ export const usePoolTokensDollarValue = ({
     return [
       getPoolTokensDollarValue({ swapInfo, tokenAmountInMicroDenom }),
       isLoading || !enabled,
-    ]
+    ] as const
   }
 
-  return [0, isLoading || !enabled]
+  return [0, isLoading || !enabled] as const
 }

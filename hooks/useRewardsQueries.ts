@@ -103,7 +103,7 @@ export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
             const pendingRewardsForToken = pendingRewards.find(
               ({ tokenInfo }) => token.symbol === tokenInfo.symbol
             )
-            console.log({ pendingRewardsForToken })
+
             return pendingRewardsForToken.dollarValue > 0
           })
           .map(({ rewards_address }) => rewards_address)

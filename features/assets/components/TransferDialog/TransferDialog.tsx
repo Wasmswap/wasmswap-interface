@@ -141,22 +141,26 @@ export const TransferDialog = ({
       <DialogContent css={{ paddingBottom: '$8' }}>
         <WalletInfoPerformingActionAgainst depositing={true} />
       </DialogContent>
-      <DialogButtons>
-        <Button onClick={onRequestClose} variant="secondary">
-          Cancel
-        </Button>
-        <Button
-          disabled={
-            transactionKind === 'deposit'
-              ? externalIbcAssetBalance <= 0
-              : nativeAssetBalance <= 0
-          }
-          onClick={() => mutateTransferAsset(null)}
-          variant="primary"
-        >
-          {isLoading ? <Spinner instant={true} size={16} /> : 'Transfer'}
-        </Button>
-      </DialogButtons>
+      <DialogButtons
+        cancellationButton={
+          <Button onClick={onRequestClose} variant="secondary">
+            Cancel
+          </Button>
+        }
+        confirmationButton={
+          <Button
+            disabled={
+              transactionKind === 'deposit'
+                ? externalIbcAssetBalance <= 0
+                : nativeAssetBalance <= 0
+            }
+            onClick={() => mutateTransferAsset(null)}
+            variant="primary"
+          >
+            {isLoading ? <Spinner instant={true} size={16} /> : 'Transfer'}
+          </Button>
+        }
+      />
     </Dialog>
   )
 }

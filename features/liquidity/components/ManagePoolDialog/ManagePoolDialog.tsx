@@ -155,21 +155,25 @@ export const ManagePoolDialog = ({
 
       <DialogDivider offsetTop="$16" offsetBottom="$8" />
 
-      <DialogButtons>
-        <Button variant="secondary" onClick={onRequestClose}>
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          onClick={isLoading ? undefined : handleSubmit}
-        >
-          {isLoading ? (
-            <Spinner instant={true} size={16} />
-          ) : (
-            <>{isAddingLiquidity ? 'Add' : 'Remove'} liquidity</>
-          )}
-        </Button>
-      </DialogButtons>
+      <DialogButtons
+        cancellationButton={
+          <Button variant="secondary" onClick={onRequestClose}>
+            Cancel
+          </Button>
+        }
+        confirmationButton={
+          <Button
+            variant="primary"
+            onClick={isLoading ? undefined : handleSubmit}
+          >
+            {isLoading ? (
+              <Spinner instant={true} size={16} />
+            ) : (
+              <>{isAddingLiquidity ? 'Add' : 'Remove'} liquidity</>
+            )}
+          </Button>
+        }
+      />
     </Dialog>
   )
 }

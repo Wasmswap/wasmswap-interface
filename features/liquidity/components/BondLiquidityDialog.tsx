@@ -324,24 +324,28 @@ export const BondLiquidityDialog = ({
           </Text>
         </Column>
       </DialogContent>
-      <DialogButtons>
-        <Button variant="secondary" onClick={onRequestClose}>
-          Cancel
-        </Button>
-        <Button
-          variant="primary"
-          onClick={handleAction}
-          disabled={getIsFormSubmissionDisabled()}
-        >
-          {isLoading ? (
-            <Spinner instant />
-          ) : dialogState === 'stake' ? (
-            'Bond'
-          ) : (
-            'Unbond'
-          )}
-        </Button>
-      </DialogButtons>
+      <DialogButtons
+        cancellationButton={
+          <Button variant="secondary" onClick={onRequestClose}>
+            Cancel
+          </Button>
+        }
+        confirmationButton={
+          <Button
+            variant="primary"
+            onClick={handleAction}
+            disabled={getIsFormSubmissionDisabled()}
+          >
+            {isLoading ? (
+              <Spinner instant />
+            ) : dialogState === 'stake' ? (
+              'Bond'
+            ) : (
+              'Unbond'
+            )}
+          </Button>
+        }
+      />
     </Dialog>
   )
 }

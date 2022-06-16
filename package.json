@@ -33,7 +33,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "focus-visible": "^5.2.0",
     "gsap": "^3.7.1",
-    "junoblocks": "^0.2.1",
+    "junoblocks": "^0.2.2",
     "next": "12.1.0",
     "normalize.css": "^8.0.1",
     "react": "^17.0.0",

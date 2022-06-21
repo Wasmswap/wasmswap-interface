@@ -5,8 +5,11 @@ import 'focus-visible'
 import { ErrorBoundary } from 'components/ErrorBoundary'
 import { TestnetDialog } from 'components/TestnetDialog'
 import {
+  css,
   globalCss,
+  media,
   styled,
+  useMedia,
   useSubscribeDefaultAppTheme,
   useThemeClassName,
 } from 'junoblocks'
@@ -24,6 +27,14 @@ const applyGlobalStyles = globalCss({
     backgroundColor: '$backgroundColors$base',
   },
 })
+
+const toasterClassName = css({
+  [media.sm]: {
+    width: '100%',
+    padding: 0,
+    bottom: '$6 !important',
+  },
+}).toString()
 
 function NextJsAppRoot({ children }) {
   const themeClassName = useThemeClassName()
@@ -56,6 +67,7 @@ const StyledContentWrapper = styled('div', {
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const isSmallScreen = useMedia('sm')
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
@@ -63,7 +75,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ErrorBoundary>
             <Component {...pageProps} />
             {__TEST_MODE__ && <TestnetDialog />}
-            <Toaster position="top-right" toastOptions={{ duration: 10000 }} />
+            <Toaster
+              position={isSmallScreen ? 'bottom-center' : 'top-right'}
+              toastOptions={{ duration: 1000000 }}
+              containerClassName={toasterClassName}
+              containerStyle={isSmallScreen ? { inset: 0 } : undefined}
+            />
           </ErrorBoundary>
         </NextJsAppRoot>
       </QueryClientProvider>

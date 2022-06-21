@@ -2,6 +2,7 @@ import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Button,
   ErrorIcon,
+  formatSdkErrorMessage,
   IconWrapper,
   Toast,
   UpRightArrow,
@@ -20,6 +21,7 @@ import { convertDenomToMicroDenom } from 'util/conversion'
 
 import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
 import { useQueryMatchingPoolForSwap } from '../../../queries/useQueryMatchingPoolForSwap'
+import { formatCompactNumber } from '../../../util/formatCompactNumber'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 
 type UseTokenSwapArgs = {
@@ -103,9 +105,27 @@ export const useTokenSwap = ({
       onSuccess() {
         toast.custom((t) => (
           <Toast
-            icon={<IconWrapper icon={<Valid />} color="valid" />}
-            title="Swap successful!"
+            icon={<IconWrapper icon={<Valid />} color="primary" />}
+            title="Swap successful"
+            body={`Turned ${formatCompactNumber(
+              providedTokenAmount,
+              'tokenAmount'
+            )} ${tokenA.symbol} to ${formatCompactNumber(
+              tokenToTokenPrice,
+              'tokenAmount'
+            )} ${tokenB.symbol}`}
             onClose={() => toast.dismiss(t.id)}
+            buttons={
+              <Button
+                as="a"
+                variant="ghost"
+                href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+                target="__blank"
+                iconRight={<UpRightArrow />}
+              >
+                Provide feedback
+              </Button>
+            }
           />
         ))
 
@@ -120,12 +140,7 @@ export const useTokenSwap = ({
         refetchQueries()
       },
       onError(e) {
-        const errorMessage =
-          String(e).length > 300
-            ? `${String(e).substring(0, 150)} ... ${String(e).substring(
-                String(e).length - 150
-              )}`
-            : String(e)
+        const errorMessage = formatSdkErrorMessage(e)
 
         toast.custom((t) => (
           <Toast

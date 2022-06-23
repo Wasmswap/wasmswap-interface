@@ -19,22 +19,20 @@ import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 
 import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
-import { useQueryMatchingPoolForSwap } from '../../../queries/useQueryMatchingPoolForSwap'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
+import { useTokenToTokenPrice } from './useTokenToTokenPrice'
 
 type UseTokenSwapArgs = {
   tokenASymbol: string
   tokenBSymbol: string
   /* token amount in denom */
   tokenAmount: number
-  tokenToTokenPrice: number
 }
 
 export const useTokenSwap = ({
   tokenASymbol,
   tokenBSymbol,
   tokenAmount: providedTokenAmount,
-  tokenToTokenPrice,
 }: UseTokenSwapArgs) => {
   const { client, address, status } = useRecoilValue(walletState)
   const setTransactionState = useSetRecoilState(transactionStatusState)
@@ -43,8 +41,13 @@ export const useTokenSwap = ({
 
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
-  const [matchingPools] = useQueryMatchingPoolForSwap({ tokenA, tokenB })
   const refetchQueries = useRefetchQueries(['tokenBalance'])
+
+  const [tokenToTokenPrice] = useTokenToTokenPrice({
+    tokenASymbol,
+    tokenBSymbol,
+    tokenAmount: providedTokenAmount,
+  })
 
   return useMutation(
     'swapTokens',
@@ -60,14 +63,13 @@ export const useTokenSwap = ({
         tokenA.decimals
       )
 
-      const price = convertDenomToMicroDenom(tokenToTokenPrice, tokenB.decimals)
+      const price = convertDenomToMicroDenom(
+        tokenToTokenPrice.price,
+        tokenB.decimals
+      )
 
-      const {
-        streamlinePoolAB,
-        streamlinePoolBA,
-        baseTokenAPool,
-        baseTokenBPool,
-      } = matchingPools
+      const { streamlinePoolAB, streamlinePoolBA, passThroughPool } =
+        tokenToTokenPrice
 
       if (streamlinePoolAB || streamlinePoolBA) {
         const swapDirection = streamlinePoolAB?.swap_address
@@ -88,14 +90,21 @@ export const useTokenSwap = ({
         })
       }
 
+      // Smoke test
+      if (!passThroughPool) {
+        throw new Error(
+          'Was not able to identify swap route for this token pair. Please contact the engineering team.'
+        )
+      }
+
       return await passThroughTokenSwap({
         tokenAmount,
         price,
         slippage,
         senderAddress: address,
         tokenA,
-        swapAddress: baseTokenAPool.swap_address,
-        outputSwapAddress: baseTokenBPool.swap_address,
+        swapAddress: passThroughPool.in.swap_address,
+        outputSwapAddress: passThroughPool.out.swap_address,
         client,
       })
     },

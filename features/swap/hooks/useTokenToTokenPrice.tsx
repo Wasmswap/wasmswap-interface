@@ -1,4 +1,5 @@
 import { useTokenInfo } from 'hooks/useTokenInfo'
+import { usePersistance } from 'junoblocks'
 import { useQueryMatchingPoolForSwap } from 'queries/useQueryMatchingPoolForSwap'
 import { useQuery } from 'react-query'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
@@ -32,7 +33,6 @@ export const useTokenToTokenPriceQuery = ({
   return useQuery({
     queryKey: [
       `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-      tokenAmount,
     ],
     async queryFn() {
       if (tokenA && tokenB && matchingPools) {
@@ -54,7 +54,7 @@ export const useTokenToTokenPriceQuery = ({
         tokenAmount > 0 &&
         tokenBSymbol !== tokenASymbol
     ),
-    refetchOnMount: 'always' as const,
+    refetchOnMount: false,
     refetchInterval: refetchInBackground
       ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
       : undefined,
@@ -63,6 +63,12 @@ export const useTokenToTokenPriceQuery = ({
 }
 
 export const useTokenToTokenPrice = (args: UseTokenPairsPricesArgs) => {
-  const { data, isLoading } = useTokenToTokenPriceQuery(args)
-  return [data, isLoading] as const
+  const { data: currentTokenPrice, isLoading } = useTokenToTokenPriceQuery(args)
+  /* persist token price when querying a new one */
+  const persistTokenPrice = usePersistance(
+    isLoading ? undefined : currentTokenPrice
+  )
+  /* select token price */
+  const tokenPrice = isLoading ? persistTokenPrice : currentTokenPrice
+  return [tokenPrice || { price: 0 }, isLoading] as const
 }

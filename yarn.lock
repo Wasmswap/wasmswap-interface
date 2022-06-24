@@ -2296,10 +2296,10 @@ json5@^1.0.1:
     array-includes "^3.1.4"
     object.assign "^4.1.2"
 
-junoblocks@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/junoblocks/-/junoblocks-0.2.2.tgz#1a1c6b9d8e1f529a41163189dfe1dc5278dcd07a"
-  integrity sha512-1JOLiPNjwvKeALeW35NHiiV7gtXUncWlepp8/QHHtllyQgNjmkxSRWrnZpR/oTtyDFN+4rTiY50hYZtsDNlAtg==
+junoblocks@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/junoblocks/-/junoblocks-0.2.3.tgz#a31ac719a8fbbdf1cbfb5a892df29c2b05f40e61"
+  integrity sha512-pb5UJ397kSOZDgtmbgq9NY7GSW9PPMPE3u2QFVtxEPuvdCGqJlbarTUB0FhYrqNfoCUUOUGi24EJgHhX9akCHg==
 
 language-subtag-registry@~0.3.2:
   version "0.3.21"

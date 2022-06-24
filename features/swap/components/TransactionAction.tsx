@@ -37,7 +37,6 @@ export const TransactionAction = ({
     })
 
   /* proceed with the swap only if the price is loaded */
-
   useEffect(() => {
     const shouldTriggerTransaction =
       !isPriceLoading && !isExecutingTransaction && requestedSwap

@@ -91,8 +91,6 @@ export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
         />
         <TransactionTips
           disabled={isUiDisabled}
-          isPriceLoading={isPriceLoading}
-          tokenToTokenPrice={tokenPrice}
           onTokenSwaps={handleSwapTokenPositions}
           size={uiSize}
         />

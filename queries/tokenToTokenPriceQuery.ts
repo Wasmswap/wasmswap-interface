@@ -92,8 +92,12 @@ export async function tokenToTokenPriceQueryWithPools({
       ].filter(Boolean)
     )
 
+  /*
+   * pick the best price among all the available swap routes.
+   * the best price is the highest one.
+   * */
   return prices.reduce((result, tokenPrice) => {
-    return result?.price > tokenPrice.price ? tokenPrice : result
+    return result?.price < tokenPrice.price ? tokenPrice : result
   }, prices[0])
 }
 

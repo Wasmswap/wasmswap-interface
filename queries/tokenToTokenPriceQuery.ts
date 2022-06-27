@@ -11,12 +11,12 @@ import {
 } from '../util/conversion'
 import { PoolEntityType, TokenInfo } from './usePoolsListQuery'
 import {
-  PassThroughPoolsMatchForSwap,
-  PoolMatchForSwap,
+  MatchingPoolsForTokenToTokenSwap,
+  PassThroughPoolsForTokenToTokenSwap,
 } from './useQueryMatchingPoolForSwap'
 
 type TokenToTokenPriceQueryArgs = {
-  matchingPools: PoolMatchForSwap
+  matchingPools: MatchingPoolsForTokenToTokenSwap
   tokenA: TokenInfo
   tokenB: TokenInfo
   amount: number
@@ -25,7 +25,7 @@ type TokenToTokenPriceQueryArgs = {
 
 type TokenToTokenPriceQueryWithPoolsReturns = {
   price: number
-  passThroughPool?: PassThroughPoolsMatchForSwap
+  passThroughPool?: PassThroughPoolsForTokenToTokenSwap
   streamlinePoolAB?: PoolEntityType
   streamlinePoolBA?: PoolEntityType
 }
@@ -46,36 +46,40 @@ export async function tokenToTokenPriceQueryWithPools({
 
   const convertedTokenAmount = convertDenomToMicroDenom(amount, tokenA.decimals)
 
-  const { streamlinePoolAB, streamlinePoolBA, passThroughPools } = matchingPools
+  const {
+    poolForDirectTokenAToTokenBSwap,
+    poolForDirectTokenBToTokenASwap,
+    passThroughPools,
+  } = matchingPools
 
-  const streamlinePoolABPromise =
-    streamlinePoolAB &&
+  const directTokenAtoTokenBPriceQueryPromise =
+    poolForDirectTokenAToTokenBSwap &&
     getToken1ForToken2Price({
       nativeAmount: convertedTokenAmount,
-      swapAddress: streamlinePoolAB.swap_address,
+      swapAddress: poolForDirectTokenAToTokenBSwap.swap_address,
       client,
     }).then((price) => ({
       price: formatPrice(price),
-      streamlinePoolAB,
+      poolForDirectTokenAToTokenBSwap: poolForDirectTokenAToTokenBSwap,
     }))
 
-  const streamlinePoolBAPromise =
-    streamlinePoolBA &&
+  const directTokenBtoTokenAPriceQueryPromise =
+    poolForDirectTokenBToTokenASwap &&
     getToken2ForToken1Price({
       tokenAmount: convertedTokenAmount,
-      swapAddress: streamlinePoolBA.swap_address,
+      swapAddress: poolForDirectTokenBToTokenASwap.swap_address,
       client,
     }).then((price) => ({
       price: formatPrice(price),
-      streamlinePoolBA,
+      poolForDirectTokenBToTokenASwap: poolForDirectTokenBToTokenASwap,
     }))
 
-  const passThroughPoolPromises = passThroughPools.map(
+  const passThroughPoolPricesQueryPromises = passThroughPools.map(
     (passThroughPool): Promise<TokenToTokenPriceQueryWithPoolsReturns> =>
       getTokenForTokenPrice({
         tokenAmount: convertedTokenAmount,
-        swapAddress: passThroughPool.in.swap_address,
-        outputSwapAddress: passThroughPool.out.swap_address,
+        swapAddress: passThroughPool.inputPool.swap_address,
+        outputSwapAddress: passThroughPool.outputPool.swap_address,
         client,
       }).then((price) => ({
         price: formatPrice(price),
@@ -86,9 +90,9 @@ export async function tokenToTokenPriceQueryWithPools({
   const prices: Array<TokenToTokenPriceQueryWithPoolsReturns> =
     await Promise.all(
       [
-        streamlinePoolABPromise,
-        streamlinePoolBAPromise,
-        ...passThroughPoolPromises,
+        directTokenAtoTokenBPriceQueryPromise,
+        directTokenBtoTokenAPriceQueryPromise,
+        ...passThroughPoolPricesQueryPromises,
       ].filter(Boolean)
     )
 

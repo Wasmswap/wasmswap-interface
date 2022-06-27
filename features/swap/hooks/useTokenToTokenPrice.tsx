@@ -1,6 +1,6 @@
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import { usePersistance } from 'junoblocks'
-import { useQueryMatchingPoolForSwap } from 'queries/useQueryMatchingPoolForSwap'
+import { useQueryMatchingPoolsForSwap } from 'queries/useQueryMatchingPoolForSwap'
 import { useQuery } from 'react-query'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
@@ -28,13 +28,11 @@ export const useTokenToTokenPriceQuery = ({
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const [matchingPools] = useQueryMatchingPoolForSwap({ tokenA, tokenB })
+  const [matchingPools] = useQueryMatchingPoolsForSwap({ tokenA, tokenB })
 
-  return useQuery({
-    queryKey: [
-      `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-    ],
-    async queryFn() {
+  return useQuery(
+    `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
+    async () => {
       if (tokenA && tokenB && matchingPools) {
         return await tokenToTokenPriceQueryWithPools({
           matchingPools,
@@ -45,21 +43,23 @@ export const useTokenToTokenPriceQuery = ({
         })
       }
     },
-    enabled: Boolean(
-      enabled &&
-        client &&
-        matchingPools &&
-        tokenA &&
-        tokenB &&
-        tokenAmount > 0 &&
-        tokenBSymbol !== tokenASymbol
-    ),
-    refetchOnMount: false,
-    refetchInterval: refetchInBackground
-      ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
-      : undefined,
-    refetchIntervalInBackground: Boolean(refetchInBackground),
-  })
+    {
+      enabled: Boolean(
+        enabled &&
+          client &&
+          matchingPools &&
+          tokenA &&
+          tokenB &&
+          tokenAmount > 0 &&
+          tokenBSymbol !== tokenASymbol
+      ),
+      refetchOnMount: false,
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: Boolean(refetchInBackground),
+    }
+  )
 }
 
 export const useTokenToTokenPrice = (args: UseTokenPairsPricesArgs) => {

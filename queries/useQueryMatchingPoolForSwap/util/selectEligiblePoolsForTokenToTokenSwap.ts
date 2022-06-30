@@ -43,7 +43,7 @@ export function selectEligiblePoolsForTokenToTokenSwap({
 
       /*
        * validate if the pool can be used as a pass through
-       * direct token a token b pool pair match
+       * token a token b pair match
        * */
       const eligibleAsPassThroughPoolPair =
         poolAssetA.symbol !== tokenA.symbol &&

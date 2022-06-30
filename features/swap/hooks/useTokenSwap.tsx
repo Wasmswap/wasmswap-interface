@@ -70,15 +70,19 @@ export const useTokenSwap = ({
         tokenB.decimals
       )
 
-      const { streamlinePoolAB, streamlinePoolBA, passThroughPool } =
-        tokenToTokenPrice
+      const {
+        poolForDirectTokenAToTokenBSwap,
+        poolForDirectTokenBToTokenASwap,
+        passThroughPools,
+      } = tokenToTokenPrice
 
-      if (streamlinePoolAB || streamlinePoolBA) {
-        const swapDirection = streamlinePoolAB?.swap_address
+      if (poolForDirectTokenAToTokenBSwap || poolForDirectTokenBToTokenASwap) {
+        const swapDirection = poolForDirectTokenAToTokenBSwap?.swap_address
           ? 'tokenAtoTokenB'
           : 'tokenBtoTokenA'
         const swapAddress =
-          streamlinePoolAB?.swap_address ?? streamlinePoolBA?.swap_address
+          poolForDirectTokenAToTokenBSwap?.swap_address ??
+          poolForDirectTokenBToTokenASwap?.swap_address
 
         return await directTokenSwap({
           tokenAmount,
@@ -93,12 +97,13 @@ export const useTokenSwap = ({
       }
 
       // Smoke test
-      if (!passThroughPool) {
+      if (!passThroughPools?.length) {
         throw new Error(
           'Was not able to identify swap route for this token pair. Please contact the engineering team.'
         )
       }
 
+      const [passThroughPool] = passThroughPools
       return await passThroughTokenSwap({
         tokenAmount,
         price,

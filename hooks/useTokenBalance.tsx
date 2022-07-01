@@ -1,4 +1,6 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { SigningStargateClient } from '@cosmjs/stargate'
+import { useWallet } from '@noahsaso/cosmodal'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
@@ -17,7 +19,7 @@ async function fetchTokenBalance({
   token: { denom, native, token_address, decimals },
   address,
 }: {
-  client: SigningCosmWasmClient
+  client: SigningCosmWasmClient | SigningStargateClient
   token: {
     denom?: string
     token_address?: string
@@ -64,7 +66,7 @@ const mapIbcTokenToNative = (ibcToken?: IBCAssetInfo) => {
 }
 
 export const useTokenBalance = (tokenSymbol: string) => {
-  const { address, status, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
 
   const tokenInfo = useTokenInfo(tokenSymbol)
   const ibcAssetInfo = useIBCAssetInfo(tokenSymbol)
@@ -72,16 +74,16 @@ export const useTokenBalance = (tokenSymbol: string) => {
   const { data: balance = 0, isLoading } = useQuery(
     ['tokenBalance', tokenSymbol, address],
     async ({ queryKey: [, symbol] }) => {
-      if (symbol && client && (tokenInfo || ibcAssetInfo)) {
+      if (symbol && signingCosmWasmClient && (tokenInfo || ibcAssetInfo)) {
         return await fetchTokenBalance({
-          client,
+          client: signingCosmWasmClient,
           address,
           token: tokenInfo || ibcAssetInfo,
         })
       }
     },
     {
-      enabled: Boolean(tokenSymbol && status === WalletStatusType.connected),
+      enabled: Boolean(tokenSymbol && connected && signingCosmWasmClient),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,

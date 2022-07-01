@@ -1,9 +1,9 @@
-import { useConnectWallet } from 'hooks/useConnectWallet'
+import { useWalletManager } from '@noahsaso/cosmodal'
 import { useTokenBalance } from 'hooks/useTokenBalance'
 import { Button, Inline, Spinner, styled, Text } from 'junoblocks'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
+import { WalletStatusType } from 'state/atoms/walletAtoms'
 import { NETWORK_FEE } from 'util/constants'
 
 import { useTokenSwap } from '../hooks'
@@ -26,8 +26,7 @@ export const TransactionAction = ({
   const { balance: tokenABalance } = useTokenBalance(tokenA?.tokenSymbol)
 
   /* wallet state */
-  const { status } = useRecoilValue(walletState)
-  const { mutate: connectWallet } = useConnectWallet()
+  const { connect, connected } = useWalletManager()
   const [slippage, setSlippage] = useRecoilState(slippageAtom)
 
   const { mutate: handleSwap, isLoading: isExecutingTransaction } =
@@ -50,11 +49,11 @@ export const TransactionAction = ({
   }, [isPriceLoading, isExecutingTransaction, requestedSwap, handleSwap])
 
   const handleSwapButtonClick = () => {
-    if (status === WalletStatusType.connected) {
+    if (connected) {
       return setRequestedSwap(true)
     }
 
-    connectWallet(null)
+    connect()
   }
 
   const shouldDisableSubmissionButton =

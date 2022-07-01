@@ -1,4 +1,4 @@
-import { useConnectWallet } from 'hooks/useConnectWallet'
+import { useWallet, useWalletManager } from '@noahsaso/cosmodal'
 import { Logo, LogoText } from 'icons'
 import {
   AddressIcon,
@@ -29,8 +29,6 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
-import { useRecoilState } from 'recoil'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
 
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
@@ -44,8 +42,8 @@ export function NavigationSidebar({
   shouldRenderBackButton,
   backButton,
 }: NavigationSidebarProps) {
-  const { mutate: connectWallet } = useConnectWallet()
-  const [{ key }, setWalletState] = useRecoilState(walletState)
+  const { connect, disconnect } = useWalletManager()
+  const { address, name } = useWallet()
 
   const themeController = useControlTheme()
 
@@ -53,19 +51,15 @@ export function NavigationSidebar({
   const [isOpen, setOpen] = useState(false)
 
   function resetWalletConnection() {
-    setWalletState({
-      status: WalletStatusType.idle,
-      address: '',
-      key: null,
-      client: null,
-    })
+    disconnect()
   }
 
   const walletButton = (
     <ConnectedWalletButton
-      connected={Boolean(key?.name)}
-      walletName={key?.name}
-      onConnect={() => connectWallet(null)}
+      connected={Boolean(name)}
+      walletName={name}
+      walletAddress={address}
+      onConnect={() => connect()}
       onDisconnect={resetWalletConnection}
       css={{ marginBottom: '$8' }}
     />

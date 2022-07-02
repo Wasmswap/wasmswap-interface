@@ -1,4 +1,5 @@
 import { SigningStargateClient } from '@cosmjs/stargate'
+import { useWallet } from '@noahsaso/cosmodal'
 import { useQuery } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { convertMicroDenomToDenom } from 'util/conversion'
@@ -10,6 +11,11 @@ import { useIBCAssetInfo } from './useIBCAssetInfo'
 export const useIBCTokenBalance = (tokenSymbol) => {
   const { address: nativeWalletAddress } = useRecoilValue(walletState)
   const ibcAsset = useIBCAssetInfo(tokenSymbol)
+
+  const { chainInfo, connected } = useWallet(ibcAsset?.chain_id)
+
+  console.log({ chainInfo, connected })
+
   const { data: balance = 0, isLoading } = useQuery(
     [`ibcTokenBalance/${tokenSymbol}`, nativeWalletAddress],
     async () => {

@@ -1,10 +1,9 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import { protectAgainstNaN, usePersistance } from 'junoblocks'
 import { useMemo } from 'react'
 import { useQueries } from 'react-query'
-import { useRecoilValue } from 'recoil'
 
 import { useCosmWasmClient } from '../hooks/useCosmWasmClient'
-import { walletState } from '../state/atoms/walletAtoms'
 import {
   __POOL_REWARDS_ENABLED__,
   DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
@@ -68,12 +67,13 @@ export const useQueryMultiplePoolsLiquidity = ({
   const [getTokenDollarValue, enabledGetTokenDollarValue] =
     useGetTokenDollarValueQuery()
 
-  const { address, client: signingClient } = useRecoilValue(walletState)
+  const { address, signingCosmWasmClient } = useWallet()
+
   const client = useCosmWasmClient()
 
   const context = {
     client,
-    signingClient,
+    signingClient: signingCosmWasmClient,
     getTokenDollarValue,
   }
 

@@ -1,3 +1,4 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
 
@@ -12,7 +13,7 @@ type UseBondTokensArgs = {
 
 export const useBondTokens = ({ poolId, ...options }: UseBondTokensArgs) => {
   const [pool] = usePoolFromListQueryById({ poolId })
-  const { address, client } = useRecoilValue(walletState)
+  const { address, signingCosmWasmClient } = useWallet()
   const [swap] = useSwapInfo({ poolId })
 
   return useMutation(async (amount: number) => {
@@ -21,7 +22,7 @@ export const useBondTokens = ({ poolId, ...options }: UseBondTokensArgs) => {
       pool.staking_address,
       swap.lp_token_address,
       amount,
-      client
+      signingCosmWasmClient
     )
   }, options)
 }
@@ -35,9 +36,14 @@ export const useUnbondTokens = ({
   ...options
 }: UseUnbondTokensArgs) => {
   const [pool] = usePoolFromListQueryById({ poolId })
-  const { address, client } = useRecoilValue(walletState)
+  const { address, signingCosmWasmClient } = useWallet()
 
   return useMutation(async (amount: number) => {
-    return unstakeTokens(address, pool.staking_address, amount, client)
+    return unstakeTokens(
+      address,
+      pool.staking_address,
+      amount,
+      signingCosmWasmClient
+    )
   }, options)
 }

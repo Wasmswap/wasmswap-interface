@@ -3,11 +3,9 @@ import { SigningStargateClient } from '@cosmjs/stargate'
 import { useWallet } from '@noahsaso/cosmodal'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { CW20 } from '../services/cw20'
-import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { getIBCAssetInfoFromList, useIBCAssetInfo } from './useIBCAssetInfo'
 import { IBCAssetInfo, useIBCAssetList } from './useIbcAssetList'
@@ -94,7 +92,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
 }
 
 export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
-  const { address, status, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
   const [tokenList] = useTokenList()
   const [ibcAssetsList] = useIBCAssetList()
 
@@ -109,7 +107,7 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
       const balances = await Promise.all(
         tokenSymbols.map((tokenSymbol) =>
           fetchTokenBalance({
-            client,
+            client: signingCosmWasmClient,
             address,
             token:
               getTokenInfoFromTokenList(tokenSymbol, tokenList.tokens) ||
@@ -127,11 +125,7 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
       }))
     },
     {
-      enabled: Boolean(
-        status === WalletStatusType.connected &&
-          tokenSymbols?.length &&
-          tokenList?.tokens
-      ),
+      enabled: Boolean(connected && tokenSymbols?.length && tokenList?.tokens),
 
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,

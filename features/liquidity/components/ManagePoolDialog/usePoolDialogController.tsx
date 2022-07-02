@@ -1,3 +1,4 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
 import { useSwapInfo } from 'hooks/useSwapInfo'
 import { useTokenBalance } from 'hooks/useTokenBalance'
@@ -12,9 +13,7 @@ import {
 import { PoolEntityTypeWithLiquidity } from 'queries/useQueryPools'
 import { toast } from 'react-hot-toast'
 import { useMutation } from 'react-query'
-import { useRecoilValue } from 'recoil'
 import { executeAddLiquidity, executeRemoveLiquidity } from 'services/liquidity'
-import { walletState } from 'state/atoms/walletAtoms'
 import {
   convertDenomToMicroDenom,
   convertMicroDenomToDenom,
@@ -128,7 +127,7 @@ const useMutateLiquidity = ({
   actionState,
   providedLiquidity,
 }) => {
-  const { address, client } = useRecoilValue(walletState)
+  const { address, signingCosmWasmClient } = useWallet()
   const refetchQueries = useRefetchQueries(['tokenBalance', 'myLiquidity'])
 
   const [swap] = useSwapInfo({
@@ -154,7 +153,7 @@ const useMutateLiquidity = ({
           ),
           swapAddress: pool.swap_address,
           senderAddress: address,
-          client,
+          client: signingCosmWasmClient,
         })
       } else {
         return executeRemoveLiquidity({
@@ -162,7 +161,7 @@ const useMutateLiquidity = ({
           swapAddress: pool.swap_address,
           senderAddress: address,
           lpTokenAddress: lp_token_address,
-          client,
+          client: signingCosmWasmClient,
         })
       }
     },

@@ -1,3 +1,4 @@
+import { useWalletManager } from '@noahsaso/cosmodal'
 import { AppLayout, PageHeader } from 'components'
 import { AssetsList, TransferDialog } from 'features/assets'
 import { useConnectIBCWallet } from 'hooks/useConnectIBCWallet'
@@ -93,12 +94,12 @@ export default function Transfer() {
     },
   })
 
-  const { status } = useRecoilValue(walletState)
+  const { connect, connected } = useWalletManager()
   useEffect(() => {
     async function connectInternalAndExternalWallets() {
-      if (status !== WalletStatusType.connected) {
+      if (!connected) {
         console.log('going to connect internal wallet first')
-        await connectInternalWallet(null)
+        await connect()
       }
 
       connectExternalWallet(null)
@@ -108,7 +109,13 @@ export default function Transfer() {
     if (selectedToken) {
       connectInternalAndExternalWallets()
     }
-  }, [connectExternalWallet, connectInternalWallet, selectedToken, status])
+  }, [
+    connect,
+    connectExternalWallet,
+    connectInternalWallet,
+    connected,
+    selectedToken,
+  ])
 
   return (
     <>

@@ -1,5 +1,9 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
-import { GasPrice } from '@cosmjs/stargate'
+import {
+  AminoTypes,
+  createIbcAminoConverters,
+  GasPrice,
+} from '@cosmjs/stargate'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
@@ -32,12 +36,13 @@ export const useConnectWallet = (
       await window.keplr.enable(chainInfo.chainId)
 
       const offlineSigner = await window.getOfflineSignerAuto(chainInfo.chainId)
-
       const wasmChainClient = await SigningCosmWasmClient.connectWithSigner(
         chainInfo.rpc,
         offlineSigner,
         {
           gasPrice: GasPrice.fromString(GAS_PRICE),
+          /* passing ibc amino types to make ibc work on amino signers (eg ledger, wallet connect) */
+          aminoTypes: new AminoTypes(createIbcAminoConverters()),
         }
       )
 

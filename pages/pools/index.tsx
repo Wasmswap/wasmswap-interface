@@ -1,4 +1,3 @@
-import { useUpdateEffect } from '@reach/utils'
 import { AppLayout, PageHeader } from 'components'
 import {
   ButtonWithDropdownForSorting,
@@ -17,6 +16,7 @@ import {
   Text,
 } from 'junoblocks'
 import React, { useMemo, useState } from 'react'
+import { useUpdateEffect } from 'react-use'
 
 import { useQueriesDataSelector } from '../../hooks/useQueriesDataSelector'
 import { usePoolsListQuery } from '../../queries/usePoolsListQuery'

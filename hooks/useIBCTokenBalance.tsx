@@ -1,42 +1,40 @@
 import { SigningStargateClient } from '@cosmjs/stargate'
 import { useWallet } from '@noahsaso/cosmodal'
 import { useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
-import { walletState } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { useIBCAssetInfo } from './useIBCAssetInfo'
 
 export const useIBCTokenBalance = (tokenSymbol) => {
-  const { address: nativeWalletAddress } = useRecoilValue(walletState)
   const ibcAsset = useIBCAssetInfo(tokenSymbol)
 
-  const { chainInfo, connected } = useWallet(ibcAsset?.chain_id)
-
-  console.log({ chainInfo, connected })
+  const { walletClient, address: nativeWalletAddress } = useWallet()
 
   const { data: balance = 0, isLoading } = useQuery(
-    [`ibcTokenBalance/${tokenSymbol}`, nativeWalletAddress],
+    [
+      `ibcTokenBalance/${tokenSymbol}`,
+      nativeWalletAddress,
+      Boolean(walletClient),
+    ],
     async () => {
       const { denom, decimals, chain_id, rpc } = ibcAsset
 
-      await window.keplr.enable(chain_id)
-      const offlineSigner = await window.getOfflineSigner(chain_id)
+      await walletClient.enable(chain_id)
+      const offlineSigner = await walletClient.getOfflineSigner(chain_id)
 
-      const wasmChainClient = await SigningStargateClient.connectWithSigner(
-        rpc,
-        offlineSigner
-      )
+      const [wasmChainClient, [{ address }]] = await Promise.all([
+        SigningStargateClient.connect(rpc),
+        offlineSigner.getAccounts(),
+      ])
 
-      const [{ address }] = await offlineSigner.getAccounts()
       const coin = await wasmChainClient.getBalance(address, denom)
 
       const amount = coin ? Number(coin.amount) : 0
       return convertMicroDenomToDenom(amount, decimals)
     },
     {
-      enabled: Boolean(nativeWalletAddress && ibcAsset),
+      enabled: Boolean(nativeWalletAddress && ibcAsset && walletClient),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,

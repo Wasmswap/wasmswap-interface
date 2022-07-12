@@ -1,5 +1,4 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
-import { SigningStargateClient } from '@cosmjs/stargate'
 import { useWallet } from '@noahsaso/cosmodal'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
@@ -17,7 +16,7 @@ async function fetchTokenBalance({
   token: { denom, native, token_address, decimals },
   address,
 }: {
-  client: SigningCosmWasmClient | SigningStargateClient
+  client: SigningCosmWasmClient
   token: {
     denom?: string
     token_address?: string
@@ -125,7 +124,12 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
       }))
     },
     {
-      enabled: Boolean(connected && tokenSymbols?.length && tokenList?.tokens),
+      enabled: Boolean(
+        connected &&
+          tokenSymbols?.length &&
+          tokenList?.tokens &&
+          signingCosmWasmClient
+      ),
 
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,

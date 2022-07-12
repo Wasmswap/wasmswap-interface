@@ -4,7 +4,9 @@ import {
   useSubscribeDefaultAppTheme,
   useThemeClassName,
 } from 'junoblocks'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+
+import { useIsRenderingOnServer } from '../hooks/useIsRenderingOnServer'
 
 const applyGlobalStyles = globalCss({
   body: {
@@ -12,18 +14,8 @@ const applyGlobalStyles = globalCss({
   },
 })
 
-const useIsRenderingOnServerSide = () => {
-  const [isRenderingOnServerSide, setIsRenderingOnServerSide] = useState(true)
-
-  useEffect(() => {
-    setIsRenderingOnServerSide(false)
-  }, [])
-
-  return isRenderingOnServerSide
-}
-
 export function NextJsAppRoot({ children }) {
-  const isRenderingOnServerSide = useIsRenderingOnServerSide()
+  const isRenderingOnServer = useIsRenderingOnServer()
 
   const themeClassName = useThemeClassName()
   useSubscribeDefaultAppTheme()
@@ -41,10 +33,10 @@ export function NextJsAppRoot({ children }) {
     <StyledContentWrapper
       data-app-wrapper=""
       lang="en-US"
-      className={isRenderingOnServerSide ? null : themeClassName}
+      className={isRenderingOnServer ? null : themeClassName}
       suppressHydrationWarning={true}
     >
-      {isRenderingOnServerSide ? null : children}
+      {isRenderingOnServer ? null : children}
     </StyledContentWrapper>
   )
 }

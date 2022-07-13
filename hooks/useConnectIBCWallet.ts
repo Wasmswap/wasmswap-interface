@@ -1,3 +1,4 @@
+import { createWasmAminoConverters } from '@cosmjs/cosmwasm-stargate'
 import {
   AminoTypes,
   createIbcAminoConverters,
@@ -63,7 +64,12 @@ export const useConnectIBCWallet = (
         {
           gasPrice: GasPrice.fromString(GAS_PRICE),
           /* passing ibc amino types to make ibc work on amino signers (eg ledger, wallet connect) */
-          aminoTypes: new AminoTypes(createIbcAminoConverters()),
+          aminoTypes: new AminoTypes(
+            Object.assign(
+              createIbcAminoConverters(),
+              createWasmAminoConverters()
+            )
+          ),
         }
       )
 

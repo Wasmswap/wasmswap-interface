@@ -1,6 +1,4 @@
-import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { SigningStargateClient } from '@cosmjs/stargate'
-import { Key } from '@keplr-wallet/types'
 import { atom } from 'recoil'
 
 export enum WalletStatusType {

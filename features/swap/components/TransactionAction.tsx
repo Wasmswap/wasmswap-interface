@@ -3,7 +3,6 @@ import { useTokenBalance } from 'hooks/useTokenBalance'
 import { Button, Inline, Spinner, styled, Text } from 'junoblocks'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { WalletStatusType } from 'state/atoms/walletAtoms'
 import { NETWORK_FEE } from 'util/constants'
 
 import { useTokenSwap } from '../hooks'
@@ -60,7 +59,7 @@ export const TransactionAction = ({
     isExecutingTransaction ||
     !tokenB.tokenSymbol ||
     !tokenA.tokenSymbol ||
-    status !== WalletStatusType.connected ||
+    !connected ||
     tokenA.amount <= 0 ||
     tokenA?.amount > tokenABalance
 

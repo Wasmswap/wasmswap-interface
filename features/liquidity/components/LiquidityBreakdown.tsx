@@ -45,7 +45,7 @@ export const LiquidityBreakdown = ({
   rewardsContracts,
   size = 'large',
 }: LiquidityBreakdownProps) => {
-  const [tokenPrice, isPriceLoading] = useTokenToTokenPrice({
+  const [{ price: tokenPrice }, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.symbol,
     tokenBSymbol: tokenB?.symbol,
     tokenAmount: 1,

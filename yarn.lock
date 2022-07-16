@@ -1384,14 +1384,6 @@ emoji-regex@^9.2.2:
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-9.2.2.tgz"
   integrity sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==
 
-enhanced-resolve@^5.7.0:
-  version "5.9.3"
-  resolved "https://registry.npmjs.org/enhanced-resolve/-/enhanced-resolve-5.9.3.tgz"
-  integrity sha512-Bq9VSor+kjvW3f9/MiiR4eE3XYgOl7/rS8lnSxbRbF3kS0B2r+Y9w5krBWxZgDxASVZbdYrn5wT4j/Wb0J9qow==
-  dependencies:
-    graceful-fs "^4.2.4"
-    tapable "^2.2.0"
-
 enquirer@^2.3.5:
   version "2.3.6"
   resolved "https://registry.npmjs.org/enquirer/-/enquirer-2.3.6.tgz"
@@ -1921,11 +1913,6 @@ goober@^2.1.1:
   version "2.1.9"
   resolved "https://registry.npmjs.org/goober/-/goober-2.1.9.tgz"
   integrity sha512-PAtnJbrWtHbfpJUIveG5PJIB6Mc9Kd0gimu9wZwPyA+wQUSeOeA4x4Ug16lyaaUUKZ/G6QEH1xunKOuXP1F4Vw==
-
-graceful-fs@^4.2.4:
-  version "4.2.10"
-  resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.10.tgz"
-  integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
 gsap@^3.7.1:
   version "3.10.4"
@@ -2504,26 +2491,17 @@ natural-compare@^1.4.0:
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-next-bundle-junoblocks@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/next-bundle-junoblocks/-/next-bundle-junoblocks-1.0.0.tgz"
-  integrity sha512-7T4uIVWEhF9g4lSjRz6yzQAd6UixlA1CLEBSWFmhHrEMXaXd3IbLhFOf/Bpw6+Df5eM8QtQcbrCJKn8zD+WRSA==
+next-bundle-junoblocks@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/next-bundle-junoblocks/-/next-bundle-junoblocks-1.0.1.tgz#1eb919d93f5d8e85b176294da91e04720d892fbd"
+  integrity sha512-he9DfDriWApCoB3UWf5JWA/g6+YYx6KT8VRCMoAGj+ylpCy6KB5WOJKtbDbRuz6SN1InOy20fMds/wRzjfo5tw==
   dependencies:
     cli-color "^2.0.2"
-    next-transpile-modules "^9.0.0"
 
 next-tick@1, next-tick@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/next-tick/-/next-tick-1.1.0.tgz"
   integrity sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==
-
-next-transpile-modules@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.npmjs.org/next-transpile-modules/-/next-transpile-modules-9.0.0.tgz"
-  integrity sha512-VCNFOazIAnXn1hvgYYSTYMnoWgKgwlYh4lm1pKbSfiB3kj5ZYLcKVhfh3jkPOg1cnd9DP+pte9yCUocdPEUBTQ==
-  dependencies:
-    enhanced-resolve "^5.7.0"
-    escalade "^3.1.1"
 
 next@12.1.0:
   version "12.1.0"
@@ -3226,11 +3204,6 @@ table@^6.0.9:
     slice-ansi "^4.0.0"
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
-
-tapable@^2.2.0:
-  version "2.2.1"
-  resolved "https://registry.npmjs.org/tapable/-/tapable-2.2.1.tgz"
-  integrity sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==
 
 text-table@^0.2.0:
   version "0.2.0"

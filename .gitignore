@@ -20,6 +20,8 @@
 *.pem
 .idea
 *.client-test.*
+.yalc
+yalc.lock
 
 # debug
 npm-debug.log*

@@ -1,4 +1,10 @@
-import { GasPrice, SigningStargateClient } from '@cosmjs/stargate'
+import { createWasmAminoConverters } from '@cosmjs/cosmwasm-stargate'
+import {
+  AminoTypes,
+  createIbcAminoConverters,
+  GasPrice,
+  SigningStargateClient,
+} from '@cosmjs/stargate'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
@@ -54,6 +60,16 @@ export const useConnectIBCWallet = (
         offlineSigner,
         {
           gasPrice: GasPrice.fromString(GAS_PRICE),
+          /*
+           * passing ibc amino types for all the amino signers (eg ledger, wallet connect)
+           * to enable ibc & wasm transactions
+           * */
+          aminoTypes: new AminoTypes(
+            Object.assign(
+              createIbcAminoConverters(),
+              createWasmAminoConverters()
+            )
+          ),
         }
       )
 

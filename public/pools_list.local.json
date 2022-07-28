@@ -139,7 +139,7 @@
       ],
       "swap_address": "juno1hulx7cgvpfcvg83wk5h96sedqgn72n026w6nl47uht554xhvj9ns263mx9",
       "staking_address": "juno1q23d30x94cm8ve243pxdc52m398r4l5ecgcfp8tud3vggcsq8s2qv7kt2z",
-      "rewards_addresses": []
+      "rewards_tokens": []
     },
     {
       "pool_id": "JUNO-COSM",
@@ -171,7 +171,7 @@
       ],
       "swap_address": "juno1yg8930mj8pk288lmkjex0qz85mj8wgtns5uzwyn2hs25pwdnw42slx2lw6",
       "staking_address": "",
-      "rewards_addresses": []
+      "rewards_tokens": []
     },
     {
       "pool_id": "CRAB-DAO",
@@ -203,7 +203,7 @@
       ],
       "swap_address": "juno187zds75uenfxht2zqz7e0wxn3ushcawvf2ndrns6q63hgfn6ptqq7d7smp",
       "staking_address": "",
-      "rewards_addresses": []
+      "rewards_tokens": []
     }
   ],
   "version": {

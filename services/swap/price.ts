@@ -53,16 +53,23 @@ export interface GetTokenForTokenPriceInput {
   client: CosmWasmClient
 }
 
-export const getTokenForTokenPrice = async (
-  input: GetTokenForTokenPriceInput
-) => {
+export const getTokenForTokenPrice = async ({
+  tokenAmount,
+  swapAddress,
+  outputSwapAddress,
+  client,
+}: GetTokenForTokenPriceInput) => {
   try {
-    const nativePrice = await getToken2ForToken1Price(input)
+    const nativePrice = await getToken2ForToken1Price({
+      tokenAmount,
+      swapAddress,
+      client,
+    })
 
     return getToken1ForToken2Price({
       nativeAmount: nativePrice,
-      swapAddress: input.outputSwapAddress,
-      client: input.client,
+      swapAddress: outputSwapAddress,
+      client: client,
     })
   } catch (e) {
     console.error('error(getTokenForTokenPrice)', e)

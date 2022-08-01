@@ -1,5 +1,6 @@
 import { useTokenInfo } from 'hooks/useTokenInfo'
-import { useQueryMatchingPoolForSwap } from 'queries/useQueryMatchingPoolForSwap'
+import { usePersistance } from 'junoblocks'
+import { useQueryMatchingPoolsForSwap } from 'queries/useQueryMatchingPoolForSwap'
 import { useQuery } from 'react-query'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
@@ -27,14 +28,11 @@ export const useTokenToTokenPriceQuery = ({
   const tokenA = useTokenInfo(tokenASymbol)
   const tokenB = useTokenInfo(tokenBSymbol)
 
-  const [matchingPools] = useQueryMatchingPoolForSwap({ tokenA, tokenB })
+  const [matchingPools] = useQueryMatchingPoolsForSwap({ tokenA, tokenB })
 
-  return useQuery({
-    queryKey: [
-      `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
-      tokenAmount,
-    ],
-    async queryFn() {
+  return useQuery(
+    `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
+    async () => {
       if (tokenA && tokenB && matchingPools) {
         return await tokenToTokenPriceQueryWithPools({
           matchingPools,
@@ -45,24 +43,32 @@ export const useTokenToTokenPriceQuery = ({
         })
       }
     },
-    enabled: Boolean(
-      enabled &&
-        client &&
-        matchingPools &&
-        tokenA &&
-        tokenB &&
-        tokenAmount > 0 &&
-        tokenBSymbol !== tokenASymbol
-    ),
-    refetchOnMount: 'always' as const,
-    refetchInterval: refetchInBackground
-      ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
-      : undefined,
-    refetchIntervalInBackground: Boolean(refetchInBackground),
-  })
+    {
+      enabled: Boolean(
+        enabled &&
+          client &&
+          matchingPools &&
+          tokenA &&
+          tokenB &&
+          tokenAmount > 0 &&
+          tokenBSymbol !== tokenASymbol
+      ),
+      refetchOnMount: false,
+      refetchInterval: refetchInBackground
+        ? DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL
+        : undefined,
+      refetchIntervalInBackground: Boolean(refetchInBackground),
+    }
+  )
 }
 
 export const useTokenToTokenPrice = (args: UseTokenPairsPricesArgs) => {
-  const { data, isLoading } = useTokenToTokenPriceQuery(args)
-  return [data, isLoading] as const
+  const { data: currentTokenPrice, isLoading } = useTokenToTokenPriceQuery(args)
+  /* persist token price when querying a new one */
+  const persistTokenPrice = usePersistance(
+    isLoading ? undefined : currentTokenPrice
+  )
+  /* select token price */
+  const tokenPrice = isLoading ? persistTokenPrice : currentTokenPrice
+  return [tokenPrice || { price: 0 }, isLoading] as const
 }

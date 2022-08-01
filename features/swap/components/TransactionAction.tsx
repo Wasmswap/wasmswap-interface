@@ -17,7 +17,6 @@ type TransactionTipsProps = {
 
 export const TransactionAction = ({
   isPriceLoading,
-  tokenToTokenPrice,
   size = 'large',
 }: TransactionTipsProps) => {
   const [requestedSwap, setRequestedSwap] = useState(false)
@@ -33,11 +32,9 @@ export const TransactionAction = ({
       tokenASymbol: tokenA?.tokenSymbol,
       tokenBSymbol: tokenB?.tokenSymbol,
       tokenAmount: tokenA?.amount,
-      tokenToTokenPrice: tokenToTokenPrice || 0,
     })
 
   /* proceed with the swap only if the price is loaded */
-
   useEffect(() => {
     const shouldTriggerTransaction =
       !isPriceLoading && !isExecutingTransaction && requestedSwap

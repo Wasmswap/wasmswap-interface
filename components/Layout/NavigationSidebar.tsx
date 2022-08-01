@@ -15,6 +15,7 @@ import {
   media,
   MoonIcon,
   Open,
+  SharesIcon,
   styled,
   Telegram,
   Text,
@@ -101,6 +102,31 @@ export function NavigationSidebar({
           selected={getIsLinkActive('/pools')}
         >
           Liquidity
+        </Button>
+      </Link>
+      <Divider offsetY="$8" />
+      <Link href={process.env.NEXT_PUBLIC_GOVERNANCE_LINK_URL} passHref>
+        <Button
+          as="a"
+          target="__blank"
+          variant="ghost"
+          size="large"
+          iconLeft={<TreasuryIcon />}
+          iconRight={<IconWrapper icon={<UpRightArrow />} />}
+        >
+          {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
+        </Button>
+      </Link>
+      <Link href={process.env.NEXT_PUBLIC_PRICE_LINK_URL} passHref>
+        <Button
+          as="a"
+          target="__blank"
+          variant="ghost"
+          size="large"
+          iconLeft={<SharesIcon />}
+          iconRight={<IconWrapper icon={<UpRightArrow />} />}
+        >
+          {process.env.NEXT_PUBLIC_PRICE_LINK_LABEL}
         </Button>
       </Link>
     </StyledListForLinks>
@@ -247,17 +273,6 @@ export function NavigationSidebar({
             iconRight={<IconWrapper icon={<UpRightArrow />} />}
           >
             Provide feedback
-          </Button>
-          <Button
-            as="a"
-            href={process.env.NEXT_PUBLIC_GOVERNANCE_LINK_URL}
-            target="__blank"
-            variant="ghost"
-            size="large"
-            iconLeft={<TreasuryIcon />}
-            iconRight={<IconWrapper icon={<UpRightArrow />} />}
-          >
-            {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
           </Button>
         </Column>
         <Inline gap={2} css={{ padding: '$20 0 $13' }}>

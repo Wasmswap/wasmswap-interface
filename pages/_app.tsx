@@ -11,6 +11,7 @@ import { QueryClientProvider } from 'react-query'
 import { RecoilRoot } from 'recoil'
 import { queryClient } from 'services/queryClient'
 
+import { ConfiguredWalletProvider } from '../components/ConfiguredWalletProvider'
 import { NextJsAppRoot } from '../components/NextJsAppRoot'
 import { __TEST_MODE__ } from '../util/constants'
 
@@ -29,14 +30,16 @@ function MyApp({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <NextJsAppRoot>
           <ErrorBoundary>
-            <Component {...pageProps} />
-            {__TEST_MODE__ && <TestnetDialog />}
-            <Toaster
-              position={isSmallScreen ? 'bottom-center' : 'top-right'}
-              toastOptions={{ duration: 1000000 }}
-              containerClassName={toasterClassName}
-              containerStyle={isSmallScreen ? { inset: 0 } : undefined}
-            />
+            <ConfiguredWalletProvider>
+              <Component {...pageProps} />
+              {__TEST_MODE__ && <TestnetDialog />}
+              <Toaster
+                position={isSmallScreen ? 'bottom-center' : 'top-right'}
+                toastOptions={{ duration: 10000 }}
+                containerClassName={toasterClassName}
+                containerStyle={isSmallScreen ? { inset: 0 } : undefined}
+              />
+            </ConfiguredWalletProvider>
           </ErrorBoundary>
         </NextJsAppRoot>
       </QueryClientProvider>

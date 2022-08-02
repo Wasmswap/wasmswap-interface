@@ -4,13 +4,14 @@ import {
   DeliverTxResponse,
   MsgTransferEncodeObject,
 } from '@cosmjs/stargate'
+import { useWallet } from '@noahsaso/cosmodal'
 import { MsgTransfer } from 'cosmjs-types/ibc/applications/transfer/v1/tx'
 import { Height } from 'cosmjs-types/ibc/core/client/v1/client'
 import { IBCAssetInfo } from 'hooks/useIbcAssetList'
 import Long from 'long'
 import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
-import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
+import { ibcWalletState } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 
 import { TransactionKind } from './types'
@@ -57,7 +58,7 @@ export const useTransferAssetMutation = ({
   tokenInfo,
   ...mutationArgs
 }: UseTransferAssetMutationArgs) => {
-  const { address, client } = useRecoilValue(walletState)
+  const { address, signingCosmWasmClient } = useWallet()
   const { address: ibcAddress, client: ibcClient } =
     useRecoilValue(ibcWalletState)
 
@@ -99,7 +100,7 @@ export const useTransferAssetMutation = ({
         undefined,
         timeout,
         '',
-        client
+        signingCosmWasmClient
       )
     }
   }, mutationArgs)

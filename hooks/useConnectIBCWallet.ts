@@ -5,6 +5,7 @@ import {
   GasPrice,
   SigningStargateClient,
 } from '@cosmjs/stargate'
+import { useWallet } from '@noahsaso/cosmodal'
 import { useEffect } from 'react'
 import { useMutation } from 'react-query'
 import { useRecoilState } from 'recoil'
@@ -18,6 +19,8 @@ export const useConnectIBCWallet = (
   tokenSymbol: string,
   mutationOptions?: Parameters<typeof useMutation>[2]
 ) => {
+  const { walletClient, connected } = useWallet()
+
   const [{ status, tokenSymbol: storedTokenSymbol }, setWalletState] =
     useRecoilState(ibcWalletState)
 
@@ -52,8 +55,8 @@ export const useConnectIBCWallet = (
     try {
       const { chain_id, rpc } = assetInfo
 
-      await window.keplr.enable(chain_id)
-      const offlineSigner = await window.getOfflineSigner(chain_id)
+      await walletClient.enable(chain_id)
+      const offlineSigner = await walletClient.getOfflineSigner(chain_id)
 
       const wasmChainClient = await SigningStargateClient.connectWithSigner(
         rpc,
@@ -97,12 +100,13 @@ export const useConnectIBCWallet = (
 
   const connectWallet = mutation.mutate
 
+  const readyToRestoreConnection = assetInfo && walletClient && connected
   useEffect(() => {
     /* restore wallet connection */
-    if (status === WalletStatusType.restored && assetInfo) {
+    if (status === WalletStatusType.restored && readyToRestoreConnection) {
       connectWallet(null)
     }
-  }, [status, connectWallet, assetInfo])
+  }, [status, connectWallet, readyToRestoreConnection])
 
   useEffect(() => {
     function reconnectWallet() {

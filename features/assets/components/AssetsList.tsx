@@ -1,22 +1,24 @@
-import { useWalletConnectionStatus } from 'hooks/useWalletConnectionStatus'
+import { useWallet, WalletConnectionStatus } from '@noahsaso/cosmodal'
 import { styled, Text, useDelayedAppearanceFlag } from 'junoblocks'
-import { walletState } from 'state/atoms/walletAtoms'
 import { __TRANSFERS_ENABLED__ } from 'util/constants'
 
 import { useGetSupportedAssetsBalancesOnChain } from '../hooks/useGetSupportedAssetsBalancesOnChain'
 import { AssetCard, AssetCardState } from './AssetCard'
 
 export const AssetsList = ({ onActionClick }) => {
+  const { status, connected } = useWallet()
+
   const [loadingBalances, [myTokens, allTokens]] =
     useGetSupportedAssetsBalancesOnChain()
 
-  const { isConnecting, isConnected } = useWalletConnectionStatus(walletState)
-
   /* isLoading state is true if either we connect the wallet or loading balances */
-  const isLoading = isConnecting || loadingBalances
+  const isLoading =
+    status === WalletConnectionStatus.Connecting || loadingBalances
   /* check if the user has any of the assets transferred on the chain */
   const hasTransferredAssets =
-    isConnected && !loadingBalances && myTokens.length > 0
+    status === WalletConnectionStatus.Connected &&
+    !loadingBalances &&
+    myTokens.length > 0
 
   const isLoadingStateShowing = useDelayedAppearanceFlag(isLoading, 650)
 
@@ -47,12 +49,12 @@ export const AssetsList = ({ onActionClick }) => {
                       balance={balance}
                     />
                   ))}
-                {isConnected && !hasTransferredAssets && (
+                {connected && !hasTransferredAssets && (
                   <Text variant="body" as="span">
                     No IBC assets... yet!
                   </Text>
                 )}
-                {!isConnected && !isLoading && (
+                {!connected && !isLoading && (
                   <Text variant="body">
                     Connect your wallet{' '}
                     <Text variant="body" as="span">

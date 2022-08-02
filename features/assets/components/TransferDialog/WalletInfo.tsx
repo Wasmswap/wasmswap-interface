@@ -1,8 +1,9 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import { CSS } from '@stitches/react'
 import { Logo } from 'icons'
 import { ConnectIcon, IconWrapper, styled, Text } from 'junoblocks'
 import { useRecoilValue } from 'recoil'
-import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
+import { ibcWalletState } from 'state/atoms/walletAtoms'
 import { APP_NAME } from 'util/constants'
 
 export const WalletInfo = ({ label, icon, address, css }) => {
@@ -41,14 +42,14 @@ export const KeplrWalletInfo = ({ css, depositing }: WalletInfoProps) => {
 }
 
 export const AppWalletInfo = ({ css, depositing }: WalletInfoProps) => {
-  const { address: walletAddress } = useRecoilValue(walletState)
+  const { address } = useWallet()
 
   return (
     <WalletInfo
       css={css}
       label={`${depositing ? 'To ' : ''}${APP_NAME}`}
       icon={<IconWrapper color="secondary" size="big" icon={<Logo />} />}
-      address={walletAddress}
+      address={address}
     />
   )
 }

@@ -37,8 +37,7 @@ export const unstakeTokens = async (
   amount: number,
   client: SigningCosmWasmClient
 ) => {
-  amount = Math.floor(amount)
-  const msg = { unstake: { amount: amount.toString() } }
+  const msg = { unstake: { amount: String(Math.floor(amount)) } }
 
   return await client.execute(
     senderAddress,

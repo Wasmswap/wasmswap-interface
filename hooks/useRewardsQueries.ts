@@ -1,7 +1,6 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import { useMutation, useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
 import { claimRewards, getPendingRewards } from 'services/rewards'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import {
   __POOL_REWARDS_ENABLED__,
   DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
@@ -17,7 +16,7 @@ type UsePendingRewardsArgs = {
 }
 
 export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
-  const { address, status, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
 
   const [getTokenInfoByDenom, enabledTokenInfoByDenomSearch] =
     useGetTokenInfoByDenom()
@@ -36,7 +35,7 @@ export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
             const { pending_rewards, denom } = await getPendingRewards(
               address,
               rewards_address,
-              client
+              signingCosmWasmClient
             )
 
             const tokenInfo = getTokenInfoByDenom({ denom })
@@ -64,7 +63,7 @@ export const usePendingRewards = ({ pool }: UsePendingRewardsArgs) => {
           shouldQueryRewards &&
           enabledTokenInfoByDenomSearch &&
           enabledTokenDollarValueQuery &&
-          status === WalletStatusType.connected
+          connected
       ),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
@@ -80,7 +79,7 @@ type UseClaimRewardsArgs = {
 } & Parameters<typeof useMutation>[2]
 
 export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
-  const { address, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
   const [pendingRewards] = usePendingRewards({
     pool,
   })
@@ -92,7 +91,7 @@ export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
         __POOL_REWARDS_ENABLED__ &&
         pendingRewards?.find(({ tokenAmount }) => tokenAmount > 0)
 
-      const shouldBeAbleToClaimRewards = pool && client && hasPendingRewards
+      const shouldBeAbleToClaimRewards = pool && connected && hasPendingRewards
 
       if (shouldBeAbleToClaimRewards) {
         const rewardsAddresses = pool.rewards_tokens
@@ -108,7 +107,11 @@ export const useClaimRewards = ({ pool, ...options }: UseClaimRewardsArgs) => {
           })
           .map(({ rewards_address }) => rewards_address)
 
-        return await claimRewards(address, rewardsAddresses, client)
+        return await claimRewards(
+          address,
+          rewardsAddresses,
+          signingCosmWasmClient
+        )
       }
     },
     options

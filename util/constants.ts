@@ -5,6 +5,7 @@ export const NETWORK_FEE = 0.003
 export const GAS_PRICE = process.env.NEXT_PUBLIC_GAS_PRICE
 
 export const APP_NAME = process.env.NEXT_PUBLIC_SITE_TITLE
+export const APP_DESCRIPTION = process.env.NEXT_PUBLIC_SITE_DESCRIPTION
 export const APP_MAX_WIDTH = '1920px'
 
 export const POOL_TOKENS_DECIMALS = 6

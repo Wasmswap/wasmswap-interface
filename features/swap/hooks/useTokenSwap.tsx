@@ -1,3 +1,4 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Button,
@@ -16,7 +17,6 @@ import {
   TransactionStatus,
   transactionStatusState,
 } from 'state/atoms/transactionAtoms'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
 
 import { useRefetchQueries } from '../../../hooks/useRefetchQueries'
@@ -36,7 +36,8 @@ export const useTokenSwap = ({
   tokenBSymbol,
   tokenAmount: providedTokenAmount,
 }: UseTokenSwapArgs) => {
-  const { client, address, status } = useRecoilValue(walletState)
+  const { signingCosmWasmClient, address, connected } = useWallet()
+
   const setTransactionState = useSetRecoilState(transactionStatusState)
   const slippage = useRecoilValue(slippageAtom)
   const setTokenSwap = useSetRecoilState(tokenSwapAtom)
@@ -54,7 +55,7 @@ export const useTokenSwap = ({
   return useMutation(
     'swapTokens',
     async () => {
-      if (status !== WalletStatusType.connected) {
+      if (!connected) {
         throw new Error('Please connect your wallet.')
       }
 
@@ -92,7 +93,7 @@ export const useTokenSwap = ({
           swapAddress,
           swapDirection,
           tokenA,
-          client,
+          client: signingCosmWasmClient,
         })
       }
 
@@ -112,7 +113,7 @@ export const useTokenSwap = ({
         tokenA,
         swapAddress: passThroughPool.inputPool.swap_address,
         outputSwapAddress: passThroughPool.outputPool.swap_address,
-        client,
+        client: signingCosmWasmClient,
       })
     },
     {

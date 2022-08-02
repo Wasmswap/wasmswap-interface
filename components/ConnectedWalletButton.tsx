@@ -17,11 +17,10 @@ import {
   Wallet,
 } from 'junoblocks'
 import React from 'react'
-import { useRecoilValue } from 'recoil'
-import { walletState } from 'state/atoms/walletAtoms'
 
 type ConnectedWalletButtonProps = { css?: CSS } & {
   walletName?: string
+  walletAddress?: string
   onConnect: () => void
   onDisconnect: () => void
   connected: boolean
@@ -32,11 +31,11 @@ export const ConnectedWalletButton = ({
   connected,
   onDisconnect,
   walletName,
+  walletAddress,
   ...props
 }: ConnectedWalletButtonProps) => {
   const baseToken = useBaseTokenInfo()
   const { balance } = useTokenBalance(baseToken?.symbol)
-  const { address } = useRecoilValue(walletState)
 
   if (!connected) {
     return (
@@ -74,7 +73,7 @@ export const ConnectedWalletButton = ({
             label="Copy wallet address"
             successLabel="Wallet address copied!"
             ariaLabel="Copy wallet address"
-            value={address}
+            value={walletAddress}
           >
             {({ copied, ...bind }) => (
               <Button

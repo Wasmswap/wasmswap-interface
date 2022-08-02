@@ -1,11 +1,10 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { useWallet } from '@noahsaso/cosmodal'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
 import { convertMicroDenomToDenom } from 'util/conversion'
 
 import { CW20 } from '../services/cw20'
-import { walletState, WalletStatusType } from '../state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from '../util/constants'
 import { getIBCAssetInfoFromList, useIBCAssetInfo } from './useIBCAssetInfo'
 import { IBCAssetInfo, useIBCAssetList } from './useIbcAssetList'
@@ -64,7 +63,7 @@ const mapIbcTokenToNative = (ibcToken?: IBCAssetInfo) => {
 }
 
 export const useTokenBalance = (tokenSymbol: string) => {
-  const { address, status, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
 
   const tokenInfo = useTokenInfo(tokenSymbol)
   const ibcAssetInfo = useIBCAssetInfo(tokenSymbol)
@@ -72,16 +71,16 @@ export const useTokenBalance = (tokenSymbol: string) => {
   const { data: balance = 0, isLoading } = useQuery(
     ['tokenBalance', tokenSymbol, address],
     async ({ queryKey: [, symbol] }) => {
-      if (symbol && client && (tokenInfo || ibcAssetInfo)) {
+      if (symbol && signingCosmWasmClient && (tokenInfo || ibcAssetInfo)) {
         return await fetchTokenBalance({
-          client,
+          client: signingCosmWasmClient,
           address,
           token: tokenInfo || ibcAssetInfo,
         })
       }
     },
     {
-      enabled: Boolean(tokenSymbol && status === WalletStatusType.connected),
+      enabled: Boolean(tokenSymbol && connected && signingCosmWasmClient),
       refetchOnMount: 'always',
       refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
       refetchIntervalInBackground: true,
@@ -92,7 +91,7 @@ export const useTokenBalance = (tokenSymbol: string) => {
 }
 
 export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
-  const { address, status, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
   const [tokenList] = useTokenList()
   const [ibcAssetsList] = useIBCAssetList()
 
@@ -107,7 +106,7 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
       const balances = await Promise.all(
         tokenSymbols.map((tokenSymbol) =>
           fetchTokenBalance({
-            client,
+            client: signingCosmWasmClient,
             address,
             token:
               getTokenInfoFromTokenList(tokenSymbol, tokenList.tokens) ||
@@ -126,9 +125,10 @@ export const useMultipleTokenBalance = (tokenSymbols?: Array<string>) => {
     },
     {
       enabled: Boolean(
-        status === WalletStatusType.connected &&
+        connected &&
           tokenSymbols?.length &&
-          tokenList?.tokens
+          tokenList?.tokens &&
+          signingCosmWasmClient
       ),
 
       refetchOnMount: 'always',

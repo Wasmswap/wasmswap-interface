@@ -1,8 +1,7 @@
+import { useWallet } from '@noahsaso/cosmodal'
 import dayjs from 'dayjs'
 import { useQuery } from 'react-query'
-import { useRecoilValue } from 'recoil'
 import { Claim, getClaims } from 'services/staking'
-import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL } from 'util/constants'
 
 import { usePoolFromListQueryById } from '../../../queries/usePoolsListQuery'
@@ -15,13 +14,17 @@ type StakingClaimsType = {
 
 export const useStakingClaims = ({ poolId }) => {
   const [pool] = usePoolFromListQueryById({ poolId })
-  const { address, status, client } = useRecoilValue(walletState)
+  const { address, connected, signingCosmWasmClient } = useWallet()
 
   const { data = {} as StakingClaimsType, isLoading } =
     useQuery<StakingClaimsType>(
       `@staking-claims/${poolId}/${address}`,
       async () => {
-        const claims = await getClaims(address, pool.staking_address, client)
+        const claims = await getClaims(
+          address,
+          pool.staking_address,
+          signingCosmWasmClient
+        )
 
         return claims.reduce(
           (claims, claim) => {
@@ -43,9 +46,7 @@ export const useStakingClaims = ({ poolId }) => {
         )
       },
       {
-        enabled: Boolean(
-          pool?.staking_address && status === WalletStatusType.connected
-        ),
+        enabled: Boolean(pool?.staking_address && connected),
         refetchOnMount: 'always',
         refetchInterval: DEFAULT_TOKEN_BALANCE_REFETCH_INTERVAL,
         refetchIntervalInBackground: true,

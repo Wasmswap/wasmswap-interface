@@ -13,13 +13,11 @@ import {
   IconWrapper,
   Inline,
   media,
-  MoonIcon,
   Open,
   SharesIcon,
   styled,
   Telegram,
   Text,
-  ToggleSwitch,
   TreasuryIcon,
   Twitter,
   UnionIcon,
@@ -244,27 +242,27 @@ export function NavigationSidebar({
         <Text variant="legend" css={{ padding: '$4 $3' }}>
           {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
         </Text>
-        <Inline css={{ display: 'grid' }}>
+        <Inline css={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button
-            iconLeft={<MoonIcon />}
             variant="ghost"
-            size="large"
-            onClick={(e) => {
-              if (e.target !== document.querySelector('#theme-toggle')) {
-                themeController.toggle()
-              }
-            }}
-            iconRight={
-              <ToggleSwitch
-                id="theme-toggle"
-                name="dark-theme"
-                onChange={themeController.setDarkTheme}
-                checked={themeController.theme.name === 'dark'}
-                optionLabels={['Dark theme', 'Light theme']}
-              />
-            }
+            selected={themeController.themeOption == 'auto'}
+            onClick={() => themeController.switchTheme('auto')}
           >
-            Dark mode
+            Auto
+          </Button>
+          <Button
+            variant="ghost"
+            selected={themeController.themeOption == 'dark'}
+            onClick={() => themeController.switchTheme('dark')}
+          >
+            Dark
+          </Button>
+          <Button
+            variant="ghost"
+            selected={themeController.themeOption == 'light'}
+            onClick={() => themeController.switchTheme('light')}
+          >
+            Light
           </Button>
         </Inline>
         <Divider offsetY="$6" />

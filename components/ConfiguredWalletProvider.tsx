@@ -9,7 +9,8 @@ import {
   WalletManagerProvider,
   WalletType,
 } from '@noahsaso/cosmodal'
-import { ReactNode, useRef } from 'react'
+import { globalCss } from 'junoblocks'
+import { ReactNode, useEffect, useRef } from 'react'
 
 import { useIsRenderingOnServer } from '../hooks/useIsRenderingOnServer'
 import { APP_DESCRIPTION, APP_NAME, GAS_PRICE } from '../util/constants'
@@ -33,6 +34,10 @@ export const ConfiguredWalletProvider = ({
     ),
   })).current
 
+  useEffect(() => {
+    applyWalletDialogStyles()
+  }, [])
+
   return (
     <WalletManagerProvider
       defaultChainId={ChainInfoID.Juno1}
@@ -51,3 +56,9 @@ export const ConfiguredWalletProvider = ({
     </WalletManagerProvider>
   )
 }
+
+const applyWalletDialogStyles = globalCss({
+  'body .ReactModal__Overlay': {
+    backgroundColor: '$colors$light75',
+  },
+})

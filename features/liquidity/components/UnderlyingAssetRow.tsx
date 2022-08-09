@@ -39,7 +39,8 @@ export const UnderlyingAssetRow = ({
   return (
     <Inline
       justifyContent="space-between"
-      css={{ visibility: visible ? 'visible' : 'hidden' }}
+      gap={4}
+      css={{ visibility: visible ? 'visible' : 'hidden', alignItems: 'center' }}
     >
       <Inline gap={3}>
         <ImageForTokenLogo
@@ -49,8 +50,8 @@ export const UnderlyingAssetRow = ({
         />
         <Text variant="link">{token?.symbol}</Text>
       </Inline>
-      <Inline align="center" gap={4}>
-        <Inline gap={6}>
+      <Inline align="center" gap={2}>
+        <Inline gap={2} css={{ alignItems: 'baseline' }}>
           <Text variant="body">
             {formatTokenBalance(tokenAmount, { includeCommaSeparation: true })}
           </Text>

@@ -112,12 +112,9 @@ export const LiquidityRewardsCard = ({
   )
 
   return (
-    <Card
-      ref={refForCard}
+    <Inline
       tabIndex={0}
       role="button"
-      onClick={receivedRewards ? onClick : undefined}
-      variant="primary"
       css={{
         display: 'flex',
         flexDirection: 'column',
@@ -137,27 +134,22 @@ export const LiquidityRewardsCard = ({
             : ''}
         </Text>
       </CardContent>
-      <CardContent css={{ paddingTop: '$10' }}>
-        <Column gap={6}>
-          {new Array(4 - pendingRewardsRenderedInline.length)
-            .fill(0)
-            .map((_, index) => (
-              <UnderlyingAssetRow visible={false} key={index} />
+      <CardContent>
+        <Inline justifyContent={'space-between'} css={{ padding: '$8 0 $12' }}>
+          <Inline gap={8}>
+            {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
+              <UnderlyingAssetRow
+                key={tokenInfo?.symbol}
+                tokenInfo={tokenInfo}
+                tokenAmount={tokenAmount}
+              />
             ))}
-          {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
-            <UnderlyingAssetRow
-              key={tokenInfo?.symbol}
-              tokenInfo={tokenInfo}
-              tokenAmount={tokenAmount}
-            />
-          ))}
-          {Boolean(pendingRewardsRenderedInTooltip?.length) && (
-            <AdditionalUnderlyingAssetsRow
-              assets={pendingRewardsRenderedInTooltip}
-            />
-          )}
-        </Column>
-        <Inline css={{ padding: '$16 0 $12' }}>
+            {Boolean(pendingRewardsRenderedInTooltip?.length) && (
+              <AdditionalUnderlyingAssetsRow
+                assets={pendingRewardsRenderedInTooltip}
+              />
+            )}
+          </Inline>
           <Button
             onClick={(e) => {
               e.stopPropagation()
@@ -166,13 +158,13 @@ export const LiquidityRewardsCard = ({
             state={receivedRewards ? cardInteractionState : undefined}
             variant="primary"
             size="large"
-            css={{ width: '100%' }}
+            ref={refForCard}
             disabled={!receivedRewards || loading}
           >
             {loading ? 'Pending...' : 'Claim your rewards'}
           </Button>
         </Inline>
       </CardContent>
-    </Card>
+    </Inline>
   )
 }

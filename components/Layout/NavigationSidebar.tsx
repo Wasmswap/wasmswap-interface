@@ -242,7 +242,7 @@ export function NavigationSidebar({
         <Text variant="legend" css={{ padding: '$4 $3' }}>
           {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
         </Text>
-        <Inline css={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Inline justifyContent={'space-between'} css={{ display: 'flex' }}>
           <Button
             variant="ghost"
             selected={themeController.themeOption == 'auto'}

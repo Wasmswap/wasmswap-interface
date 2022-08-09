@@ -199,33 +199,39 @@ export default function Pool() {
             />
             <>
               <StyledDivForCards>
-                <ManageLiquidityCard
-                  providedLiquidityReserve={pool.liquidity.reserves.provided}
-                  providedLiquidity={pool.liquidity.available.provided}
-                  stakedLiquidityReserve={
-                    pool.liquidity.reserves.providedStaked
-                  }
-                  providedTotalLiquidity={pool.liquidity.providedTotal}
-                  stakedLiquidity={pool.liquidity.staked}
-                  tokenASymbol={tokenA.symbol}
-                  tokenBSymbol={tokenB.symbol}
-                  supportsIncentives={supportsIncentives}
-                  onClick={() =>
-                    setManageLiquidityDialogState({
-                      isShowing: true,
-                      actionType: 'add',
-                    })
-                  }
-                />
-                <ManageBondedLiquidityCard
-                  onClick={() => setIsBondingDialogShowing(true)}
-                  providedLiquidity={pool.liquidity.available.provided}
-                  stakedLiquidity={pool.liquidity.staked.provided}
-                  yieldPercentageReturn={
-                    pool.liquidity.rewards.annualYieldPercentageReturn
-                  }
-                  supportsIncentives={supportsIncentives}
-                />
+                <div style={{ flexBasis: 'auto', flexGrow: 1 }}>
+                  <ManageLiquidityCard
+                    providedLiquidityReserve={pool.liquidity.reserves.provided}
+                    providedLiquidity={pool.liquidity.available.provided}
+                    stakedLiquidityReserve={
+                      pool.liquidity.reserves.providedStaked
+                    }
+                    providedTotalLiquidity={pool.liquidity.providedTotal}
+                    stakedLiquidity={pool.liquidity.staked}
+                    tokenASymbol={tokenA.symbol}
+                    tokenBSymbol={tokenB.symbol}
+                    supportsIncentives={supportsIncentives}
+                    onClick={() =>
+                      setManageLiquidityDialogState({
+                        isShowing: true,
+                        actionType: 'add',
+                      })
+                    }
+                  />
+                </div>
+                <div style={{ flexBasis: 'auto', flexGrow: 1 }}>
+                  <ManageBondedLiquidityCard
+                    onClick={() => setIsBondingDialogShowing(true)}
+                    providedLiquidity={pool.liquidity.available.provided}
+                    stakedLiquidity={pool.liquidity.staked.provided}
+                    yieldPercentageReturn={
+                      pool.liquidity.rewards.annualYieldPercentageReturn
+                    }
+                    supportsIncentives={supportsIncentives}
+                  />
+                </div>
+              </StyledDivForCards>
+              <div style={{ marginTop: '12px' }}>
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
                   hasBondedLiquidity={
@@ -238,7 +244,7 @@ export default function Pool() {
                   loading={isClaimingRewards}
                   supportsIncentives={supportsIncentives}
                 />
-              </StyledDivForCards>
+              </div>
             </>
             <>
               {supportsIncentives && (
@@ -258,9 +264,11 @@ export default function Pool() {
 }
 
 const StyledDivForCards = styled('div', {
-  display: 'grid',
-  columnGap: '$8',
-  gridTemplateColumns: '1fr 1fr 1fr',
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: '$8',
+  alignItems: 'stretch',
   [media.sm]: {
     gridTemplateColumns: '1fr',
     rowGap: '$8',

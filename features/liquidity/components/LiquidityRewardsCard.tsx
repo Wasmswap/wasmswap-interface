@@ -6,6 +6,7 @@ import {
   Column,
   dollarValueFormatterWithDecimals,
   Inline,
+  media,
   Text,
   UnionIcon,
   useSubscribeInteractions,
@@ -135,8 +136,11 @@ export const LiquidityRewardsCard = ({
         </Text>
       </CardContent>
       <CardContent>
-        <Inline justifyContent={'space-between'} css={{ padding: '$8 0 $12' }}>
-          <Inline gap={8}>
+        <Inline
+          justifyContent={'space-between'}
+          css={{ padding: '$8 0 $12', flexWrap: 'wrap', margin: '-$4' }}
+        >
+          <Inline gap={8} css={{ margin: '$4' }}>
             {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
               <UnderlyingAssetRow
                 key={tokenInfo?.symbol}
@@ -160,6 +164,7 @@ export const LiquidityRewardsCard = ({
             size="large"
             ref={refForCard}
             disabled={!receivedRewards || loading}
+            css={{ margin: '$4' }}
           >
             {loading ? 'Pending...' : 'Claim your rewards'}
           </Button>

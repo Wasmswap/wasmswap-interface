@@ -14,6 +14,7 @@ import { useClaimRewards, usePendingRewards } from 'hooks/useRewardsQueries'
 import {
   Button,
   ChevronIcon,
+  Column,
   Divider,
   Error,
   IconWrapper,
@@ -219,7 +220,7 @@ export default function Pool() {
                     }
                   />
                 </div>
-                <div style={{ flexBasis: 'auto', flexGrow: 1 }}>
+                <Column css={{ flexBasis: 'auto', flexGrow: 1 }}>
                   <ManageBondedLiquidityCard
                     onClick={() => setIsBondingDialogShowing(true)}
                     providedLiquidity={pool.liquidity.available.provided}
@@ -229,9 +230,9 @@ export default function Pool() {
                     }
                     supportsIncentives={supportsIncentives}
                   />
-                </div>
+                </Column>
               </StyledDivForCards>
-              <div style={{ marginTop: '12px' }}>
+              <Column css={{ marginTop: '$6' }}>
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
                   hasBondedLiquidity={
@@ -244,7 +245,7 @@ export default function Pool() {
                   loading={isClaimingRewards}
                   supportsIncentives={supportsIncentives}
                 />
-              </div>
+              </Column>
             </>
             <>
               {supportsIncentives && (

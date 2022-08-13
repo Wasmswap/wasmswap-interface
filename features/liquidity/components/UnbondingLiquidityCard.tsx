@@ -37,7 +37,7 @@ export const UnbondingLiquidityCard = ({
 }: UnbondingLiquidityCardProps) => {
   const [dollarValue] = usePoolTokensDollarValue({
     poolId,
-    tokenAmountInMicroDenom: amount,
+    poolTokenAmountInMicroDenom: amount,
   })
 
   const formattedDollarValue =

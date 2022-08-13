@@ -67,7 +67,7 @@ export const UnbondingLiquidityStatusList = ({
 
   const [redeemableTokenDollarValue] = usePoolTokensDollarValue({
     poolId,
-    tokenAmountInMicroDenom: amount,
+    poolTokenAmountInMicroDenom: amount,
   })
 
   const formattedRedeemableTokenDollarValue =

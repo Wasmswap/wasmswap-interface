@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             {__TEST_MODE__ && <TestnetDialog />}
             <Toaster
               position={isSmallScreen ? 'bottom-center' : 'top-right'}
-              toastOptions={{ duration: 1000000 }}
+              toastOptions={{ duration: 5000 }}
               containerClassName={toasterClassName}
               containerStyle={isSmallScreen ? { inset: 0 } : undefined}
             />

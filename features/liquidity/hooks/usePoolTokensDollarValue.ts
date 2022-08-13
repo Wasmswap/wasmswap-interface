@@ -45,12 +45,13 @@ export const useGetPoolTokensDollarValue = ({
 
 type UsePoolTokensDollarValueArgs = {
   poolId: string
-  tokenAmountInMicroDenom: number
+  poolTokenAmountInMicroDenom: number
 }
 
+/* this is to figure out dollar value of liquidity pool tokens provided */
 export const usePoolTokensDollarValue = ({
   poolId,
-  tokenAmountInMicroDenom,
+  poolTokenAmountInMicroDenom,
 }: UsePoolTokensDollarValueArgs) => {
   const [getPoolTokensDollarValue, enabled] = useGetPoolTokensDollarValue({
     poolId,
@@ -60,7 +61,10 @@ export const usePoolTokensDollarValue = ({
 
   if (swapInfo) {
     return [
-      getPoolTokensDollarValue({ swapInfo, tokenAmountInMicroDenom }),
+      getPoolTokensDollarValue({
+        swapInfo,
+        tokenAmountInMicroDenom: poolTokenAmountInMicroDenom,
+      }),
       isLoading || !enabled,
     ] as const
   }

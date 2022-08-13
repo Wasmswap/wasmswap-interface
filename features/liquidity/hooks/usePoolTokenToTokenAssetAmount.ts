@@ -7,7 +7,7 @@ import {
   usePoolFromListQueryById,
 } from '../../../queries/usePoolsListQuery'
 
-type UsePoolPairTokenAmountArgs = {
+type UsePoolTokenToTokenAssetAmountArgs = {
   poolId: string
   tokenSymbol: TokenInfo['symbol']
   poolTokenAmountInMicroDenom: number
@@ -21,7 +21,7 @@ export const usePoolTokenToTokenAssetAmount = ({
   poolId,
   tokenSymbol,
   poolTokenAmountInMicroDenom,
-}: UsePoolPairTokenAmountArgs) => {
+}: UsePoolTokenToTokenAssetAmountArgs) => {
   const [swapInfo, isLoading] = useSwapInfo({ poolId })
   const [pool] = usePoolFromListQueryById({ poolId })
 

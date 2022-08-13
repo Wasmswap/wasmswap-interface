@@ -1,6 +1,6 @@
 export { useClaimTokens } from './useClaimTokens'
-export { usePoolPairTokenAmount } from './usePoolPairTokenAmount'
 export { usePoolTokensDollarValue } from './usePoolTokensDollarValue'
+export { usePoolTokenToTokenAssetAmount } from './usePoolTokenToTokenAssetAmount'
 export { useStakedTokenBalance } from './useStakedTokenBalance'
 export { useStakingClaims } from './useStakingClaims'
 export { useUnstakingDuration } from './useUnstakingDuration'

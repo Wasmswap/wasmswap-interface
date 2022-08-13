@@ -1,7 +1,7 @@
 import {
   useClaimTokens,
-  usePoolPairTokenAmount,
   usePoolTokensDollarValue,
+  usePoolTokenToTokenAssetAmount,
   useStakingClaims,
 } from 'features/liquidity/hooks'
 import { useRefetchQueries } from 'hooks/useRefetchQueries'
@@ -45,20 +45,20 @@ export const UnbondingLiquidityStatusList = ({
       poolId,
     })
 
-  const [tokenAAmount] = usePoolPairTokenAmount({
+  const [tokenAAmount] = usePoolTokenToTokenAssetAmount({
     poolId,
-    tokenAmountInMicroDenom: amount,
-    tokenPairIndex: 0,
+    tokenSymbol: tokenA?.symbol,
+    poolTokenAmountInMicroDenom: amount,
   })
 
   const formattedTokenAAmount = formatTokenBalance(tokenAAmount, {
     includeCommaSeparation: true,
   })
 
-  const [tokenBAmount] = usePoolPairTokenAmount({
+  const [tokenBAmount] = usePoolTokenToTokenAssetAmount({
     poolId,
-    tokenAmountInMicroDenom: amount,
-    tokenPairIndex: 1,
+    tokenSymbol: tokenB?.symbol,
+    poolTokenAmountInMicroDenom: amount,
   })
 
   const formattedTokenBAmount = formatTokenBalance(tokenBAmount, {

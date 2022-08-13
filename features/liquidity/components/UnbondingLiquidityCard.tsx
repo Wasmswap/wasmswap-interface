@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import {
-  usePoolPairTokenAmount,
   usePoolTokensDollarValue,
+  usePoolTokenToTokenAssetAmount,
 } from 'features/liquidity/hooks'
 import {
   Card,
@@ -46,20 +46,20 @@ export const UnbondingLiquidityCard = ({
       includeCommaSeparation: true,
     })
 
-  const [tokenAAmount] = usePoolPairTokenAmount({
+  const [tokenAAmount] = usePoolTokenToTokenAssetAmount({
     poolId,
-    tokenAmountInMicroDenom: amount,
-    tokenPairIndex: 0,
+    tokenSymbol: tokenA?.symbol,
+    poolTokenAmountInMicroDenom: amount,
   })
 
   const tokenAFormattedAmount = `${formatTokenBalance(tokenAAmount, {
     includeCommaSeparation: true,
   })} ${tokenA.symbol}`
 
-  const [tokenBAmount] = usePoolPairTokenAmount({
+  const [tokenBAmount] = usePoolTokenToTokenAssetAmount({
     poolId,
-    tokenAmountInMicroDenom: amount,
-    tokenPairIndex: 1,
+    tokenSymbol: tokenB?.symbol,
+    poolTokenAmountInMicroDenom: amount,
   })
 
   const tokenBFormattedAmount = `${formatTokenBalance(tokenBAmount, {

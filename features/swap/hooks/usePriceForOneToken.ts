@@ -1,8 +1,17 @@
 import { usePersistance } from 'junoblocks'
+import { TokenInfo } from 'queries/usePoolsListQuery'
 
 import { useTokenToTokenPrice } from './useTokenToTokenPrice'
 
-export const usePriceForOneToken = ({ tokenASymbol, tokenBSymbol }) => {
+type UsePriceForOneTokenArgs = {
+  tokenASymbol: TokenInfo['symbol']
+  tokenBSymbol: TokenInfo['symbol']
+}
+
+export const usePriceForOneToken = ({
+  tokenASymbol,
+  tokenBSymbol,
+}: UsePriceForOneTokenArgs) => {
   const [{ price: currentTokenPrice }, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenASymbol,
     tokenBSymbol: tokenBSymbol,

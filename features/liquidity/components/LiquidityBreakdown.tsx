@@ -22,7 +22,7 @@ import { SerializedRewardsContract } from '../../../queries/queryRewardsContract
 import { TokenInfo } from '../../../queries/usePoolsListQuery'
 import { PoolTokenValue } from '../../../queries/useQueryPools'
 import { formatCompactNumber } from '../../../util/formatCompactNumber'
-import { usePoolPairTokenAmount } from '../hooks'
+import { usePoolTokenToTokenAssetAmount } from '../hooks'
 import { AprPill } from './AprPill'
 import { StyledDivForTokenLogos } from './PoolCard'
 
@@ -51,15 +51,15 @@ export const LiquidityBreakdown = ({
     tokenAmount: 1,
   })
 
-  const [tokenAAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: totalLiquidity?.tokenAmount ?? 0,
-    tokenPairIndex: 0,
+  const [tokenAAmount] = usePoolTokenToTokenAssetAmount({
+    poolTokenAmountInMicroDenom: totalLiquidity?.tokenAmount ?? 0,
+    tokenSymbol: tokenA?.symbol,
     poolId,
   })
 
-  const [tokenBAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: totalLiquidity?.tokenAmount ?? 0,
-    tokenPairIndex: 1,
+  const [tokenBAmount] = usePoolTokenToTokenAssetAmount({
+    poolTokenAmountInMicroDenom: totalLiquidity?.tokenAmount ?? 0,
+    tokenSymbol: tokenB?.symbol,
     poolId,
   })
 

@@ -1,4 +1,4 @@
-import { usePoolPairTokenAmount } from 'features/liquidity/hooks'
+import { usePoolTokenToTokenAssetAmount } from 'features/liquidity/hooks'
 import {
   BasicNumberInput,
   formatTokenBalance,
@@ -37,15 +37,15 @@ export const StakingSummary = ({
 
   const refForInput = useRef<HTMLInputElement>()
 
-  const [tokenAAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: liquidityAmount,
-    tokenPairIndex: 0,
+  const [tokenAAmount] = usePoolTokenToTokenAssetAmount({
+    poolTokenAmountInMicroDenom: liquidityAmount,
+    tokenSymbol: tokenA?.symbol,
     poolId,
   })
 
-  const [tokenBAmount] = usePoolPairTokenAmount({
-    tokenAmountInMicroDenom: liquidityAmount,
-    tokenPairIndex: 1,
+  const [tokenBAmount] = usePoolTokenToTokenAssetAmount({
+    poolTokenAmountInMicroDenom: liquidityAmount,
+    tokenSymbol: tokenB?.symbol,
     poolId,
   })
 

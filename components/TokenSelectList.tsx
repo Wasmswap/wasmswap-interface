@@ -41,6 +41,23 @@ export const TokenSelectList = ({
   ...props
 }: TokenSelectListProps) => {
   const filteredTokenList = useMemo(() => {
+    
+    tokenList = tokenList.map((token) => {
+      if (fetchingBalanceMode === 'native') {
+        const { balance, _ } = useTokenBalance(token.symbol)
+        token.balance = balance
+        return token
+      } else {
+        const { balance, _ } = useIBCTokenBalance(token.symbol)
+        token.balance = balance
+        return token
+      }
+    }).sort((a, b) => {
+      if (a.balance < b.balance) { return 1}
+      if (a.balance > b.balance) { return -1}
+      return 0
+    })
+
     if (!tokenList || isQueryEmpty(queryFilter)) {
       return tokenList
     }

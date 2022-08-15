@@ -266,15 +266,18 @@ export const LiquidityBreakdown = ({
 }
 
 function TotalInfoRow({ children }) {
-  const baseCss = { padding: '$15 0 $18' }
+  const baseCss = { padding: '$14 $4 $18 $4' }
 
   if (__POOL_STAKING_ENABLED__ && __POOL_REWARDS_ENABLED__) {
     return (
       <Inline
         css={{
           ...baseCss,
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr 0.75fr 0.75fr',
+          display: 'flex',
+          justifyContent: 'space-around',
+          backgroundColor: '$colors$dark10',
+          borderRadius: '$2',
+          marginBottom: '$8',
         }}
       >
         {children}

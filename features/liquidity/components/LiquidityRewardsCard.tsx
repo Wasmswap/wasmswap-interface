@@ -123,8 +123,8 @@ export const LiquidityRewardsCard = ({
       }}
     >
       <CardContent>
-        <Text variant="legend" color="brand" css={{ padding: '$16 0 $6' }}>
-          Liquidity rewards
+        <Text variant={"header"} color="body" css={{ padding: '$16 0 $6' }}>
+          Pooling rewards
         </Text>
         <Text variant="hero" color="brand">
           ${rewardsDollarValue}

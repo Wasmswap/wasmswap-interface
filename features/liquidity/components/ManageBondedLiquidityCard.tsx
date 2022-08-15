@@ -116,7 +116,7 @@ export const ManageBondedLiquidityCard = ({
     >
       <CardContent>
         <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
-          Staked liquidity
+          Bonded tokens
         </Text>
         <Text variant="hero">${bondedLiquidityDollarValue}</Text>
         <Text variant="link" color="tertiary" css={{ padding: '$2 0 $14' }}>

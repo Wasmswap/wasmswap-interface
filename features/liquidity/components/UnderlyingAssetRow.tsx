@@ -17,12 +17,14 @@ type UnderlyingAssetRowProps = {
   tokenInfo?: TokenInfo
   tokenAmount?: number
   visible?: boolean
+  symbolVisible?: boolean
 }
 
 export const UnderlyingAssetRow = ({
   tokenInfo,
   tokenAmount,
   visible = true,
+  symbolVisible = true,
 }: UnderlyingAssetRowProps) => {
   const token = visible ? tokenInfo : undefined
   const [tokenDollarValue] = useTokenDollarValue(
@@ -51,7 +53,7 @@ export const UnderlyingAssetRow = ({
         <Text variant="link">{token?.symbol}</Text>
       </Inline>
       <Inline align="center" gap={2}>
-        <Inline align="baseline" gap={2}>
+        <Inline gap={2} css={{ alignContent: 'baseline' }}>
           <Text variant="body">
             {formatTokenBalance(tokenAmount, { includeCommaSeparation: true })}
           </Text>

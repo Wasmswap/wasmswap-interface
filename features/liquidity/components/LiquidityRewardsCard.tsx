@@ -152,6 +152,7 @@ export const LiquidityRewardsCard = ({
               <UnderlyingAssetRow
                 key={tokenInfo?.symbol}
                 tokenInfo={tokenInfo}
+                symbolVisible={false}
                 tokenAmount={tokenAmount}
               />
             ))}

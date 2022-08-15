@@ -14,8 +14,17 @@ type UsePoolTokenToTokenAssetAmountArgs = {
 }
 
 /*
- * `usePoolTokenToTokenAssetAmount` is used to calculate the amount of token asset
- * based on lp token amount provided
+ * Used to calculate the amount of token asset included in the pool
+ * based on liquidity pool token amount provided.
+ *
+ * @example
+ *
+ * const [stakedTokenAAmount] = usePoolTokenToTokenAssetAmount({
+ *   poolTokenAmountInMicroDenom: stakedLiquidity?.tokenAmount ?? 0,
+ *   tokenSymbol: tokenA?.symbol,
+ *   poolId,
+ * })
+ *
  * */
 export const usePoolTokenToTokenAssetAmount = ({
   poolId,

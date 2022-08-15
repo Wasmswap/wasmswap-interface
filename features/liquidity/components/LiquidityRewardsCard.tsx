@@ -123,17 +123,24 @@ export const LiquidityRewardsCard = ({
       }}
     >
       <CardContent>
-        <Text variant={"header"} color="body" css={{ padding: '$16 0 $6' }}>
+        <Text variant={'header'} color="body" css={{ padding: '$16 0 $6' }}>
           Pooling rewards
         </Text>
-        <Text variant="hero" color="brand">
-          ${rewardsDollarValue}
-        </Text>
-        <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>
-          {pendingRewards?.length
-            ? `Receive ${pendingRewards.length} tokens`
-            : ''}
-        </Text>
+        <Column
+          css={{
+            '-webkit-background-clip': 'text',
+            '-webkit-text-fill-color': 'transparent',
+            backgroundImage:
+              'linear-gradient(140.55deg, #FE9C9E 1.35%, #FA2995 5.1%, #EA1EE9 10.37%, #287CF4 58.83%, #4CA7F2 75.84%, #31DAE2 99.52%)',
+          }}
+        >
+          <Text variant="hero">${rewardsDollarValue}</Text>
+          <Text variant="link" css={{ paddingTop: '$2' }}>
+            {pendingRewards?.length
+              ? `Receive ${pendingRewards.length} tokens`
+              : ''}
+          </Text>
+        </Column>
       </CardContent>
       <CardContent>
         <Inline

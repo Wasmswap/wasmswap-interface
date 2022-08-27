@@ -17,8 +17,8 @@ export const useTokenList = () => {
     () => {
       const tokenMapBySymbol = new Map()
       poolsListResponse.pools.forEach(({ pool_assets, rewards_tokens }) => {
-        const poolTokens = [...(pool_assets || []), ...(rewards_tokens || [])]
-        poolTokens.forEach((token) => {
+        const poolAssets = [...(pool_assets || []), ...(rewards_tokens || [])]
+        poolAssets.forEach((token) => {
           if (!tokenMapBySymbol.has(token.symbol)) {
             tokenMapBySymbol.set(token.symbol, token)
           }

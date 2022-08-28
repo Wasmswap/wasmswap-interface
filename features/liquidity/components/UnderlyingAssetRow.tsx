@@ -1,5 +1,4 @@
 import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
-import { useTokenInfo } from 'hooks/useTokenInfo'
 import {
   Button,
   dollarValueFormatterWithDecimals,
@@ -12,20 +11,22 @@ import {
   Tooltip,
 } from 'junoblocks'
 
+import { TokenInfo } from '../../../queries/usePoolsListQuery'
+
 type UnderlyingAssetRowProps = {
-  tokenSymbol?: string
+  tokenInfo?: TokenInfo
   tokenAmount?: number
   visible?: boolean
 }
 
 export const UnderlyingAssetRow = ({
-  tokenSymbol,
+  tokenInfo,
   tokenAmount,
   visible = true,
 }: UnderlyingAssetRowProps) => {
-  const token = useTokenInfo(visible ? tokenSymbol : undefined)
+  const token = visible ? tokenInfo : undefined
   const [tokenDollarValue] = useTokenDollarValue(
-    visible ? tokenSymbol : undefined
+    visible ? tokenInfo?.symbol : undefined
   )
 
   const tokenAmountDollarValue = dollarValueFormatterWithDecimals(
@@ -46,14 +47,14 @@ export const UnderlyingAssetRow = ({
           logoURI={token?.logoURI}
           alt={token?.symbol}
         />
-        <Text variant="link">{tokenSymbol}</Text>
+        <Text variant="link">{token?.symbol}</Text>
       </Inline>
       <Inline align="center" gap={4}>
         <Inline gap={6}>
           <Text variant="body">
             {formatTokenBalance(tokenAmount, { includeCommaSeparation: true })}
           </Text>
-          <Text variant="secondary">{tokenSymbol}</Text>
+          <Text variant="secondary">{token?.symbol}</Text>
         </Inline>
         <Tooltip label={infoTooltipLabel} aria-label={infoTooltipLabel}>
           <Button

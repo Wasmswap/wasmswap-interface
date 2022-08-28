@@ -146,8 +146,8 @@ export const LiquidityRewardsCard = ({
             ))}
           {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
             <UnderlyingAssetRow
-              key={tokenInfo.symbol}
-              tokenSymbol={tokenInfo.symbol}
+              key={tokenInfo?.symbol}
+              tokenInfo={tokenInfo}
               tokenAmount={tokenAmount}
             />
           ))}

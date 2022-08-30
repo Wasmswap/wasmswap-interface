@@ -171,9 +171,9 @@ export const LiquidityBreakdown = ({
 
       <>
         <TotalInfoRow>
-          <Column gap={6} align="flex-start" justifyContent="flex-start">
+          <Column gap={8} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">
-              Total liquidity
+              Pool Liquidity
             </Text>
             <Inline gap={2}>
               <Text variant="header">${compactTotalLiquidity} </Text>
@@ -191,7 +191,7 @@ export const LiquidityBreakdown = ({
             </Inline>
           </Column>
 
-          <Column gap={6} align="flex-start" justifyContent="flex-start">
+          <Column gap={8} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">
               {tokenA?.symbol}
             </Text>
@@ -213,7 +213,7 @@ export const LiquidityBreakdown = ({
             </Inline>
           </Column>
 
-          <Column gap={6} align="flex-start" justifyContent="flex-start">
+          <Column gap={8} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">
               {tokenB?.symbol}
             </Text>
@@ -234,11 +234,16 @@ export const LiquidityBreakdown = ({
               </Tooltip>
             </Inline>
           </Column>
-
+          <Column gap={4} align="center" justifyContent="space-between">
+            <Text variant="legend" color="secondary" align="right">
+              Bonding Reward
+            </Text>
+            <AprPill value={formattedYieldPercentageReturn} />
+          </Column>
           {__POOL_REWARDS_ENABLED__ && (
-            <Column gap={6} align="center" justifyContent="center">
+            <Column gap={8} align="center" justifyContent="center">
               <Text variant="legend" color="secondary" align="center">
-                Token reward
+                Reward Tokens
               </Text>
               <StyledDivForTokenLogos>
                 {rewardsContracts?.map(({ tokenInfo }) => (
@@ -252,13 +257,6 @@ export const LiquidityBreakdown = ({
               </StyledDivForTokenLogos>
             </Column>
           )}
-
-          <Column gap={6} align="flex-end" justifyContent="flex-end">
-            <Text variant="legend" color="secondary" align="right">
-              APR reward
-            </Text>
-            <AprPill value={formattedYieldPercentageReturn} />
-          </Column>
         </TotalInfoRow>
       </>
     </>

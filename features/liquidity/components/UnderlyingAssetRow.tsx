@@ -53,7 +53,7 @@ export const UnderlyingAssetRow = ({
         <Text variant="link">{token?.symbol}</Text>
       </Inline>
       <Inline align="center" gap={2}>
-        <Inline gap={2} css={{ alignContent: 'baseline' }}>
+        <Inline gap={5} css={{ alignContent: 'baseline' }}>
           <Text variant="body">
             {formatTokenBalance(tokenAmount, { includeCommaSeparation: true })}
           </Text>

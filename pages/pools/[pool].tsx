@@ -171,7 +171,6 @@ export default function Pool() {
           />
         }
       >
-
         {!isMobile && <Divider />}
 
         {isLoadingInitial && (

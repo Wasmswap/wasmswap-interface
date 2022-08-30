@@ -154,7 +154,11 @@ export function NavigationSidebar({ backButton }: NavigationSidebarProps) {
     return (
       <StyledWrapperForMobile>
         <Column gap={6}>
-          <Inline align="center" justifyContent="space-between" css={{padding: "0 $12"}}>
+          <Inline
+            align="center"
+            justifyContent="space-between"
+            css={{ padding: '0 $12' }}
+          >
             <Link href="/" passHref>
               <StyledDivForLogo as="a">
                 <Logo data-logo="" width="37px" height="47px" />
@@ -178,7 +182,7 @@ export function NavigationSidebar({ backButton }: NavigationSidebarProps) {
               {menuLinks}
             </Column>
           )}
-          <Divider/>
+          <Divider />
         </Column>
       </StyledWrapperForMobile>
     )

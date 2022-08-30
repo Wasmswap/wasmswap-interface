@@ -134,37 +134,72 @@ export const LiquidityBreakdown = ({
           tokenB={tokenB}
           priceBreakdown={priceBreakdown}
         />
-        <Inline justifyContent="space-between" css={{ padding: '$14 0 $12' }}>
-          <Column gap={6} align="flex-start" justifyContent="flex-start">
-            <Text variant="legend" color="secondary" align="left">
-              Total liquidity
-            </Text>
-            <Text variant="header">${compactTotalLiquidity}</Text>
-          </Column>
-          <Column gap={6} align="flex-end" justifyContent="flex-end">
-            <Text variant="legend" color="secondary" align="right">
-              APR reward
-            </Text>
-            <Text variant="header">{formattedYieldPercentageReturn}%</Text>
-          </Column>
-        </Inline>
-        {__POOL_REWARDS_ENABLED__ && (
-          <Column gap={6} css={{ paddingBottom: '$20' }}>
-            <Text variant="legend" color="secondary">
-              Token reward distribution
-            </Text>
-            <Inline gap={8}>
-              {rewardsContracts?.map(({ tokenInfo }) => (
-                <ImageForTokenLogo
-                  size="large"
-                  key={tokenInfo.symbol}
-                  logoURI={tokenInfo.logoURI}
-                  alt={tokenInfo.symbol}
-                />
-              ))}
+        <Inline
+          css={{
+            backgroundColor: '$colors$dark10',
+            borderRadius: '$2',
+            marginBottom: '$14',
+          }}
+        >
+          <Column
+            justifyContent="space-between"
+            css={{ padding: '$10 $16', width: '100%' }}
+          >
+            <Inline justifyContent={'space-between'} align="center">
+              <Column gap={6} align="flex-start" justifyContent="flex-start">
+                <Text variant="legend" color="secondary" align="left">
+                  Total liquidity
+                </Text>
+                <Text variant="header">${compactTotalLiquidity}</Text>
+              </Column>
+
+              <Column gap={8} align="flex-start" justifyContent="flex-start">
+                <Text variant="legend" color="secondary" align="left">
+                  {tokenA?.symbol}
+                </Text>
+                <Inline gap={2}>
+                  <Text variant="header">{compactTokenAAmount}</Text>
+                </Inline>
+              </Column>
+              <Column gap={8} align="flex-start" justifyContent="flex-start">
+                <Text variant="legend" color="secondary" align="left">
+                  {tokenB?.symbol}
+                </Text>
+                <Inline gap={2}>
+                  <Text variant="header">{compactTokenBAmount}</Text>
+                </Inline>
+              </Column>
+            </Inline>
+            <Column css={{ padding: '$8 0' }}>
+              <Divider />
+            </Column>
+            <Inline justifyContent={'space-between'} align="center">
+              <Column gap={4} align="flex-start" justifyContent="space-between">
+                <Text variant="legend" color="secondary" align="right">
+                  Bonding Reward
+                </Text>
+                <AprPill value={formattedYieldPercentageReturn} />
+              </Column>
+              {__POOL_REWARDS_ENABLED__ && (
+                <Column gap={6} align="center">
+                  <Text variant="legend" color="secondary">
+                    Reward Tokens
+                  </Text>
+                  <StyledDivForTokenLogos>
+                    {rewardsContracts?.map(({ tokenInfo }) => (
+                      <ImageForTokenLogo
+                        size="large"
+                        key={tokenInfo.symbol}
+                        logoURI={tokenInfo.logoURI}
+                        alt={tokenInfo.symbol}
+                      />
+                    ))}
+                  </StyledDivForTokenLogos>
+                </Column>
+              )}
             </Inline>
           </Column>
-        )}
+        </Inline>
       </>
     )
   }

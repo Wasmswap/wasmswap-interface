@@ -24,15 +24,19 @@ export const useGetTokenDollarValueQuery = () => {
     async function getTokenDollarValue({ tokenInfo, tokenAmountInDenom }) {
       if (!tokenAmountInDenom) return 0
 
-      const priceForOneToken = (
-        await tokenToTokenPriceQueryWithPools({
-          matchingPools: getMatchingPoolForSwap({ tokenA, tokenB: tokenInfo }),
-          tokenA,
-          tokenB: tokenInfo,
-          client,
-          amount: 1,
-        })
-      )?.price
+      const tokenToTokenPrice = await tokenToTokenPriceQueryWithPools({
+        matchingPools: getMatchingPoolForSwap({ tokenA, tokenB: tokenInfo }),
+        tokenA,
+        tokenB: tokenInfo,
+        client,
+        amount: 1,
+      })
+
+      console.log({ tokenToTokenPrice })
+
+      const priceForOneToken = tokenToTokenPrice?.price
+
+      console.log({ priceForOneToken, tokenADollarPrice })
 
       return protectAgainstNaN(
         (tokenAmountInDenom / priceForOneToken) * tokenADollarPrice

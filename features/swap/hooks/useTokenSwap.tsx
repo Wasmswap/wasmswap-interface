@@ -70,26 +70,24 @@ export const useTokenSwap = ({
         tokenB.decimals
       )
 
-      const {
-        poolForDirectTokenAToTokenBSwap,
-        poolForDirectTokenBToTokenASwap,
-        passThroughPools,
-      } = tokenToTokenPrice
+      const { poolsForTokenSwap } = tokenToTokenPrice
+      const isDirectPoolPoolForSwap = poolsForTokenSwap.length === 1
+      if (isDirectPoolPoolForSwap) {
+        const [pool] = poolsForTokenSwap
 
-      if (poolForDirectTokenAToTokenBSwap || poolForDirectTokenBToTokenASwap) {
-        const swapDirection = poolForDirectTokenAToTokenBSwap?.swap_address
+        const isTokenAToTokenBPool =
+          pool.pool_assets[0].symbol === tokenA.symbol
+
+        const swapDirection = isTokenAToTokenBPool
           ? 'tokenAtoTokenB'
           : 'tokenBtoTokenA'
-        const swapAddress =
-          poolForDirectTokenAToTokenBSwap?.swap_address ??
-          poolForDirectTokenBToTokenASwap?.swap_address
 
         return await directTokenSwap({
           tokenAmount,
           price,
           slippage,
           senderAddress: address,
-          swapAddress,
+          swapAddress: pool?.swap_address,
           swapDirection,
           tokenA,
           client,
@@ -97,21 +95,21 @@ export const useTokenSwap = ({
       }
 
       // Smoke test
-      if (!passThroughPools?.length) {
+      if (!poolsForTokenSwap?.length) {
         throw new Error(
           'Was not able to identify swap route for this token pair. Please contact the engineering team.'
         )
       }
 
-      const [passThroughPool] = passThroughPools
+      const [inputPool, outputPool] = poolsForTokenSwap
       return await passThroughTokenSwap({
         tokenAmount,
         price,
         slippage,
         senderAddress: address,
         tokenA,
-        swapAddress: passThroughPool.inputPool.swap_address,
-        outputSwapAddress: passThroughPool.outputPool.swap_address,
+        swapAddress: inputPool.swap_address,
+        outputSwapAddress: outputPool.swap_address,
         client,
       })
     },

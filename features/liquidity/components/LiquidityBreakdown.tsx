@@ -134,7 +134,6 @@ export const LiquidityBreakdown = ({
           tokenB={tokenB}
           priceBreakdown={priceBreakdown}
         />
-        <Divider />
         <Inline justifyContent="space-between" css={{ padding: '$14 0 $12' }}>
           <Column gap={6} align="flex-start" justifyContent="flex-start">
             <Text variant="legend" color="secondary" align="left">

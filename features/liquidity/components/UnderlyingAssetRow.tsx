@@ -24,13 +24,13 @@ export const UnderlyingAssetRow = ({
   tokenInfo,
   tokenAmount,
   visible = true,
-  symbolVisible = true,
+  // symbolVisible = true,
 }: UnderlyingAssetRowProps) => {
   const token = visible ? tokenInfo : undefined
   const [tokenDollarValue] = useTokenDollarValue(
     visible ? tokenInfo?.symbol : undefined
   )
-
+  
   const tokenAmountDollarValue = dollarValueFormatterWithDecimals(
     protectAgainstNaN(tokenAmount * tokenDollarValue),
     { includeCommaSeparation: true }

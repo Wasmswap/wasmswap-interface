@@ -1,12 +1,10 @@
 import {
   ArrowUpIcon,
   Button,
-  Card,
   CardContent,
   Column,
   dollarValueFormatterWithDecimals,
   Inline,
-  media,
   Text,
   UnionIcon,
   useSubscribeInteractions,

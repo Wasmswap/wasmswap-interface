@@ -41,7 +41,7 @@ type NavigationSidebarProps = {
   backButton?: ReactNode
 }
 
-export function NavigationSidebar({ backButton }: NavigationSidebarProps) {
+export function NavigationSidebar(_: NavigationSidebarProps) {
   const { mutate: connectWallet } = useConnectWallet()
   const [{ key }, setWalletState] = useRecoilState(walletState)
 

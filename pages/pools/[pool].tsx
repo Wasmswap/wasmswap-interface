@@ -2,7 +2,6 @@ import { AppLayout, NavigationSidebar } from 'components'
 import {
   BondLiquidityDialog,
   LiquidityBreakdown,
-  LiquidityHeader,
   LiquidityRewardsCard,
   ManageBondedLiquidityCard,
   ManageLiquidityCard,

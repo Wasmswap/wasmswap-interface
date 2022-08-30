@@ -44,7 +44,7 @@ type PoolHeaderProps = {
 }
 
 const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
-  <Inline justifyContent="space-between" css={{ padding: '$14 0' }}>
+  <Inline justifyContent="space-between" css={{ padding: '$16 0 $14' }}>
     <Inline gap={6}>
       <Text variant="header">All Pools</Text>
       <ChevronIcon

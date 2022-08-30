@@ -171,11 +171,6 @@ export default function Pool() {
           />
         }
       >
-        <LiquidityHeader
-          tokenA={tokenA}
-          tokenB={tokenB}
-          size={isMobile ? 'small' : 'large'}
-        />
 
         {!isMobile && <Divider />}
 

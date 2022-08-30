@@ -277,7 +277,7 @@ function TotalInfoRow({ children }) {
           justifyContent: 'space-between',
           backgroundColor: '$colors$dark10',
           borderRadius: '$2',
-          marginBottom: '$15',
+          marginBottom: '$14',
         }}
       >
         {children}

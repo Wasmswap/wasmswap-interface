@@ -123,7 +123,7 @@ export const LiquidityRewardsCard = ({
       }}
     >
       <CardContent>
-        <Text variant={'header'} color="body" css={{ padding: '$16 0 $6' }}>
+        <Text variant={'primary'} color="body" css={{ padding: '$16 0 $10' }}>
           Pooling rewards
         </Text>
         <Column
@@ -134,10 +134,10 @@ export const LiquidityRewardsCard = ({
               'linear-gradient(140.55deg, #FE9C9E 1.35%, #FA2995 5.1%, #EA1EE9 10.37%, #287CF4 58.83%, #4CA7F2 75.84%, #31DAE2 99.52%)',
           }}
         >
-          <Text variant="hero">${rewardsDollarValue}</Text>
+          <Text variant="hero">+ ${rewardsDollarValue}</Text>
           <Text variant="link" css={{ paddingTop: '$2' }}>
             {pendingRewards?.length
-              ? `Receive ${pendingRewards.length} tokens`
+              ? `Spread in ${pendingRewards.length} tokens`
               : ''}
           </Text>
         </Column>
@@ -147,7 +147,7 @@ export const LiquidityRewardsCard = ({
           justifyContent={'space-between'}
           css={{ padding: '$8 0 $12', flexWrap: 'wrap', margin: '-$4' }}
         >
-          <Inline gap={8} css={{ margin: '$4' }}>
+          <Inline gap={14} css={{ margin: '$4' }}>
             {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
               <UnderlyingAssetRow
                 key={tokenInfo?.symbol}
@@ -174,7 +174,7 @@ export const LiquidityRewardsCard = ({
             disabled={!receivedRewards || loading}
             css={{ margin: '$4' }}
           >
-            {loading ? 'Pending...' : 'Claim your rewards'}
+            {loading ? 'Pending...' : 'Claim rewards'}
           </Button>
         </Inline>
       </CardContent>

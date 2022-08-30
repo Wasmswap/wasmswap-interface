@@ -1,6 +1,7 @@
 import { useTokenToTokenPrice } from 'features/swap'
 import {
   Button,
+  ChevronIcon,
   Column,
   Divider,
   dollarValueFormatter,
@@ -35,6 +36,45 @@ type LiquidityBreakdownProps = {
   rewardsContracts: Array<SerializedRewardsContract>
   size: 'large' | 'small'
 }
+
+type PoolHeaderProps = {
+  tokenA: TokenInfo
+  tokenB: TokenInfo
+  priceBreakdown: string
+}
+
+const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
+  <Inline justifyContent="space-between" css={{ padding: '$14 0' }}>
+    <Inline gap={6}>
+      <Text variant="header">All Pools</Text>
+      <ChevronIcon
+        css={{ transform: 'rotate(180deg)', color: '$colors$dark' }}
+      />
+
+      <Inline gap={8}>
+        <Inline gap={3}>
+          <ImageForTokenLogo
+            size="large"
+            logoURI={tokenA.logoURI}
+            alt={tokenA.symbol}
+          />
+          <Text variant="link">{tokenA.symbol}</Text>
+        </Inline>
+        <Inline gap={3}>
+          <ImageForTokenLogo
+            size="large"
+            logoURI={tokenB.logoURI}
+            alt={tokenB.symbol}
+          />
+          <Text variant="link">{tokenB.symbol}</Text>
+        </Inline>
+      </Inline>
+    </Inline>
+    <Text variant="legend" color="secondary" transform="lowercase">
+      {priceBreakdown}
+    </Text>
+  </Inline>
+)
 
 export const LiquidityBreakdown = ({
   tokenA,
@@ -89,23 +129,11 @@ export const LiquidityBreakdown = ({
   if (size === 'small') {
     return (
       <>
-        <Inline justifyContent="space-between" css={{ paddingBottom: '$12' }}>
-          <Inline gap={12}>
-            {[tokenA, tokenB].map((token) => (
-              <Inline gap={3} key={token.symbol}>
-                <ImageForTokenLogo
-                  size="large"
-                  logoURI={token.logoURI}
-                  alt={token.symbol}
-                />
-                <Text variant="link">{token.symbol}</Text>
-              </Inline>
-            ))}
-          </Inline>
-          <Text variant="legend" color="secondary" transform="lowercase">
-            {priceBreakdown}
-          </Text>
-        </Inline>
+        <PoolHeader
+          tokenA={tokenA}
+          tokenB={tokenB}
+          priceBreakdown={priceBreakdown}
+        />
         <Divider />
         <Inline justifyContent="space-between" css={{ padding: '$14 0 $12' }}>
           <Column gap={6} align="flex-start" justifyContent="flex-start">
@@ -144,28 +172,11 @@ export const LiquidityBreakdown = ({
 
   return (
     <>
-      <Inline justifyContent="space-between" css={{ padding: '$8 0' }}>
-        <Inline gap={18}>
-          <Text variant="primary">Pool #{poolId}</Text>
-          <Inline gap={12}>
-            <Inline gap={6}>
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenA.logoURI}
-                alt={tokenA.symbol}
-              />
-              <ImageForTokenLogo
-                size="large"
-                logoURI={tokenB.logoURI}
-                alt={tokenB.symbol}
-              />
-            </Inline>
-          </Inline>
-        </Inline>
-        <Text variant="legend" color="secondary" transform="lowercase">
-          {priceBreakdown}
-        </Text>
-      </Inline>
+      <PoolHeader
+        tokenA={tokenA}
+        tokenB={tokenB}
+        priceBreakdown={priceBreakdown}
+      />
 
       <Divider />
 

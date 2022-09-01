@@ -40,7 +40,7 @@
         {
           "id": "",
           "chain_id": "lucina",
-          "token_address": "juno1wl59k23zngj34l7d42y9yltask7rjlnxgccawc7ltrknp6n52fpsndlmj0",
+          "token_address": "juno1cnuw3f076wgdyahssdkd0g3nr96ckq8cwa2mh029fn5mgf2fmcmsuwdfj4",
           "symbol": "POOD",
           "name": "Poodle",
           "decimals": 6,
@@ -50,8 +50,8 @@
           "denom": "upood"
         }
       ],
-      "swap_address": "juno182nff4ttmvshn6yjlqj5czapfcav9434l2qzz8aahf5pxnyd33tstk25ur",
-      "staking_address": "juno1fjvnr96n8kcl6d8qzr74klqjl9wakmqv5c9hzvqwr904kp34ye8qwfl5qr",
+      "swap_address": "juno18v47nqmhvejx3vc498pantg8vr435xa0rt6x0m6kzhp6yuqmcp8supzmcp",
+      "staking_address": "juno1jkte0pytr85qg0whmgux3vmz9ehmh82w40h8gaqeg435fnkyfxqqau5rja",
       "rewards_tokens": []
     },
     {
@@ -83,10 +83,10 @@
         }
       ],
       "swap_address": "juno1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrq68ev2p",
-      "staking_address": "juno16y344e8ryydmeu2g8yyfznq79j7jfnar4p59ngpvaazcj83jzsmsnvh4g8",
+      "staking_address": "juno1udfs22xpxle475m2nz7u47jfa3vngncdegmczwwdx00cmetypa3s6256eu",
       "rewards_tokens": [
         {
-          "rewards_address": "juno193dzcmy7lwuj4eda3zpwwt9ejal00xva0vawcvhgsyyp5cfh6jyqnatq3s",
+          "rewards_address": "juno1dan30fymgvrknydd7gkrpyuh5sdcnqejy7sl20sfslscptn50clqsn05uj",
           "token_address": "",
           "swap_address": "",
           "symbol": "JUNOX",
@@ -97,7 +97,7 @@
           "decimals": 6
         },
         {
-          "rewards_address": "juno1rwx6w02alc4kaz7xpyg3rlxpjl4g63x5jq292mkxgg65zqpn5llqrg099d",
+          "rewards_address": "juno1xut80d09q0tgtch8p0z4k5f88d3uvt8cvtzm5h3tu3tsy4jk9xls377nhn",
           "token_address": "juno14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9skjuwg8",
           "swap_address": "juno1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrq68ev2p",
           "symbol": "CRAB",
@@ -137,8 +137,8 @@
           "denom": "udao"
         }
       ],
-      "swap_address": "juno1hulx7cgvpfcvg83wk5h96sedqgn72n026w6nl47uht554xhvj9ns263mx9",
-      "staking_address": "juno1q23d30x94cm8ve243pxdc52m398r4l5ecgcfp8tud3vggcsq8s2qv7kt2z",
+      "swap_address": "juno1nc5tatafv6eyq7llkr2gv50ff9e22mnf70qgjlv737ktmt4eswrq68ev2p",
+      "staking_address": "juno1qjxu65ucccpg8c5kac8ng6yxfqq85fluwd0p9nt74g2304qw8eyqvk2dvh",
       "rewards_tokens": []
     },
     {
@@ -169,7 +169,7 @@
           "denom": "ucosm"
         }
       ],
-      "swap_address": "juno1yg8930mj8pk288lmkjex0qz85mj8wgtns5uzwyn2hs25pwdnw42slx2lw6",
+      "swap_address": "juno182nff4ttmvshn6yjlqj5czapfcav9434l2qzz8aahf5pxnyd33tstk25ur",
       "staking_address": "",
       "rewards_tokens": []
     },
@@ -201,7 +201,7 @@
           "denom": "udao"
         }
       ],
-      "swap_address": "juno187zds75uenfxht2zqz7e0wxn3ushcawvf2ndrns6q63hgfn6ptqq7d7smp",
+      "swap_address": "juno182nff4ttmvshn6yjlqj5czapfcav9434l2qzz8aahf5pxnyd33tstk25ur",
       "staking_address": "",
       "rewards_tokens": []
     }

@@ -82,6 +82,10 @@ export type InfoResponse = {
   token1_reserve: string
   token2_denom: string
   token2_reserve: string
+  owner?: string
+  lp_fee_percent?: string
+  protocol_fee_percent?: string
+  protocol_fee_recipient?: string
 }
 
 export const getSwapInfo = async (

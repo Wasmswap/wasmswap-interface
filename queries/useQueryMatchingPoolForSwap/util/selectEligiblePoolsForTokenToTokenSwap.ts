@@ -1,6 +1,5 @@
 import { PoolEntityType, TokenInfo } from '../../usePoolsListQuery'
 import { MatchingPoolsForTokenToTokenSwap } from '../types'
-import { selectPoolByTokenPair } from './selectPoolByTokenPair'
 import { validateIfPassThroughPoolMatchIsUnique } from './validateIfPassThroughPoolMatchIsUnique'
 
 type SelectEligiblePoolsForTokenToTokenSwapArgs = {
@@ -45,29 +44,31 @@ export function selectEligiblePoolsForTokenToTokenSwap({
        * validate if the pool can be used as a pass through
        * token a token b pair match
        * */
-      const eligibleAsPassThroughPoolPair =
-        poolAssetA.symbol !== tokenA.symbol &&
-        [tokenA.symbol, tokenB.symbol].includes(poolAssetB.symbol)
+      const eligibleAsPassThroughInputPool =
+        tokenA.symbol === poolAssetA.symbol ||
+        tokenA.symbol === poolAssetB.symbol
 
-      if (eligibleAsPassThroughPoolPair) {
-        const isValidSwapInputPool = poolAssetB.symbol === tokenA.symbol
-        const isValidSwapOutputPool = poolAssetB.symbol === tokenB.symbol
+      if (eligibleAsPassThroughInputPool) {
+        const intermediaryToken =
+          tokenA.symbol === poolAssetA.symbol ? poolAssetB : poolAssetA
 
-        const passThroughSwapInputPool = isValidSwapInputPool
-          ? pool
-          : selectPoolByTokenPair(poolsList, poolAssetA, tokenA)
-
-        const passThroughSwapOutputPool = isValidSwapOutputPool
-          ? pool
-          : selectPoolByTokenPair(poolsList, poolAssetA, tokenB)
+        let passThroughSwapOutputPool = poolsList.find(
+          ({ pool_assets: [assetA, assetB] }) => {
+            return (
+              (intermediaryToken.symbol === assetA.symbol &&
+                tokenB.symbol === assetB.symbol) ||
+              (tokenB.symbol === assetA.symbol &&
+                intermediaryToken.symbol === assetB.symbol)
+            )
+          }
+        )
 
         const passThroughPoolPair = {
-          inputPool: passThroughSwapInputPool,
+          inputPool: pool,
           outputPool: passThroughSwapOutputPool,
         }
 
         const hasEligiblePassThroughPoolPair =
-          passThroughSwapInputPool &&
           passThroughSwapOutputPool &&
           validateIfPassThroughPoolMatchIsUnique(
             result.passThroughPools,

@@ -1,7 +1,7 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { coin } from '@cosmjs/stargate'
 
-import { TokenInfo } from '../../queries/usePoolsListQuery'
+import { PoolEntityType, TokenInfo } from '../../queries/usePoolsListQuery'
 import {
   createExecuteMessage,
   createIncreaseAllowanceMessage,
@@ -13,8 +13,8 @@ type PassThroughTokenSwapArgs = {
   price: number
   slippage: number
   senderAddress: string
-  swapAddress: string
-  outputSwapAddress: string
+  swap: PoolEntityType
+  outputSwap: PoolEntityType
   tokenA: TokenInfo
   client: SigningCosmWasmClient
 }
@@ -22,8 +22,8 @@ type PassThroughTokenSwapArgs = {
 export const passThroughTokenSwap = async ({
   tokenAmount,
   tokenA,
-  outputSwapAddress,
-  swapAddress,
+  outputSwap,
+  swap,
   senderAddress,
   slippage,
   price,
@@ -31,12 +31,15 @@ export const passThroughTokenSwap = async ({
 }: PassThroughTokenSwapArgs): Promise<any> => {
   const minOutputToken = Math.floor(price * (1 - slippage))
 
+  const input_token =
+    swap.pool_assets[0].symbol === tokenA.symbol ? 'Token1' : 'Token2'
+
   const swapMessage = {
     pass_through_swap: {
       output_min_token: `${minOutputToken}`,
-      input_token: 'Token2',
+      input_token,
       input_token_amount: `${tokenAmount}`,
-      output_amm_address: outputSwapAddress,
+      output_amm_address: outputSwap.swap_address,
     },
   }
 
@@ -45,12 +48,12 @@ export const passThroughTokenSwap = async ({
       senderAddress,
       tokenAmount,
       tokenAddress: tokenA.token_address,
-      swapAddress,
+      swapAddress: swap.swap_address,
     })
 
     const executeMessage = createExecuteMessage({
       senderAddress,
-      contractAddress: swapAddress,
+      contractAddress: swap.swap_address,
       message: swapMessage,
     })
 
@@ -65,7 +68,7 @@ export const passThroughTokenSwap = async ({
 
   return await client.execute(
     senderAddress,
-    swapAddress,
+    swap.swap_address,
     swapMessage,
     'auto',
     undefined,

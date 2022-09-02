@@ -110,8 +110,8 @@ export const useTokenSwap = ({
         slippage,
         senderAddress: address,
         tokenA,
-        swapAddress: passThroughPool.inputPool.swap_address,
-        outputSwapAddress: passThroughPool.outputPool.swap_address,
+        swap: passThroughPool.inputPool,
+        outputSwap: passThroughPool.outputPool,
         client,
       })
     },

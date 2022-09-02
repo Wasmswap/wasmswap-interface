@@ -80,8 +80,10 @@ export async function tokenToTokenPriceQueryWithPools({
       pricingQueries.push(
         getTokenForTokenPrice({
           tokenAmount: convertedTokenAmount,
-          swapAddress: passThroughPool.inputPool.swap_address,
-          outputSwapAddress: passThroughPool.outputPool.swap_address,
+          tokenA,
+          tokenB,
+          swap: passThroughPool.inputPool,
+          outputSwap: passThroughPool.outputPool,
           client,
         }).then((price) => ({
           price: formatPrice(price),

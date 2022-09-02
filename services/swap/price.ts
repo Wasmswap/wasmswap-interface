@@ -1,4 +1,5 @@
 import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate'
+import { PoolEntityType, TokenInfo } from '../../queries/usePoolsListQuery'
 
 export interface GetToken1ForToken2PriceInput {
   nativeAmount: number
@@ -48,29 +49,48 @@ export const getToken2ForToken1Price = async ({
 
 export interface GetTokenForTokenPriceInput {
   tokenAmount: number
-  swapAddress: string
-  outputSwapAddress: string
+  tokenA: TokenInfo
+  tokenB: TokenInfo
+  swap: PoolEntityType
+  outputSwap: PoolEntityType
   client: CosmWasmClient
 }
 
 export const getTokenForTokenPrice = async ({
   tokenAmount,
-  swapAddress,
-  outputSwapAddress,
+  tokenA,
+  tokenB,
+  swap,
+  outputSwap,
   client,
 }: GetTokenForTokenPriceInput) => {
   try {
-    const nativePrice = await getToken2ForToken1Price({
-      tokenAmount,
-      swapAddress,
-      client,
-    })
+    const intermediatePrice =
+      tokenA.symbol === swap.pool_assets[0].symbol
+        ? await getToken1ForToken2Price({
+            nativeAmount: tokenAmount,
+            swapAddress: swap.swap_address,
+            client,
+          })
+        : await getToken2ForToken1Price({
+            tokenAmount,
+            swapAddress: swap.swap_address,
+            client,
+          })
 
-    return getToken1ForToken2Price({
-      nativeAmount: nativePrice,
-      swapAddress: outputSwapAddress,
-      client: client,
-    })
+    let result =
+      tokenB.symbol === outputSwap.pool_assets[1].symbol
+        ? await getToken1ForToken2Price({
+            nativeAmount: intermediatePrice,
+            swapAddress: outputSwap.swap_address,
+            client,
+          })
+        : await getToken2ForToken1Price({
+            tokenAmount: intermediatePrice,
+            swapAddress: outputSwap.swap_address,
+            client,
+          })
+    return result
   } catch (e) {
     console.error('error(getTokenForTokenPrice)', e)
   }

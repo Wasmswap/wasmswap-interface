@@ -105,14 +105,7 @@ export const LiquidityBreakdown = ({
 
   const compactTokenAAmount = formatCompactNumber(tokenAAmount, 'tokenAmount')
   const compactTokenBAmount = formatCompactNumber(tokenBAmount, 'tokenAmount')
-  const compactTotalLiquidity = formatCompactNumber(totalLiquidity?.dollarValue)
-
-  const formattedTokenAAmount = formatTokenBalance(tokenAAmount, {
-    includeCommaSeparation: true,
-  })
-  const formattedTokenBAmount = formatTokenBalance(tokenBAmount, {
-    includeCommaSeparation: true,
-  })
+ 
   const formattedTotalLiquidity = dollarValueFormatterWithDecimals(
     totalLiquidity?.dollarValue,
     { includeCommaSeparation: true }
@@ -150,7 +143,7 @@ export const LiquidityBreakdown = ({
                 <Text variant="legend" color="secondary" align="left">
                   Total liquidity
                 </Text>
-                <Text variant="header">${compactTotalLiquidity}</Text>
+                <Text variant="header">${formattedTotalLiquidity}</Text>
               </Column>
 
               <Column gap={8} align="flex-start" justifyContent="flex-start">
@@ -180,7 +173,7 @@ export const LiquidityBreakdown = ({
                 </Text>
                 <AprPill value={formattedYieldPercentageReturn} />
               </Column>
-              {__POOL_REWARDS_ENABLED__ && (
+              {__POOL_REWARDS_ENABLED__ && rewardsContracts && rewardsContracts.length > 0 && (
                 <Column gap={6} align="center">
                   <Text variant="legend" color="secondary">
                     Reward Tokens
@@ -221,18 +214,7 @@ export const LiquidityBreakdown = ({
               Pool Liquidity
             </Text>
             <Inline gap={2}>
-              <Text variant="header">${compactTotalLiquidity} </Text>
-              <Tooltip
-                label={`$${formattedTotalLiquidity}`}
-                aria-label={`$${formattedTotalLiquidity} in total liquidity`}
-              >
-                <Button
-                  variant="ghost"
-                  size="small"
-                  icon={<InfoIcon />}
-                  iconColor={'secondary'}
-                />
-              </Tooltip>
+              <Text variant="header">${formattedTotalLiquidity} </Text>
             </Inline>
           </Column>
 
@@ -241,20 +223,7 @@ export const LiquidityBreakdown = ({
               {tokenA?.symbol}
             </Text>
             <Inline gap={2}>
-              <Text variant="header">
-                {compactTokenAAmount} 
-              </Text>
-              <Tooltip
-                label={`${formattedTokenAAmount} $${tokenA?.symbol}`}
-                aria-label={`${formattedTokenAAmount} $${tokenA?.symbol} in liquidity`}
-              >
-                <Button
-                  variant="ghost"
-                  size="small"
-                  icon={<InfoIcon />}
-                  iconColor={'secondary'}
-                />
-              </Tooltip>
+              <Text variant="header">{compactTokenAAmount}</Text>
             </Inline>
           </Column>
 
@@ -263,20 +232,7 @@ export const LiquidityBreakdown = ({
               {tokenB?.symbol}
             </Text>
             <Inline gap={2}>
-              <Text variant="header">
-                {compactTokenBAmount} 
-              </Text>
-              <Tooltip
-                label={`${formattedTokenBAmount} $${tokenB?.symbol}`}
-                aria-label={`${formattedTokenBAmount} $${tokenB?.symbol} in liquidity`}
-              >
-                <Button
-                  variant="ghost"
-                  size="small"
-                  icon={<InfoIcon />}
-                  iconColor={'secondary'}
-                />
-              </Tooltip>
+              <Text variant="header">{compactTokenBAmount}</Text>
             </Inline>
           </Column>
           <Column gap={4} align="center" justifyContent="space-between">
@@ -285,7 +241,7 @@ export const LiquidityBreakdown = ({
             </Text>
             <AprPill value={formattedYieldPercentageReturn} />
           </Column>
-          {__POOL_REWARDS_ENABLED__ && (
+          {__POOL_REWARDS_ENABLED__ && rewardsContracts && rewardsContracts.length > 0 && (
             <Column gap={8} align="center" justifyContent="center">
               <Text variant="legend" color="secondary" align="center">
                 Reward Tokens

@@ -311,7 +311,7 @@ const StyledWrapper = styled('div', {
   height: '100%',
   maxHeight: '100vh',
   minHeight: '100vh',
-  zIndex: '$1',
+  zIndex: 1,
 })
 
 const StyledWrapperForMobile = styled('div', {

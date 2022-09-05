@@ -204,9 +204,6 @@ export const LiquidityBreakdown = ({
         tokenB={tokenB}
         priceBreakdown={priceBreakdown}
       />
-
-      <Divider />
-
       <>
         <TotalInfoRow>
           <Column gap={8} align="flex-start" justifyContent="flex-start">

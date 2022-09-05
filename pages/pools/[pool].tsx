@@ -192,7 +192,7 @@ export default function Pool() {
             />
             <>
               <StyledDivForCards>
-                <Column style={{ flexBasis: '0px', flexGrow: 1 }}>
+                <Column style={{ flexBasis: '0px', flexGrow: 1, flexShrink: 1 }}>
                   <ManageLiquidityCard
                     providedLiquidityReserve={pool.liquidity.reserves.provided}
                     providedLiquidity={pool.liquidity.available.provided}
@@ -212,7 +212,7 @@ export default function Pool() {
                     }
                   />
                 </Column>
-                <Column css={{ flexBasis: '0px', flexGrow: 1 }}>
+                <Column css={{ flexBasis: '0px', flexGrow: 1, flexShrink: 1 }}>
                   <ManageBondedLiquidityCard
                     onClick={() => setIsBondingDialogShowing(true)}
                     providedLiquidity={pool.liquidity.available.provided}

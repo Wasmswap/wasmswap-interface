@@ -46,7 +46,7 @@ export const AppLayout = ({
 const StyledWrapper = styled('div', {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'space-around',
+  justifyContent: 'center',
   minHeight: '100vh',
   backgroundColor: '$backgroundColors$base',
   maxWidth: APP_MAX_WIDTH,
@@ -58,18 +58,17 @@ const StyledWrapper = styled('div', {
 
 const StyledContainer = styled('div', {
   position: 'relative',
-  zIndex: '$2',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  padding: '',
+  padding: '0 48px',
   '& main': {
     margin: '0 auto',
     width: '100%',
-    maxWidth: MAIN_PANE_MAX_WIDTH,
   },
+  maxWidth: MAIN_PANE_MAX_WIDTH,
+  minWidth: MAIN_PANE_MAX_WIDTH,
   [media.sm]: {
-    zIndex: '$1',
   },
 })
 

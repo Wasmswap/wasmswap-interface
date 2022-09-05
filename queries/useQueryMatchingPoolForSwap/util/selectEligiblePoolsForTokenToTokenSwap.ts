@@ -52,7 +52,7 @@ export function selectEligiblePoolsForTokenToTokenSwap({
         const intermediaryToken =
           tokenA.symbol === poolAssetA.symbol ? poolAssetB : poolAssetA
 
-        let passThroughSwapOutputPool = poolsList.find(
+        const passThroughSwapOutputPool = poolsList.find(
           ({ pool_assets: [assetA, assetB] }) => {
             return (
               (intermediaryToken.symbol === assetA.symbol &&

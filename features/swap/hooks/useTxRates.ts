@@ -16,19 +16,6 @@ function calculateTokenToTokenConversionRate({
   return tokenToTokenPrice / tokenAAmount
 }
 
-function calculateTokenToTokenConversionDollarRate({
-  conversionRate,
-  tokenADollarPrice,
-  oneTokenToTokenPrice,
-  tokenAAmount,
-}) {
-  if (tokenAAmount === 0) {
-    return tokenADollarPrice
-  }
-
-  return (tokenADollarPrice * conversionRate) / oneTokenToTokenPrice
-}
-
 export const useTxRates = ({
   tokenASymbol,
   tokenBSymbol,
@@ -36,8 +23,7 @@ export const useTxRates = ({
   tokenToTokenPrice,
   isLoading,
 }) => {
-  const [tokenADollarPrice, fetchingTokenDollarPrice] =
-    useTokenDollarValue(tokenASymbol)
+  const [_, fetchingTokenDollarPrice] = useTokenDollarValue(tokenASymbol)
 
   const [oneTokenToTokenPrice] = usePriceForOneToken({
     tokenASymbol: tokenASymbol,

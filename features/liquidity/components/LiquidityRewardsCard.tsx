@@ -118,9 +118,10 @@ export const LiquidityRewardsCard = ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        alignItems: 'flex-start'
       }}
     >
-      <CardContent>
+      <Column>
         <Text variant={'primary'} color="body" css={{ padding: '$16 0 $10' }}>
           Pooling rewards
         </Text>
@@ -139,7 +140,7 @@ export const LiquidityRewardsCard = ({
               : ''}
           </Text>
         </Column>
-      </CardContent>
+      </Column>
       <CardContent>
         <Inline
           justifyContent={'space-between'}

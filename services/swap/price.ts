@@ -78,19 +78,17 @@ export const getTokenForTokenPrice = async ({
             client,
           })
 
-    let result =
-      tokenB.symbol === outputSwap.pool_assets[1].symbol
-        ? await getToken1ForToken2Price({
-            nativeAmount: intermediatePrice,
-            swapAddress: outputSwap.swap_address,
-            client,
-          })
-        : await getToken2ForToken1Price({
-            tokenAmount: intermediatePrice,
-            swapAddress: outputSwap.swap_address,
-            client,
-          })
-    return result
+    return tokenB.symbol === outputSwap.pool_assets[1].symbol
+      ? await getToken1ForToken2Price({
+          nativeAmount: intermediatePrice,
+          swapAddress: outputSwap.swap_address,
+          client,
+        })
+      : await getToken2ForToken1Price({
+          tokenAmount: intermediatePrice,
+          swapAddress: outputSwap.swap_address,
+          client,
+        })
   } catch (e) {
     console.error('error(getTokenForTokenPrice)', e)
   }

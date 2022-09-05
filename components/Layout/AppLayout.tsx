@@ -68,8 +68,7 @@ const StyledContainer = styled('div', {
   },
   maxWidth: MAIN_PANE_MAX_WIDTH,
   minWidth: MAIN_PANE_MAX_WIDTH,
-  [media.sm]: {
-  },
+  [media.sm]: {},
 })
 
 const StyledWrapperForMobile = styled('div', {

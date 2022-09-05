@@ -105,7 +105,7 @@ export const LiquidityBreakdown = ({
 
   const compactTokenAAmount = formatCompactNumber(tokenAAmount, 'tokenAmount')
   const compactTokenBAmount = formatCompactNumber(tokenBAmount, 'tokenAmount')
- 
+
   const formattedTotalLiquidity = dollarValueFormatterWithDecimals(
     totalLiquidity?.dollarValue,
     { includeCommaSeparation: true }
@@ -173,23 +173,25 @@ export const LiquidityBreakdown = ({
                 </Text>
                 <AprPill value={formattedYieldPercentageReturn} />
               </Column>
-              {__POOL_REWARDS_ENABLED__ && rewardsContracts && rewardsContracts.length > 0 && (
-                <Column gap={6} align="center">
-                  <Text variant="legend" color="secondary">
-                    Reward Tokens
-                  </Text>
-                  <StyledDivForTokenLogos>
-                    {rewardsContracts?.map(({ tokenInfo }) => (
-                      <ImageForTokenLogo
-                        size="large"
-                        key={tokenInfo.symbol}
-                        logoURI={tokenInfo.logoURI}
-                        alt={tokenInfo.symbol}
-                      />
-                    ))}
-                  </StyledDivForTokenLogos>
-                </Column>
-              )}
+              {__POOL_REWARDS_ENABLED__ &&
+                rewardsContracts &&
+                rewardsContracts.length > 0 && (
+                  <Column gap={6} align="center">
+                    <Text variant="legend" color="secondary">
+                      Reward Tokens
+                    </Text>
+                    <StyledDivForTokenLogos>
+                      {rewardsContracts?.map(({ tokenInfo }) => (
+                        <ImageForTokenLogo
+                          size="large"
+                          key={tokenInfo.symbol}
+                          logoURI={tokenInfo.logoURI}
+                          alt={tokenInfo.symbol}
+                        />
+                      ))}
+                    </StyledDivForTokenLogos>
+                  </Column>
+                )}
             </Inline>
           </Column>
         </Inline>
@@ -238,23 +240,25 @@ export const LiquidityBreakdown = ({
             </Text>
             <AprPill value={formattedYieldPercentageReturn} />
           </Column>
-          {__POOL_REWARDS_ENABLED__ && rewardsContracts && rewardsContracts.length > 0 && (
-            <Column gap={8} align="center" justifyContent="center">
-              <Text variant="legend" color="secondary" align="center">
-                Reward Tokens
-              </Text>
-              <StyledDivForTokenLogos>
-                {rewardsContracts?.map(({ tokenInfo }) => (
-                  <ImageForTokenLogo
-                    size="large"
-                    key={tokenInfo.symbol}
-                    logoURI={tokenInfo.logoURI}
-                    alt={tokenInfo.symbol}
-                  />
-                ))}
-              </StyledDivForTokenLogos>
-            </Column>
-          )}
+          {__POOL_REWARDS_ENABLED__ &&
+            rewardsContracts &&
+            rewardsContracts.length > 0 && (
+              <Column gap={8} align="center" justifyContent="center">
+                <Text variant="legend" color="secondary" align="center">
+                  Reward Tokens
+                </Text>
+                <StyledDivForTokenLogos>
+                  {rewardsContracts?.map(({ tokenInfo }) => (
+                    <ImageForTokenLogo
+                      size="large"
+                      key={tokenInfo.symbol}
+                      logoURI={tokenInfo.logoURI}
+                      alt={tokenInfo.symbol}
+                    />
+                  ))}
+                </StyledDivForTokenLogos>
+              </Column>
+            )}
         </TotalInfoRow>
       </>
     </>

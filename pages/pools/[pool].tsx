@@ -170,7 +170,6 @@ export default function Pool() {
           />
         }
       >
-
         {isLoadingInitial && (
           <StyledDivForSpinner>
             <Spinner color="primary" size={32} />
@@ -192,7 +191,9 @@ export default function Pool() {
             />
             <>
               <StyledDivForCards>
-                <Column style={{ flexBasis: '0px', flexGrow: 1, flexShrink: 1 }}>
+                <Column
+                  style={{ flexBasis: '0px', flexGrow: 1, flexShrink: 1 }}
+                >
                   <ManageLiquidityCard
                     providedLiquidityReserve={pool.liquidity.reserves.provided}
                     providedLiquidity={pool.liquidity.available.provided}

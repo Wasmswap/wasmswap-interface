@@ -242,7 +242,7 @@ export const LiquidityBreakdown = ({
             </Text>
             <Inline gap={2}>
               <Text variant="header">
-                {compactTokenAAmount} ${tokenA?.symbol}
+                {compactTokenAAmount} 
               </Text>
               <Tooltip
                 label={`${formattedTokenAAmount} $${tokenA?.symbol}`}
@@ -264,7 +264,7 @@ export const LiquidityBreakdown = ({
             </Text>
             <Inline gap={2}>
               <Text variant="header">
-                {compactTokenBAmount} ${tokenB?.symbol}
+                {compactTokenBAmount} 
               </Text>
               <Tooltip
                 label={`${formattedTokenBAmount} $${tokenB?.symbol}`}

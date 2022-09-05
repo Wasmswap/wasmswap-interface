@@ -33,6 +33,7 @@ import React, { ReactNode, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
+import { PriceData } from '../../icons/PriceData'
 
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
@@ -104,17 +105,17 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           iconLeft={<IconWrapper icon={<Open />} />}
           selected={getIsLinkActive('/pools')}
         >
-          Liquidity
+          Pools
         </Button>
       </Link>
-      <Divider offsetY="$8" />
+      <Inline css={{ paddingBottom: '$6' }} />
       <Link href={process.env.NEXT_PUBLIC_GOVERNANCE_LINK_URL} passHref>
         <Button
           as="a"
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<TreasuryIcon />}
+          iconLeft={<IconWrapper icon={<TreasuryIcon />}/> }
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
@@ -126,7 +127,7 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<SharesIcon />}
+          iconLeft={<IconWrapper icon={<PriceData/>}/>}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_PRICE_LINK_LABEL}

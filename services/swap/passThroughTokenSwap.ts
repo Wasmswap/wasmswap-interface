@@ -13,8 +13,8 @@ type PassThroughTokenSwapArgs = {
   price: number
   slippage: number
   senderAddress: string
-  swap: PoolEntityType
-  outputSwap: PoolEntityType
+  inputPool: PoolEntityType
+  outputPool: PoolEntityType
   tokenA: TokenInfo
   client: SigningCosmWasmClient
 }
@@ -22,8 +22,8 @@ type PassThroughTokenSwapArgs = {
 export const passThroughTokenSwap = async ({
   tokenAmount,
   tokenA,
-  outputSwap,
-  swap,
+  outputPool: outputSwap,
+  inputPool: swap,
   senderAddress,
   slippage,
   price,

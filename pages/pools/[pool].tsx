@@ -14,7 +14,6 @@ import {
   Button,
   ChevronIcon,
   Column,
-  Divider,
   Error,
   IconWrapper,
   Inline,

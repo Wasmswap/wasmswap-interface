@@ -1,17 +1,13 @@
 import { useTokenToTokenPrice } from 'features/swap'
 import {
-  Button,
   ChevronIcon,
   Column,
   Divider,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
-  formatTokenBalance,
   ImageForTokenLogo,
-  InfoIcon,
   Inline,
   Text,
-  Tooltip,
 } from 'junoblocks'
 import React from 'react'
 import {

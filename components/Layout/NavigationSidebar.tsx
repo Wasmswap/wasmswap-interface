@@ -15,7 +15,6 @@ import {
   media,
   MoonIcon,
   Open,
-  SharesIcon,
   styled,
   Telegram,
   Text,
@@ -34,7 +33,6 @@ import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
 import { PriceData } from '../../icons/PriceData'
-
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
 type NavigationSidebarProps = {

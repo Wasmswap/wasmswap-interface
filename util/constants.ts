@@ -7,6 +7,8 @@ export const GAS_PRICE = process.env.NEXT_PUBLIC_GAS_PRICE
 export const APP_NAME = process.env.NEXT_PUBLIC_SITE_TITLE
 export const APP_MAX_WIDTH = '1920px'
 
+export const MAIN_PANE_MAX_WIDTH = '786px'
+
 export const POOL_TOKENS_DECIMALS = 6
 
 /* the app operates in test mode */

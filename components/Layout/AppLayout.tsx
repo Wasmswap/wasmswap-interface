@@ -1,5 +1,5 @@
 import { media, styled, useMedia } from 'junoblocks'
-import { APP_MAX_WIDTH } from 'util/constants'
+import { APP_MAX_WIDTH, MAIN_PANE_MAX_WIDTH } from 'util/constants'
 
 import { ExtensionSidebar } from './ExtensionSidebar'
 import { FooterBar } from './FooterBar'
@@ -44,9 +44,10 @@ export const AppLayout = ({
 }
 
 const StyledWrapper = styled('div', {
-  display: 'grid',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-around',
   minHeight: '100vh',
-  gridTemplateColumns: '16.5rem 1fr 16.5rem',
   backgroundColor: '$backgroundColors$base',
   maxWidth: APP_MAX_WIDTH,
   margin: '0 auto',
@@ -61,11 +62,11 @@ const StyledContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  padding: '0 $12 $20 $12',
+  padding: '',
   '& main': {
     margin: '0 auto',
     width: '100%',
-    maxWidth: '69.5rem',
+    maxWidth: MAIN_PANE_MAX_WIDTH,
   },
   [media.sm]: {
     zIndex: '$1',

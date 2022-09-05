@@ -115,7 +115,7 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<IconWrapper icon={<TreasuryIcon />}/> }
+          iconLeft={<IconWrapper icon={<TreasuryIcon />} />}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
@@ -127,7 +127,7 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<IconWrapper icon={<PriceData/>}/>}
+          iconLeft={<IconWrapper icon={<PriceData />} />}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_PRICE_LINK_LABEL}
@@ -211,91 +211,92 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
         {walletButton}
         {menuLinks}
       </StyledMenuContainer>
-      <div>
-        <Text variant="legend" css={{ padding: '$4 $3' }}>
-          {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
-        </Text>
-        <Inline css={{ display: 'grid' }}>
-          <Button
-            iconLeft={<MoonIcon />}
-            variant="ghost"
-            size="large"
-            onClick={(e) => {
-              if (e.target !== document.querySelector('#theme-toggle')) {
-                themeController.toggle()
-              }
-            }}
-            iconRight={
-              <ToggleSwitch
-                id="theme-toggle"
-                name="dark-theme"
-                onChange={themeController.setDarkTheme}
-                checked={themeController.theme.name === 'dark'}
-                optionLabels={['Dark theme', 'Light theme']}
-              />
+      <Text variant="legend" css={{ padding: '$4 $3' }}>
+        {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
+      </Text>
+      <Inline css={{ display: 'grid' }}>
+        <Button
+          iconLeft={<MoonIcon />}
+          variant="ghost"
+          size="large"
+          onClick={(e) => {
+            if (e.target !== document.querySelector('#theme-toggle')) {
+              themeController.toggle()
             }
-          >
-            Dark mode
-          </Button>
-        </Inline>
-        <Divider offsetY="$6" />
-        <Column gap={4}>
-          <Button
-            as="a"
-            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
-            target="__blank"
-            variant="ghost"
-            size="large"
-            iconLeft={<FeedbackIcon />}
-            iconRight={<IconWrapper icon={<UpRightArrow />} />}
-          >
-            Provide feedback
-          </Button>
-        </Column>
-        <Inline gap={2} css={{ padding: '$20 0 $13' }}>
-          <Button
-            as="a"
-            href={process.env.NEXT_PUBLIC_DISCORD_LINK}
-            target="__blank"
-            icon={<IconWrapper icon={<Discord />} />}
-            variant="ghost"
-            size="medium"
-            css={buttonIconCss}
-          />
-          <Button
-            as="a"
-            href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
-            target="__blank"
-            icon={<IconWrapper icon={<Telegram />} />}
-            variant="ghost"
-            size="medium"
-            css={buttonIconCss}
-          />
-          <Button
-            as="a"
-            href={process.env.NEXT_PUBLIC_TWITTER_LINK}
-            target="__blank"
-            icon={<IconWrapper icon={<Twitter />} />}
-            variant="ghost"
-            size="medium"
-            css={buttonIconCss}
-          />
-          <Button
-            as="a"
-            href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
-            target="__blank"
-            icon={<IconWrapper icon={<Github />} />}
-            variant="ghost"
-            size="medium"
-            css={buttonIconCss}
-          />
-        </Inline>
-      </div>
+          }}
+          iconRight={
+            <ToggleSwitch
+              id="theme-toggle"
+              name="dark-theme"
+              onChange={themeController.setDarkTheme}
+              checked={themeController.theme.name === 'dark'}
+              optionLabels={['Dark theme', 'Light theme']}
+            />
+          }
+        >
+          Dark mode
+        </Button>
+      </Inline>
+      <Divider offsetY="$6" />
+      <Column gap={4}>
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+          target="__blank"
+          variant="ghost"
+          size="large"
+          iconLeft={<FeedbackIcon />}
+          iconRight={<IconWrapper icon={<UpRightArrow />} />}
+        >
+          Provide feedback
+        </Button>
+      </Column>
+      <Inline gap={2} css={{ padding: '$20 0 $13' }}>
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_DISCORD_LINK}
+          target="__blank"
+          icon={<IconWrapper icon={<Discord />} />}
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
+          target="__blank"
+          icon={<IconWrapper icon={<Telegram />} />}
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_TWITTER_LINK}
+          target="__blank"
+          icon={<IconWrapper icon={<Twitter />} />}
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+        <Button
+          as="a"
+          href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
+          target="__blank"
+          icon={<IconWrapper icon={<Github />} />}
+          variant="ghost"
+          size="medium"
+          css={buttonIconCss}
+        />
+      </Inline>
     </StyledWrapper>
   )
 }
 
 const StyledWrapper = styled('div', {
+  flexBasis: '16.5rem',
+  flexGrow: 0,
+  flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -309,6 +310,7 @@ const StyledWrapper = styled('div', {
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
+  minHeight: '100vh',
   zIndex: '$1',
 })
 

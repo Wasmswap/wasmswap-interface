@@ -44,8 +44,6 @@ export const useTxRates = ({
     tokenBSymbol: tokenBSymbol,
   })
 
-  const dollarValue = (tokenADollarPrice || 0) * (tokenAAmount || 0)
-
   const shouldShowRates =
     (tokenASymbol &&
       tokenBSymbol &&
@@ -66,18 +64,15 @@ export const useTxRates = ({
         )
   )
 
+  const [tokenBDollarValue] = useTokenDollarValue(tokenBSymbol)
   const conversionRateInDollar = usePersistance(
     isLoading || fetchingTokenDollarPrice || !shouldShowRates
       ? undefined
-      : protectAgainstNaN(
-          calculateTokenToTokenConversionDollarRate({
-            tokenAAmount,
-            conversionRate,
-            tokenADollarPrice,
-            oneTokenToTokenPrice,
-          })
-        )
+      : protectAgainstNaN(conversionRate * tokenBDollarValue)
   )
+
+  const dollarValue =
+    (tokenBDollarValue || 0) * (tokenAAmount * conversionRate || 0)
 
   return {
     isShowing: Boolean(shouldShowRates),

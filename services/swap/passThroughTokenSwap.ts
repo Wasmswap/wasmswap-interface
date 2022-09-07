@@ -22,8 +22,8 @@ type PassThroughTokenSwapArgs = {
 export const passThroughTokenSwap = async ({
   tokenAmount,
   tokenA,
-  outputPool: outputSwap,
-  inputPool: swap,
+  outputPool,
+  inputPool,
   senderAddress,
   slippage,
   price,
@@ -32,14 +32,14 @@ export const passThroughTokenSwap = async ({
   const minOutputToken = Math.floor(price * (1 - slippage))
 
   const input_token =
-    swap.pool_assets[0].symbol === tokenA.symbol ? 'Token1' : 'Token2'
+    inputPool.pool_assets[0].symbol === tokenA.symbol ? 'Token1' : 'Token2'
 
   const swapMessage = {
     pass_through_swap: {
       output_min_token: `${minOutputToken}`,
       input_token,
       input_token_amount: `${tokenAmount}`,
-      output_amm_address: outputSwap.swap_address,
+      output_amm_address: outputPool.swap_address,
     },
   }
 
@@ -48,12 +48,12 @@ export const passThroughTokenSwap = async ({
       senderAddress,
       tokenAmount,
       tokenAddress: tokenA.token_address,
-      swapAddress: swap.swap_address,
+      swapAddress: inputPool.swap_address,
     })
 
     const executeMessage = createExecuteMessage({
       senderAddress,
-      contractAddress: swap.swap_address,
+      contractAddress: inputPool.swap_address,
       message: swapMessage,
     })
 
@@ -68,7 +68,7 @@ export const passThroughTokenSwap = async ({
 
   return await client.execute(
     senderAddress,
-    swap.swap_address,
+    inputPool.swap_address,
     swapMessage,
     'auto',
     undefined,

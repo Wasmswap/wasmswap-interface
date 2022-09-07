@@ -51,8 +51,8 @@ export interface GetTokenForTokenPriceInput {
   tokenAmount: number
   tokenA: TokenInfo
   tokenB: TokenInfo
-  swap: PoolEntityType
-  outputSwap: PoolEntityType
+  inputPool: PoolEntityType
+  outputPool: PoolEntityType
   client: CosmWasmClient
 }
 
@@ -60,33 +60,33 @@ export const getTokenForTokenPrice = async ({
   tokenAmount,
   tokenA,
   tokenB,
-  swap,
-  outputSwap,
+  inputPool,
+  outputPool,
   client,
 }: GetTokenForTokenPriceInput) => {
   try {
     const intermediatePrice =
-      tokenA.symbol === swap.pool_assets[0].symbol
+      tokenA.symbol === inputPool.pool_assets[0].symbol
         ? await getToken1ForToken2Price({
             nativeAmount: tokenAmount,
-            swapAddress: swap.swap_address,
+            swapAddress: inputPool.swap_address,
             client,
           })
         : await getToken2ForToken1Price({
             tokenAmount,
-            swapAddress: swap.swap_address,
+            swapAddress: inputPool.swap_address,
             client,
           })
 
-    return tokenB.symbol === outputSwap.pool_assets[1].symbol
+    return tokenB.symbol === outputPool.pool_assets[1].symbol
       ? await getToken1ForToken2Price({
           nativeAmount: intermediatePrice,
-          swapAddress: outputSwap.swap_address,
+          swapAddress: outputPool.swap_address,
           client,
         })
       : await getToken2ForToken1Price({
           tokenAmount: intermediatePrice,
-          swapAddress: outputSwap.swap_address,
+          swapAddress: outputPool.swap_address,
           client,
         })
   } catch (e) {

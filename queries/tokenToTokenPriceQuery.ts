@@ -80,8 +80,10 @@ export async function tokenToTokenPriceQueryWithPools({
       pricingQueries.push(
         getTokenForTokenPrice({
           tokenAmount: convertedTokenAmount,
-          swapAddress: passThroughPool.inputPool.swap_address,
-          outputSwapAddress: passThroughPool.outputPool.swap_address,
+          tokenA,
+          tokenB,
+          inputPool: passThroughPool.inputPool,
+          outputPool: passThroughPool.outputPool,
           client,
         }).then((price) => ({
           price: formatPrice(price),
@@ -101,57 +103,4 @@ export async function tokenToTokenPriceQueryWithPools({
   return prices.reduce((result, tokenPrice) => {
     return result?.price < tokenPrice.price ? tokenPrice : result
   }, prices[0])
-}
-
-export async function tokenToTokenPriceQuery({
-  baseToken,
-  fromTokenInfo,
-  toTokenInfo,
-  amount,
-  client,
-}): Promise<number | undefined> {
-  const formatPrice = (price) =>
-    convertMicroDenomToDenom(price, toTokenInfo.decimals)
-
-  const convertedTokenAmount = convertDenomToMicroDenom(
-    amount,
-    fromTokenInfo.decimals
-  )
-
-  if (fromTokenInfo.symbol === toTokenInfo.symbol) {
-    return 1
-  }
-
-  const shouldQueryBaseTokenForTokenB =
-    fromTokenInfo.symbol === baseToken.symbol && toTokenInfo.swap_address
-
-  const shouldQueryTokenBForBaseToken =
-    toTokenInfo.symbol === baseToken.symbol && fromTokenInfo.swap_address
-
-  if (shouldQueryBaseTokenForTokenB) {
-    const resp = await getToken1ForToken2Price({
-      nativeAmount: convertedTokenAmount,
-      swapAddress: toTokenInfo.swap_address,
-      client,
-    })
-
-    return formatPrice(resp)
-  } else if (shouldQueryTokenBForBaseToken) {
-    return formatPrice(
-      await getToken2ForToken1Price({
-        tokenAmount: convertedTokenAmount,
-        swapAddress: fromTokenInfo.swap_address,
-        client,
-      })
-    )
-  }
-
-  return formatPrice(
-    await getTokenForTokenPrice({
-      tokenAmount: convertedTokenAmount,
-      swapAddress: fromTokenInfo.swap_address,
-      outputSwapAddress: toTokenInfo.swap_address,
-      client,
-    })
-  )
 }

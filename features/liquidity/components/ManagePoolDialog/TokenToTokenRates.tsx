@@ -17,7 +17,7 @@ export const TokenToTokenRates = ({
     tokenBSymbol,
   })
 
-  const { isShowing, conversionRate, conversionRateInDollar, dollarValue } =
+  const { isShowing, conversionRate, conversionRateInDollar, tokenBSwapValueUSD } =
     useTxRates({
       tokenASymbol,
       tokenBSymbol,
@@ -37,7 +37,7 @@ export const TokenToTokenRates = ({
       </Text>
       <Text variant="caption" color="disabled">
         $
-        {dollarValueFormatterWithDecimals(dollarValue * 2, {
+        {dollarValueFormatterWithDecimals(tokenBSwapValueUSD * 2, {
           includeCommaSeparation: true,
         })}
       </Text>

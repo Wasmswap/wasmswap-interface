@@ -36,7 +36,7 @@ export const TransactionTips = ({
     tokenAmount: tokenA?.amount || 1,
   })
 
-  const { isShowing, conversionRate, conversionRateInDollar, dollarValue } =
+  const { isShowing, conversionRate, conversionRateInDollar, tokenBSwapValueUSD } =
     useTxRates({
       tokenASymbol: tokenA?.tokenSymbol,
       tokenBSymbol: tokenB?.tokenSymbol,
@@ -72,7 +72,7 @@ export const TransactionTips = ({
     </>
   )
 
-  const formattedDollarValue = dollarValueFormatterWithDecimals(dollarValue, {
+  const formattedDollarValue = dollarValueFormatterWithDecimals(tokenBSwapValueUSD, {
     includeCommaSeparation: true,
   })
 

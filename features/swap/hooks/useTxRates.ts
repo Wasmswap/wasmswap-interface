@@ -23,7 +23,7 @@ export const useTxRates = ({
   tokenToTokenPrice,
   isLoading,
 }) => {
-  const [_, fetchingTokenDollarPrice] = useTokenDollarValue(tokenASymbol)
+  const [tokenADollarValue, fetchingTokenDollarPrice] = useTokenDollarValue(tokenASymbol)
 
   const [oneTokenToTokenPrice] = usePriceForOneToken({
     tokenASymbol: tokenASymbol,
@@ -57,13 +57,15 @@ export const useTxRates = ({
       : protectAgainstNaN(conversionRate * tokenBDollarValue)
   )
 
-  const dollarValue =
+  const tokenASwapValueUSD = (tokenADollarValue || 0) * (tokenAAmount || 0) 
+  const tokenBSwapValueUSD =
     (tokenBDollarValue || 0) * (tokenAAmount * conversionRate || 0)
 
   return {
     isShowing: Boolean(shouldShowRates),
     conversionRate,
     conversionRateInDollar,
-    dollarValue,
+    tokenASwapValueUSD,
+    tokenBSwapValueUSD,
   }
 }

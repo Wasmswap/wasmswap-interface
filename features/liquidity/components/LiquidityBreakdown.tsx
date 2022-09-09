@@ -1,13 +1,16 @@
 import { useTokenToTokenPrice } from 'features/swap'
 import {
+  Button,
   ChevronIcon,
   Column,
   Divider,
   dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   ImageForTokenLogo,
+  InfoIcon,
   Inline,
   Text,
+  Tooltip,
 } from 'junoblocks'
 import React from 'react'
 import {
@@ -43,10 +46,7 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
   <Inline justifyContent="space-between" css={{ padding: '$16 0 $14' }}>
     <Inline gap={6}>
       <Text variant="header">All Pools</Text>
-      <ChevronIcon
-        rotation="180deg"
-        css={{ color: '$colors$dark' }}
-      />
+      <ChevronIcon rotation="180deg" css={{ color: '$colors$dark' }} />
 
       <Inline gap={8}>
         <Inline gap={3}>
@@ -235,8 +235,12 @@ export const LiquidityBreakdown = ({
             <Text variant="legend" color="secondary" align="left">
               Swap Fee
             </Text>
+
             <Inline gap={2}>
-              <Text variant="header">0.2%</Text>
+              <Text variant="header">0.3%</Text>
+              <Tooltip label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}>
+                <Button variant="ghost" size="small" icon={<InfoIcon />} />
+              </Tooltip>
             </Inline>
           </Column>
 

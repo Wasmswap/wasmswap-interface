@@ -44,7 +44,8 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
     <Inline gap={6}>
       <Text variant="header">All Pools</Text>
       <ChevronIcon
-        css={{ transform: 'rotate(180deg)', color: '$colors$dark' }}
+        rotation="180deg"
+        css={{ color: '$colors$dark' }}
       />
 
       <Inline gap={8}>
@@ -230,6 +231,15 @@ export const LiquidityBreakdown = ({
               <Text variant="header">{compactTokenBAmount}</Text>
             </Inline>
           </Column>
+          <Column gap={8} align="flex-start" justifyContent="flex-start">
+            <Text variant="legend" color="secondary" align="left">
+              Swap Fee
+            </Text>
+            <Inline gap={2}>
+              <Text variant="header">0.2%</Text>
+            </Inline>
+          </Column>
+
           <Column gap={4} align="center" justifyContent="space-between">
             <Text variant="legend" color="secondary" align="right">
               Bonding Reward

@@ -134,36 +134,38 @@ export const TransactionTips = ({
         )}
       </StyledDivForRateWrapper>
       <Inline justifyContent={'flex-end'} gap={8} css={{ cursor: 'pointer' }}>
-        <Tooltip label="Price impact due to the amount of liquity available in the pool.">
-          <Inline
-            css={{
-              backgroundColor: errorThreshold
-                ? '$backgroundColors$error'
-                : '$backgroundColors$secondary',
-              padding: '$2 $4 $2 $2',
-              borderRadius: 4,
-            }}
-          >
-            <ArrowUpIcon
-              color={errorThreshold ? 'error' : 'secondary'}
+        {tokenB?.tokenSymbol && (
+          <Tooltip label="Price impact due to the amount of liquity available in the pool.">
+            <Inline
               css={{
-                transform: priceImpact < 0 ? 'rotate(180deg)' : undefined,
-              }}
-              size="medium"
-            />
-            <Text
-              variant="legend"
-              wrap={false}
-              css={{
-                color: errorThreshold
-                  ? '$textColors$error'
-                  : '$textColors$secondary',
+                backgroundColor: errorThreshold
+                  ? '$backgroundColors$error'
+                  : '$backgroundColors$secondary',
+                padding: '$2 $4 $2 $2',
+                borderRadius: 4,
               }}
             >
-              {formattedPriceImpact}%
-            </Text>
-          </Inline>
-        </Tooltip>
+              <ArrowUpIcon
+                color={errorThreshold ? 'error' : 'secondary'}
+                css={{
+                  transform: priceImpact < 0 ? 'rotate(180deg)' : undefined,
+                }}
+                size="medium"
+              />
+              <Text
+                variant="legend"
+                wrap={false}
+                css={{
+                  color: errorThreshold
+                    ? '$textColors$error'
+                    : '$textColors$secondary',
+                }}
+              >
+                {formattedPriceImpact}%
+              </Text>
+            </Inline>
+          </Tooltip>
+        )}
         <Column gap={4}>
           <Text variant="legend">${tokenAFormattedSwapValue}</Text>
           <Text variant="legend">${tokenBFormattedSwapValue}</Text>

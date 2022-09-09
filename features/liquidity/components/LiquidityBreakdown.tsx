@@ -170,6 +170,20 @@ export const LiquidityBreakdown = ({
                 </Text>
                 <AprPill value={formattedYieldPercentageReturn} />
               </Column>
+              <Column gap={4} align="flex-start" justifyContent="flex-start">
+                <Text variant="legend" color="secondary" align="left">
+                  Swap Fee
+                </Text>
+
+                <Inline gap={2}>
+                  <Text variant="header">0.3%</Text>
+                  <Tooltip
+                    label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}
+                  >
+                    <Button variant="ghost" size="small" icon={<InfoIcon />} />
+                  </Tooltip>
+                </Inline>
+              </Column>
               {__POOL_REWARDS_ENABLED__ &&
                 rewardsContracts &&
                 rewardsContracts.length > 0 && (
@@ -238,7 +252,9 @@ export const LiquidityBreakdown = ({
 
             <Inline gap={2}>
               <Text variant="header">0.3%</Text>
-              <Tooltip label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}>
+              <Tooltip
+                label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}
+              >
                 <Button variant="ghost" size="small" icon={<InfoIcon />} />
               </Tooltip>
             </Inline>

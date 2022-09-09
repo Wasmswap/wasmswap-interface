@@ -17,14 +17,18 @@ export const TokenToTokenRates = ({
     tokenBSymbol,
   })
 
-  const { isShowing, conversionRate, conversionRateInDollar, tokenBSwapValueUSD } =
-    useTxRates({
-      tokenASymbol,
-      tokenBSymbol,
-      tokenAAmount,
-      tokenToTokenPrice: oneTokenToTokenPrice * tokenAAmount,
-      isLoading,
-    })
+  const {
+    isShowing,
+    conversionRate,
+    conversionRateInDollar,
+    tokenBSwapValueUSD,
+  } = useTxRates({
+    tokenASymbol,
+    tokenBSymbol,
+    tokenAAmount,
+    tokenToTokenPrice: oneTokenToTokenPrice * tokenAAmount,
+    isLoading,
+  })
 
   return (
     <StyledDivForGrid active={isShowing}>

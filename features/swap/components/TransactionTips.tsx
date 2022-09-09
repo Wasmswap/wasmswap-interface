@@ -1,4 +1,5 @@
 import {
+  ArrowUpIcon,
   Button,
   Column,
   dollarValueFormatterWithDecimals,
@@ -79,7 +80,9 @@ export const TransactionTips = ({
 
   const priceImpact =
     (tokenBSwapValueUSD - tokenASwapValueUSD) / tokenASwapValueUSD
-  const formattedPriceImpact = Math.round(priceImpact * 10000) / 100
+  const formattedPriceImpact = Math.abs(Math.round(priceImpact * 10000) / 100)
+  const errorThreshold = priceImpact < -0.05
+
   const tokenAFormattedSwapValue = dollarValueFormatterWithDecimals(
     tokenASwapValueUSD,
     {
@@ -129,10 +132,33 @@ export const TransactionTips = ({
           </Text>
         )}
       </StyledDivForRateWrapper>
-      <Inline justifyContent={'flex-end'} gap={12}>
-        <Button variant="secondary" css={{}}>
-          <Text variant="legend" wrap={false}>{formattedPriceImpact}%</Text>
-        </Button>
+      <Inline justifyContent={'flex-end'} gap={8}>
+        <Inline
+          css={{
+            backgroundColor: errorThreshold
+              ? '$backgroundColors$error'
+              : '$backgroundColors$secondary',
+            padding: '$2 $4 $2 $2',
+            borderRadius: 4,
+          }}
+        >
+          <ArrowUpIcon
+            color={errorThreshold ? 'error' : 'secondary'}
+            css={{ transform: priceImpact < 0 ? 'rotate(180deg)' : undefined }}
+            size="medium"
+          />
+          <Text
+            variant="legend"
+            wrap={false}
+            css={{
+              color: errorThreshold
+                ? '$textColors$error'
+                : '$textColors$secondary',
+            }}
+          >
+            {formattedPriceImpact}%
+          </Text>
+        </Inline>
         <Column gap={4}>
           <Text variant="legend">${tokenAFormattedSwapValue}</Text>
           <Text variant="legend">${tokenBFormattedSwapValue}</Text>

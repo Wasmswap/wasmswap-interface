@@ -36,14 +36,19 @@ export const TransactionTips = ({
     tokenAmount: tokenA?.amount || 1,
   })
 
-  const { isShowing, conversionRate, conversionRateInDollar, tokenBSwapValueUSD } =
-    useTxRates({
-      tokenASymbol: tokenA?.tokenSymbol,
-      tokenBSymbol: tokenB?.tokenSymbol,
-      tokenAAmount: tokenA?.amount || 1,
-      tokenToTokenPrice,
-      isLoading: isPriceLoading,
-    })
+  const {
+    isShowing,
+    conversionRate,
+    conversionRateInDollar,
+    tokenASwapValueUSD,
+    tokenBSwapValueUSD,
+  } = useTxRates({
+    tokenASymbol: tokenA?.tokenSymbol,
+    tokenBSymbol: tokenB?.tokenSymbol,
+    tokenAAmount: tokenA?.amount || 1,
+    tokenToTokenPrice,
+    isLoading: isPriceLoading,
+  })
 
   const switchTokensButton = (
     <Button
@@ -72,9 +77,21 @@ export const TransactionTips = ({
     </>
   )
 
-  const formattedDollarValue = dollarValueFormatterWithDecimals(tokenBSwapValueUSD, {
-    includeCommaSeparation: true,
-  })
+  const priceImpact =
+    (tokenBSwapValueUSD - tokenASwapValueUSD) / tokenASwapValueUSD
+  const formattedPriceImpact = Math.round(priceImpact * 10000) / 100
+  const tokenAFormattedSwapValue = dollarValueFormatterWithDecimals(
+    tokenASwapValueUSD,
+    {
+      includeCommaSeparation: true,
+    }
+  )
+  const tokenBFormattedSwapValue = dollarValueFormatterWithDecimals(
+    tokenBSwapValueUSD,
+    {
+      includeCommaSeparation: true,
+    }
+  )
 
   if (size === 'small') {
     return (
@@ -93,7 +110,7 @@ export const TransactionTips = ({
               {transactionRates}
             </Text>
             <Text variant="caption" color="disabled" wrap={false}>
-              Swap estimate: ${formattedDollarValue}
+              Swap estimate: ${tokenBFormattedSwapValue}
             </Text>
           </Column>
         )}
@@ -112,8 +129,15 @@ export const TransactionTips = ({
           </Text>
         )}
       </StyledDivForRateWrapper>
-
-      <Text variant="legend">${formattedDollarValue}</Text>
+      <Inline justifyContent={'flex-end'} gap={12}>
+        <Button variant="secondary" css={{}}>
+          <Text variant="legend" wrap={false}>{formattedPriceImpact}%</Text>
+        </Button>
+        <Column gap={4}>
+          <Text variant="legend">${tokenAFormattedSwapValue}</Text>
+          <Text variant="legend">${tokenBFormattedSwapValue}</Text>
+        </Column>
+      </Inline>
     </StyledDivForWrapper>
   )
 }

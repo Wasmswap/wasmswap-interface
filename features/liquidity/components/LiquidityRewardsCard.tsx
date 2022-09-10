@@ -1,7 +1,6 @@
 import {
   ArrowUpIcon,
   Button,
-  CardContent,
   Column,
   dollarValueFormatterWithDecimals,
   Inline,

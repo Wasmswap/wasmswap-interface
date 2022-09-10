@@ -141,42 +141,44 @@ export const LiquidityRewardsCard = ({
           </Text>
         </Column>
       </Column>
-      <CardContent>
-        <Inline
-          justifyContent={'space-between'}
-          css={{ padding: '$8 0 $12', flexWrap: 'wrap', margin: '-$4' }}
-        >
-          <Inline gap={14} css={{ margin: '$4' }}>
-            {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
-              <UnderlyingAssetRow
-                key={tokenInfo?.symbol}
-                tokenInfo={tokenInfo}
-                symbolVisible={false}
-                tokenAmount={tokenAmount}
-              />
-            ))}
-            {Boolean(pendingRewardsRenderedInTooltip?.length) && (
-              <AdditionalUnderlyingAssetsRow
-                assets={pendingRewardsRenderedInTooltip}
-              />
-            )}
-          </Inline>
-          <Button
-            onClick={(e) => {
-              e.stopPropagation()
-              onClick?.()
-            }}
-            state={receivedRewards ? cardInteractionState : undefined}
-            variant="primary"
-            size="large"
-            ref={refForCard}
-            disabled={!receivedRewards || loading}
-            css={{ margin: '$4' }}
-          >
-            {loading ? 'Pending...' : 'Claim rewards'}
-          </Button>
+      <Inline
+        justifyContent="space-between"
+        css={{
+          padding: '$8 0 $12',
+          flexWrap: 'wrap',
+          width: '100%',
+        }}
+      >
+        <Inline gap={14} css={{ margin: '$4 0', flexWrap: 'wrap' }}>
+          {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
+            <UnderlyingAssetRow
+              key={tokenInfo?.symbol}
+              tokenInfo={tokenInfo}
+              symbolVisible={false}
+              tokenAmount={tokenAmount}
+            />
+          ))}
+          {Boolean(pendingRewardsRenderedInTooltip?.length) && (
+            <AdditionalUnderlyingAssetsRow
+              assets={pendingRewardsRenderedInTooltip}
+            />
+          )}
         </Inline>
-      </CardContent>
+        <Button
+          onClick={(e) => {
+            e.stopPropagation()
+            onClick?.()
+          }}
+          state={receivedRewards ? cardInteractionState : undefined}
+          variant="primary"
+          size="large"
+          ref={refForCard}
+          disabled={!receivedRewards || loading}
+          css={{ margin: '$4 0' }}
+        >
+          {loading ? 'Pending...' : 'Claim rewards'}
+        </Button>
+      </Inline>
     </Inline>
   )
 }

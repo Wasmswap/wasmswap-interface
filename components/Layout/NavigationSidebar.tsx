@@ -209,84 +209,86 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
         {walletButton}
         {menuLinks}
       </StyledMenuContainer>
-      <Text variant="legend" css={{ padding: '$4 $3' }}>
-        {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
-      </Text>
-      <Inline css={{ display: 'grid' }}>
-        <Button
-          iconLeft={<MoonIcon />}
-          variant="ghost"
-          size="large"
-          onClick={(e) => {
-            if (e.target !== document.querySelector('#theme-toggle')) {
-              themeController.toggle()
+      <Column>
+        <Text variant="legend" css={{ padding: '$4 $3' }}>
+          {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
+        </Text>
+        <Inline css={{ display: 'grid' }}>
+          <Button
+            iconLeft={<MoonIcon />}
+            variant="ghost"
+            size="large"
+            onClick={(e) => {
+              if (e.target !== document.querySelector('#theme-toggle')) {
+                themeController.toggle()
+              }
+            }}
+            iconRight={
+              <ToggleSwitch
+                id="theme-toggle"
+                name="dark-theme"
+                onChange={themeController.setDarkTheme}
+                checked={themeController.theme.name === 'dark'}
+                optionLabels={['Dark theme', 'Light theme']}
+              />
             }
-          }}
-          iconRight={
-            <ToggleSwitch
-              id="theme-toggle"
-              name="dark-theme"
-              onChange={themeController.setDarkTheme}
-              checked={themeController.theme.name === 'dark'}
-              optionLabels={['Dark theme', 'Light theme']}
-            />
-          }
-        >
-          Dark mode
-        </Button>
-      </Inline>
-      <Divider offsetY="$6" />
-      <Column gap={4}>
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
-          target="__blank"
-          variant="ghost"
-          size="large"
-          iconLeft={<FeedbackIcon />}
-          iconRight={<IconWrapper icon={<UpRightArrow />} />}
-        >
-          Provide feedback
-        </Button>
+          >
+            Dark mode
+          </Button>
+        </Inline>
+        <Divider offsetY="$6" />
+        <Column gap={4}>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
+            target="__blank"
+            variant="ghost"
+            size="large"
+            iconLeft={<FeedbackIcon />}
+            iconRight={<IconWrapper icon={<UpRightArrow />} />}
+          >
+            Provide feedback
+          </Button>
+        </Column>
+        <Inline gap={2} css={{ padding: '$20 0 $13' }}>
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_DISCORD_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Discord />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Telegram />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_TWITTER_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Twitter />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+          <Button
+            as="a"
+            href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
+            target="__blank"
+            icon={<IconWrapper icon={<Github />} />}
+            variant="ghost"
+            size="medium"
+            css={buttonIconCss}
+          />
+        </Inline>
       </Column>
-      <Inline gap={2} css={{ padding: '$20 0 $13' }}>
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_DISCORD_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Discord />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_TELEGRAM_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Telegram />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_TWITTER_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Twitter />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-        <Button
-          as="a"
-          href={process.env.NEXT_PUBLIC_INTERFACE_GITHUB_LINK}
-          target="__blank"
-          icon={<IconWrapper icon={<Github />} />}
-          variant="ghost"
-          size="medium"
-          css={buttonIconCss}
-        />
-      </Inline>
     </StyledWrapper>
   )
 }

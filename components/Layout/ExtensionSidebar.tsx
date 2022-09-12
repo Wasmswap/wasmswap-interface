@@ -30,14 +30,19 @@ export const ExtensionSidebar = () => {
 }
 
 const StyledDivForWrapper = styled('div', {
-  zIndex: '$2',
+  flexBasis: '16.5rem',
+  flexGrow: 0,
+  flexShrink: 0,
+  zIndex: 1,
   position: 'sticky',
   borderLeft: '1px solid $borderColors$inactive',
+  backgroundColor: '$backgroundColors$base',
   top: 0,
   right: 0,
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
+  minHeight: '100vh',
   padding: '$11 $12',
 })
 

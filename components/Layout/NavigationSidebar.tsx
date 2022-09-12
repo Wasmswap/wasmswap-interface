@@ -15,7 +15,6 @@ import {
   media,
   MoonIcon,
   Open,
-  SharesIcon,
   styled,
   Telegram,
   Text,
@@ -33,7 +32,7 @@ import React, { ReactNode, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
-
+import { PriceData } from '../../icons/PriceData'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
 type NavigationSidebarProps = {
@@ -41,10 +40,7 @@ type NavigationSidebarProps = {
   backButton?: ReactNode
 }
 
-export function NavigationSidebar({
-  shouldRenderBackButton,
-  backButton,
-}: NavigationSidebarProps) {
+export function NavigationSidebar(_: NavigationSidebarProps) {
   const { mutate: connectWallet } = useConnectWallet()
   const [{ key }, setWalletState] = useRecoilState(walletState)
 
@@ -107,17 +103,17 @@ export function NavigationSidebar({
           iconLeft={<IconWrapper icon={<Open />} />}
           selected={getIsLinkActive('/pools')}
         >
-          Liquidity
+          Pools
         </Button>
       </Link>
-      <Divider offsetY="$8" />
+      <Inline css={{ paddingBottom: '$6' }} />
       <Link href={process.env.NEXT_PUBLIC_GOVERNANCE_LINK_URL} passHref>
         <Button
           as="a"
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<TreasuryIcon />}
+          iconLeft={<IconWrapper icon={<TreasuryIcon />} />}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
@@ -129,7 +125,7 @@ export function NavigationSidebar({
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<SharesIcon />}
+          iconLeft={<IconWrapper icon={<PriceData />} />}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_PRICE_LINK_LABEL}
@@ -154,66 +150,39 @@ export function NavigationSidebar({
       </Button>
     )
 
-    if (shouldRenderBackButton) {
-      return (
-        <>
-          <StyledWrapperForMobile>
-            <Inline align="center" justifyContent="space-between">
-              <Column align="flex-start" css={{ flex: 0.3 }}>
-                {backButton}
-              </Column>
-
-              <Link href="/" passHref>
-                <Column
-                  css={{ flex: 0.4, color: '$colors$black' }}
-                  align="center"
-                  as="a"
-                >
-                  <Logo data-logo="" width="37px" height="47px" />
-                </Column>
-              </Link>
-              <Column align="flex-end" css={{ flex: 0.3 }}>
-                {triggerMenuButton}
-              </Column>
-            </Inline>
-            {isOpen && (
-              <Column css={{ paddingTop: '$12' }}>
-                {walletButton}
-                {menuLinks}
-              </Column>
-            )}
-          </StyledWrapperForMobile>
-          <Divider />
-        </>
-      )
-    }
-
     return (
       <StyledWrapperForMobile>
-        <Inline align="center" justifyContent="space-between">
-          <Link href="/" passHref>
-            <StyledDivForLogo as="a">
-              <Logo data-logo="" width="37px" height="47px" />
-              <div data-logo-label="">
-                <Text
-                  variant="caption"
-                  color="error"
-                  css={{ padding: '0 0 $1 0' }}
-                >
-                  {__TEST_MODE__ ? 'Testnet' : 'Beta'}
-                </Text>
-                <LogoText />
-              </div>
-            </StyledDivForLogo>
-          </Link>
-          {triggerMenuButton}
-        </Inline>
-        {isOpen && (
-          <Column css={{ paddingTop: '$12' }}>
-            {walletButton}
-            {menuLinks}
-          </Column>
-        )}
+        <Column gap={6}>
+          <Inline
+            align="center"
+            justifyContent="space-between"
+            css={{ padding: '0 $12' }}
+          >
+            <Link href="/" passHref>
+              <StyledDivForLogo as="a">
+                <Logo data-logo="" width="37px" height="47px" />
+                <div data-logo-label="">
+                  <Text
+                    variant="caption"
+                    color="error"
+                    css={{ padding: '0 0 $1 0' }}
+                  >
+                    {__TEST_MODE__ ? 'Testnet' : 'Beta'}
+                  </Text>
+                  <LogoText />
+                </div>
+              </StyledDivForLogo>
+            </Link>
+            {triggerMenuButton}
+          </Inline>
+          {isOpen && (
+            <Column css={{ paddingTop: '$12' }}>
+              {walletButton}
+              {menuLinks}
+            </Column>
+          )}
+          <Divider />
+        </Column>
       </StyledWrapperForMobile>
     )
   }
@@ -240,7 +209,7 @@ export function NavigationSidebar({
         {walletButton}
         {menuLinks}
       </StyledMenuContainer>
-      <div>
+      <Column>
         <Text variant="legend" css={{ padding: '$4 $3' }}>
           {APP_NAME} v{process.env.NEXT_PUBLIC_APP_VERSION}
         </Text>
@@ -319,12 +288,15 @@ export function NavigationSidebar({
             css={buttonIconCss}
           />
         </Inline>
-      </div>
+      </Column>
     </StyledWrapper>
   )
 }
 
 const StyledWrapper = styled('div', {
+  flexBasis: '16.5rem',
+  flexGrow: 0,
+  flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -338,7 +310,8 @@ const StyledWrapper = styled('div', {
   width: '100%',
   height: '100%',
   maxHeight: '100vh',
-  zIndex: '$1',
+  minHeight: '100vh',
+  zIndex: 1,
 })
 
 const StyledWrapperForMobile = styled('div', {
@@ -346,7 +319,7 @@ const StyledWrapperForMobile = styled('div', {
   position: 'sticky',
   left: 0,
   top: 0,
-  padding: '$10 $12',
+  padding: '$10 0 0',
   backgroundColor: '$backgroundColors$base',
   zIndex: '$3',
 })

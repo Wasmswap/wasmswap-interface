@@ -1,8 +1,6 @@
 import {
   ArrowUpIcon,
   Button,
-  Card,
-  CardContent,
   Column,
   dollarValueFormatterWithDecimals,
   Inline,
@@ -112,42 +110,50 @@ export const LiquidityRewardsCard = ({
   )
 
   return (
-    <Card
-      ref={refForCard}
+    <Inline
       tabIndex={0}
       role="button"
-      onClick={receivedRewards ? onClick : undefined}
-      variant="primary"
       css={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        alignItems: 'flex-start',
       }}
     >
-      <CardContent>
-        <Text variant="legend" color="brand" css={{ padding: '$16 0 $6' }}>
-          Liquidity rewards
+      <Column>
+        <Text variant={'primary'} color="body" css={{ padding: '$16 0 $10' }}>
+          Pooling rewards
         </Text>
-        <Text variant="hero" color="brand">
-          ${rewardsDollarValue}
-        </Text>
-        <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>
-          {pendingRewards?.length
-            ? `Receive ${pendingRewards.length} tokens`
-            : ''}
-        </Text>
-      </CardContent>
-      <CardContent css={{ paddingTop: '$10' }}>
-        <Column gap={6}>
-          {new Array(4 - pendingRewardsRenderedInline.length)
-            .fill(0)
-            .map((_, index) => (
-              <UnderlyingAssetRow visible={false} key={index} />
-            ))}
+        <Column
+          css={{
+            '-webkit-background-clip': 'text',
+            '-webkit-text-fill-color': 'transparent',
+            backgroundImage:
+              'linear-gradient(140.55deg, #FE9C9E 1.35%, #FA2995 5.1%, #EA1EE9 10.37%, #287CF4 58.83%, #4CA7F2 75.84%, #31DAE2 99.52%)',
+          }}
+        >
+          <Text variant="hero">+ ${rewardsDollarValue}</Text>
+          <Text variant="link" css={{ paddingTop: '$2' }}>
+            {pendingRewards?.length
+              ? `Spread in ${pendingRewards.length} tokens`
+              : ''}
+          </Text>
+        </Column>
+      </Column>
+      <Inline
+        justifyContent="space-between"
+        css={{
+          padding: '$8 0 $12',
+          flexWrap: 'wrap',
+          width: '100%',
+        }}
+      >
+        <Inline gap={14} css={{ margin: '$4 0', flexWrap: 'wrap' }}>
           {pendingRewardsRenderedInline?.map(({ tokenInfo, tokenAmount }) => (
             <UnderlyingAssetRow
               key={tokenInfo?.symbol}
               tokenInfo={tokenInfo}
+              symbolVisible={false}
               tokenAmount={tokenAmount}
             />
           ))}
@@ -156,23 +162,22 @@ export const LiquidityRewardsCard = ({
               assets={pendingRewardsRenderedInTooltip}
             />
           )}
-        </Column>
-        <Inline css={{ padding: '$16 0 $12' }}>
-          <Button
-            onClick={(e) => {
-              e.stopPropagation()
-              onClick?.()
-            }}
-            state={receivedRewards ? cardInteractionState : undefined}
-            variant="primary"
-            size="large"
-            css={{ width: '100%' }}
-            disabled={!receivedRewards || loading}
-          >
-            {loading ? 'Pending...' : 'Claim your rewards'}
-          </Button>
         </Inline>
-      </CardContent>
-    </Card>
+        <Button
+          onClick={(e) => {
+            e.stopPropagation()
+            onClick?.()
+          }}
+          state={receivedRewards ? cardInteractionState : undefined}
+          variant="primary"
+          size="large"
+          ref={refForCard}
+          disabled={!receivedRewards || loading}
+          css={{ margin: '$4 0' }}
+        >
+          {loading ? 'Pending...' : 'Claim rewards'}
+        </Button>
+      </Inline>
+    </Inline>
   )
 }

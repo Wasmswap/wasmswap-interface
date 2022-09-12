@@ -2,7 +2,6 @@ import { AppLayout, NavigationSidebar } from 'components'
 import {
   BondLiquidityDialog,
   LiquidityBreakdown,
-  LiquidityHeader,
   LiquidityRewardsCard,
   ManageBondedLiquidityCard,
   ManageLiquidityCard,
@@ -14,7 +13,7 @@ import { useClaimRewards, usePendingRewards } from 'hooks/useRewardsQueries'
 import {
   Button,
   ChevronIcon,
-  Divider,
+  Column,
   Error,
   IconWrapper,
   Inline,
@@ -170,14 +169,6 @@ export default function Pool() {
           />
         }
       >
-        <LiquidityHeader
-          tokenA={tokenA}
-          tokenB={tokenB}
-          size={isMobile ? 'small' : 'large'}
-        />
-
-        {!isMobile && <Divider />}
-
         {isLoadingInitial && (
           <StyledDivForSpinner>
             <Spinner color="primary" size={32} />
@@ -199,33 +190,41 @@ export default function Pool() {
             />
             <>
               <StyledDivForCards>
-                <ManageLiquidityCard
-                  providedLiquidityReserve={pool.liquidity.reserves.provided}
-                  providedLiquidity={pool.liquidity.available.provided}
-                  stakedLiquidityReserve={
-                    pool.liquidity.reserves.providedStaked
-                  }
-                  providedTotalLiquidity={pool.liquidity.providedTotal}
-                  stakedLiquidity={pool.liquidity.staked}
-                  tokenASymbol={tokenA.symbol}
-                  tokenBSymbol={tokenB.symbol}
-                  supportsIncentives={supportsIncentives}
-                  onClick={() =>
-                    setManageLiquidityDialogState({
-                      isShowing: true,
-                      actionType: 'add',
-                    })
-                  }
-                />
-                <ManageBondedLiquidityCard
-                  onClick={() => setIsBondingDialogShowing(true)}
-                  providedLiquidity={pool.liquidity.available.provided}
-                  stakedLiquidity={pool.liquidity.staked.provided}
-                  yieldPercentageReturn={
-                    pool.liquidity.rewards.annualYieldPercentageReturn
-                  }
-                  supportsIncentives={supportsIncentives}
-                />
+                <Column
+                  style={{ flexBasis: '0px', flexGrow: 1, flexShrink: 1 }}
+                >
+                  <ManageLiquidityCard
+                    providedLiquidityReserve={pool.liquidity.reserves.provided}
+                    providedLiquidity={pool.liquidity.available.provided}
+                    stakedLiquidityReserve={
+                      pool.liquidity.reserves.providedStaked
+                    }
+                    providedTotalLiquidity={pool.liquidity.providedTotal}
+                    stakedLiquidity={pool.liquidity.staked}
+                    tokenASymbol={tokenA.symbol}
+                    tokenBSymbol={tokenB.symbol}
+                    supportsIncentives={supportsIncentives}
+                    onClick={() =>
+                      setManageLiquidityDialogState({
+                        isShowing: true,
+                        actionType: 'add',
+                      })
+                    }
+                  />
+                </Column>
+                <Column css={{ flexBasis: '0px', flexGrow: 1, flexShrink: 1 }}>
+                  <ManageBondedLiquidityCard
+                    onClick={() => setIsBondingDialogShowing(true)}
+                    providedLiquidity={pool.liquidity.available.provided}
+                    stakedLiquidity={pool.liquidity.staked.provided}
+                    yieldPercentageReturn={
+                      pool.liquidity.rewards.annualYieldPercentageReturn
+                    }
+                    supportsIncentives={supportsIncentives}
+                  />
+                </Column>
+              </StyledDivForCards>
+              <Column css={{ marginTop: '$6' }}>
                 <LiquidityRewardsCard
                   onClick={mutateClaimRewards}
                   hasBondedLiquidity={
@@ -238,7 +237,7 @@ export default function Pool() {
                   loading={isClaimingRewards}
                   supportsIncentives={supportsIncentives}
                 />
-              </StyledDivForCards>
+              </Column>
             </>
             <>
               {supportsIncentives && (
@@ -258,9 +257,11 @@ export default function Pool() {
 }
 
 const StyledDivForCards = styled('div', {
-  display: 'grid',
-  columnGap: '$8',
-  gridTemplateColumns: '1fr 1fr 1fr',
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: '$8',
+  alignItems: 'stretch',
   [media.sm]: {
     gridTemplateColumns: '1fr',
     rowGap: '$8',

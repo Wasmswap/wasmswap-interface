@@ -75,7 +75,7 @@ export const ManageLiquidityCard = ({
     >
       <CardContent>
         <Text variant="legend" color="body" css={{ padding: '$16 0 $6' }}>
-          Your liquidity
+          Holdings
         </Text>
         <Text variant="hero">${providedLiquidityDollarValue}</Text>
         <Text variant="link" color="brand" css={{ paddingTop: '$2' }}>

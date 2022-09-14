@@ -54,6 +54,7 @@ export type PoolLiquidityState = {
 
 export type PoolEntityTypeWithLiquidity = PoolEntityType & {
   liquidity: PoolLiquidityState
+  swap_info: Awaited<ReturnType<typeof querySwapInfo>>
 }
 
 type QueryMultiplePoolsArgs = {
@@ -191,6 +192,7 @@ export const useQueryMultiplePoolsLiquidity = ({
     return {
       ...pool,
       liquidity,
+      swap_info: swap,
     }
   }
 

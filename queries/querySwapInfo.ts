@@ -8,5 +8,7 @@ export async function querySwapInfo({ context: { client }, swap_address }) {
     token1_reserve: Number(swap.token1_reserve),
     token2_reserve: Number(swap.token2_reserve),
     lp_token_supply: Number(swap.lp_token_supply),
+    protocol_fee_percent: Number(swap.protocol_fee_percent),
+    lp_fee_percent: Number(swap.lp_fee_percent),
   }
 }

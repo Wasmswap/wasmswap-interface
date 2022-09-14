@@ -34,6 +34,8 @@ type LiquidityBreakdownProps = {
   yieldPercentageReturn: number
   rewardsContracts: Array<SerializedRewardsContract>
   size: 'large' | 'small'
+  lpFee?: number
+  protocolFee?: number
 }
 
 type PoolHeaderProps = {
@@ -73,6 +75,25 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
   </Inline>
 )
 
+const SwapFeeElem = ({
+  protocolFee,
+  lpFee,
+}: {
+  protocolFee?: number
+  lpFee?: number
+}) => (
+  <>
+    <Text variant="header">{`${(protocolFee || 0) + (lpFee || 0)}%`}</Text>
+    <Tooltip
+      label={`${lpFee || 0}% of Swap Fee goes to LP Providers (LP) and ${
+        protocolFee || 0
+      }% goes to Raw DAO`}
+    >
+      <Button variant="ghost" size="small" icon={<InfoIcon />} />
+    </Tooltip>
+  </>
+)
+
 export const LiquidityBreakdown = ({
   tokenA,
   tokenB,
@@ -80,6 +101,8 @@ export const LiquidityBreakdown = ({
   totalLiquidity,
   yieldPercentageReturn,
   rewardsContracts,
+  lpFee,
+  protocolFee,
   size = 'large',
 }: LiquidityBreakdownProps) => {
   const [{ price: tokenPrice }, isPriceLoading] = useTokenToTokenPrice({
@@ -176,12 +199,7 @@ export const LiquidityBreakdown = ({
                 </Text>
 
                 <Inline gap={2}>
-                  <Text variant="header">0.3%</Text>
-                  <Tooltip
-                    label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}
-                  >
-                    <Button variant="ghost" size="small" icon={<InfoIcon />} />
-                  </Tooltip>
+                  <SwapFeeElem lpFee={lpFee} protocolFee={protocolFee} />
                 </Inline>
               </Column>
               {__POOL_REWARDS_ENABLED__ &&
@@ -251,12 +269,7 @@ export const LiquidityBreakdown = ({
             </Text>
 
             <Inline gap={2}>
-              <Text variant="header">0.3%</Text>
-              <Tooltip
-                label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}
-              >
-                <Button variant="ghost" size="small" icon={<InfoIcon />} />
-              </Tooltip>
+              <SwapFeeElem lpFee={lpFee} protocolFee={protocolFee} />
             </Inline>
           </Column>
 

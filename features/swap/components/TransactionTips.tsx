@@ -1,5 +1,4 @@
 import {
-  ArrowUpIcon,
   Button,
   Column,
   dollarValueFormatterWithDecimals,
@@ -9,7 +8,6 @@ import {
   Inline,
   styled,
   Text,
-  Tooltip,
 } from 'junoblocks'
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
@@ -38,19 +36,14 @@ export const TransactionTips = ({
     tokenAmount: tokenA?.amount || 1,
   })
 
-  const {
-    isShowing,
-    conversionRate,
-    conversionRateInDollar,
-    tokenASwapValueUSD,
-    tokenBSwapValueUSD,
-  } = useTxRates({
-    tokenASymbol: tokenA?.tokenSymbol,
-    tokenBSymbol: tokenB?.tokenSymbol,
-    tokenAAmount: tokenA?.amount || 1,
-    tokenToTokenPrice,
-    isLoading: isPriceLoading,
-  })
+  const { isShowing, conversionRate, conversionRateInDollar, dollarValue } =
+    useTxRates({
+      tokenASymbol: tokenA?.tokenSymbol,
+      tokenBSymbol: tokenB?.tokenSymbol,
+      tokenAAmount: tokenA?.amount || 1,
+      tokenToTokenPrice,
+      isLoading: isPriceLoading,
+    })
 
   const switchTokensButton = (
     <Button
@@ -79,23 +72,9 @@ export const TransactionTips = ({
     </>
   )
 
-  const priceImpact =
-    (tokenBSwapValueUSD - tokenASwapValueUSD) / tokenASwapValueUSD
-  const formattedPriceImpact = Math.abs(Math.round(priceImpact * 10000) / 100)
-  const errorThreshold = priceImpact < -0.05
-
-  const tokenAFormattedSwapValue = dollarValueFormatterWithDecimals(
-    tokenASwapValueUSD,
-    {
-      includeCommaSeparation: true,
-    }
-  )
-  const tokenBFormattedSwapValue = dollarValueFormatterWithDecimals(
-    tokenBSwapValueUSD,
-    {
-      includeCommaSeparation: true,
-    }
-  )
+  const formattedDollarValue = dollarValueFormatterWithDecimals(dollarValue, {
+    includeCommaSeparation: true,
+  })
 
   if (size === 'small') {
     return (
@@ -114,7 +93,7 @@ export const TransactionTips = ({
               {transactionRates}
             </Text>
             <Text variant="caption" color="disabled" wrap={false}>
-              Swap estimate: ${tokenBFormattedSwapValue}
+              Swap estimate: ${formattedDollarValue}
             </Text>
           </Column>
         )}
@@ -133,44 +112,8 @@ export const TransactionTips = ({
           </Text>
         )}
       </StyledDivForRateWrapper>
-      <Inline justifyContent={'flex-end'} gap={8} css={{ cursor: 'pointer' }}>
-        {tokenB?.tokenSymbol && (
-          <Tooltip label="Price impact due to the amount of liquity available in the pool.">
-            <Inline
-              css={{
-                backgroundColor: errorThreshold
-                  ? '$backgroundColors$error'
-                  : '$backgroundColors$secondary',
-                padding: '$2 $4 $2 $2',
-                borderRadius: 4,
-              }}
-            >
-              <ArrowUpIcon
-                color={errorThreshold ? 'error' : 'secondary'}
-                css={{
-                  transform: priceImpact < 0 ? 'rotate(180deg)' : undefined,
-                }}
-                size="medium"
-              />
-              <Text
-                variant="legend"
-                wrap={false}
-                css={{
-                  color: errorThreshold
-                    ? '$textColors$error'
-                    : '$textColors$secondary',
-                }}
-              >
-                {formattedPriceImpact}%
-              </Text>
-            </Inline>
-          </Tooltip>
-        )}
-        <Column gap={4}>
-          <Text variant="legend">${tokenAFormattedSwapValue}</Text>
-          <Text variant="legend">${tokenBFormattedSwapValue}</Text>
-        </Column>
-      </Inline>
+
+      <Text variant="legend">${formattedDollarValue}</Text>
     </StyledDivForWrapper>
   )
 }

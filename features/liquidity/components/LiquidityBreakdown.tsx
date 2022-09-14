@@ -5,7 +5,6 @@ import {
   Column,
   Divider,
   dollarValueFormatter,
-  dollarValueFormatterWithDecimals,
   ImageForTokenLogo,
   InfoIcon,
   Inline,
@@ -126,10 +125,7 @@ export const LiquidityBreakdown = ({
   const compactTokenAAmount = formatCompactNumber(tokenAAmount, 'tokenAmount')
   const compactTokenBAmount = formatCompactNumber(tokenBAmount, 'tokenAmount')
 
-  const formattedTotalLiquidity = dollarValueFormatterWithDecimals(
-    totalLiquidity?.dollarValue,
-    { includeCommaSeparation: true }
-  )
+  const formattedTotalLiquidity = formatCompactNumber(totalLiquidity?.dollarValue) 
 
   const formattedYieldPercentageReturn = dollarValueFormatter(
     yieldPercentageReturn ?? 0

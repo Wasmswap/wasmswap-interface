@@ -75,26 +75,21 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
 )
 
 const SwapFee = ({
-  protocolFee,
-  lpFee,
+  protocolFee = 0,
+  lpFee = 0.3,
 }: {
   protocolFee?: number
   lpFee?: number
-}) => {
-  const protocolFeeSafe = protocolFee != undefined ? protocolFee : 0
-  const lpFeeSafe = lpFee != undefined ? lpFee : 0.3
-
-  return (
-    <>
-      <Text variant="header">{`${protocolFeeSafe + lpFeeSafe}%`}</Text>
-      <Tooltip
-        label={`${lpFeeSafe}% of Swap Fee goes to LP Providers (LP) and ${protocolFeeSafe}% goes to Raw DAO`}
-      >
-        <Button variant="ghost" size="small" icon={<InfoIcon />} />
-      </Tooltip>
-    </>
-  )
-}
+}) => (
+  <>
+    <Text variant="header">{`${protocolFee + lpFee}%`}</Text>
+    <Tooltip
+      label={`${lpFee}% of Swap Fee goes to LP Providers (LP) and ${protocolFee}% goes to Raw DAO`}
+    >
+      <Button variant="ghost" size="small" icon={<InfoIcon />} />
+    </Tooltip>
+  </>
+)
 
 export const LiquidityBreakdown = ({
   tokenA,

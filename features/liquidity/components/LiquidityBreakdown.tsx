@@ -74,24 +74,27 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
   </Inline>
 )
 
-const SwapFeeElem = ({
+const SwapFee = ({
   protocolFee,
   lpFee,
 }: {
   protocolFee?: number
   lpFee?: number
-}) => (
-  <>
-    <Text variant="header">{`${(protocolFee || 0) + (lpFee || 0)}%`}</Text>
-    <Tooltip
-      label={`${lpFee || 0}% of Swap Fee goes to LP Providers (LP) and ${
-        protocolFee || 0
-      }% goes to Raw DAO`}
-    >
-      <Button variant="ghost" size="small" icon={<InfoIcon />} />
-    </Tooltip>
-  </>
-)
+}) => {
+  const protocolFeeSafe = protocolFee || 0
+  const lpFeeSafe = lpFee || 0.3
+
+  return (
+    <>
+      <Text variant="header">{`${protocolFeeSafe + lpFeeSafe}%`}</Text>
+      <Tooltip
+        label={`${lpFeeSafe}% of Swap Fee goes to LP Providers (LP) and ${protocolFeeSafe}% goes to Raw DAO`}
+      >
+        <Button variant="ghost" size="small" icon={<InfoIcon />} />
+      </Tooltip>
+    </>
+  )
+}
 
 export const LiquidityBreakdown = ({
   tokenA,
@@ -125,7 +128,9 @@ export const LiquidityBreakdown = ({
   const compactTokenAAmount = formatCompactNumber(tokenAAmount, 'tokenAmount')
   const compactTokenBAmount = formatCompactNumber(tokenBAmount, 'tokenAmount')
 
-  const formattedTotalLiquidity = formatCompactNumber(totalLiquidity?.dollarValue) 
+  const formattedTotalLiquidity = formatCompactNumber(
+    totalLiquidity?.dollarValue
+  )
 
   const formattedYieldPercentageReturn = dollarValueFormatter(
     yieldPercentageReturn ?? 0
@@ -195,7 +200,7 @@ export const LiquidityBreakdown = ({
                 </Text>
 
                 <Inline gap={2}>
-                  <SwapFeeElem lpFee={lpFee} protocolFee={protocolFee} />
+                  <SwapFee lpFee={lpFee} protocolFee={protocolFee} />
                 </Inline>
               </Column>
               {__POOL_REWARDS_ENABLED__ &&
@@ -265,7 +270,7 @@ export const LiquidityBreakdown = ({
             </Text>
 
             <Inline gap={2}>
-              <SwapFeeElem lpFee={lpFee} protocolFee={protocolFee} />
+              <SwapFee lpFee={lpFee} protocolFee={protocolFee} />
             </Inline>
           </Column>
 

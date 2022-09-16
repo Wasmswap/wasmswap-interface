@@ -5,7 +5,6 @@ import {
   Column,
   Divider,
   dollarValueFormatter,
-  dollarValueFormatterWithDecimals,
   ImageForTokenLogo,
   InfoIcon,
   Inline,
@@ -34,6 +33,8 @@ type LiquidityBreakdownProps = {
   yieldPercentageReturn: number
   rewardsContracts: Array<SerializedRewardsContract>
   size: 'large' | 'small'
+  lpFee?: number
+  protocolFee?: number
 }
 
 type PoolHeaderProps = {
@@ -73,6 +74,23 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
   </Inline>
 )
 
+const SwapFee = ({
+  protocolFee = 0,
+  lpFee = 0.3,
+}: {
+  protocolFee?: number
+  lpFee?: number
+}) => (
+  <>
+    <Text variant="header">{`${protocolFee + lpFee}%`}</Text>
+    <Tooltip
+      label={`${lpFee}% of Swap Fee goes to LP Providers (LP) and ${protocolFee}% goes to Raw DAO`}
+    >
+      <Button variant="ghost" size="small" icon={<InfoIcon />} />
+    </Tooltip>
+  </>
+)
+
 export const LiquidityBreakdown = ({
   tokenA,
   tokenB,
@@ -80,6 +98,8 @@ export const LiquidityBreakdown = ({
   totalLiquidity,
   yieldPercentageReturn,
   rewardsContracts,
+  lpFee,
+  protocolFee,
   size = 'large',
 }: LiquidityBreakdownProps) => {
   const [{ price: tokenPrice }, isPriceLoading] = useTokenToTokenPrice({
@@ -103,9 +123,8 @@ export const LiquidityBreakdown = ({
   const compactTokenAAmount = formatCompactNumber(tokenAAmount, 'tokenAmount')
   const compactTokenBAmount = formatCompactNumber(tokenBAmount, 'tokenAmount')
 
-  const formattedTotalLiquidity = dollarValueFormatterWithDecimals(
-    totalLiquidity?.dollarValue,
-    { includeCommaSeparation: true }
+  const formattedTotalLiquidity = formatCompactNumber(
+    totalLiquidity?.dollarValue
   )
 
   const formattedYieldPercentageReturn = dollarValueFormatter(
@@ -176,12 +195,7 @@ export const LiquidityBreakdown = ({
                 </Text>
 
                 <Inline gap={2}>
-                  <Text variant="header">0.3%</Text>
-                  <Tooltip
-                    label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}
-                  >
-                    <Button variant="ghost" size="small" icon={<InfoIcon />} />
-                  </Tooltip>
+                  <SwapFee lpFee={lpFee} protocolFee={protocolFee} />
                 </Inline>
               </Column>
               {__POOL_REWARDS_ENABLED__ &&
@@ -251,12 +265,7 @@ export const LiquidityBreakdown = ({
             </Text>
 
             <Inline gap={2}>
-              <Text variant="header">0.3%</Text>
-              <Tooltip
-                label={`0.2% of Swap Fee goes to LP Providers (LP) and 0.1% goes to Raw DAO`}
-              >
-                <Button variant="ghost" size="small" icon={<InfoIcon />} />
-              </Tooltip>
+              <SwapFee lpFee={lpFee} protocolFee={protocolFee} />
             </Inline>
           </Column>
 

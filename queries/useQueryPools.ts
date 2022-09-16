@@ -16,7 +16,7 @@ import {
   SerializedRewardsContract,
 } from './queryRewardsContracts'
 import { queryStakedLiquidity } from './queryStakedLiquidity'
-import { querySwapInfo } from './querySwapInfo'
+import { querySwapInfo, SwapInfoResponse } from './querySwapInfo'
 import { useGetTokenDollarValueQuery } from './useGetTokenDollarValueQuery'
 import { PoolEntityType, usePoolsListQuery } from './usePoolsListQuery'
 
@@ -54,6 +54,7 @@ export type PoolLiquidityState = {
 
 export type PoolEntityTypeWithLiquidity = PoolEntityType & {
   liquidity: PoolLiquidityState
+  swap_info: SwapInfoResponse
 }
 
 type QueryMultiplePoolsArgs = {
@@ -191,6 +192,7 @@ export const useQueryMultiplePoolsLiquidity = ({
     return {
       ...pool,
       liquidity,
+      swap_info: swap,
     }
   }
 

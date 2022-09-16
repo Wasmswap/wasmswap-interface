@@ -185,6 +185,8 @@ export default function Pool() {
               yieldPercentageReturn={
                 pool.liquidity.rewards.annualYieldPercentageReturn
               }
+              lpFee={pool.swap_info.lp_fee_percent}
+              protocolFee={pool.swap_info.protocol_fee_percent}
               rewardsContracts={pool.liquidity.rewards.contracts}
               size={isMobile ? 'small' : 'large'}
             />

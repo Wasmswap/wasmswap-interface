@@ -81,8 +81,8 @@ const SwapFee = ({
   protocolFee?: number
   lpFee?: number
 }) => {
-  const protocolFeeSafe = protocolFee || 0
-  const lpFeeSafe = lpFee || 0.3
+  const protocolFeeSafe = protocolFee != undefined ? protocolFee : 0
+  const lpFeeSafe = lpFee != undefined ? lpFee : 0.3
 
   return (
     <>

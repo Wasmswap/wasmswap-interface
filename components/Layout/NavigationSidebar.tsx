@@ -152,11 +152,7 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
     return (
       <StyledWrapperForMobile>
         <Column gap={6}>
-          <Inline
-            align="center"
-            justifyContent="space-between"
-            css={{ padding: '0 $12' }}
-          >
+          <Inline align="center" justifyContent="space-between">
             <Link href="/" passHref>
               <StyledDivForLogo as="a">
                 <Logo data-logo="" width="37px" height="47px" />
@@ -180,7 +176,6 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
               {menuLinks}
             </Column>
           )}
-          <Divider />
         </Column>
       </StyledWrapperForMobile>
     )
@@ -317,9 +312,10 @@ const StyledWrapperForMobile = styled('div', {
   position: 'sticky',
   left: 0,
   top: 0,
-  padding: '$10 0 0',
+  padding: '$10 $12',
   backgroundColor: '$backgroundColors$base',
   zIndex: '$3',
+  borderBottom: '1px solid $colors$dark10'
 })
 
 const StyledMenuContainer = styled('div', {

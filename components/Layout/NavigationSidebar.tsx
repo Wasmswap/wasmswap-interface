@@ -12,7 +12,6 @@ import {
   Inline,
   media,
   MoonIcon,
-  Open,
   styled,
   Telegram,
   Text,
@@ -116,7 +115,7 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           iconLeft={<IconWrapper icon={<TreasuryIcon />} />}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
-            {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
+          {process.env.NEXT_PUBLIC_GOVERNANCE_LINK_LABEL}
         </Button>
       </Link>
       <Link href={process.env.NEXT_PUBLIC_PRICE_LINK_URL} passHref>

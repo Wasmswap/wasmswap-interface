@@ -236,7 +236,6 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
             Dark mode
           </Button>
         </Inline>
-        <Divider offsetY="$6" />
         <Column gap={4}>
           <Button
             as="a"

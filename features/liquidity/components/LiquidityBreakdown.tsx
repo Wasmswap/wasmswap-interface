@@ -147,7 +147,7 @@ export const LiquidityBreakdown = ({
           css={{
             backgroundColor: '$colors$dark10',
             borderRadius: '$2',
-            marginBottom: '$14',
+            marginBottom: '$8',
           }}
         >
           <Column
@@ -312,7 +312,7 @@ function TotalInfoRow({ children }) {
           justifyContent: 'space-between',
           backgroundColor: '$colors$dark10',
           borderRadius: '$2',
-          marginBottom: '$14',
+          marginBottom: '$8',
         }}
       >
         {children}

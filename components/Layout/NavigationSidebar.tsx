@@ -1,8 +1,6 @@
 import { useConnectWallet } from 'hooks/useConnectWallet'
-import { Logo, LogoText } from 'icons'
+import { Logo, LogoText, PoolsIcon } from 'icons'
 import {
-  AddressIcon,
-  ArrowUpIcon,
   Button,
   ChevronIcon,
   Column,
@@ -14,7 +12,6 @@ import {
   Inline,
   media,
   MoonIcon,
-  Open,
   styled,
   Telegram,
   Text,
@@ -34,6 +31,8 @@ import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
 import { Analytics } from '../../icons/Analytics'
 import { Dollar } from '../../icons/Dollar'
+import { SwapIcon } from '../../icons/Swap'
+import { TransferIcon } from '../../icons/Transfer'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
 type NavigationSidebarProps = {
@@ -79,10 +78,10 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<AddressIcon />}
+          iconLeft={<SwapIcon />}
           selected={getIsLinkActive('/')}
         >
-          Swap
+          <Inline css={{ paddingLeft: '$4' }}>Swap</Inline>
         </Button>
       </Link>
       <Link href="/transfer" passHref>
@@ -90,10 +89,10 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<ArrowUpIcon />}
+          iconLeft={<TransferIcon />}
           selected={getIsLinkActive('/transfer')}
         >
-          Transfer
+          <Inline css={{ paddingLeft: '$4' }}>Transfer</Inline>
         </Button>
       </Link>
       <Link href="/pools" passHref>
@@ -101,10 +100,10 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           as="a"
           variant="menu"
           size="large"
-          iconLeft={<IconWrapper icon={<Open />} />}
+          iconLeft={<PoolsIcon />}
           selected={getIsLinkActive('/pools')}
         >
-          Pools
+          <Inline css={{ paddingLeft: '$4' }}>Pools</Inline>
         </Button>
       </Link>
       <Inline css={{ paddingBottom: '$6' }} />

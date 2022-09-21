@@ -5,7 +5,6 @@ import {
   ChevronIcon,
   Column,
   Discord,
-  Divider,
   FeedbackIcon,
   Github,
   IconWrapper,
@@ -315,7 +314,7 @@ const StyledWrapperForMobile = styled('div', {
   padding: '$10 $12',
   backgroundColor: '$backgroundColors$base',
   zIndex: '$3',
-  borderBottom: '1px solid $colors$dark10'
+  borderBottom: '1px solid $colors$dark10',
 })
 
 const StyledMenuContainer = styled('div', {

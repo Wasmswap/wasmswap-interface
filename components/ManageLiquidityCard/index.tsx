@@ -1,4 +1,5 @@
 import { UnderlyingAssetRow } from '../../features/liquidity/components/UnderlyingAssetRow'
+import { TokenInfo } from '../../queries/usePoolsListQuery'
 import {
   Button,
   Card,
@@ -16,6 +17,10 @@ export type ManageLiquidityCardProps = {
   availableToBondDollarValue?: number
   supportsIncentives: boolean
   didProvideLiquidity: boolean
+  tokenAInfo: TokenInfo
+  tokenBInfo: TokenInfo
+  tokenAReserve: number
+  tokenBReserve: number
   onClick: () => void
 }
 
@@ -24,15 +29,17 @@ export const ManageLiquidityCard: FC<ManageLiquidityCardProps> = ({
   availableToBondDollarValue,
   supportsIncentives,
   didProvideLiquidity,
+  tokenAInfo,
+  tokenBInfo,
+  tokenAReserve,
+  tokenBReserve,
   onClick,
 }) => {
   return (
     <Card
       tabIndex={-1}
       role="button"
-      variant={
-        didProvideLiquidity ? 'primary' : 'secondary'
-      }
+      variant={didProvideLiquidity ? 'primary' : 'secondary'}
       onClick={onClick}
     >
       <CardContent>
@@ -55,8 +62,8 @@ export const ManageLiquidityCard: FC<ManageLiquidityCardProps> = ({
           Underlying assets
         </Text>
         <Column gap={6} css={{ paddingBottom: '$16' }}>
-          {/* <UnderlyingAssetRow tokenInfo={tokenA} tokenAmount={tokenAReserve} />
-          <UnderlyingAssetRow tokenInfo={tokenB} tokenAmount={tokenBReserve} /> */}
+          <UnderlyingAssetRow tokenInfo={tokenAInfo} tokenAmount={tokenAReserve} />
+          <UnderlyingAssetRow tokenInfo={tokenBInfo} tokenAmount={tokenBReserve} />
         </Column>
         <Inline css={{ paddingBottom: '$12' }}>
           {didProvideLiquidity && (

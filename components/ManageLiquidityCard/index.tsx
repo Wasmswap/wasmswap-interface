@@ -62,8 +62,14 @@ export const ManageLiquidityCard: FC<ManageLiquidityCardProps> = ({
           Underlying assets
         </Text>
         <Column gap={6} css={{ paddingBottom: '$16' }}>
-          <UnderlyingAssetRow tokenInfo={tokenAInfo} tokenAmount={tokenAReserve} />
-          <UnderlyingAssetRow tokenInfo={tokenBInfo} tokenAmount={tokenBReserve} />
+          <UnderlyingAssetRow
+            tokenInfo={tokenAInfo}
+            tokenAmount={tokenAReserve}
+          />
+          <UnderlyingAssetRow
+            tokenInfo={tokenBInfo}
+            tokenAmount={tokenBReserve}
+          />
         </Column>
         <Inline css={{ paddingBottom: '$12' }}>
           {didProvideLiquidity && (

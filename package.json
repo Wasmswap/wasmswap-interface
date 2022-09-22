@@ -9,7 +9,9 @@
     "lint": "next lint",
     "test": "jest --watch",
     "prettier:write": "prettier --write .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@cosmjs/amino": "0.28.10",
@@ -43,13 +45,23 @@
     "sass": "^1.45.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.19.1",
     "@keplr-wallet/types": "^0.9.9",
+    "@storybook/addon-actions": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.12",
+    "@storybook/addon-interactions": "^6.5.12",
+    "@storybook/addon-links": "^6.5.12",
+    "@storybook/builder-webpack5": "^6.5.12",
+    "@storybook/manager-webpack5": "^6.5.12",
+    "@storybook/react": "^6.5.12",
+    "@storybook/testing-library": "^0.0.13",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "autoprefixer": "^10.3.1",
+    "babel-loader": "^8.2.5",
     "eslint": "7.30.0",
     "eslint-config-next": "11.0.1",
     "jest": "^28.1.2",

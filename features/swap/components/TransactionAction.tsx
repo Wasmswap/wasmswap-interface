@@ -4,11 +4,8 @@ import { Button, Inline, Spinner, styled, Text } from 'junoblocks'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { NETWORK_FEE } from 'util/constants'
-import {
-  feeFromSwapInfo,
-  useQuerySwapInfo,
-} from '../../../queries/useQuerySwap'
+import { useQuerySwapInfo } from '../../../queries/useQuerySwap'
+import { useMemo } from 'react'
 
 import { useTokenSwap } from '../hooks'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
@@ -39,11 +36,14 @@ export const TransactionAction = ({
       tokenBSymbol: tokenB?.tokenSymbol,
       tokenAmount: tokenA?.amount,
     })
-  const { data: swapInfo, isLoading: swapInfoLoading } = useQuerySwapInfo({
+  const { data: swapFee, isLoading: swapInfoLoading } = useQuerySwapInfo({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
   })
-  const swapInfoReady = swapInfo != undefined && !swapInfoLoading 
+  const swapInfoReady = useMemo(
+    () => swapFee != undefined,
+    [swapFee, swapInfoLoading]
+  )
 
   /* proceed with the swap only if the price is loaded */
   useEffect(() => {
@@ -92,7 +92,9 @@ export const TransactionAction = ({
           <Text variant="legend" transform="uppercase">
             Swap fee
           </Text>
-          <Text variant="legend">{NETWORK_FEE * 100}%</Text>
+          <Text variant="legend">
+            {swapInfoReady ? `${swapFee}%` : `Choose Pair...`}
+          </Text>
         </Inline>
         <Inline css={{ display: 'grid', paddingTop: '$8' }}>
           <Button
@@ -125,8 +127,8 @@ export const TransactionAction = ({
         <StyledDivColumnForInfo kind="fees">
           <Text variant="legend">
             {swapInfoReady
-              ? `Swap fee (${feeFromSwapInfo(swapInfo)}%)`
-              : `Swap Fee - Choose Pair`}
+              ? `Swap fee (${swapFee}%)`
+              : `Swap Fee - Choose Pair...`}
           </Text>
         </StyledDivColumnForInfo>
       </StyledDivForInfo>

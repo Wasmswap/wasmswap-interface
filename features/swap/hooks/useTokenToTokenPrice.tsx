@@ -31,7 +31,12 @@ export const useTokenToTokenPriceQuery = ({
   const [matchingPools] = useQueryMatchingPoolsForSwap({ tokenA, tokenB })
 
   return useQuery(
-    [`tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`, tokenASymbol, tokenBSymbol, tokenAmount],
+    [
+      `tokenToTokenPrice/${tokenBSymbol}/${tokenASymbol}/${tokenAmount}`,
+      tokenASymbol,
+      tokenBSymbol,
+      tokenAmount,
+    ],
     async () => {
       if (tokenA && tokenB && matchingPools) {
         return await tokenToTokenPriceQueryWithPools({

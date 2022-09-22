@@ -18,20 +18,45 @@ export const useQuerySwapInfo = ({
   const {
     poolForDirectTokenAToTokenBSwap,
     poolForDirectTokenBToTokenASwap,
-    // TODO(1): Pass through pools swap info
-    // passThroughPools,
+    passThroughPools,
   } = tokenToTokenPrice
   const client = useCosmWasmClient()
-  const swap_address =
+  const poolAddress =
     poolForDirectTokenAToTokenBSwap?.swap_address ??
     poolForDirectTokenBToTokenASwap?.swap_address
 
-  console.log(tokenASymbol, tokenBSymbol, tokenToTokenPrice, swap_address)
-
   return useQuery(
-    ['swapInfo', tokenASymbol, tokenBSymbol],
+    ['swapInfo', tokenASymbol, tokenBSymbol, poolAddress, passThroughPools],
     async () => {
-      return await querySwapInfo({ context: { client }, swap_address })
+      if (poolAddress != undefined) {
+        return feeFromSwapInfo(
+          await querySwapInfo({
+            context: { client },
+            swap_address: poolAddress,
+          })
+        )
+      }
+
+      if (!passThroughPools) return undefined
+
+      const swapInfos = await Promise.all(
+        passThroughPools
+          .map((p) => [
+            querySwapInfo({
+              context: { client },
+              swap_address: p.inputPool.swap_address,
+            }),
+            querySwapInfo({
+              context: { client },
+              swap_address: p.outputPool.swap_address,
+            }),
+          ])
+          .flat()
+      )
+      return swapInfos.reduce(
+        (sum, swapInfo) => sum + feeFromSwapInfo(swapInfo),
+        0
+      )
     }
   )
 }

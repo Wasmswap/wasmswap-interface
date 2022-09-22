@@ -4,7 +4,7 @@ import { Button, Inline, Spinner, styled, Text } from 'junoblocks'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { useQuerySwapInfo } from '../../../queries/useQuerySwap'
+import { useQuerySwapFee } from '../../../queries/useQuerySwap'
 import { useMemo } from 'react'
 
 import { useTokenSwap } from '../hooks'
@@ -36,13 +36,13 @@ export const TransactionAction = ({
       tokenBSymbol: tokenB?.tokenSymbol,
       tokenAmount: tokenA?.amount,
     })
-  const { data: swapFee, isLoading: swapInfoLoading } = useQuerySwapInfo({
+  const { data: swapFee, isLoading: swapFeeLoading } = useQuerySwapFee({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
   })
   const swapInfoReady = useMemo(
-    () => swapFee != undefined,
-    [swapFee, swapInfoLoading]
+    () => swapFee != undefined && !swapFeeLoading,
+    [swapFee, swapFeeLoading]
   )
 
   /* proceed with the swap only if the price is loaded */

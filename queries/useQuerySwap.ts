@@ -3,7 +3,7 @@ import { useTokenToTokenPrice } from '../features/swap'
 import { useCosmWasmClient } from '../hooks/useCosmWasmClient'
 import { querySwapInfo } from './querySwapInfo'
 
-export const useQuerySwapInfo = ({
+export const useQuerySwapFee = ({
   tokenASymbol,
   tokenBSymbol,
 }: {

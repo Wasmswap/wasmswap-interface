@@ -32,7 +32,8 @@ import React, { ReactNode, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { __TEST_MODE__, APP_NAME } from 'util/constants'
-import { PriceData } from '../../icons/PriceData'
+import { Analytics } from '../../icons/Analytics'
+import { Dollar } from '../../icons/Dollar'
 import { ConnectedWalletButton } from '../ConnectedWalletButton'
 
 type NavigationSidebarProps = {
@@ -42,7 +43,7 @@ type NavigationSidebarProps = {
 
 export function NavigationSidebar(_: NavigationSidebarProps) {
   const { mutate: connectWallet } = useConnectWallet()
-  const [{ key }, setWalletState] = useRecoilState(walletState)
+  const [{ key, address, status }, setWalletState] = useRecoilState(walletState)
 
   const themeController = useControlTheme()
 
@@ -125,10 +126,28 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
           target="__blank"
           variant="ghost"
           size="large"
-          iconLeft={<IconWrapper icon={<PriceData />} />}
+          iconLeft={<IconWrapper icon={<Analytics />} />}
           iconRight={<IconWrapper icon={<UpRightArrow />} />}
         >
           {process.env.NEXT_PUBLIC_PRICE_LINK_LABEL}
+        </Button>
+      </Link>
+      <Link
+        href={`${process.env.NEXT_PUBLIC_KADO_LINK_URL}${
+          status === WalletStatusType.connected ? `&onToAddress=${address}` : ''
+        }`}
+        target="__blank"
+        passHref
+      >
+        <Button
+          as="a"
+          target="__blank"
+          variant="ghost"
+          size="large"
+          iconLeft={<IconWrapper icon={<Dollar />} />}
+          iconRight={<IconWrapper icon={<UpRightArrow />} />}
+        >
+          {process.env.NEXT_PUBLIC_KADO_LINK_LABEL}
         </Button>
       </Link>
     </StyledListForLinks>

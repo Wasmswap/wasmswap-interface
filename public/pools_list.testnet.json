@@ -40,7 +40,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno142ljpm4c2nd4yp0xq549dgffd0lajk7gljd36e4fla88fmn3u75sxgn5a0",
+          "token_address": "juno1mnsus3ssrqp43l2l9xk44jvcakwmtr6r5uqqfa5eha692jd76y5q5fegyj",
           "symbol": "POOD",
           "name": "Poodle",
           "decimals": 6,
@@ -50,8 +50,8 @@
           "denom": "upood"
         }
       ],
-      "swap_address": "juno1wp69la224pws8vfh9vy9d2fx3scnmpzdnxrve4sf2785cjdem5hqx4ekkg",
-      "staking_address": "juno15pvkdcgju2965c34vp8z2gms7psu2jc2k2d9c9aczt4wuz90m5gsj2cdks",
+      "swap_address": "juno1nsrl9z4mlt0ef4p3susm8hkyz6ep7z4kktc4rkfuj5lj2mtv4wysca05g7",
+      "staking_address": "juno1je7shq9eejdz94lmjpy2dg6kks9lk2fsawlyu08pgjachylawghq6vnh7a",
       "rewards_tokens": []
     },
     {
@@ -72,7 +72,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno1hnwnv2wf0kkqavnelwvg22rhpqjw4nxr5qz9yu0x6c42jq7u3pmsqekam9",
+          "token_address": "juno1x5mylzhf0l7erhwelrgx52uxc5fmnk5k0e3taljnqr2a7fqjghrq3jxz2t",
           "symbol": "CRAB",
           "name": "Crab",
           "decimals": 6,
@@ -82,11 +82,11 @@
           "denom": "ucrab"
         }
       ],
-      "swap_address": "juno14avv6pnr2lk2ajl98xqvns2ljx86cuyhy84ejmklflck38w7tlqske5c5j",
-      "staking_address": "juno13rmtpj452vepqrul6ktfqedqmnghta5c8gwa84m88w0wq9rvwwcs545jt2",
+      "swap_address": "juno1j4ezvp80mnn75hlngak35n6wwzemxqjxdncdxc5n9dfw6s0q080qyhh9zl",
+      "staking_address": "juno1k9lqf94dk8v0t5tcsxvjddjgy3ncr8w6nxe8k5p7wqpjzhedn3gsvw0q8k",
       "rewards_tokens": [
         {
-          "rewards_address": "juno1dars44rnrv3juk5lxe0y2xhaap8a3uccn4mteu2cmemf6sd3nrkq8lfkzn",
+          "rewards_address": "juno1hnwa4n792a3t6nnxfezpks7u8mgjq8uvwd45pk6fu478qlxgrm0qwhvt4c",
           "token_address": "",
           "swap_address": "",
           "symbol": "JUNOX",
@@ -97,9 +97,9 @@
           "decimals": 6
         },
         {
-          "rewards_address": "juno1ept6pmkenqnzrgkczzv5hmtkch36wz0203tdwan035cjxdmayuyqwxflaf",
-          "token_address": "juno1hnwnv2wf0kkqavnelwvg22rhpqjw4nxr5qz9yu0x6c42jq7u3pmsqekam9",
-          "swap_address": "juno14avv6pnr2lk2ajl98xqvns2ljx86cuyhy84ejmklflck38w7tlqske5c5j",
+          "rewards_address": "juno1qlq6uatzj9zecxwkq5pl2wee2xhuhqwj5xe4c5f4gh24axqwsr5s6dnvqk",
+          "token_address": "juno1x5mylzhf0l7erhwelrgx52uxc5fmnk5k0e3taljnqr2a7fqjghrq3jxz2t",
+          "swap_address": "juno1j4ezvp80mnn75hlngak35n6wwzemxqjxdncdxc5n9dfw6s0q080qyhh9zl",
           "symbol": "CRAB",
           "name": "Crab",
           "logoURI": "https://cryptologos.cc/logos/irisnet-iris-logo.svg?v=022",
@@ -127,7 +127,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno10s4nsmrgxse5nr4eqw3626wen4nu6ujm8dacaeq4ku28mzczzflsnrkke4",
+          "token_address": "juno103ch5yuqrw03p9c7lg9czc2ng7d2qtd49heprergf6867atftncs9rclkh",
           "symbol": "DAO",
           "name": "DAO",
           "decimals": 6,
@@ -137,8 +137,8 @@
           "denom": "udao"
         }
       ],
-      "swap_address": "juno1544chmhgyn2s2zh84vktfpqdvm4x0zx00rpzgh57d993ztryhfrqfc8h95",
-      "staking_address": "juno1jvzpv89dapaq2cz2ma8e9hks3ps6dv385kumd5hrfvtzh2kq2mgqhc9pwa",
+      "swap_address": "juno1ajwqdgnae4c8gcrcf7fcnwzqmx5emdazkuxzwhssq5qccs2u7desj4adma",
+      "staking_address": "juno1zm3e54zssvj67rq9sgeame2wc4aegkd9vsyfzvlwatjz47dus52qhrgrum",
       "rewards_tokens": []
     }
   ],

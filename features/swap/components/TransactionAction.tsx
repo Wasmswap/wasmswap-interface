@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
 import { NETWORK_FEE } from 'util/constants'
 
-import { useTokenSwap } from '../hooks'
+import { useTokenSwap, useSwapFee } from '../hooks'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'
 import { SlippageSelector } from './SlippageSelector'
 
@@ -62,6 +62,8 @@ export const TransactionAction = ({
     tokenA.amount <= 0 ||
     tokenA?.amount > tokenABalance
 
+  const swapFee = useSwapFee({ tokenA, tokenB })
+
   if (size === 'small') {
     return (
       <>
@@ -83,7 +85,7 @@ export const TransactionAction = ({
           <Text variant="legend" transform="uppercase">
             Swap fee
           </Text>
-          <Text variant="legend">{NETWORK_FEE * 100}%</Text>
+          <Text variant="legend">{swapFee}%</Text>
         </Inline>
         <Inline css={{ display: 'grid', paddingTop: '$8' }}>
           <Button
@@ -114,7 +116,7 @@ export const TransactionAction = ({
           />
         </StyledDivColumnForInfo>
         <StyledDivColumnForInfo kind="fees">
-          <Text variant="legend">Swap fee ({NETWORK_FEE * 100}%)</Text>
+          <Text variant="legend">Swap fee ({swapFee}%)</Text>
         </StyledDivColumnForInfo>
       </StyledDivForInfo>
       <Button

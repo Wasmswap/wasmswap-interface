@@ -4,7 +4,6 @@ import { Button, Inline, Spinner, styled, Text } from 'junoblocks'
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { walletState, WalletStatusType } from 'state/atoms/walletAtoms'
-import { NETWORK_FEE } from 'util/constants'
 
 import { useTokenSwap, useSwapFee } from '../hooks'
 import { slippageAtom, tokenSwapAtom } from '../swapAtoms'

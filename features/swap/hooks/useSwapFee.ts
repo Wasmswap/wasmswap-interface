@@ -9,9 +9,9 @@ export const useSwapFee = ({ tokenA, tokenB }) => {
     tokenAmount: 1,
   })
 
-  // pool_id for direct token swap pools OR inputPool for passthrough swaps
+  // pool_id for direct token swap pools OR inputPool for passthrough swap
   let poolId1: string = ''
-  // pool_id for outputPool of passthrough swaps
+  // pool_id for outputPool if passthrough swap
   let poolId2: string = ''
   if (tokenToTokenPrice.poolForDirectTokenAToTokenBSwap) {
     poolId1 = tokenToTokenPrice.poolForDirectTokenAToTokenBSwap.pool_id
@@ -39,8 +39,8 @@ export const useSwapFee = ({ tokenA, tokenB }) => {
     (swapInfo1.lp_fee_percent || swapInfo1.protocol_fee_percent)
   ) {
     swapFee =
-      Number(swapInfo1[0].lp_fee_percent || 0) +
-      Number(swapInfo1[0].protocol_fee_percent || 0)
+      Number(swapInfo1.lp_fee_percent || 0) +
+      Number(swapInfo1.protocol_fee_percent || 0)
   }
 
   // add fee for outputPool passthrough pool if set
@@ -49,8 +49,8 @@ export const useSwapFee = ({ tokenA, tokenB }) => {
     (swapInfo2.lp_fee_percent || swapInfo2.protocol_fee_percent)
   ) {
     swapFee +=
-      Number(swapInfo1[0].lp_fee_percent || 0) +
-      Number(swapInfo1[0].protocol_fee_percent || 0)
+      Number(swapInfo2.lp_fee_percent || 0) +
+      Number(swapInfo2.protocol_fee_percent || 0)
 
   // add default network fee if not set in outputPool passhthrough
   } else if (swapInfo2){

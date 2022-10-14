@@ -13,6 +13,8 @@ export type SwapInfo = Pick<
   lp_token_supply: number
   token1_reserve: number
   token2_reserve: number
+  lp_fee_percent?: number
+  protocol_fee_percent?: number
 }
 
 type UseMultipleSwapInfoArgs = {
@@ -39,6 +41,12 @@ export const useSwapInfo = ({
         token1_reserve: Number(swap.token1_reserve),
         token2_reserve: Number(swap.token2_reserve),
         lp_token_supply: Number(swap.lp_token_supply),
+        lp_fee_percent: swap.lp_fee_percent
+          ? Number(swap.lp_fee_percent)
+          : undefined,
+        protocol_fee_percent: swap.protocol_fee_percent
+          ? Number(swap.protocol_fee_percent)
+          : undefined,
       }
     },
     {

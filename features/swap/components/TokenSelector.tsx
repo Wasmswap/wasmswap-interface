@@ -6,8 +6,11 @@ import {
   styled,
   Union,
   useOnClickOutside,
+  Text
 } from 'junoblocks'
 import React, { useRef, useState } from 'react'
+import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
+import { formatCurrency } from '../../../util/formatCompactNumber'
 
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
 import { QueryInput } from './QueryInput'
@@ -51,6 +54,7 @@ export const TokenSelector = ({
     onChange({ tokenSymbol: selectedTokenSymbol, amount })
     setTokenListShowing(false)
   }
+  const [tokenDollarValue] = useTokenDollarValue(tokenSymbol)
 
   useOnClickOutside([wrapperRef], () => {
     setTokenListShowing(false)
@@ -192,6 +196,9 @@ export const TokenSelector = ({
               iconColor="tertiary"
             />
           )}
+    {!isTokenListShowing && (
+      <Text variant="ghost" color="tertiary" css={{paddingRight: '$4'}}>({formatCurrency(amount * tokenDollarValue)})</Text>
+    )}
           {!isTokenListShowing && (
             <SelectorInput
               inputRef={inputRef}

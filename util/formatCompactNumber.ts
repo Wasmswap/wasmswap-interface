@@ -29,3 +29,7 @@ export const formatCompactNumber = (
   }
   return formatTokenBalance(value)
 }
+
+export const formatCurrency = (value:number, options: Intl.NumberFormatOptions) => {
+  return Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD', ...options}).format(value)
+}

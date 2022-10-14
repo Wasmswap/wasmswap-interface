@@ -52,8 +52,8 @@ export const useSwapFee = ({ tokenA, tokenB }) => {
       Number(swapInfo2.lp_fee_percent || 0) +
       Number(swapInfo2.protocol_fee_percent || 0)
 
-  // add default network fee if not set in outputPool passhthrough
-  } else if (swapInfo2){
+    // add default network fee if not set in outputPool passhthrough
+  } else if (swapInfo2) {
     swapFee += NETWORK_FEE * 100
   }
 

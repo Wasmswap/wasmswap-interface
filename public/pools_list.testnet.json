@@ -140,6 +140,38 @@
       "swap_address": "juno1ajwqdgnae4c8gcrcf7fcnwzqmx5emdazkuxzwhssq5qccs2u7desj4adma",
       "staking_address": "juno1zm3e54zssvj67rq9sgeame2wc4aegkd9vsyfzvlwatjz47dus52qhrgrum",
       "rewards_tokens": []
+    },
+    {
+      "pool_id": "JUNO-DOG",
+      "pool_assets": [
+        {
+          "id": "juno-network",
+          "chain_id": "lucina",
+          "token_address": "",
+          "symbol": "JUNOX",
+          "name": "Junox",
+          "decimals": 6,
+          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
+          "tags": ["native"],
+          "native": true,
+          "denom": "ujunox"
+        },
+        {
+          "id": "juno-network",
+          "chain_id": "lucina",
+          "token_address": "juno1hfse9vmmgzzx5tdg3qj2jqnw0y6r0al695g8qxeyn3wlg9t0hrmssap036",
+          "symbol": "DOG",
+          "name": "DOG",
+          "decimals": 6,
+          "logoURI": "https://cryptologos.cc/logos/dogebonk-dobo-logo.svg?v=023",
+          "tags": ["memecoin"],
+          "native": false,
+          "denom": "udog"
+        }
+      ],
+      "swap_address": "juno15w2p95kcc563uydjls3hjduuknwc6qfn4m80thfk97rrh2yvpupqhm5rtu",
+      "staking_address": "",
+      "rewards_tokens": []
     }
   ],
   "version": {

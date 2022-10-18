@@ -159,7 +159,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno1hfse9vmmgzzx5tdg3qj2jqnw0y6r0al695g8qxeyn3wlg9t0hrmssap036",
+          "token_address": "juno1zhm3xqhvzz9z2envkdsarkx6g34t37terg366hap7uzfseyapqsqscp32r",
           "symbol": "DOG",
           "name": "DOG",
           "decimals": 6,
@@ -169,7 +169,7 @@
           "denom": "udog"
         }
       ],
-      "swap_address": "juno15w2p95kcc563uydjls3hjduuknwc6qfn4m80thfk97rrh2yvpupqhm5rtu",
+      "swap_address": "juno1wv7naz8ezrsagps2s8dzuqq0f6h2fhw043x4jkykay4l0zvevqkq5fdf7m",
       "staking_address": "",
       "rewards_tokens": []
     }

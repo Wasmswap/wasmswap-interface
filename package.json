@@ -1,6 +1,6 @@
 {
   "name": "wasmswap-interface",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "scripts": {
     "dev": "next dev",
     "dev:w-blocks": "BUNDLE_JUNOBLOCKS=true next dev",

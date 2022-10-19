@@ -67,7 +67,7 @@ export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
   const [{ price: tokenPrice }, isPriceLoading] = useTokenToTokenPrice({
     tokenASymbol: tokenA?.tokenSymbol,
     tokenBSymbol: tokenB?.tokenSymbol,
-    tokenAmount: tokenA?.amount || 1,
+    tokenAmount: tokenA?.amount || 0,
   })
 
   const handleSwapTokenPositions = () => {

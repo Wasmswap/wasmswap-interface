@@ -215,7 +215,7 @@ export const TokenSelector = ({
             )}
             {!isTokenListShowing && (
               <Text variant="legend">
-                {formatCurrency(amount * tokenDollarValue)}
+                {amount > 0 && formatCurrency(amount * tokenDollarValue)}
               </Text>
             )}
           </Column>

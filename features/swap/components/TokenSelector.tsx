@@ -6,7 +6,8 @@ import {
   styled,
   Union,
   useOnClickOutside,
-  Text
+  Text,
+  Column,
 } from 'junoblocks'
 import React, { useRef, useState } from 'react'
 import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
@@ -196,23 +197,28 @@ export const TokenSelector = ({
               iconColor="tertiary"
             />
           )}
-    {!isTokenListShowing && (
-      <Text variant="ghost" color="tertiary" css={{paddingRight: '$4'}}>({formatCurrency(amount * tokenDollarValue)})</Text>
-    )}
-          {!isTokenListShowing && (
-            <SelectorInput
-              inputRef={inputRef}
-              amount={amount}
-              disabled={!tokenSymbol || readOnly || disabled}
-              onAmountChange={handleAmountChange}
-              onFocus={() => {
-                setInputForAmountFocused(true)
-              }}
-              onBlur={() => {
-                setInputForAmountFocused(false)
-              }}
-            />
-          )}
+
+          <Column align="flex-end">
+            {!isTokenListShowing && (
+              <SelectorInput
+                inputRef={inputRef}
+                amount={amount}
+                disabled={!tokenSymbol || readOnly || disabled}
+                onAmountChange={handleAmountChange}
+                onFocus={() => {
+                  setInputForAmountFocused(true)
+                }}
+                onBlur={() => {
+                  setInputForAmountFocused(false)
+                }}
+              />
+            )}
+            {!isTokenListShowing && (
+              <Text variant="legend">
+                {formatCurrency(amount * tokenDollarValue)}
+              </Text>
+            )}
+          </Column>
         </StyledDivForAmountWrapper>
         <StyledDivForOverlay
           interactive={readOnly ? false : !isInputForAmountFocused}

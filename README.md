@@ -130,6 +130,8 @@ To update the styling for buttons go to `components/Button.tsx` and provide your
 
 To update the typography component configuration, go to `components/Text.tsx` and provide your custom styling for our variants.
 
+#### Test
+
 ## How to deploy
 
 This is a nextjs app; thus everything that a nextjs app supports for deployment technically is supported by `wasmswap-interface`. We would recommend looking into Vercel.

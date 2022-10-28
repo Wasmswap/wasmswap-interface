@@ -30,3 +30,7 @@ export const __DARK_MODE_ENABLED_BY_DEFAULT__ = JSON.parse(
   process.env.NEXT_PUBLIC_DARK_MODE_ENABLED_BY_DEFAULT
 )
 /* /feature flags */
+
+export const __KEPLR_PREFER_NO_SET_FEE__ = JSON.parse(
+  process.env.NEXT_PUBLIC_KEPLR_PREFER_NO_SET_FEE || 'false'
+)

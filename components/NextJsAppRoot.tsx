@@ -6,6 +6,8 @@ import {
 } from 'junoblocks'
 import { useEffect, useState } from 'react'
 
+import { __KEPLR_PREFER_NO_SET_FEE__ } from '../util/constants'
+
 const applyGlobalStyles = globalCss({
   body: {
     backgroundColor: '$backgroundColors$base',
@@ -27,6 +29,17 @@ export function NextJsAppRoot({ children }) {
 
   const themeClassName = useThemeClassName()
   useSubscribeDefaultAppTheme()
+
+  /* disable gas auto feature flag */
+  useEffect(() => {
+    if (__KEPLR_PREFER_NO_SET_FEE__) {
+      window.keplr.defaultOptions = {
+        sign: {
+          preferNoSetFee: __KEPLR_PREFER_NO_SET_FEE__,
+        },
+      }
+    }
+  }, [__KEPLR_PREFER_NO_SET_FEE__])
 
   /* apply theme class on body also */
   useEffect(() => {

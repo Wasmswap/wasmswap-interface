@@ -7,6 +7,7 @@ import {
   useSortPools,
 } from 'features/liquidity'
 import {
+  Button,
   Column,
   ErrorIcon,
   Inline,
@@ -21,6 +22,7 @@ import { useUpdateEffect } from 'react-use'
 import { useQueriesDataSelector } from '../../hooks/useQueriesDataSelector'
 import { usePoolsListQuery } from '../../queries/usePoolsListQuery'
 import { useQueryMultiplePoolsLiquidity } from '../../queries/useQueryPools'
+import Link from 'next/link'
 
 export default function Pools() {
   const { data: poolsListResponse } = usePoolsListQuery()
@@ -53,7 +55,13 @@ export default function Pools() {
       title="Liquidity"
       subtitle="Provide liquidity to the market and
         receive swap fees from each trade."
-    />
+    >
+      <Link href="/pools/create" passHref>
+        <Button as="a" variant="secondary" size="small">
+          Create a pool +
+        </Button>
+      </Link>
+    </PageHeader>
   )
 
   if (isError) {

@@ -29,4 +29,7 @@ export const __TRANSFERS_ENABLED__ = JSON.parse(
 export const __DARK_MODE_ENABLED_BY_DEFAULT__ = JSON.parse(
   process.env.NEXT_PUBLIC_DARK_MODE_ENABLED_BY_DEFAULT
 )
+export const __DISABLE_GAS_AUTO__ = JSON.parse(
+  process.env.NEXT_PUBLIC_DISABLE_GAS_AUTO
+)
 /* /feature flags */

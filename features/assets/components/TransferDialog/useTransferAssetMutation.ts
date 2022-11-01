@@ -12,7 +12,7 @@ import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
-import { DEFAULT_FEE } from '../util/messages'
+import { DEFAULT_FEE } from 'util/messages'
 
 import { TransactionKind } from './types'
 

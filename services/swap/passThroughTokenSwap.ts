@@ -6,7 +6,7 @@ import {
   createExecuteMessage,
   createIncreaseAllowanceMessage,
   validateTransactionSuccess,
-  DEFAULT_FEE
+  DEFAULT_FEE,
 } from '../../util/messages'
 
 type PassThroughTokenSwapArgs = {

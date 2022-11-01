@@ -1,8 +1,6 @@
 import { SigningCosmWasmClient } from '@cosmjs/cosmwasm-stargate'
 import { Coin } from '@cosmjs/launchpad'
-import {
-  DEFAULT_FEE
-} from '../util/messages'
+import { DEFAULT_FEE } from '../util/messages'
 
 export type Expiration =
   | { readonly at_height: number }

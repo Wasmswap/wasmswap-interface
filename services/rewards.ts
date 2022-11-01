@@ -6,7 +6,7 @@ import {
 import {
   createExecuteMessage,
   validateTransactionSuccess,
-  DEFAULT_FEE
+  DEFAULT_FEE,
 } from '../util/messages'
 
 type Denom =

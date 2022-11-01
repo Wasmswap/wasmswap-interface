@@ -6,8 +6,12 @@ import {
   styled,
   Union,
   useOnClickOutside,
+  Text,
+  Column,
 } from 'junoblocks'
 import React, { useRef, useState } from 'react'
+import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
+import { formatCurrency } from '../../../util/formatCompactNumber'
 
 import { ConvenienceBalanceButtons } from './ConvenienceBalanceButtons'
 import { QueryInput } from './QueryInput'
@@ -51,6 +55,7 @@ export const TokenSelector = ({
     onChange({ tokenSymbol: selectedTokenSymbol, amount })
     setTokenListShowing(false)
   }
+  const [tokenDollarValue] = useTokenDollarValue(tokenSymbol)
 
   useOnClickOutside([wrapperRef], () => {
     setTokenListShowing(false)
@@ -192,20 +197,28 @@ export const TokenSelector = ({
               iconColor="tertiary"
             />
           )}
-          {!isTokenListShowing && (
-            <SelectorInput
-              inputRef={inputRef}
-              amount={amount}
-              disabled={!tokenSymbol || readOnly || disabled}
-              onAmountChange={handleAmountChange}
-              onFocus={() => {
-                setInputForAmountFocused(true)
-              }}
-              onBlur={() => {
-                setInputForAmountFocused(false)
-              }}
-            />
-          )}
+
+          <Column align="flex-end">
+            {!isTokenListShowing && (
+              <SelectorInput
+                inputRef={inputRef}
+                amount={amount}
+                disabled={!tokenSymbol || readOnly || disabled}
+                onAmountChange={handleAmountChange}
+                onFocus={() => {
+                  setInputForAmountFocused(true)
+                }}
+                onBlur={() => {
+                  setInputForAmountFocused(false)
+                }}
+              />
+            )}
+            {!isTokenListShowing && (
+              <Text variant="legend">
+                {amount > 0 && formatCurrency(amount * tokenDollarValue)}
+              </Text>
+            )}
+          </Column>
         </StyledDivForAmountWrapper>
         <StyledDivForOverlay
           interactive={readOnly ? false : !isInputForAmountFocused}

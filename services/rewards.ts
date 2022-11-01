@@ -6,6 +6,7 @@ import {
 import {
   createExecuteMessage,
   validateTransactionSuccess,
+  DEFAULT_FEE
 } from '../util/messages'
 
 type Denom =
@@ -33,7 +34,7 @@ export const claimRewards = async (
   )
 
   return validateTransactionSuccess(
-    await client.signAndBroadcast(senderAddress, messages, 'auto')
+    await client.signAndBroadcast(senderAddress, messages, DEFAULT_FEE)
   )
 }
 

@@ -12,6 +12,9 @@ import { useMutation } from 'react-query'
 import { useRecoilValue } from 'recoil'
 import { ibcWalletState, walletState } from 'state/atoms/walletAtoms'
 import { convertDenomToMicroDenom } from 'util/conversion'
+import {
+  DEFAULT_FEE
+} from '../util/messages'
 
 import { TransactionKind } from './types'
 
@@ -48,7 +51,7 @@ const sendIbcTokens = (
       timeoutTimestamp: timeoutTimestampNanoseconds,
     }),
   }
-  return client.signAndBroadcast(senderAddress, [transferMsg], 'auto', memo)
+  return client.signAndBroadcast(senderAddress, [transferMsg], DEFAULT_FEE, memo)
 }
 
 export const useTransferAssetMutation = ({
@@ -79,7 +82,7 @@ export const useTransferAssetMutation = ({
         tokenInfo.channel,
         undefined,
         timeout,
-        'auto'
+        DEFAULT_FEE
       )
     }
 

@@ -6,6 +6,7 @@ import {
   createExecuteMessage,
   createIncreaseAllowanceMessage,
   validateTransactionSuccess,
+  DEFAULT_FEE
 } from '../../util/messages'
 
 type DirectTokenSwapArgs = {
@@ -57,7 +58,7 @@ export const directTokenSwap = async ({
       await client.signAndBroadcast(
         senderAddress,
         [increaseAllowanceMessage, executeMessage],
-        'auto'
+        DEFAULT_FEE
       )
     )
   }
@@ -66,7 +67,7 @@ export const directTokenSwap = async ({
     senderAddress,
     swapAddress,
     swapMessage,
-    'auto',
+    DEFAULT_FEE,
     undefined,
     [coin(tokenAmount, tokenA.denom)]
   )

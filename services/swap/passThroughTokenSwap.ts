@@ -6,6 +6,7 @@ import {
   createExecuteMessage,
   createIncreaseAllowanceMessage,
   validateTransactionSuccess,
+  DEFAULT_FEE
 } from '../../util/messages'
 
 type PassThroughTokenSwapArgs = {
@@ -61,7 +62,7 @@ export const passThroughTokenSwap = async ({
       await client.signAndBroadcast(
         senderAddress,
         [increaseAllowanceMessage, executeMessage],
-        'auto'
+        DEFAULT_FEE
       )
     )
   }
@@ -70,7 +71,7 @@ export const passThroughTokenSwap = async ({
     senderAddress,
     inputPool.swap_address,
     swapMessage,
-    'auto',
+    DEFAULT_FEE,
     undefined,
     [coin(tokenAmount, tokenA.denom)]
   )

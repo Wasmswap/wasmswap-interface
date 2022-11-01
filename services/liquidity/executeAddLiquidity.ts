@@ -9,6 +9,7 @@ import {
   createExecuteMessage,
   createIncreaseAllowanceMessage,
   validateTransactionSuccess,
+  DEFAULT_FEE
 } from '../../util/messages'
 
 type ExecuteAddLiquidityArgs = {
@@ -83,7 +84,7 @@ export const executeAddLiquidity = async ({
       await client.signAndBroadcast(
         senderAddress,
         [...increaseAllowanceMessages, executeAddLiquidityMessage],
-        'auto'
+        DEFAULT_FEE
       )
     )
   }
@@ -97,7 +98,7 @@ export const executeAddLiquidity = async ({
     senderAddress,
     swapAddress,
     addLiquidityMessage,
-    'auto',
+    DEFAULT_FEE,
     undefined,
     funds
   )

@@ -3,6 +3,7 @@ import {
   createExecuteMessage,
   createIncreaseAllowanceMessage,
   validateTransactionSuccess,
+  DEFAULT_FEE
 } from 'util/messages'
 
 type ExecuteRemoveLiquidityArgs = {
@@ -43,7 +44,7 @@ export const executeRemoveLiquidity = async ({
     await client.signAndBroadcast(
       senderAddress,
       [increaseAllowanceMessage, executeMessage],
-      'auto'
+      DEFAULT_FEE
     )
   )
 }

@@ -194,7 +194,7 @@ export function NavigationSidebar(_: NavigationSidebarProps) {
             {triggerMenuButton}
           </Inline>
           {isOpen && (
-            <Column css={{ paddingTop: '$12' }}>
+            <Column css={{ padding: '$12 $12 0' }}>
               {walletButton}
               {menuLinks}
             </Column>

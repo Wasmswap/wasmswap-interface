@@ -49,7 +49,8 @@ const StyledWrapper = styled('div', {
   justifyContent: 'center',
   minHeight: '100vh',
   backgroundColor: '$backgroundColors$base',
-  maxWidth: APP_MAX_WIDTH,
+  width: APP_MAX_WIDTH,
+  maxWidth: '100%',
   margin: '0 auto',
   [media.md]: {
     gridTemplateColumns: '15rem 1fr',
@@ -66,8 +67,8 @@ const StyledContainer = styled('div', {
     margin: '0 auto',
     width: '100%',
   },
-  maxWidth: MAIN_PANE_MAX_WIDTH,
-  minWidth: MAIN_PANE_MAX_WIDTH,
+  maxWidth: '100%',
+  width: MAIN_PANE_MAX_WIDTH,
   [media.sm]: {},
 })
 

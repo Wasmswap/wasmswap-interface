@@ -52,13 +52,23 @@ export function selectEligiblePoolsForTokenToTokenSwap({
         const intermediaryToken =
           tokenA.symbol === poolAssetA.symbol ? poolAssetB : poolAssetA
 
+        const intermediaryTokenPositionInputPool =
+          intermediaryToken.denom === poolAssetA.denom ? 'a' : 'b'
+
         const passThroughSwapOutputPool = poolsList.find(
           ({ pool_assets: [assetA, assetB] }) => {
+            const intermediaryTokenPositionOutputPool =
+              intermediaryToken.denom === assetA.denom ? 'a' : 'b'
+
+            const intermediaryTokenInSamePosition =
+              intermediaryTokenPositionInputPool ==
+              intermediaryTokenPositionOutputPool
             return (
-              (intermediaryToken.symbol === assetA.symbol &&
+              ((intermediaryToken.symbol === assetA.symbol &&
                 tokenB.symbol === assetB.symbol) ||
-              (tokenB.symbol === assetA.symbol &&
-                intermediaryToken.symbol === assetB.symbol)
+                (tokenB.symbol === assetA.symbol &&
+                  intermediaryToken.symbol === assetB.symbol)) &&
+              intermediaryTokenInSamePosition
             )
           }
         )

@@ -40,8 +40,7 @@ export const TransactionAction = ({
     const shouldTriggerTransaction =
       !isPriceLoading && !isExecutingTransaction && requestedSwap
     if (shouldTriggerTransaction) {
-      handleSwap()
-      setRequestedSwap(false)
+      handleSwap(undefined, { onSettled: () => setRequestedSwap(false) })
     }
   }, [isPriceLoading, isExecutingTransaction, requestedSwap, handleSwap])
 

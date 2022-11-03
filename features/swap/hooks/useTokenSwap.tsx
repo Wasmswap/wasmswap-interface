@@ -99,7 +99,7 @@ export const useTokenSwap = ({
       // Smoke test
       if (!passThroughPools?.length) {
         throw new Error(
-          'Was not able to identify swap route for this token pair. Please contact the engineering team.'
+          'Could not find a valid swap route. Try swapping to a different asset.'
         )
       }
 

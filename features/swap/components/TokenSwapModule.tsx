@@ -110,13 +110,12 @@ export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
           size={uiSize}
         />
       </StyledDivForWrapper>
+      <TransactionAction isPriceLoading={isPriceLoading} size={uiSize} />
       {invalidPool && (
         <ErrorCard>
           Could not find a valid swap route. Try swapping to a different asset.
         </ErrorCard>
       )}
-
-      <TransactionAction isPriceLoading={isPriceLoading} size={uiSize} />
     </>
   )
 }

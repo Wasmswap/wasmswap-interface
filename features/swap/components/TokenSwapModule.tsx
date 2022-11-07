@@ -1,5 +1,5 @@
 import { useTokenList } from 'hooks/useTokenList'
-import { styled, useMedia } from 'junoblocks'
+import { styled, useMedia, Toast, Card, Text } from 'junoblocks'
 import { useEffect, useRef } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
@@ -12,6 +12,7 @@ import { tokenSwapAtom } from '../swapAtoms'
 import { TokenSelector } from './TokenSelector'
 import { TransactionAction } from './TransactionAction'
 import { TransactionTips } from './TransactionTips'
+import { ErrorCard } from './ErrorCard'
 
 type TokenSwapModuleProps = {
   /* will be used if provided on first render instead of internal state */
@@ -70,6 +71,10 @@ export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
     tokenAmount: tokenA?.amount || 0,
   })
 
+  const invalidPool = !isPriceLoading && tokenA?.amount > 0 && tokenPrice === 0
+
+  console.log('invalidPool', invalidPool)
+
   const handleSwapTokenPositions = () => {
     setTokenSwapState([
       tokenB ? { ...tokenB, amount: tokenPrice } : tokenB,
@@ -105,6 +110,12 @@ export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
           size={uiSize}
         />
       </StyledDivForWrapper>
+      {invalidPool && (
+        <ErrorCard>
+          Could not find a valid swap route. Try swapping to a different asset.
+        </ErrorCard>
+      )}
+
       <TransactionAction isPriceLoading={isPriceLoading} size={uiSize} />
     </>
   )
@@ -113,4 +124,5 @@ export const TokenSwapModule = ({ initialTokenPair }: TokenSwapModuleProps) => {
 const StyledDivForWrapper = styled('div', {
   borderRadius: '8px',
   backgroundColor: '$colors$dark10',
+  marginBottom: '$6',
 })

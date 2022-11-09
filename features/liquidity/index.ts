@@ -16,4 +16,5 @@ export {
 } from './hooks/usePoolTokensDollarValue'
 export type { SortDirections, SortParameters } from './hooks/useSortPools'
 export { useSortPools } from './hooks/useSortPools'
+export { PoolCreateModule } from './components/PoolCreateModule'
 export {}

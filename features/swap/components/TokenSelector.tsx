@@ -26,6 +26,7 @@ type TokenSelectorProps = {
   tokenSymbol: string
   onChange: (token: { tokenSymbol; amount }) => void
   size?: 'small' | 'large'
+  containerCss?: any
 }
 
 export const TokenSelector = ({
@@ -35,6 +36,7 @@ export const TokenSelector = ({
   amount,
   onChange,
   size = 'large',
+  containerCss = {},
 }: TokenSelectorProps) => {
   const wrapperRef = useRef<HTMLDivElement>()
   const inputRef = useRef<HTMLInputElement>()
@@ -66,6 +68,7 @@ export const TokenSelector = ({
       <StyledDivForContainer
         selected={isInputForSearchFocused}
         ref={wrapperRef}
+        css={containerCss}
       >
         {isTokenListShowing && (
           <Inline justifyContent="space-between" css={{ padding: '$5 $6' }}>

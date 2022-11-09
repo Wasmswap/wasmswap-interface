@@ -28,23 +28,13 @@ export const PoolCreateModule = () => {
   const onChangeToken2 = (event) => {
     setToken2(event)
   }
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   return (
     <>
-      <div>
-        <Row style={{ gap: '2px' }}>
-          <TokenPicker onClick={() => setIsDialogOpen(true)} />
-          <TokenPicker onClick={() => setIsDialogOpen(true)} />
-        </Row>
-      </div>
-
       <AddLiquidityDialog
         token1={token1}
         token2={token2}
         onChangeToken1={onChangeToken1}
         onChangeToken2={onChangeToken2}
-        isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
       />
     </>
   )
@@ -61,11 +51,10 @@ const TokenPicker = ({ onClick }) => {
 }
 
 const TokenPickerWrapper = styled('div', {
-  flexGrow: 1,
+  flex: 1,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: '60px 0',
   cursor: 'pointer',
   backgroundColor: '$backgroundColors$primary',
   borderRadius: '6px',
@@ -85,38 +74,34 @@ const AddLiquidityDialog = ({
   token2,
   onChangeToken1,
   onChangeToken2,
-  isOpen,
-  onClose,
 }) => {
   return (
-    <Dialog isShowing={isOpen} onRequestClose={onClose} css={{width: 'unset'}}>
-      <DialogHeader paddingBottom={'$8'}>
-        <Text variant="header">Add Liquidity</Text>
-      </DialogHeader>
-      <DialogContent css={{ padding: '$6 0' }}>
-        <StyledDivForWrapper>
-          <TokenSelector
-            tokenSymbol={token1.tokenSymbol}
-            amount={token1.amount}
-            onChange={onChangeToken1}
-          />
-          <TokenSelector
-            tokenSymbol={token2.tokenSymbol}
-            amount={token2.amount}
-            onChange={onChangeToken2}
-          />
-        </StyledDivForWrapper>
-      </DialogContent>
-      <DialogDivider offsetTop="$16" offsetBottom="$8" />
-
-      <DialogButtons
-        confirmationButton={
-          <Button variant="secondary" onClick={onClose}>
-            Done
-          </Button>
-        }
-      />
-    </Dialog>
+    <Row style={{ gap: '4px', alignItems: 'flex-start' }}>
+      <TokenPickerWrapper onClick={() => console.log('click')}>
+        <TokenSelector
+          tokenSymbol={token1.tokenSymbol}
+          amount={token1.amount}
+          onChange={onChangeToken1}
+          size="small"
+          containerCss={{
+            padding: 0,
+            width: '100%',
+          }}
+        />
+      </TokenPickerWrapper>
+      <TokenPickerWrapper onClick={() => console.log('click')}>
+        <TokenSelector
+          tokenSymbol={token2.tokenSymbol}
+          amount={token2.amount}
+          onChange={onChangeToken2}
+          size="small"
+          containerCss={{
+            padding: 0,
+            width: '100%',
+          }}
+        />
+      </TokenPickerWrapper>
+    </Row>
   )
 }
 

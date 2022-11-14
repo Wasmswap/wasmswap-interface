@@ -1,4 +1,6 @@
 import { TokenSelector } from '../../swap/components/TokenSelector'
+// import { useTokenToTokenPrice } from '../../``swap/hooks/useTokenToTokenPrice'
+import { useTokenDollarValue } from '../../../hooks/useTokenDollarValue'
 import { Row } from 'components'
 import {
   Text,
@@ -28,6 +30,21 @@ export const PoolCreateModule = () => {
   const onChangeToken2 = (event) => {
     setToken2(event)
   }
+
+  //   const [{ price: currentTokenPrice }, isPriceLoading] = useTokenToTokenPrice({
+  //   tokenASymbol: token1.tokenSymbol,
+  //   tokenBSymbol: tokenBSymbol,
+  //   tokenAmount: 1,
+  // })
+
+  const [tokenAPrice, isPriceALoading] = useTokenDollarValue(token1.tokenSymbol)
+
+  console.log('tokenAPrice', tokenAPrice, isPriceALoading)
+
+  const [tokenBPrice, isPriceBLoading] = useTokenDollarValue(token2.tokenSymbol)
+
+  console.log('tokenBPrice', tokenBPrice, isPriceBLoading)
+
   return (
     <>
       <AddLiquidityDialog
@@ -35,6 +52,8 @@ export const PoolCreateModule = () => {
         token2={token2}
         onChangeToken1={onChangeToken1}
         onChangeToken2={onChangeToken2}
+        token1Price={tokenAPrice}
+        token2Price={(token1.amount * tokenAPrice) / token2.amount}
       />
     </>
   )
@@ -71,7 +90,9 @@ const TokenPickerIconPlaceholder = styled('div', {
 
 const AddLiquidityDialog = ({
   token1,
+  token1Price = 0,
   token2,
+  token2Price = 0,
   onChangeToken1,
   onChangeToken2,
 }) => {
@@ -88,6 +109,11 @@ const AddLiquidityDialog = ({
             width: '100%',
           }}
         />
+
+        <div>
+          1 {token1.tokenSymbol} =~ {token1.amount / token2.amount}{' '}
+          {token2.tokenSymbol} =~ ${token1Price}
+        </div>
       </TokenPickerWrapper>
       <TokenPickerWrapper onClick={() => console.log('click')}>
         <TokenSelector
@@ -100,6 +126,11 @@ const AddLiquidityDialog = ({
             width: '100%',
           }}
         />
+
+        <div>
+          1 {token2.tokenSymbol} =~ {token2.amount / token1.amount}{' '}
+          {token1.tokenSymbol} =~ ${token2Price}
+        </div>
       </TokenPickerWrapper>
     </Row>
   )

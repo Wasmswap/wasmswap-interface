@@ -121,20 +121,26 @@ export const TokenSelector = ({
                 />
               </Inline>
             )}
-            <SelectorInput
-              inputRef={inputRef}
-              amount={amount}
-              disabled={!tokenSymbol || readOnly || disabled}
-              onAmountChange={handleAmountChange}
-              onFocus={() => {
-                setInputForAmountFocused(true)
-              }}
-              onBlur={() => {
-                setInputForAmountFocused(false)
-              }}
-            />
+            <Column align="flex-end">
+              <SelectorInput
+                inputRef={inputRef}
+                amount={amount}
+                disabled={!tokenSymbol || readOnly || disabled}
+                onAmountChange={handleAmountChange}
+                onFocus={() => {
+                  setInputForAmountFocused(true)
+                }}
+                onBlur={() => {
+                  setInputForAmountFocused(false)
+                }}
+              />
+              <Text variant="legend">
+                {amount > 0 && formatCurrency(amount * tokenDollarValue)}
+              </Text>
+            </Column>
           </StyledInlineForInputWrapper>
         )}
+
         {isTokenListShowing && (
           <TokenOptionsList
             activeTokenSymbol={tokenSymbol}

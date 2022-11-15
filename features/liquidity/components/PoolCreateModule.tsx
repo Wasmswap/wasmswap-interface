@@ -12,6 +12,7 @@ import {
   DialogButtons,
   Button,
   Spinner,
+  Column,
 } from 'junoblocks'
 import { useState } from 'react'
 
@@ -97,42 +98,70 @@ const AddLiquidityDialog = ({
   onChangeToken2,
 }) => {
   return (
-    <Row style={{ gap: '4px', alignItems: 'flex-start' }}>
-      <TokenPickerWrapper onClick={() => console.log('click')}>
-        <TokenSelector
-          tokenSymbol={token1.tokenSymbol}
-          amount={token1.amount}
-          onChange={onChangeToken1}
-          size="small"
-          containerCss={{
-            padding: 0,
-            width: '100%',
-          }}
-        />
+    <Column>
+      <Row style={{ gap: '4px', alignItems: 'flex-start' }}>
+        <TokenPickerWrapper onClick={() => console.log('click')}>
+          <TokenSelector
+            tokenSymbol={token1.tokenSymbol}
+            amount={token1.amount}
+            onChange={onChangeToken1}
+            size="small"
+            containerCss={{
+              padding: 0,
+              width: '100%',
+            }}
+          />
 
-        <div>
+          {/*<div>
           1 {token1.tokenSymbol} =~ {token1.amount / token2.amount}{' '}
           {token2.tokenSymbol} =~ ${token1Price}
-        </div>
-      </TokenPickerWrapper>
-      <TokenPickerWrapper onClick={() => console.log('click')}>
-        <TokenSelector
-          tokenSymbol={token2.tokenSymbol}
-          amount={token2.amount}
-          onChange={onChangeToken2}
-          size="small"
-          containerCss={{
-            padding: 0,
-            width: '100%',
-          }}
-        />
+          </div>
+       */}
+        </TokenPickerWrapper>
+        <TokenPickerWrapper onClick={() => console.log('click')}>
+          <TokenSelector
+            tokenSymbol={token2.tokenSymbol}
+            amount={token2.amount}
+            onChange={onChangeToken2}
+            size="small"
+            containerCss={{
+              padding: 0,
+              width: '100%',
+            }}
+          />
 
-        <div>
-          1 {token2.tokenSymbol} =~ {token2.amount / token1.amount}{' '}
-          {token1.tokenSymbol} =~ ${token2Price}
-        </div>
+          <div></div>
+        </TokenPickerWrapper>
+      </Row>
+      <TokenPickerWrapper
+        style={{ marginTop: '10px', padding: '12px', gap: '8px' }}
+      >
+        <Text variant="legend">
+          1 {token1.tokenSymbol} {' ≈ '} ${token1Price} USD
+        </Text>
+        <Text variant="legend">
+          1 {token2.tokenSymbol} {' ≈ '} {token2.amount / token1.amount}{' '}
+          {token1.tokenSymbol} {' ≈ '} ${token2Price} USD
+        </Text>
       </TokenPickerWrapper>
-    </Row>
+      <TokenPickerWrapper
+        style={{
+          marginTop: '10px',
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          padding: '12px',
+        }}
+      >
+        <Text variant="title">TOTAL LP SIZE</Text>
+        <Text>${token1.amount * token1Price * 2} USD</Text>
+      </TokenPickerWrapper>
+      <Button
+        variant="primary"
+        style={{ marginTop: '32px', fontSize: '20px', padding: '8px' }}
+      >
+        CREATE POOL
+      </Button>
+    </Column>
   )
 }
 

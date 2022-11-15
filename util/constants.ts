@@ -29,4 +29,7 @@ export const __TRANSFERS_ENABLED__ = JSON.parse(
 export const __DARK_MODE_ENABLED_BY_DEFAULT__ = JSON.parse(
   process.env.NEXT_PUBLIC_DARK_MODE_ENABLED_BY_DEFAULT
 )
+export const __POOL_CREATE_ENABLED__ = JSON.parse(
+  process.env.NEXT_PUBLIC_POOL_CREATE_ENABLED
+)
 /* /feature flags */

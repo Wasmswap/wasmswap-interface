@@ -22,6 +22,7 @@ import { useUpdateEffect } from 'react-use'
 import { useQueriesDataSelector } from '../../hooks/useQueriesDataSelector'
 import { usePoolsListQuery } from '../../queries/usePoolsListQuery'
 import { useQueryMultiplePoolsLiquidity } from '../../queries/useQueryPools'
+import { __POOL_CREATE_ENABLED__ } from '../../util/constants'
 import Link from 'next/link'
 
 export default function Pools() {
@@ -56,11 +57,13 @@ export default function Pools() {
       subtitle="Provide liquidity to the market and
         receive swap fees from each trade."
     >
-      <Link href="/pools/create" passHref>
-        <Button as="a" variant="secondary" size="small">
-          Create a pool +
-        </Button>
-      </Link>
+      {__POOL_CREATE_ENABLED__ && (
+        <Link href="/pools/create" passHref>
+          <Button as="a" variant="secondary" size="small">
+            Create a pool +
+          </Button>
+        </Link>
+      )}
     </PageHeader>
   )
 

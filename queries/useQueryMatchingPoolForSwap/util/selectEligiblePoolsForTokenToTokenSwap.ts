@@ -14,7 +14,7 @@ export function selectEligiblePoolsForTokenToTokenSwap({
   tokenB,
   poolsList,
 }: SelectEligiblePoolsForTokenToTokenSwapArgs) {
-  return poolsList.reduce(
+  let eligiblePools = poolsList.reduce(
     (result, pool) => {
       const [poolAssetA, poolAssetB] = pool.pool_assets
 
@@ -98,4 +98,12 @@ export function selectEligiblePoolsForTokenToTokenSwap({
       passThroughPools: [],
     } as MatchingPoolsForTokenToTokenSwap
   )
+  if (
+    eligiblePools.poolForDirectTokenAToTokenBSwap ||
+    eligiblePools.poolForDirectTokenBToTokenASwap
+  ) {
+    eligiblePools.passThroughPools = []
+  }
+  console.log(eligiblePools)
+  return eligiblePools
 }

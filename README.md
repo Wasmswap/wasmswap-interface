@@ -104,7 +104,7 @@ NEXT_PUBLIC_APP_VERSION=1.0.0
 
 ### Branding
 
-We rcommend vector graphics for your project's logo and name. Go to `/icons/Logo.tsx` and swap our branded logo symbol with yours to update the app logo.
+We recommend vector graphics for your project's logo and name. Go to `/icons/Logo.tsx` and swap our branded logo symbol with yours to update the app logo.
 
 Go to `/icons/LogoText.tsx` and update the file accordingly to update the logo text.
 

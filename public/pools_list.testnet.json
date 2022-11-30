@@ -40,7 +40,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno1mnsus3ssrqp43l2l9xk44jvcakwmtr6r5uqqfa5eha692jd76y5q5fegyj",
+          "token_address": "juno1m4tky3p8qn0ehyhnr2n0hnyt00yfmu6mwxjrl7f0nn8nqh77946qrsveps",
           "symbol": "POOD",
           "name": "Poodle",
           "decimals": 6,
@@ -50,8 +50,8 @@
           "denom": "upood"
         }
       ],
-      "swap_address": "juno1nsrl9z4mlt0ef4p3susm8hkyz6ep7z4kktc4rkfuj5lj2mtv4wysca05g7",
-      "staking_address": "juno1je7shq9eejdz94lmjpy2dg6kks9lk2fsawlyu08pgjachylawghq6vnh7a",
+      "swap_address": "juno14lckg4x7df6s64vgmmp9u5uswc58z684dh5n9ztp3uvf3ea7tafsp6afll",
+      "staking_address": "juno1z6a37hun45e9hc63x33uclkaxcggalcshz2k7adgkyku3y395crqxq2yrv",
       "rewards_tokens": []
     },
     {
@@ -72,7 +72,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno1x5mylzhf0l7erhwelrgx52uxc5fmnk5k0e3taljnqr2a7fqjghrq3jxz2t",
+          "token_address": "juno1ss8hu0mhpvcekr6zn9r9hw32d77rnwu68z6k4tg4n6wkj8jzlnnq2f6pxt",
           "symbol": "CRAB",
           "name": "Crab",
           "decimals": 6,
@@ -82,11 +82,11 @@
           "denom": "ucrab"
         }
       ],
-      "swap_address": "juno1j4ezvp80mnn75hlngak35n6wwzemxqjxdncdxc5n9dfw6s0q080qyhh9zl",
-      "staking_address": "juno1k9lqf94dk8v0t5tcsxvjddjgy3ncr8w6nxe8k5p7wqpjzhedn3gsvw0q8k",
+      "swap_address": "juno13sjyluvppwvhfq55dm3a0hhy2sruenu059n5wsun5uxzl0u9lz3qer4x5j",
+      "staking_address": "juno14jtx2838lcdwxuwx9wwq4hagpph32ukmgv7psexay68343fqg3csev0cus",
       "rewards_tokens": [
         {
-          "rewards_address": "juno1hnwa4n792a3t6nnxfezpks7u8mgjq8uvwd45pk6fu478qlxgrm0qwhvt4c",
+          "rewards_address": "juno1axzudeaghaeg9u8crsmj067grfkhrjv389f5fg42n6axg2dghhqqnh4qr9",
           "token_address": "",
           "swap_address": "",
           "symbol": "JUNOX",
@@ -97,9 +97,9 @@
           "decimals": 6
         },
         {
-          "rewards_address": "juno1qlq6uatzj9zecxwkq5pl2wee2xhuhqwj5xe4c5f4gh24axqwsr5s6dnvqk",
-          "token_address": "juno1x5mylzhf0l7erhwelrgx52uxc5fmnk5k0e3taljnqr2a7fqjghrq3jxz2t",
-          "swap_address": "juno1j4ezvp80mnn75hlngak35n6wwzemxqjxdncdxc5n9dfw6s0q080qyhh9zl",
+          "rewards_address": "juno13d64m7j8mwht72cv2c5c397gpwuxzsh8frk2avtxvk288wsxnr8qgjgqxv",
+          "token_address": "juno1ss8hu0mhpvcekr6zn9r9hw32d77rnwu68z6k4tg4n6wkj8jzlnnq2f6pxt",
+          "swap_address": "juno13sjyluvppwvhfq55dm3a0hhy2sruenu059n5wsun5uxzl0u9lz3qer4x5j",
           "symbol": "CRAB",
           "name": "Crab",
           "logoURI": "https://cryptologos.cc/logos/irisnet-iris-logo.svg?v=022",
@@ -127,7 +127,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno103ch5yuqrw03p9c7lg9czc2ng7d2qtd49heprergf6867atftncs9rclkh",
+          "token_address": "juno12rw82rwwk24mk2jzwvmduxnuw5ntwltd5yl02g570rcw6csq8tlqaf9jeu",
           "symbol": "DAO",
           "name": "DAO",
           "decimals": 6,
@@ -137,40 +137,8 @@
           "denom": "udao"
         }
       ],
-      "swap_address": "juno1ajwqdgnae4c8gcrcf7fcnwzqmx5emdazkuxzwhssq5qccs2u7desj4adma",
-      "staking_address": "juno1zm3e54zssvj67rq9sgeame2wc4aegkd9vsyfzvlwatjz47dus52qhrgrum",
-      "rewards_tokens": []
-    },
-    {
-      "pool_id": "JUNO-DOG",
-      "pool_assets": [
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "",
-          "symbol": "JUNOX",
-          "name": "Junox",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
-          "tags": ["native"],
-          "native": true,
-          "denom": "ujunox"
-        },
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "juno1zhm3xqhvzz9z2envkdsarkx6g34t37terg366hap7uzfseyapqsqscp32r",
-          "symbol": "DOG",
-          "name": "DOG",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/dogebonk-dobo-logo.svg?v=023",
-          "tags": ["memecoin"],
-          "native": false,
-          "denom": "udog"
-        }
-      ],
-      "swap_address": "juno1wv7naz8ezrsagps2s8dzuqq0f6h2fhw043x4jkykay4l0zvevqkq5fdf7m",
-      "staking_address": "",
+      "swap_address": "juno1vfvdflrkzej9ps37l9z7y4225k408ty3wap526zmqvkc85zaez4sh907z0",
+      "staking_address": "juno1dvq3lj06j3m797ymjujmhhmncrwsct9d649ufyx5ukzw3yvfv79qk7rvlg",
       "rewards_tokens": []
     }
   ],

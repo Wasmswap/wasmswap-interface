@@ -1,6 +1,9 @@
 import { NETWORK_FEE } from 'util/constants'
-import { useSwapInfo } from '../../../hooks/useSwapInfo'
+import { useCosmWasmClient } from '../../../hooks/useCosmWasmClient'
+import { getSwapFee, FeeResponse } from '../../../services/swap'
 import { useTokenToTokenPrice } from './'
+import { usePoolsListQuery } from '../../../queries/usePoolsListQuery'
+import { useQuery } from 'react-query'
 
 export const useSwapFee = ({ tokenA, tokenB }) => {
   const [tokenToTokenPrice] = useTokenToTokenPrice({
@@ -21,41 +24,43 @@ export const useSwapFee = ({ tokenA, tokenB }) => {
     poolId1 = tokenToTokenPrice.passThroughPools[0].inputPool.pool_id
     poolId2 = tokenToTokenPrice.passThroughPools[0].outputPool.pool_id
   }
-  const [swapInfo1] = useSwapInfo({
-    poolId: poolId1,
-    refetchInBackground: false,
-  })
-  const [swapInfo2] = useSwapInfo({
-    poolId: poolId2,
-    refetchInBackground: false,
-  })
+  const { data: fee1 } = useSwapFeeQuery(poolId1)
+  const { data: fee2 } = useSwapFeeQuery(poolId2)
 
   // default to NETWORK_FEE constant
   let swapFee = NETWORK_FEE * 100
 
   // use fee for direct token swap or inputPool passthrough if set
-  if (
-    swapInfo1 &&
-    (swapInfo1.lp_fee_percent || swapInfo1.protocol_fee_percent)
-  ) {
+  if (fee1 && (fee1.lp_fee_percent || fee1.protocol_fee_percent)) {
     swapFee =
-      Number(swapInfo1.lp_fee_percent || 0) +
-      Number(swapInfo1.protocol_fee_percent || 0)
+      Number(fee1.lp_fee_percent || 0) + Number(fee1.protocol_fee_percent || 0)
   }
 
   // add fee for outputPool passthrough pool if set
-  if (
-    swapInfo2 &&
-    (swapInfo2.lp_fee_percent || swapInfo2.protocol_fee_percent)
-  ) {
+  if (fee2 && (fee2.lp_fee_percent || fee2.protocol_fee_percent)) {
     swapFee +=
-      Number(swapInfo2.lp_fee_percent || 0) +
-      Number(swapInfo2.protocol_fee_percent || 0)
+      Number(fee2.lp_fee_percent || 0) + Number(fee2.protocol_fee_percent || 0)
 
     // add default network fee if not set in outputPool passhthrough
-  } else if (swapInfo2) {
+  } else if (fee2) {
     swapFee += NETWORK_FEE * 100
   }
 
   return swapFee
+}
+
+export const useSwapFeeQuery = (poolId: string, options = {}) => {
+  const { data: poolsListResponse } = usePoolsListQuery()
+  const client = useCosmWasmClient()
+  const pool = poolsListResponse?.poolsById[poolId]
+
+  return useQuery<FeeResponse, Error, FeeResponse, (string | undefined)[]>(
+    [`swapFee/${poolId}`],
+    () => getSwapFee(pool.swap_address, client),
+    {
+      enabled: Boolean(client && poolId && pool),
+      refetchOnMount: false,
+      ...options,
+    }
+  )
 }

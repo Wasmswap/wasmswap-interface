@@ -127,3 +127,32 @@ export const getSwapInfo = async (
     console.error('Cannot get swap info:', e)
   }
 }
+
+export type FeeResponse = {
+  lp_fee_percent: string
+  owner: string
+  protocol_fee_percent: string
+  protocol_fee_recipient: string
+}
+
+export const getSwapFee = async (
+  swapAddress: string,
+  client: CosmWasmClient
+): Promise<FeeResponse> => {
+  try {
+    if (!swapAddress || !client) {
+      throw new Error(
+        `No swapAddress or rpcEndpoint was provided: ${JSON.stringify({
+          swapAddress,
+          client,
+        })}`
+      )
+    }
+
+    return await client.queryContractSmart(swapAddress, {
+      fee: {},
+    })
+  } catch (e) {
+    console.error('Cannot get swap fee:', e)
+  }
+}

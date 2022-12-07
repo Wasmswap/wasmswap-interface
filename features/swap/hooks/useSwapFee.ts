@@ -34,11 +34,7 @@ export const useSwapFee = ({ tokenA, tokenB }) => {
   if (fee1 && (fee1.lp_fee_percent || fee1.protocol_fee_percent)) {
     swapFee =
       Number(fee1.lp_fee_percent || 0) + Number(fee1.protocol_fee_percent || 0)
-    // add default network fee if not set in outputPool passhthrough
-  } else if (poolId1 !== '') {
-    swapFee += NETWORK_FEE * 100
   }
-
   // add fee for outputPool passthrough pool if set
   if (fee2 && (fee2.lp_fee_percent || fee2.protocol_fee_percent)) {
     swapFee +=

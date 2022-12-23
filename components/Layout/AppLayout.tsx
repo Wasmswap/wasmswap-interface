@@ -62,7 +62,7 @@ const StyledContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  padding: '0 $24 $24 $24',
+  padding: '0 $12 $12 $12',
   '& main': {
     margin: '0 auto',
     width: '100%',

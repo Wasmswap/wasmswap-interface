@@ -28,5 +28,8 @@ const StyledCard = styled('div', {
 })
 
 const StyledA = styled('a', {
-  color: 'Blue',
+  color: '$textColors$brand',
+  '&:hover': {
+    textDecoration: 'underline',
+  },
 })

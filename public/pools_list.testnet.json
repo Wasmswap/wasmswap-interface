@@ -40,7 +40,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno12wwfatmpqnxdqk0ka8rpd4ud4frc97srtv55mmlf7xunux6led8s8wtgx2",
+          "token_address": "juno1vjqqxqyxc557yjn52chuemyhapx3mmuz46eyxjz60uj5gc72qs5s0pk3np",
           "symbol": "CRAB",
           "name": "Crab",
           "decimals": 6,
@@ -50,11 +50,11 @@
           "denom": "ucrab"
         }
       ],
-      "swap_address": "juno18nhxas6yzzef3agczvfr62303enemkl8m84rlhur6q920rzarg5q3dn2fd",
-      "staking_address": "juno1vhxnvu0zh6p707auf0ltq6scse3d2fxvp4804s54q45z29vtjleqghne5g",
+      "swap_address": "juno15qpctej6plvx4m8dzk2f40j2ntr7cz5lg0um5vg6q4mg7j8hghsqlcy85p",
+      "staking_address": "juno1wrrsul5hm7l07qhukxkx6pfenfz3f9etds0tkt5rqxqyaw5p24pssdme7k",
       "rewards_tokens": [
         {
-          "rewards_address": "juno1c0dufpgcv9hawyg523wjrjgtuwry33zllv5aglhemrhncfxanfxqtk5ywg",
+          "rewards_address": "juno1x3sa5aluxwr5t3yxe63ejtjhnngxg877d0059zmd5sxk54mu3hgqgdy7t9",
           "token_address": "",
           "swap_address": "",
           "symbol": "JUNOX",
@@ -65,9 +65,9 @@
           "decimals": 6
         },
         {
-          "rewards_address": "juno18ggsr64v8h8n7u49tjm4heujjlg6246w5p86qrfhmanauzdmht7s4da34r",
-          "token_address": "juno12wwfatmpqnxdqk0ka8rpd4ud4frc97srtv55mmlf7xunux6led8s8wtgx2",
-          "swap_address": "juno18nhxas6yzzef3agczvfr62303enemkl8m84rlhur6q920rzarg5q3dn2fd",
+          "rewards_address": "juno1cwhu0kzyqlsemudjgmdcqszwpuwul6ppyeze57tzpsyc5z34kcps4dwazx",
+          "token_address": "juno1vjqqxqyxc557yjn52chuemyhapx3mmuz46eyxjz60uj5gc72qs5s0pk3np",
+          "swap_address": "juno15qpctej6plvx4m8dzk2f40j2ntr7cz5lg0um5vg6q4mg7j8hghsqlcy85p",
           "symbol": "CRAB",
           "name": "Crab",
           "logoURI": "https://cryptologos.cc/logos/irisnet-iris-logo.svg?v=022",
@@ -83,7 +83,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno1lqhg97uxqlm7qhl4dylm2ynzf6z8r3px9epc23epkcu3703tal7qwj6vun",
+          "token_address": "juno126vxx7gzaudty5xwdsxj52q0w8n7l049ccs0ewc8hxmh7yutxlwsjn4hj5",
           "symbol": "DAO",
           "name": "DAO",
           "decimals": 6,
@@ -105,8 +105,8 @@
           "denom": "ujunox"
         }
       ],
-      "swap_address": "juno1gjk9gva6dfs254qvlthw6ldqu3etp3wf2854n2ln7szepzvrggys89w3yn",
-      "staking_address": "juno1paazsk7v2sx8tdjgw9ud22mg6hrawqwd27tjrv4nex9v529yzphsglem68",
+      "swap_address": "juno1qg94eug9592l35fnvhs4sqmmm8hm7vpw0qzx7764umyndmxd4fsq550xuc",
+      "staking_address": "juno1tlmulq54j0jth2ua8gug4yaxhdw85v24ympehgvasazmtdmjspjqrm8fv6",
       "rewards_tokens": []
     },
     {
@@ -127,7 +127,7 @@
         {
           "id": "juno-network",
           "chain_id": "lucina",
-          "token_address": "juno174a3wz38p2rzqznm9npar95zpp5tpfe420amyj7qfs5373nklmqsqutetv",
+          "token_address": "juno133d35dnkr4cmkglkq4fmr3trhsuuu5xjd7xnqye5pehq99f83s5qpmszgu",
           "symbol": "POOD",
           "name": "Poodle",
           "decimals": 6,
@@ -137,104 +137,8 @@
           "denom": "upood"
         }
       ],
-      "swap_address": "juno1fwdduklq6csqp3xzzjdrsxqw8wtrfw3kflry09xghsn8m9nrfddsdztjjl",
-      "staking_address": "juno1rnftahwja0xf3xrng33h9hyqs5s270rga92a999ynd8a4wj5c0nsgvevgg",
-      "rewards_tokens": []
-    },
-    {
-      "pool_id": "JUNO-DOG",
-      "pool_assets": [
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "",
-          "symbol": "JUNOX",
-          "name": "Junox",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
-          "tags": ["native"],
-          "native": true,
-          "denom": "ujunox"
-        },
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "juno1sds2hju9gnc6g4jhu78kvxe8snwk80zypq6qlny7jv4pfmz5s9fqzl6s3g",
-          "symbol": "DOG",
-          "name": "Dog Coin",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/dogebonk-dobo-logo.svg?v=023",
-          "tags": ["memecoin"],
-          "native": false,
-          "denom": "udog"
-        }
-      ],
-      "swap_address": "juno177uyrw4px4dpw6ne3s0m4sfd93f6stz34k3tsgjnhezplgprfafsrd2hve",
-      "staking_address": "",
-      "rewards_tokens": []
-    },
-    {
-      "pool_id": "JUNO-BULL",
-      "pool_assets": [
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "",
-          "symbol": "JUNOX",
-          "name": "Junox",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
-          "tags": ["native"],
-          "native": true,
-          "denom": "ujunox"
-        },
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "juno1c5zfjmrvja82jrwceml4d3x7xhtz8hzvwksre5u23q8q2xyxx2vqa9d7zg",
-          "symbol": "BULL",
-          "name": "Bull Coin",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/polymath-network-poly-logo.svg?v=023",
-          "tags": ["memecoin"],
-          "native": false,
-          "denom": "ubull"
-        }
-      ],
-      "swap_address": "juno1ja8s2t860q3ye8zx5dr2qqnfsemslv9ycnj60jetyp2g5ve00lzqtlqaup",
-      "staking_address": "",
-      "rewards_tokens": []
-    },
-    {
-      "pool_id": "JUNO-CAT",
-      "pool_assets": [
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "",
-          "symbol": "JUNOX",
-          "name": "Junox",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
-          "tags": ["native"],
-          "native": true,
-          "denom": "ujunox"
-        },
-        {
-          "id": "juno-network",
-          "chain_id": "lucina",
-          "token_address": "juno1u3p88cklq0tt7frfwfjchhcs5ss0tjzwkxgr32m50j5pjnkxdzdszuj02h",
-          "symbol": "CAT",
-          "name": "Cat Coin",
-          "decimals": 6,
-          "logoURI": "https://cryptologos.cc/logos/catcoin-token-cats-logo.svg?v=023",
-          "tags": ["memecoin"],
-          "native": false,
-          "denom": "ubull"
-        }
-      ],
-      "swap_address": "juno1fy9hvdfluz46p38sf83gsmh4072pqa63rm9pz8qk09y3xfl5dymsvnvemc",
-      "staking_address": "",
+      "swap_address": "juno1htxmhlqgxm5e8ua3vtqauyk7ehr9g86rtz9t4d2vajj643cv5t6s6nl592",
+      "staking_address": "juno1md2z802sj2hjyarku6kzaly3j2gk9lu58gm997pghj9gnm35snns8r0rr7",
       "rewards_tokens": []
     }
   ],

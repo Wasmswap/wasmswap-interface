@@ -1,4 +1,4 @@
-import { Button, ErrorIcon, styled, Text, UpRightArrowIcon } from 'junoblocks'
+import { ErrorIcon, styled, Text } from 'junoblocks'
 
 import { __TEST_MODE__ } from '../../util/constants'
 
@@ -9,21 +9,6 @@ export const ExtensionSidebar = () => {
         <ErrorIcon color="primary" size="large" />
         <Text>This is a {__TEST_MODE__ ? 'testnet' : 'beta'} version</Text>
       </StyledDivForTitleWrapper>
-      <Text css={{ padding: '$9 0 $11' }}>
-        This website is currently{' '}
-        {__TEST_MODE__ ? 'operates in testnet mode' : 'in beta'}. Please provide
-        feedback.
-      </Text>
-      <Button
-        as="a"
-        href={process.env.NEXT_PUBLIC_FEEDBACK_LINK}
-        target="__blank"
-        variant="secondary"
-        iconRight={<UpRightArrowIcon />}
-        css={{ width: '100%' }}
-      >
-        Report an issue
-      </Button>
       <StyledSpringBottom src="/springs-bg.png" />
     </StyledDivForWrapper>
   )

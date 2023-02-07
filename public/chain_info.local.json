@@ -1,44 +1,39 @@
 {
-  "chainId": "testing",
-  "chainName": "Juno Local",
+  "chainId": "sei-chain",
+  "chainName": "Sei Local",
   "rpc": "http://localhost:26657/",
   "rest": "http://localhost:1317/",
   "stakeCurrency": {
-    "coinDenom": "JUNO",
-    "coinMinimalDenom": "ujuno",
+    "coinDenom": "SEI",
+    "coinMinimalDenom": "usei",
     "coinDecimals": 6,
-    "coinGeckoId": "juno-network"
+    "coinGeckoId": "sei-network"
   },
   "bip44": {
     "coinType": 118
   },
   "bech32Config": {
-    "bech32PrefixAccAddr": "juno",
-    "bech32PrefixAccPub": "junopub",
-    "bech32PrefixValAddr": "junovaloper",
-    "bech32PrefixValPub": "junovaloperpub",
-    "bech32PrefixConsAddr": "junovalcons",
-    "bech32PrefixConsPub": "junovalconspub"
+    "bech32PrefixAccAddr": "sei",
+    "bech32PrefixAccPub": "seipub",
+    "bech32PrefixValAddr": "seivaloper",
+    "bech32PrefixValPub": "seivaloperpub",
+    "bech32PrefixConsAddr": "seivalcons",
+    "bech32PrefixConsPub": "seivalconspub"
   },
   "currencies": [
     {
-      "coinDenom": "JUNO",
-      "coinMinimalDenom": "ujuno",
+      "coinDenom": "usei",
+      "coinMinimalDenom": "usei",
       "coinDecimals": 6,
-      "coinGeckoId": "juno-network"
-    },
-    {
-      "coinDenom": "COSM",
-      "coinMinimalDenom": "ucosm",
-      "coinDecimals": 6
+      "coinGeckoId": "sei-network"
     }
   ],
   "feeCurrencies": [
     {
-      "coinDenom": "JUNO",
-      "coinMinimalDenom": "ujuno",
+      "coinDenom": "usei",
+      "coinMinimalDenom": "usei",
       "coinDecimals": 6,
-      "coinGeckoId": "juno-network"
+      "coinGeckoId": "sei-network"
     }
   ],
   "coinType": 118,

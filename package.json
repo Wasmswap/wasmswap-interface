@@ -1,6 +1,6 @@
 {
   "name": "wasmswap-interface",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "scripts": {
     "dev": "next dev",
     "dev:w-blocks": "BUNDLE_JUNOBLOCKS=true next dev",
@@ -23,6 +23,7 @@
     "@cosmjs/stargate": "0.28.10",
     "@next/bundle-analyzer": "^12.1.0",
     "@react-spring/web": "^9.4.2",
+    "@sei-js/core": "^1.1.6",
     "@stitches/react": "^1.2.6",
     "body-scroll-lock": "^4.0.0-beta.0",
     "color": "^4.1.0",

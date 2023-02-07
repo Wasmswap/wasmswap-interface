@@ -75,8 +75,8 @@ const PoolHeader = ({ tokenA, tokenB, priceBreakdown }: PoolHeaderProps) => (
 )
 
 const SwapFee = ({
-  protocolFee = 0,
-  lpFee = 0.3,
+  protocolFee = 0.1,
+  lpFee = 0.1,
 }: {
   protocolFee?: number
   lpFee?: number
@@ -84,7 +84,7 @@ const SwapFee = ({
   <>
     <Text variant="header">{`${protocolFee + lpFee}%`}</Text>
     <Tooltip
-      label={`${lpFee}% of Swap Fee goes to LP Providers (LP) and ${protocolFee}% goes to Raw DAO`}
+      label={`${lpFee}% of Swap Fee goes to LP Providers (LP) and ${protocolFee}% goes to the protocol`}
     >
       <Button variant="ghost" size="small" icon={<InfoIcon />} />
     </Tooltip>

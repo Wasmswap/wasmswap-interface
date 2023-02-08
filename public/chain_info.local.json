@@ -22,7 +22,7 @@
   },
   "currencies": [
     {
-      "coinDenom": "usei",
+      "coinDenom": "SEI",
       "coinMinimalDenom": "usei",
       "coinDecimals": 6,
       "coinGeckoId": "sei-network"
@@ -30,7 +30,7 @@
   ],
   "feeCurrencies": [
     {
-      "coinDenom": "usei",
+      "coinDenom": "SEI",
       "coinMinimalDenom": "usei",
       "coinDecimals": 6,
       "coinGeckoId": "sei-network"

@@ -1,5 +1,4 @@
 import { LiquidityInput } from 'components'
-import { useTokenDollarValue } from 'hooks/useTokenDollarValue'
 import {
   Button,
   Dialog,
@@ -7,7 +6,6 @@ import {
   DialogContent,
   DialogDivider,
   DialogHeader,
-  dollarValueFormatter,
   dollarValueFormatterWithDecimals,
   formatTokenBalance,
   IconWrapper,
@@ -253,16 +251,13 @@ function RemoveLiquidityContent({
   liquidityPercentage,
   onChangeLiquidity,
 }) {
-  const [tokenAPrice] = useTokenDollarValue(tokenA.symbol)
   const percentageInputRef = useRef<HTMLInputElement>()
 
   useEffect(() => {
     percentageInputRef.current?.focus()
   }, [])
 
-  const availableLiquidityDollarValue = dollarValueFormatter(
-    tokenAReserve * 2 * tokenAPrice
-  ) as number
+  const availableLiquidityDollarValue = 1 // TODO: calculate
 
   const liquidityToRemove = availableLiquidityDollarValue * liquidityPercentage
 

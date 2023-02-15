@@ -53,6 +53,50 @@
       "swap_address": "sei1xr3rq8yvd7qplsw5yx90ftsr2zdhg4e9z60h5duusgxpv72hud3shh3qfl",
       "staking_address": "",
       "rewards_tokens": []
+    },
+    {
+      "pool_id": "SEI-TESTCW",
+      "pool_assets": [
+        {
+          "id": "sei-network",
+          "chain_id": "sei-chain",
+          "token_address": "",
+          "symbol": "SEI",
+          "name": "Sei",
+          "decimals": 6,
+          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
+          "tags": ["native"],
+          "native": true,
+          "denom": "usei"
+        },
+        {
+          "id": "testcurrencycw",
+          "chain_id": "sei-chain",
+          "token_address": "sei1fzm6gzyccl8jvdv3qq6hp9vs6ylaruervs4m06c7k0ntzn2f8faq8un0p6",
+          "symbol": "TESTCW",
+          "name": "testcurrencycw20",
+          "decimals": 6,
+          "logoURI": "https://cryptologos.cc/logos/polygon-matic-logo.svg?v=022",
+          "tags": ["cw20"],
+          "native": false,
+          "denom": "testcw"
+        }
+      ],
+      "swap_address": "sei1z7asfxkwv0t863rllul570eh5pf2zk07k3d86ag4vtghaue37l5sdfr5nk",
+      "staking_address": "sei1w798gp0zqv3s9hjl3jlnwxtwhykga6rn93p46q2crsdqhaj3y4gslx7gpp",
+      "rewards_tokens": [
+        {
+          "rewards_address": "sei149ltwdnpxrhx9al42s359glcjnsuc6x3dalz28f04dsxhlu7jhmq8ymcll",
+          "token_address": "",
+          "swap_address": "",
+          "symbol": "SEI",
+          "name": "Sei",
+          "logoURI": "https://cryptologos.cc/logos/anyswap-any-logo.svg?v=022",
+          "native": true,
+          "denom": "usei",
+          "decimals": 6
+        }
+      ]
     }
   ],
   "version": {
